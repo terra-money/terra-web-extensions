@@ -2,12 +2,9 @@
   "name": "web-template",
   "version": "1.0.0",
   "scripts": {
-    "build": "cross-env TS_NODE_PROJECT=tsconfig.script.json node -r ts-node/register -r tsconfig-paths/register scripts/build.ts",
-    "start": "cross-env TS_NODE_PROJECT=tsconfig.script.json INSPECT_CHROME=9222 node -r ts-node/register -r tsconfig-paths/register scripts/extension-web-sample.start.ts",
-    "extension:dev": "multiplerun extension-dev",
-    "extension:watch": "cross-env TS_NODE_PROJECT=tsconfig.script.json INSPECT_CHROME=9222 node -r ts-node/register -r tsconfig-paths/register scripts/extension.watch.ts",
-    "extension-web-sample:start": "cross-env TS_NODE_PROJECT=tsconfig.script.json INSPECT_CHROME=9222 node -r ts-node/register -r tsconfig-paths/register scripts/extension-web-sample.start.ts",
-    "start:debug": "cross-env TS_NODE_PROJECT=tsconfig.script.json INSPECT_CHROME=9222 node --inspect-brk=9588 -r ts-node/register -r tsconfig-paths/register scripts/extension-web-sample.start.ts",
+    "webextension:dev": "multiplerun webextension-dev",
+    "webextension:watch": "cross-env TS_NODE_PROJECT=tsconfig.script.json INSPECT_CHROME=9222 node -r ts-node/register -r tsconfig-paths/register scripts/webextension.watch.ts",
+    "webextension-test-app:start": "cross-env TS_NODE_PROJECT=tsconfig.script.json INSPECT_CHROME=9222 node -r ts-node/register -r tsconfig-paths/register scripts/webextension-test-app.start.ts",
     "storybook:start": "start-storybook",
     "storybook:build": "build-storybook --output-dir out/storybook",
     "test": "jest --colors",
@@ -15,9 +12,9 @@
     "precommit": "lint-staged"
   },
   "multiplerun": {
-    "extension-dev": [
-      "yarn run extension:watch",
-      "yarn run extension-web-sample:start"
+    "webextension-dev": [
+      "yarn run webextension:watch",
+      "yarn run webextension-test-app:start"
     ]
   },
   "lint-staged": {
@@ -26,12 +23,15 @@
     ]
   },
   "dependencies": {
+    "@terra-dev/use-local-storage": "^0.1.0",
     "@terra-money/terra.js": "^1.6.0",
     "crypto-browserify": "^3.12.0",
     "crypto-js": "^4.0.0",
+    "fast-deep-equal": "^3.1.3",
     "process": "^0.11.10",
     "react-router-dom": "^5.2.0",
     "rxjs": "^6.6.6",
+    "use-state-ref": "^1.0.0",
     "webextension-polyfill-ts": "^0.25.0"
   },
   "devDependencies": {

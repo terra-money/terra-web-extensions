@@ -26,5 +26,7 @@ yarn-error.log*
 # output
 coverage/
 out/
+dev/
 test/storage/
 .eslintcache
+tsconfig.tsbuildinfo

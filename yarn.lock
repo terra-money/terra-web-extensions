@@ -3323,6 +3323,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@terra-dev/use-local-storage@npm:^0.1.0":
+  version: 0.1.0
+  resolution: "@terra-dev/use-local-storage@npm:0.1.0"
+  dependencies:
+    react: ^17.0.1
+  checksum: 3a9d5938e59de0189dc52186e41233d81ec4054610d4b70aa00e6770d756aab8316cf2ad65f599398baedfac4ac3983ef055da8cb3901b1eb5c226e5e5e1273f
+  languageName: node
+  linkType: hard
+
 "@terra-money/terra.js@npm:^1.6.0":
   version: 1.6.0
   resolution: "@terra-money/terra.js@npm:1.6.0"
@@ -8944,7 +8953,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-deep-equal@npm:^3.1.1":
+"fast-deep-equal@npm:^3.1.1, fast-deep-equal@npm:^3.1.3":
   version: 3.1.3
   resolution: "fast-deep-equal@npm:3.1.3"
   checksum: 451526766b219503131d11e823eaadd1533080b0be4860e316670b039dcaf31cd1007c2fe036a9b922abba7c040dfad5e942ed79d21f2ff849e50049f36e0fb7
@@ -16368,7 +16377,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"react@npm:>=16.0.0, react@npm:^17.0.2":
+"react@npm:>=16.0.0, react@npm:>=16.8.0, react@npm:^17.0.1, react@npm:^17.0.2":
   version: 17.0.2
   resolution: "react@npm:17.0.2"
   dependencies:
@@ -19454,6 +19463,15 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"use-state-ref@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "use-state-ref@npm:1.0.0"
+  dependencies:
+    react: ">=16.8.0"
+  checksum: 0dfb6a723098540600bac1779e2a7356ee76d3a5f4f111a53395a1827e115e61399de8d8c3835c5858bcb108263658b523d18ed75ea32ab72c0e835542bd073e
+  languageName: node
+  linkType: hard
+
 "use@npm:^3.1.0":
   version: 3.1.1
   resolution: "use@npm:3.1.1"
@@ -19759,6 +19777,7 @@ fsevents@^1.2.7:
     "@storybook/addon-essentials": ^6.1.21
     "@storybook/addon-storysource": ^6.1.21
     "@storybook/react": ^6.1.21
+    "@terra-dev/use-local-storage": ^0.1.0
     "@terra-money/terra.js": ^1.6.0
     "@types/chrome": ^0.0.133
     "@types/crypto-js": ^4.0.1
@@ -19771,6 +19790,7 @@ fsevents@^1.2.7:
     cross-env: ^7.0.3
     crypto-browserify: ^3.12.0
     crypto-js: ^4.0.0
+    fast-deep-equal: ^3.1.3
     jest: ^26.6.3
     lint-staged: ^10.5.4
     multiplerun: ^2.0.1
@@ -19784,6 +19804,7 @@ fsevents@^1.2.7:
     ts-node: ^9.1.1
     tsconfig-paths: ^3.9.0
     typescript: ^4.2.3
+    use-state-ref: ^1.0.0
     web-vitals: ^1.1.1
     webextension-polyfill-ts: ^0.25.0
   languageName: unknown

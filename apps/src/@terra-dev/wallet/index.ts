@@ -1,12 +1,21 @@
 import { decrypt, encrypt } from '@terra-dev/crypto';
 import { MnemonicKey } from '@terra-money/terra.js';
 
-export type EncryptedWallet = string & { __nominal: 'encrypted-wallet' };
+export type EncryptedWalletString = string & { __nominal: 'encrypted-wallet' };
 
 export interface Wallet {
   privateKey: string;
   publicKey: string;
   terraAddress: string;
+}
+
+export interface WalletInfo {
+  name: string;
+  terraAddress: string;
+}
+
+export interface EncryptedWallet extends WalletInfo {
+  encryptedWallet: EncryptedWalletString;
 }
 
 export function createMnemonicKey(): MnemonicKey {
@@ -28,12 +37,12 @@ export function createWallet(mk: MnemonicKey): Wallet {
 export function encryptWallet(
   wallet: Wallet,
   password: string,
-): EncryptedWallet {
-  return encrypt(JSON.stringify(wallet), password) as EncryptedWallet;
+): EncryptedWalletString {
+  return encrypt(JSON.stringify(wallet), password) as EncryptedWalletString;
 }
 
 export function decryptWallet(
-  encrypedWallet: EncryptedWallet,
+  encrypedWallet: EncryptedWalletString,
   password: string,
 ): Wallet {
   return JSON.parse(decrypt(encrypedWallet, password));

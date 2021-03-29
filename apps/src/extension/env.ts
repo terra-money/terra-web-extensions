@@ -1,1 +1,0 @@
-export const CONTENT_AND_BACKGROUND_CONNECTION_NAME = 'terra-connect-bridge';

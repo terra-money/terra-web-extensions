@@ -1,0 +1,24 @@
+# Flows
+
+- Frontend
+    - clients
+        - WebExtensionClient
+        - NodeClient + ElectronClient (proxy)
+    - core
+        - interface WalletClient
+        - walletClient.status() -> NO_AVAILABLE | READY
+        - walletClient.subscribe(({ wallets: WalletLabel[] }) => {})
+        - walletClient.refetch()
+        - walletClient.execute({ tx }) -> Observable<TxResult>
+    - react
+        - <WalletProvider client={ WalletClient }>
+        - const { wallets: WalletLabel[], refetchWallet } = useWallet()
+- Backend
+    - backends
+        - WebExtensionBackend
+        - NodeBackend
+    - core
+        - interface WalletBackend
+        - walletBackend.refetch.addListener(() => { })
+        - walletBackend.execute.addListener(({ tx }) => { })
+        - walletBackend.update({ wallets })
