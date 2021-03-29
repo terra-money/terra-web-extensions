@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json.schemastore.org/chrome-manifest",
+  "manifest_version": 2,
+  
+  "name": "Terra Connect",
+  "description": "Terra Connect",
+  "version": "0.1.0",
+  
+  "permissions": [
+    "tabs",
+    "management",
+    "topSites",
+    "bookmarks",
+    "storage"
+  ],
+  
+  "icons": {
+    "16": "icons/icon-32.png",
+    "48": "icons/icon-128.png",
+    "128": "icons/icon-128.png"
+  },
+  
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": true
+  },
+  
+  "content_scripts": [{
+    "js": ["content.js"],
+    "matches": ["<all_urls>"],
+    "run_at": "document_start",
+    "all_frames": true
+  }],
+  
+  "web_accessible_resources": [
+    "inpage.js"
+  ],
+  
+  "browser_action": {
+    "default_icon": {
+      "16": "icons/icon-32.png",
+      "32": "icons/icon-32.png"
+    },
+    "default_title": "TODO: Browser Action Title",
+    "default_popup": "popup.html"
+  },
+  
+  "options_page": "options.html"
+}
