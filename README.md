@@ -1,67 +1,35 @@
-# WORKSPACE TEMPLATE
+# Development
 
-## Start web project
-
-```sh
-# create a workspace directory
-npx generate-github-directory https://github.com/rocket-hangar/workspace-template my-project
-cd my-project
-
-# create an app
-npx generate-github-directory https://github.com/rocket-hangar/rocket-scripts-templates/tree/master/templates/web my-app
-
-# add "my-app" to workspaces of package.json
-
-# install
-yarn
-
-# start
-cd my-app
-
-# start
-yarn run start
-```
-
-## Start electron project
+## 1. Run development
 
 ```sh
-# create a workspace directory
-npx generate-github-directory https://github.com/rocket-hangar/workspace-template my-project
-cd my-project
-
-# create an app
-npx generate-github-directory https://github.com/rocket-hangar/rocket-scripts-templates/tree/master/templates/electron my-app
-
-# add "my-app" to workspaces of package.json
-
-# install
-yarn
-
-# directory
-cd my-app
-
-# start
-yarn run start
+yarn install
+cd apps
+yarn run webextension:dev
 ```
 
-## Start multi-packages project
+## 2-1. Chrome
 
-```sh
-# create a workspace directory
-npx generate-github-directory https://github.com/rocket-hangar/workspace-template my-project
-cd my-project
+1. Go to `chrome://extensions` page
+2. Turn on "Developer mode" on right top corner
+3. Click "Load unpacked"
+4. Choose the `~/apps/dev/webextension` directory
 
-# create an app
-npx generate-github-directory https://github.com/rocket-hangar/rocket-punch-templates/tree/master/templates/packages my-packages
+## 2-2. Firefox
 
-# add "my-packages" to workspaces of package.json
+1. Go to `about:debugging`
+2. Go to "This firefox"
+3. Click "Load Temporary Add-on"
+4. Choose the `~/apps/dev/webextension` directory
 
-# install
-yarn
+## 2-3. Safari
 
-# start
-cd my-packages
+1. Allow `Develop / Allow Unsigned Extensions` on the Safari Menubar 
+2. Open XCode project the `~/safari-webextension/terra-connect`
+3. Run
 
-# start
-yarn run test
-```
+## 3. Debugging Web and Web Extension
+
+<img src="readme-assets/terminals.png" width="700" alt="Terminals" />
+
+1. Open `http://localhost:8001` (see the second terminal `keys` line)
