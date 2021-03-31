@@ -1,17 +1,32 @@
 import { ClientStates } from '@terra-dev/terra-connect';
+import {
+  SerializedTx,
+  TxDenied,
+  TxFail,
+  TxProgress,
+  TxSucceed,
+} from '@terra-dev/tx';
 import { observeNetworkStorage } from '@terra-dev/webextension-network-storage';
 import { observeWalletStorage } from '@terra-dev/webextension-wallet-storage';
-import { BehaviorSubject, combineLatest } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { defaultNetworks } from 'webextension/env';
 import {
   ExtensionClientStatesUpdated,
+  ExtensionTxResponse,
   FromContentScriptToWebMessage,
   FromWebToContentScriptMessage,
   isExtensionMessage,
 } from '../internal';
 
-export function initContentScript() {
+export interface ContentScriptOptions {
+  onTx: (
+    terraAddress: string,
+    tx: SerializedTx,
+  ) => Observable<TxProgress | TxSucceed | TxFail | TxDenied>;
+}
+
+export function initContentScript({ onTx }: ContentScriptOptions) {
   const meta = document.querySelector('head > meta[name="terra-connect"]');
 
   if (!meta) return;
@@ -28,6 +43,19 @@ export function initContentScript() {
       switch (event.data.type) {
         case FromWebToContentScriptMessage.REFETCH_CLIENT_STATES:
           extensionStateLastUpdated.next(Date.now());
+          break;
+        case FromWebToContentScriptMessage.EXECUTE_TX:
+          onTx(event.data.terraAddress, event.data.payload).subscribe(
+            (txResult) => {
+              const msg: ExtensionTxResponse = {
+                type: FromContentScriptToWebMessage.TX_RESPONSE,
+                id: event.data.id,
+                payload: txResult,
+              };
+
+              window.postMessage(msg, '*');
+            },
+          );
           break;
       }
     },

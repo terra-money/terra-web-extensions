@@ -3,7 +3,9 @@ import { render } from 'react-dom';
 import { HashRouter } from 'react-router-dom';
 
 function Main() {
-  return <div>Tx</div>;
+  const queries = window.location.search;
+
+  return <div>Tx!!! {queries}</div>;
 }
 
 render(

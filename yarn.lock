@@ -5,6 +5,68 @@ __metadata:
   version: 4
   cacheKey: 7
 
+"@anchor-protocol/anchor.js@npm:^0.1.14":
+  version: 0.1.18
+  resolution: "@anchor-protocol/anchor.js@npm:0.1.18"
+  dependencies:
+    "@terra-money/terra.js": ^1.3.6
+    yaml: ^1.10.0
+  checksum: e2b993f4abf50244efd381304a7a1aa52e19f636f51c1c443def79584106f429c07270d28e9d104071070adb093c1490498d1bf30013287960cfceedf588a0bf
+  languageName: node
+  linkType: hard
+
+"@anchor-protocol/notation@npm:^0.1.0":
+  version: 0.1.0
+  resolution: "@anchor-protocol/notation@npm:0.1.0"
+  dependencies:
+    "@anchor-protocol/types": ^0.1.0
+    "@terra-dev/big-interpolate": ^0.1.0
+    big.js: ^6.0.3
+    d3-ease: ^2.0.0
+    d3-timer: ^2.0.0
+    numeral: ^2.0.6
+    react: ^17.0.1
+  checksum: a2578770613f9e9603150485a55ed7917a5f4043f495bf4ea9d63c3bfbddeed0c4bcfed75b41e7331a66ff3c64d16e87a3b8edc0d7bead04f4b9b1f8fb587fe9
+  languageName: node
+  linkType: hard
+
+"@anchor-protocol/types@npm:^0.1.0":
+  version: 0.1.0
+  resolution: "@anchor-protocol/types@npm:0.1.0"
+  checksum: 45ba62634dd738365e6b81594a8be7d37a9ed7ffbbec582ee8440f5a3718c4037c75fa2d702722c7a138716e7899b50a4de4421f3712dd0d2c54b1e2077b68b7
+  languageName: node
+  linkType: hard
+
+"@apollo/client@npm:^3.3.13":
+  version: 3.3.13
+  resolution: "@apollo/client@npm:3.3.13"
+  dependencies:
+    "@graphql-typed-document-node/core": ^3.0.0
+    "@types/zen-observable": ^0.8.0
+    "@wry/context": ^0.6.0
+    "@wry/equality": ^0.4.0
+    fast-json-stable-stringify: ^2.0.0
+    graphql-tag: ^2.12.0
+    hoist-non-react-statics: ^3.3.2
+    optimism: ^0.15.0
+    prop-types: ^15.7.2
+    symbol-observable: ^2.0.0
+    ts-invariant: ^0.7.0
+    tslib: ^1.10.0
+    zen-observable: ^0.8.14
+  peerDependencies:
+    graphql: ^14.0.0 || ^15.0.0
+    react: ^16.8.0 || ^17.0.0
+    subscriptions-transport-ws: ^0.9.0
+  peerDependenciesMeta:
+    react:
+      optional: true
+    subscriptions-transport-ws:
+      optional: true
+  checksum: b53741ce60cbbf5a55f58b590fa76a56af1b1db35ab8dd521a79bfa003033f1134f2ab4917d2b6c86f99e60c0edf317cbf569e9840f0d78bff53285fc48d6697
+  languageName: node
+  linkType: hard
+
 "@babel/code-frame@npm:7.10.4":
   version: 7.10.4
   resolution: "@babel/code-frame@npm:7.10.4"
@@ -1693,6 +1755,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@graphql-typed-document-node/core@npm:^3.0.0":
+  version: 3.1.0
+  resolution: "@graphql-typed-document-node/core@npm:3.1.0"
+  peerDependencies:
+    graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
+  checksum: f1c90f749b516ad67aa1eaeca1fdbe915ed1737464c6f99fb8571e301ade486587711b7bbdda4994068fd652992de7ed03538c7b6e585194edfa25feedf73e04
+  languageName: node
+  linkType: hard
+
 "@handbook/markdown-source-import@npm:^1.1.0":
   version: 1.1.0
   resolution: "@handbook/markdown-source-import@npm:1.1.0"
@@ -3323,16 +3394,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@terra-dev/use-local-storage@npm:^0.1.0":
+"@terra-dev/big-interpolate@npm:^0.1.0":
   version: 0.1.0
-  resolution: "@terra-dev/use-local-storage@npm:0.1.0"
+  resolution: "@terra-dev/big-interpolate@npm:0.1.0"
   dependencies:
-    react: ^17.0.1
-  checksum: 3a9d5938e59de0189dc52186e41233d81ec4054610d4b70aa00e6770d756aab8316cf2ad65f599398baedfac4ac3983ef055da8cb3901b1eb5c226e5e5e1273f
+    big.js: ^6.0.3
+    d3-ease: ^2.0.0
+  checksum: 21d8015e41426d993b8d28e645a7635e391e1cd7da172061777a285ad16bdf793b0b833d09e215e2b0e447ec7f93f0070aa84d8ddf6c782440b2858032eda9a4
   languageName: node
   linkType: hard
 
-"@terra-money/terra.js@npm:^1.6.0":
+"@terra-dev/use-map@npm:^0.1.0":
+  version: 0.1.0
+  resolution: "@terra-dev/use-map@npm:0.1.0"
+  dependencies:
+    react: ^17.0.1
+  checksum: 7eb9dc0671f38dbfc7e36cd180c858190d588dd77fdbb38895b0eb00eaa39ae347b414c8c006ba2dbad88c9de63b54ff50aa060347a397e38f8d774ae222dac6
+  languageName: node
+  linkType: hard
+
+"@terra-money/terra.js@npm:^1.3.6, @terra-money/terra.js@npm:^1.6.0":
   version: 1.6.0
   resolution: "@terra-money/terra.js@npm:1.6.0"
   dependencies:
@@ -3397,6 +3478,13 @@ __metadata:
   dependencies:
     "@babel/types": ^7.3.0
   checksum: 676150e00d1f6b535a3c53f9c22ae4abb3707abdbf71a9ebf200a8722fc0cd9b7c677165c0dea35616fed5af9f93b40aaa58ba56fd21bb2c843cd03c12419afd
+  languageName: node
+  linkType: hard
+
+"@types/big.js@npm:^6.0.2":
+  version: 6.0.2
+  resolution: "@types/big.js@npm:6.0.2"
+  checksum: d6bfcf0d0a5f24ff0e0c53495a88ad4abfecc774135c2ed91f7adcd9cb6003efdfa7f0678c695354d9f069b6d390ec7586383117108425cbdcb14d07e7ea4fc4
   languageName: node
   linkType: hard
 
@@ -3939,6 +4027,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/zen-observable@npm:^0.8.0":
+  version: 0.8.2
+  resolution: "@types/zen-observable@npm:0.8.2"
+  checksum: f48643c09a5fb00503d5b5c156779870bc5c96c4cc7f3d0f643619752a04eed784de6a37c9121e284d2cdd8ec70e3e00a73613797f009f37dbe6795ffb9607c5
+  languageName: node
+  linkType: hard
+
 "@typescript-eslint/eslint-plugin@npm:^3.10.1":
   version: 3.10.1
   resolution: "@typescript-eslint/eslint-plugin@npm:3.10.1"
@@ -4356,6 +4451,33 @@ __metadata:
     "@webassemblyjs/wast-parser": 1.9.0
     "@xtuc/long": 4.2.2
   checksum: 9f013b27e28b60cb215011079a15c94d1a7b0784eb3b59ec4936f8c0635ecdb58875c6809485cff814e01df170f02c18676cf782826795dc08553b98e69c1049
+  languageName: node
+  linkType: hard
+
+"@wry/context@npm:^0.6.0":
+  version: 0.6.0
+  resolution: "@wry/context@npm:0.6.0"
+  dependencies:
+    tslib: ^2.1.0
+  checksum: c1452ba9009a13ddf86c98b7051167304fdeb9284438d9c7ccb2f86a3f9724fd2ce5685574d5949cd4a66918dd230fbb61185b62b5dbd1760a8dea4b6c6900c0
+  languageName: node
+  linkType: hard
+
+"@wry/equality@npm:^0.4.0":
+  version: 0.4.0
+  resolution: "@wry/equality@npm:0.4.0"
+  dependencies:
+    tslib: ^2.1.0
+  checksum: 87c2b705edf0cc81e8b034367765762f3d2a1a0bfd9163b70389398bc0fc0338e1f8d68b2eaa70b0f5101c455bf5d419ae4a4f03f7f7697803e34adb9ca86b72
+  languageName: node
+  linkType: hard
+
+"@wry/trie@npm:^0.3.0":
+  version: 0.3.0
+  resolution: "@wry/trie@npm:0.3.0"
+  dependencies:
+    tslib: ^2.1.0
+  checksum: 74305830c7138924772073fbe6aeaadf2a9a55bc16ac4a2436f17dff83bb32950a17dbbb4fcdfb9f63977a53e3f8cda0dd33b18cfdbd5ba6f6484f84d12a504e
   languageName: node
   linkType: hard
 
@@ -5664,6 +5786,13 @@ __metadata:
   version: 5.2.2
   resolution: "big.js@npm:5.2.2"
   checksum: ea33d7d25674df4253ae3667da7f48ade6cc8828cb4f2c3a7753f53975f10cebae57e0d1ecf84f1b920b5467262dc0d4f357e5e497b138472d0e64992a8402a4
+  languageName: node
+  linkType: hard
+
+"big.js@npm:^6.0.3":
+  version: 6.0.3
+  resolution: "big.js@npm:6.0.3"
+  checksum: 9c913208308acc60b10499d7deca50c9facf52cc664bee203b112e9e98daa1244470648e7da1f632d904808cdb863f2b303df9b447ed5b5bf4934988e3f3c307
   languageName: node
   linkType: hard
 
@@ -7502,6 +7631,20 @@ __metadata:
   version: 1.0.1
   resolution: "cyclist@npm:1.0.1"
   checksum: 74bc0a48c37bed8a430f103d0a880902768b7e3bcc0f9e098c4bd9630438c6b053b88e33c127e41316bb2da8d642a937015961a6cd563641ad2a5798dfecadd9
+  languageName: node
+  linkType: hard
+
+"d3-ease@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "d3-ease@npm:2.0.0"
+  checksum: 770df967fc54ef9c958966538688eab2c104188eb5a851072fc8e51e3191aa835f922f3249e8a11ecca60f35206801e5b429c8a0edd82b27323e69f821ba7d3f
+  languageName: node
+  linkType: hard
+
+"d3-timer@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "d3-timer@npm:2.0.0"
+  checksum: 4e2ba2f02ec74bdb531c7cc974e59f51c2d7784331368b0af6b07f01f894c9de48d73b465280e6e54d9e85dca7c06de8f955764a312ce43caa8bfdf35db2917c
   languageName: node
   linkType: hard
 
@@ -9897,6 +10040,24 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"graphql-tag@npm:^2.12.0":
+  version: 2.12.3
+  resolution: "graphql-tag@npm:2.12.3"
+  dependencies:
+    tslib: ^2.1.0
+  peerDependencies:
+    graphql: ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
+  checksum: ab3a7cdf57fa213d4f9efd1229476042f7d640376c0389656be43f32d34201f5ed90e60c3a54bcdb12712688136d6d9637bd45964b63f94a9a2c131b0fa78ef5
+  languageName: node
+  linkType: hard
+
+"graphql@npm:^15.5.0":
+  version: 15.5.0
+  resolution: "graphql@npm:15.5.0"
+  checksum: 789cdcb069a3e00592e779002217a6bc5fd09efad63ee8c4190c4b3ea96c89010e74f085fb1cba876a0bb0e324e01df2eddb84d79dca90a28e582bc425fef9ef
+  languageName: node
+  linkType: hard
+
 "gray-matter@npm:^4.0.2":
   version: 4.0.2
   resolution: "gray-matter@npm:4.0.2"
@@ -10216,7 +10377,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"hoist-non-react-statics@npm:^3.1.0, hoist-non-react-statics@npm:^3.3.0":
+"hoist-non-react-statics@npm:^3.1.0, hoist-non-react-statics@npm:^3.3.0, hoist-non-react-statics@npm:^3.3.2":
   version: 3.3.2
   resolution: "hoist-non-react-statics@npm:3.3.2"
   dependencies:
@@ -13883,6 +14044,13 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"numeral@npm:^2.0.6":
+  version: 2.0.6
+  resolution: "numeral@npm:2.0.6"
+  checksum: 962d3200e283add3e47dae023fa9f928c749c90cbf393fc17924954b59ae49dd9bafa9cd8bb1257d551cea54278ca3a07a30df8e0a8b85388dd78a13cf89b118
+  languageName: node
+  linkType: hard
+
 "nwsapi@npm:^2.2.0":
   version: 2.2.0
   resolution: "nwsapi@npm:2.2.0"
@@ -14087,6 +14255,16 @@ fsevents@^1.2.7:
   bin:
     opener: bin/opener-bin.js
   checksum: 855420de4ffbfed1a25f000e7d146c4194aa678cc113d428572de67f9491f6721183ffdeb705af3b08404e29f7ec451b88da9ae19347a515872803dfabef471c
+  languageName: node
+  linkType: hard
+
+"optimism@npm:^0.15.0":
+  version: 0.15.0
+  resolution: "optimism@npm:0.15.0"
+  dependencies:
+    "@wry/context": ^0.6.0
+    "@wry/trie": ^0.3.0
+  checksum: a9152e33a27be9b2b4a441387061a7e8aff9877872169eba49c11c07fee19b7369efd48f7530f5a65e142f46b63ba3c8a56c9b893eaa696e143f1fdff33760a2
   languageName: node
   linkType: hard
 
@@ -18410,6 +18588,13 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"symbol-observable@npm:^2.0.0":
+  version: 2.0.3
+  resolution: "symbol-observable@npm:2.0.3"
+  checksum: c022177891e0aa3169bbaaed68d928ff7a2b5f5b1b2bf655b99804ecfabe280a6f1042dd3bda609475e637c57141d39b33e692b6f6b5fdb29ce7f61cf77be57f
+  languageName: node
+  linkType: hard
+
 "symbol-tree@npm:^3.2.4":
   version: 3.2.4
   resolution: "symbol-tree@npm:3.2.4"
@@ -18910,6 +19095,15 @@ fsevents@^1.2.7:
   version: 2.0.12
   resolution: "ts-essentials@npm:2.0.12"
   checksum: 40556ad8f5f1628f3e2a2eee068791e430fb05668899f90ccec26acde3730cd27e311c34bf1ac6c963e19edeeb7be2d3130e914f9a489a986df2f8a020d38ec3
+  languageName: node
+  linkType: hard
+
+"ts-invariant@npm:^0.7.0":
+  version: 0.7.3
+  resolution: "ts-invariant@npm:0.7.3"
+  dependencies:
+    tslib: ^2.1.0
+  checksum: 2fef71589aba75dbde8aa82a8add90dbc356e741452181850cef32903374e4ca451e4bc063ea77d564296287659e465f2c2d639c0d44449fd64467348d37dd71
   languageName: node
   linkType: hard
 
@@ -19771,14 +19965,19 @@ fsevents@^1.2.7:
   version: 0.0.0-use.local
   resolution: "web-template@workspace:apps"
   dependencies:
+    "@anchor-protocol/anchor.js": ^0.1.14
+    "@anchor-protocol/notation": ^0.1.0
+    "@anchor-protocol/types": ^0.1.0
+    "@apollo/client": ^3.3.13
     "@rocket-scripts/web": ^2.1.2
     "@sentry/browser": ^6.2.3
     "@sentry/tracing": ^6.2.3
     "@storybook/addon-essentials": ^6.1.21
     "@storybook/addon-storysource": ^6.1.21
     "@storybook/react": ^6.1.21
-    "@terra-dev/use-local-storage": ^0.1.0
+    "@terra-dev/use-map": ^0.1.0
     "@terra-money/terra.js": ^1.6.0
+    "@types/big.js": ^6.0.2
     "@types/chrome": ^0.0.133
     "@types/crypto-js": ^4.0.1
     "@types/jest": ^26.0.22
@@ -19787,10 +19986,12 @@ fsevents@^1.2.7:
     "@types/react-dom": ^17.0.3
     "@types/react-router-dom": ^5.1.7
     "@types/webpack-env": ^1.16.0
+    big.js: ^6.0.3
     cross-env: ^7.0.3
     crypto-browserify: ^3.12.0
     crypto-js: ^4.0.0
     fast-deep-equal: ^3.1.3
+    graphql: ^15.5.0
     jest: ^26.6.3
     lint-staged: ^10.5.4
     multiplerun: ^2.0.1
@@ -20519,6 +20720,13 @@ fsevents@^1.2.7:
   dependencies:
     "@types/yoga-layout": 1.9.2
   checksum: e8db26850d5ea55d0538522245c2343d555e82d3528837cfb371040b4a877a7a4860aeb325e15fa5061bcca0a2dac6abd5af2051f584048009f2c5b4bb8afdf7
+  languageName: node
+  linkType: hard
+
+"zen-observable@npm:^0.8.14":
+  version: 0.8.15
+  resolution: "zen-observable@npm:0.8.15"
+  checksum: 7d155f8a75b9314f9f31e70a31edcd897b0e8a1313737502ab84a573e49d2c333b738e415c156334a6e910c363ce546b59fa7921eff61440285caa99c843df74
   languageName: node
   linkType: hard
 

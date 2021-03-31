@@ -8,7 +8,7 @@ export const defaultNetworks: Network[] = [
       lcd: 'https://lcd.terra.dev',
       fcd: 'https://fcd.terra.dev',
       ws: 'wss://fcd.terra.dev',
-      mantle: 'https://mantle.terra.dev',
+      mantle: 'https://mantle.anchorprotocol.com/',
     },
   },
   {
@@ -18,7 +18,7 @@ export const defaultNetworks: Network[] = [
       lcd: 'https://tequila-lcd.terra.dev',
       fcd: 'https://tequila-fcd.terra.dev',
       ws: 'wss://tequila-ws.terra.dev',
-      mantle: 'https://tequila-mantle.terra.dev',
+      mantle: 'https://tequila-mantle.anchorprotocol.com/',
     },
   },
 ];

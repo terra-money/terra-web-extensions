@@ -16,7 +16,7 @@ export interface ClientStates {
 
 export interface TerraConnectClient {
   status: () => Observable<ClientStatus>;
-  
+
   /**
    * @example
    * client.states()
@@ -30,7 +30,7 @@ export interface TerraConnectClient {
    *       })
    */
   states: () => Observable<ClientStates | null>;
-  
+
   /**
    * Refetch the clientsStates
    *
@@ -55,7 +55,7 @@ export interface TerraConnectClient {
    * Execute transaction
    *
    * @example
-   * client.execute({...your_tx})
+   * client.execute(your_terraAddress, {...your_tx})
    *       .subscribe((result: TxProgress | TxSucceed | TxFail | TxDenied) => {
    *          switch (result.status) {
    *            case TxStatus.PROGRESS:
@@ -80,7 +80,10 @@ export interface TerraConnectClient {
    * - Tx is Failed : TxProgress -> [...TxProgress] -> TxFail
    * - Tx is Succeed : TxProgress -> [...TxProgress] -> TxSucceed
    */
-  execute: (tx: Tx) => Observable<TxProgress | TxSucceed | TxFail | TxDenied>;
+  execute: (
+    terraAddress: string,
+    tx: Tx,
+  ) => Observable<TxProgress | TxSucceed | TxFail | TxDenied>;
 
   /**
    * Destroy this client

@@ -51,7 +51,7 @@ export class TerraConnectWebExtensionClient implements TerraConnectClient {
     return this._status.asObservable();
   };
 
-  execute = (tx: Tx) => {
+  execute = (terraAddress: string, tx: Tx) => {
     return new Observable<TxProgress | TxSucceed | TxFail | TxDenied>(
       (subscriber) => {
         subscriber.next({
@@ -63,6 +63,7 @@ export class TerraConnectWebExtensionClient implements TerraConnectClient {
         const msg: ExecuteExtensionTx = {
           type: FromWebToContentScriptMessage.EXECUTE_TX,
           id,
+          terraAddress,
           payload: serializeTx(tx),
         };
 

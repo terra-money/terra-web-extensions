@@ -1,5 +1,11 @@
 import { ClientStates } from '@terra-dev/terra-connect';
-import { SerializedTx, TxDenied, TxFail, TxSucceed } from '@terra-dev/tx';
+import {
+  SerializedTx,
+  TxDenied,
+  TxFail,
+  TxProgress,
+  TxSucceed,
+} from '@terra-dev/tx';
 
 // ---------------------------------------------
 // web -> content script
@@ -18,6 +24,9 @@ export interface ExecuteExtensionTx {
 
   /** primary id of this tx */
   id: number;
+
+  /** target terra wallet address */
+  terraAddress: string;
 
   /** transaction payload */
   payload: SerializedTx;
@@ -43,7 +52,7 @@ export interface ExtensionTxResponse {
   id: number;
 
   /** tx response */
-  payload: TxSucceed | TxFail | TxDenied;
+  payload: TxProgress | TxSucceed | TxFail | TxDenied;
 }
 
 export type ExtensionMessage =

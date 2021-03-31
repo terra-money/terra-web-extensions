@@ -1,4 +1,6 @@
+import { Wallet } from '@terra-dev/wallet';
 import { CreateTxOptions } from '@terra-money/terra.js';
+import { Observable } from 'rxjs';
 
 export enum TxStatus {
   PROGRESS = 'progress',
@@ -54,4 +56,13 @@ export function serializeTx(tx: Tx): SerializedTx {
     sequence: tx.sequence,
     feeDenoms: tx.feeDenoms,
   };
+}
+
+export function executeTx(
+  wallet: Wallet,
+  tx: SerializedTx,
+): Observable<TxProgress | TxSucceed | TxFail> {
+  return new Observable<TxProgress | TxSucceed | TxFail>((subscriber) => {
+    // TODO
+  });
 }
