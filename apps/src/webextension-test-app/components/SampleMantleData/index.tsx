@@ -1,3 +1,4 @@
+import { createHookMsg } from '@anchor-protocol/anchor.js/dist/utils/cw20/create-hook-msg';
 import {
   AnimateNumber,
   demicrofy,
@@ -66,7 +67,42 @@ export function SampleMantleData() {
     selectedWallet,
   ]);
 
-  const withdraw = useCallback(() => {}, []);
+  const withdraw = useCallback(() => {
+    if (!clientStates?.network || !selectedWallet) return;
+
+    const tx: Tx = {
+      fee: new StdFee(
+        gasFee,
+        new Coins({
+          uusd: new Int(MICRO).toString(),
+        }),
+      ),
+      gasAdjustment,
+      msgs: [
+        new MsgExecuteContract(selectedWallet.terraAddress, address.cw20.aUST, {
+          send: {
+            contract: address.moneyMarket.market,
+            amount: new Int(10 * MICRO).toString(),
+            msg: createHookMsg({
+              redeem_stable: {},
+            }),
+          },
+        }),
+      ],
+    };
+
+    execute(selectedWallet.terraAddress, clientStates.network, tx).subscribe(
+      console.log,
+    );
+  }, [
+    address.cw20.aUST,
+    address.moneyMarket.market,
+    clientStates?.network,
+    execute,
+    gasAdjustment,
+    gasFee,
+    selectedWallet,
+  ]);
 
   return (
     <section>
