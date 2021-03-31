@@ -15,11 +15,11 @@ import {
 import { Tx, TxStatus } from '@terra-dev/tx';
 import { Coins, Int, MsgExecuteContract, StdFee } from '@terra-money/terra.js';
 import React, { useCallback, useState } from 'react';
-import { pollTxInfo } from './queries/txInfos';
+import { GuardSpinner } from 'react-spinners-kit';
 import { useConstants } from '../../contexts/constants';
 import { useContractAddress } from '../../contexts/contract';
+import { pollTxInfo } from './queries/txInfos';
 import { useUserBalances } from './queries/userBalances';
-import { GuardSpinner, SpiralSpinner } from 'react-spinners-kit';
 
 export function SampleMantleData() {
   const [inProgress, setInProgress] = useState<boolean>(false);
