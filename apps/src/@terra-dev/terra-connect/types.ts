@@ -9,17 +9,34 @@ export enum ClientStatus {
   READY = 'ready',
 }
 
+export interface StatusInitializing {
+  type: ClientStatus.INITIALIZING;
+}
+
+export interface StatusNoAvailable {
+  type: ClientStatus.NO_AVAILABLE;
+  isSupportBrowser: boolean;
+  isInstalled: boolean;
+  installLink?: string;
+}
+
+export interface StatusReady {
+  type: ClientStatus.READY;
+}
+
 export interface ClientStates {
   wallets: WalletInfo[];
   network: Network;
 }
 
 export interface TerraConnectClient {
-  status: () => Observable<ClientStatus>;
+  status: () => Observable<
+    StatusInitializing | StatusNoAvailable | StatusReady
+  >;
 
   /**
    * @example
-   * client.states()
+   * client.clientStates()
    *       .subscribe(states => {
    *         if (!states) {
    *           console.log('client is still not ready')
@@ -29,7 +46,7 @@ export interface TerraConnectClient {
    *         }
    *       })
    */
-  states: () => Observable<ClientStates | null>;
+  clientStates: () => Observable<ClientStates | null>;
 
   /**
    * Refetch the clientsStates
@@ -38,7 +55,7 @@ export interface TerraConnectClient {
    * Normally, when the clientStates is changed, states() get the new clientStates.
    *
    * @example
-   * client.states()
+   * client.clientStates()
    *       .subscribe(states => {
    *         // 2. will get new clientStates
    *         console.log('Got new states', Date.now())
@@ -46,10 +63,10 @@ export interface TerraConnectClient {
    *
    * function callback() {
    *   // 1. refetch client states
-   *   client.refetch()
+   *   client.refetchClientStates()
    * }
    */
-  refetch: () => void;
+  refetchClientStates: () => void;
 
   /**
    * Execute transaction

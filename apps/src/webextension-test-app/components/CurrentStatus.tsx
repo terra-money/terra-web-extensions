@@ -4,5 +4,5 @@ import React from 'react';
 export function CurrentStatus() {
   const { status } = useTerraConnect();
 
-  return <p>{status}</p>;
+  return <p>{JSON.stringify(status)}</p>;
 }

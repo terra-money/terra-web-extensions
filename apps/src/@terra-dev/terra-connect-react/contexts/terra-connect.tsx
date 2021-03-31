@@ -2,6 +2,9 @@ import { Network } from '@terra-dev/network';
 import {
   ClientStates,
   ClientStatus,
+  StatusInitializing,
+  StatusNoAvailable,
+  StatusReady,
   TerraConnectClient,
 } from '@terra-dev/terra-connect';
 import { Tx, TxDenied, TxFail, TxProgress, TxSucceed } from '@terra-dev/tx';
@@ -24,7 +27,7 @@ export interface TerraConnectProviderProps {
 }
 
 export interface TerraConnect {
-  status: ClientStatus;
+  status: StatusInitializing | StatusNoAvailable | StatusReady;
   clientStates: ClientStates | null;
   refetchClientStates: () => void;
   execute: (
@@ -41,25 +44,31 @@ export function TerraConnectProvider({
   children,
   client,
 }: TerraConnectProviderProps) {
-  const [status, setStatus] = useState<ClientStatus>(ClientStatus.INITIALIZING);
+  const [status, setStatus] = useState<
+    StatusInitializing | StatusNoAvailable | StatusReady
+  >(() => ({
+    type: ClientStatus.INITIALIZING,
+  }));
   const [clientStates, setClientStates] = useState<ClientStates | null>(null);
 
   const refetchClientStates = useCallback(() => {
-    client.refetch();
+    client.refetchClientStates();
   }, [client]);
 
   useEffect(() => {
-    client.refetch();
+    client.refetchClientStates();
 
     const statusSubscription = client.status().subscribe((status) => {
       console.log('terra-connect.tsx..() status is', status);
       setStatus(status);
     });
 
-    const statesSubscription = client.states().subscribe((clientStates) => {
-      console.log('terra-connect.tsx..() clientStates are', clientStates);
-      setClientStates(clientStates);
-    });
+    const statesSubscription = client
+      .clientStates()
+      .subscribe((clientStates) => {
+        console.log('terra-connect.tsx..() clientStates are', clientStates);
+        setClientStates(clientStates);
+      });
 
     return () => {
       statusSubscription.unsubscribe();

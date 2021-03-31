@@ -5961,6 +5961,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"bowser@npm:^2.11.0":
+  version: 2.11.0
+  resolution: "bowser@npm:2.11.0"
+  checksum: d51e10d18909b7d01dd58c35466c63d419d503acda732ea6ca6a80c9cdc5c1bbf7c77abfcf620f75bba62521048292faec6d27b7e92f44bcd82b5f89bf46052f
+  languageName: node
+  linkType: hard
+
 "boxen@npm:^4.1.0":
   version: 4.2.0
   resolution: "boxen@npm:4.2.0"
@@ -20070,6 +20077,7 @@ fsevents@^1.2.7:
     "@types/styled-components": ^5.1.9
     "@types/webpack-env": ^1.16.0
     big.js: ^6.0.3
+    bowser: ^2.11.0
     cross-env: ^7.0.3
     crypto-browserify: ^3.12.0
     crypto-js: ^4.0.0
