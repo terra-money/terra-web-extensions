@@ -15,23 +15,26 @@ import {
 import { TerraConnectWebExtensionClient } from '@terra-dev/terra-connect-webextension';
 import React, { ReactNode, useMemo } from 'react';
 import { render } from 'react-dom';
-import { CurrentStatus } from 'webextension-test-app/components/CurrentStatus';
-import { CurrentWallet } from 'webextension-test-app/components/CurrentWallet';
-import { SampleMantleData } from 'webextension-test-app/components/SampleMantleData';
-import {
-  Constants,
-  ConstantsProvider,
-} from 'webextension-test-app/contexts/constants';
-import { ContractProvider } from 'webextension-test-app/contexts/contract';
 import { CurrentNetwork } from './components/CurrentNetwork';
+import { CurrentStatus } from './components/CurrentStatus';
+import { CurrentWallet } from './components/CurrentWallet';
+import { SampleMantleData } from './components/SampleMantleData';
 import { WalletSelector } from './components/WalletSelector';
+import { Constants, ConstantsProvider } from './contexts/constants';
+import { ContractProvider } from './contexts/contract';
 import { columbusContractAddresses, tequilaContractAddresses } from './env';
 
 const client = new TerraConnectWebExtensionClient(window);
 
 function AppProviders({ children }: { children: ReactNode }) {
+  // ---------------------------------------------
+  // terra connect
+  // ---------------------------------------------
   const { clientStates } = useTerraConnect();
 
+  // ---------------------------------------------
+  // graphql settings
+  // ---------------------------------------------
   const isMainnet = useMemo(() => {
     if (!clientStates) return false;
     return /^columbus/.test(clientStates.network.chainID);
@@ -78,10 +81,9 @@ function AppProviders({ children }: { children: ReactNode }) {
     [isMainnet],
   );
 
-  if (!client) {
-    return null;
-  }
-
+  // ---------------------------------------------
+  // presentation
+  // ---------------------------------------------
   return (
     <ConstantsProvider {...constants}>
       <ContractProvider
