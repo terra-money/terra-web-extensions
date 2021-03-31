@@ -6,7 +6,8 @@ import { map } from 'rxjs/operators';
 import { defaultNetworks } from 'webextension/env';
 import {
   ExtensionClientStatesUpdated,
-  ExtensionMessageType,
+  FromContentScriptToWebMessage,
+  FromWebToContentScriptMessage,
   isExtensionMessage,
 } from '../internal';
 
@@ -25,7 +26,7 @@ export function initContentScript() {
       }
 
       switch (event.data.type) {
-        case ExtensionMessageType.REFETCH_CLIENT_STATES:
+        case FromWebToContentScriptMessage.REFETCH_CLIENT_STATES:
           extensionStateLastUpdated.next(Date.now());
           break;
       }
@@ -62,7 +63,7 @@ export function initContentScript() {
     )
     .subscribe((clientStates) => {
       const msg: ExtensionClientStatesUpdated = {
-        type: ExtensionMessageType.CLIENT_STATES_UPDATED,
+        type: FromContentScriptToWebMessage.CLIENT_STATES_UPDATED,
         payload: clientStates,
       };
       window.postMessage(msg, '*');

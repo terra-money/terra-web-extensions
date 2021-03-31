@@ -1,4 +1,8 @@
-import { ClientStates, TerraConnectClient } from '@terra-dev/terra-connect';
+import {
+  ClientStates,
+  ClientStatus,
+  TerraConnectClient,
+} from '@terra-dev/terra-connect';
 import React, {
   Consumer,
   Context,
@@ -17,6 +21,7 @@ export interface TerraConnectProviderProps {
 }
 
 export interface TerraConnect {
+  status: ClientStatus;
   clientStates: ClientStates | null;
   refetchClientStates: () => void;
 }
@@ -28,6 +33,7 @@ export function TerraConnectProvider({
   children,
   client,
 }: TerraConnectProviderProps) {
+  const [status, setStatus] = useState<ClientStatus>(ClientStatus.INITIALIZING);
   const [clientStates, setClientStates] = useState<ClientStates | null>(null);
 
   const refetchClientStates = useCallback(() => {
@@ -37,21 +43,29 @@ export function TerraConnectProvider({
   useEffect(() => {
     client.refetch();
 
-    const subscription = client.states().subscribe((clientStates) => {
-      console.log('terra-connect.tsx..()', clientStates);
+    const statusSubscription = client.status().subscribe((status) => {
+      console.log('terra-connect.tsx..() status is', status);
+      setStatus(status);
+    });
+
+    const statesSubscription = client.states().subscribe((clientStates) => {
+      console.log('terra-connect.tsx..() clientStates are', clientStates);
       setClientStates(clientStates);
     });
+
     return () => {
-      subscription.unsubscribe();
+      statusSubscription.unsubscribe();
+      statesSubscription.unsubscribe();
     };
   }, [client]);
 
   const state = useMemo<TerraConnect>(
     () => ({
+      status,
       clientStates,
       refetchClientStates,
     }),
-    [clientStates, refetchClientStates],
+    [clientStates, refetchClientStates, status],
   );
 
   return (

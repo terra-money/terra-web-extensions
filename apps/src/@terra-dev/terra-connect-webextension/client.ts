@@ -1,36 +1,33 @@
-import { Network } from '@terra-dev/network';
 import {
   ClientStates,
   ClientStatus,
   TerraConnectClient,
-  Tx,
-  TxResult,
 } from '@terra-dev/terra-connect';
+import {
+  serializeTx,
+  Tx,
+  TxDenied,
+  TxFail,
+  TxProgress,
+  TxStatus,
+  TxSucceed,
+} from '@terra-dev/tx';
 import { BehaviorSubject, Observable } from 'rxjs';
 import {
-  ExtensionMessageType,
+  ExecuteExtensionTx,
+  FromContentScriptToWebMessage,
+  FromWebToContentScriptMessage,
   isExtensionMessage,
   RefetchExtensionClientStates,
 } from './internal';
 
 export class TerraConnectWebExtensionClient implements TerraConnectClient {
   private _status: BehaviorSubject<ClientStatus>;
-  private _network: BehaviorSubject<Network>;
   private _clientStates: BehaviorSubject<ClientStates | null>;
 
   constructor(private hostWindow: Window) {
     this._status = new BehaviorSubject<ClientStatus>(ClientStatus.INITIALIZING);
     this._clientStates = new BehaviorSubject<ClientStates | null>(null);
-    this._network = new BehaviorSubject<Network>({
-      name: 'testnet',
-      chainID: 'tequila-004',
-      servers: {
-        lcd: 'https://lcd.terra.dev',
-        fcd: 'https://fcd.terra.dev',
-        ws: 'wss://fcd.terra.dev',
-        mantle: 'https://mantle.terra.dev',
-      },
-    });
 
     const meta = document.querySelector('head > meta[name="terra-connect"]');
 
@@ -44,8 +41,9 @@ export class TerraConnectWebExtensionClient implements TerraConnectClient {
 
   refetch = () => {
     const msg: RefetchExtensionClientStates = {
-      type: ExtensionMessageType.REFETCH_CLIENT_STATES,
+      type: FromWebToContentScriptMessage.REFETCH_CLIENT_STATES,
     };
+
     window.postMessage(msg);
   };
 
@@ -53,15 +51,51 @@ export class TerraConnectWebExtensionClient implements TerraConnectClient {
     return this._status.asObservable();
   };
 
-  network = () => {
-    return this._network.asObservable();
-  };
-
   execute = (tx: Tx) => {
-    console.log('index.ts..execute()', tx);
-    return new Observable<TxResult>((subscriber) => {
-      // TODO
-    });
+    return new Observable<TxProgress | TxSucceed | TxFail | TxDenied>(
+      (subscriber) => {
+        subscriber.next({
+          status: TxStatus.PROGRESS,
+        });
+
+        const id = Date.now();
+
+        const msg: ExecuteExtensionTx = {
+          type: FromWebToContentScriptMessage.EXECUTE_TX,
+          id,
+          payload: serializeTx(tx),
+        };
+
+        window.postMessage(msg);
+
+        function callback(event: MessageEvent) {
+          if (
+            !isExtensionMessage(event.data) ||
+            event.data.type !== FromContentScriptToWebMessage.TX_RESPONSE ||
+            event.data.id !== id
+          ) {
+            return;
+          }
+
+          subscriber.next(event.data.payload);
+
+          if (
+            event.data.payload.status === TxStatus.SUCCEED ||
+            event.data.payload.status === TxStatus.FAIL ||
+            event.data.payload.status === TxStatus.DENIED
+          ) {
+            subscriber.complete();
+            window.removeEventListener('message', callback);
+          }
+        }
+
+        window.addEventListener('message', callback);
+
+        return () => {
+          window.removeEventListener('message', callback);
+        };
+      },
+    );
   };
 
   states = () => {
@@ -78,8 +112,12 @@ export class TerraConnectWebExtensionClient implements TerraConnectClient {
     }
 
     switch (event.data.type) {
-      case ExtensionMessageType.CLIENT_STATES_UPDATED:
+      case FromContentScriptToWebMessage.CLIENT_STATES_UPDATED:
         this._clientStates.next(event.data.payload);
+
+        if (this._status.getValue() !== ClientStatus.READY) {
+          this._status.next(ClientStatus.READY);
+        }
         break;
     }
   };

@@ -5,6 +5,7 @@ import {
 import { TerraConnectWebExtensionClient } from '@terra-dev/terra-connect-webextension';
 import React from 'react';
 import { render } from 'react-dom';
+import { CurrentStatus } from 'webextension-test-app/components/CurrentStatus';
 import { CurrentWallet } from 'webextension-test-app/components/CurrentWallet';
 import { CurrentNetwork } from './components/CurrentNetwork';
 import { WalletSelector } from './components/WalletSelector';
@@ -19,6 +20,7 @@ function App() {
           <WalletSelector />
         </header>
         <section>
+          <CurrentStatus />
           <CurrentNetwork />
           <CurrentWallet />
         </section>
