@@ -1,12 +1,18 @@
 import { browser, Runtime } from 'webextension-polyfill-ts';
+import {
+  getIdFromContentScriptPort,
+  getIdFromTxPort,
+  isContentScriptPort,
+  isTxPort,
+} from './env';
 
 const contentScriptPorts: Map<string, Runtime.Port> = new Map();
 
 browser.runtime.onConnect.addListener((port) => {
-  if (/content-[0-9]+/.test(port.name)) {
-    contentScriptPorts.set(port.name.substr(8), port);
-  } else if (/tx-[0-9]+/.test(port.name)) {
-    const id = port.name.substr(3);
+  if (isContentScriptPort(port.name)) {
+    contentScriptPorts.set(getIdFromContentScriptPort(port.name), port);
+  } else if (isTxPort(port.name)) {
+    const id = getIdFromTxPort(port.name);
 
     const onMessage = (msg: unknown) => {
       const contentScriptPort = contentScriptPorts.get(id);

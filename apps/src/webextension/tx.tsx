@@ -6,6 +6,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { render } from 'react-dom';
 import styled from 'styled-components';
 import { browser } from 'webextension-polyfill-ts';
+import { txPortPrefix } from 'webextension/env';
 
 function MainBase({ className }: { className?: string }) {
   const txInfo = useMemo(() => {
@@ -65,7 +66,7 @@ function MainBase({ className }: { className?: string }) {
       );
 
       const port = browser.runtime.connect(undefined, {
-        name: 'tx-' + id,
+        name: txPortPrefix + id,
       });
 
       executeTx(wallet, network, tx).subscribe(

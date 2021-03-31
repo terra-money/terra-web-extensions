@@ -22,3 +22,13 @@ export const defaultNetworks: Network[] = [
     },
   },
 ];
+
+export const txPortPrefix = 'tx-';
+export const contentScriptPortPrefix = 'content-';
+
+export const isTxPort = (name: string) => /^tx-[0-9]+$/.test(name);
+export const isContentScriptPort = (name: string) =>
+  /^content-[0-9]+$/.test(name);
+
+export const getIdFromTxPort = (name: string) => name.substr(3);
+export const getIdFromContentScriptPort = (name: string) => name.substr(3);

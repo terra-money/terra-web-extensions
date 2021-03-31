@@ -16,6 +16,7 @@ import { render } from 'react-dom';
 import { Observable } from 'rxjs';
 import { browser } from 'webextension-polyfill-ts';
 import { TxModal } from 'webextension/components/TxModal';
+import { contentScriptPortPrefix } from 'webextension/env';
 
 function onTx(
   id: string,
@@ -44,7 +45,7 @@ function onTx(
       });
 
       const port = browser.runtime.connect(undefined, {
-        name: 'content-' + id,
+        name: contentScriptPortPrefix + id,
       });
 
       const onMessage = (msg: TxProgress | TxSucceed | TxFail | TxDenied) => {
