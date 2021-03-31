@@ -14,14 +14,18 @@ import {
 } from '@terra-dev/terra-connect-react';
 import { Tx, TxStatus } from '@terra-dev/tx';
 import { Coins, Int, MsgExecuteContract, StdFee } from '@terra-money/terra.js';
-import React, { useCallback } from 'react';
-import { pollTxInfo } from 'webextension-test-app/components/SampleMantleData/queries/txInfos';
-import { useConstants } from 'webextension-test-app/contexts/constants';
-import { useContractAddress } from 'webextension-test-app/contexts/contract';
+import React, { useCallback, useState } from 'react';
+import { pollTxInfo } from './queries/txInfos';
+import { useConstants } from '../../contexts/constants';
+import { useContractAddress } from '../../contexts/contract';
 import { useUserBalances } from './queries/userBalances';
+import { GuardSpinner, SpiralSpinner } from 'react-spinners-kit';
 
 export function SampleMantleData() {
+  const [inProgress, setInProgress] = useState<boolean>(false);
+
   const { clientStates, execute } = useTerraConnect();
+
   const { selectedWallet } = useWalletSelect();
 
   const client = useApolloClient();
@@ -37,6 +41,8 @@ export function SampleMantleData() {
 
   const deposit = useCallback(() => {
     if (!clientStates?.network || !selectedWallet) return;
+
+    setInProgress(true);
 
     const tx: Tx = {
       fee: new StdFee(
@@ -62,9 +68,11 @@ export function SampleMantleData() {
 
     execute(selectedWallet.terraAddress, clientStates.network, tx).subscribe(
       (txResult) => {
-        console.log(txResult);
         if (txResult.status === TxStatus.SUCCEED) {
-          pollTxInfo(client, txResult.payload.txhash).then(() => refetch());
+          pollTxInfo(client, txResult.payload.txhash).then(() => {
+            refetch();
+            setInProgress(false);
+          });
         }
       },
       (error) => console.error(error),
@@ -82,6 +90,8 @@ export function SampleMantleData() {
 
   const withdraw = useCallback(() => {
     if (!clientStates?.network || !selectedWallet) return;
+
+    setInProgress(true);
 
     const tx: Tx = {
       fee: new StdFee(
@@ -108,7 +118,10 @@ export function SampleMantleData() {
       (txResult) => {
         console.log(txResult);
         if (txResult.status === TxStatus.SUCCEED) {
-          pollTxInfo(client, txResult.payload.txhash).then(() => refetch());
+          pollTxInfo(client, txResult.payload.txhash).then(() => {
+            refetch();
+            setInProgress(false);
+          });
         }
       },
       (error) => console.error(error),
@@ -144,10 +157,14 @@ export function SampleMantleData() {
       </ul>
 
       <h2>Anchor Depost / Withdraw</h2>
-      <div>
-        <button onClick={deposit}>Deposit 10 UST</button>
-        <button onClick={withdraw}>Withdraw 10 aUST</button>
-      </div>
+      {inProgress ? (
+        <GuardSpinner />
+      ) : (
+        <div>
+          <button onClick={deposit}>Deposit 10 UST</button>
+          <button onClick={withdraw}>Withdraw 10 aUST</button>
+        </div>
+      )}
     </section>
   );
 }
