@@ -1,8 +1,10 @@
+import { Network } from '@terra-dev/network';
 import {
   ClientStates,
   ClientStatus,
   TerraConnectClient,
 } from '@terra-dev/terra-connect';
+import { Tx, TxDenied, TxFail, TxProgress, TxSucceed } from '@terra-dev/tx';
 import React, {
   Consumer,
   Context,
@@ -14,6 +16,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
+import { Observable } from 'rxjs';
 
 export interface TerraConnectProviderProps {
   children: ReactNode;
@@ -24,6 +27,11 @@ export interface TerraConnect {
   status: ClientStatus;
   clientStates: ClientStates | null;
   refetchClientStates: () => void;
+  execute: (
+    terraAddress: string,
+    network: Network,
+    tx: Tx,
+  ) => Observable<TxProgress | TxSucceed | TxFail | TxDenied>;
 }
 
 // @ts-ignore
@@ -64,8 +72,9 @@ export function TerraConnectProvider({
       status,
       clientStates,
       refetchClientStates,
+      execute: client.execute,
     }),
-    [clientStates, refetchClientStates, status],
+    [client.execute, clientStates, refetchClientStates, status],
   );
 
   return (

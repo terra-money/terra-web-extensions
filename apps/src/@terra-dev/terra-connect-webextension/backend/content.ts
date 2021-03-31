@@ -1,3 +1,4 @@
+import { Network } from '@terra-dev/network';
 import { ClientStates } from '@terra-dev/terra-connect';
 import {
   SerializedTx,
@@ -22,6 +23,7 @@ import {
 export interface ContentScriptOptions {
   onTx: (
     terraAddress: string,
+    network: Network,
     tx: SerializedTx,
   ) => Observable<TxProgress | TxSucceed | TxFail | TxDenied>;
 }
@@ -45,17 +47,19 @@ export function initContentScript({ onTx }: ContentScriptOptions) {
           extensionStateLastUpdated.next(Date.now());
           break;
         case FromWebToContentScriptMessage.EXECUTE_TX:
-          onTx(event.data.terraAddress, event.data.payload).subscribe(
-            (txResult) => {
-              const msg: ExtensionTxResponse = {
-                type: FromContentScriptToWebMessage.TX_RESPONSE,
-                id: event.data.id,
-                payload: txResult,
-              };
+          onTx(
+            event.data.terraAddress,
+            event.data.network,
+            event.data.payload,
+          ).subscribe((txResult) => {
+            const msg: ExtensionTxResponse = {
+              type: FromContentScriptToWebMessage.TX_RESPONSE,
+              id: event.data.id,
+              payload: txResult,
+            };
 
-              window.postMessage(msg, '*');
-            },
-          );
+            window.postMessage(msg, '*');
+          });
           break;
       }
     },

@@ -1,5 +1,6 @@
+import { Network } from '@terra-dev/network';
 import { Wallet } from '@terra-dev/wallet';
-import { CreateTxOptions } from '@terra-money/terra.js';
+import { CreateTxOptions, Msg, StdFee } from '@terra-money/terra.js';
 import { Observable } from 'rxjs';
 
 export enum TxStatus {
@@ -34,15 +35,9 @@ export interface TxDenied {
 
 export interface Tx extends CreateTxOptions {}
 
-export interface SerializedTx {
+export interface SerializedTx extends Omit<CreateTxOptions, 'msgs' | 'fee'> {
   msgs: string[];
   fee: string | undefined;
-  memo: string | undefined;
-  gasPrices: string | undefined;
-  gasAdjustment: string | undefined;
-  account_number: number | undefined;
-  sequence: number | undefined;
-  feeDenoms: string[] | undefined;
 }
 
 export function serializeTx(tx: Tx): SerializedTx {
@@ -58,8 +53,17 @@ export function serializeTx(tx: Tx): SerializedTx {
   };
 }
 
+export function deserializeTx(tx: SerializedTx): Tx {
+  return {
+    ...tx,
+    msgs: tx.msgs.map((msg) => Msg.fromData(JSON.parse(msg))),
+    fee: tx.fee ? StdFee.fromData(JSON.parse(tx.fee)) : undefined,
+  };
+}
+
 export function executeTx(
   wallet: Wallet,
+  network: Network,
   tx: SerializedTx,
 ): Observable<TxProgress | TxSucceed | TxFail> {
   return new Observable<TxProgress | TxSucceed | TxFail>((subscriber) => {

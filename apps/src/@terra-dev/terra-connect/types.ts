@@ -82,6 +82,7 @@ export interface TerraConnectClient {
    */
   execute: (
     terraAddress: string,
+    network: Network,
     tx: Tx,
   ) => Observable<TxProgress | TxSucceed | TxFail | TxDenied>;
 

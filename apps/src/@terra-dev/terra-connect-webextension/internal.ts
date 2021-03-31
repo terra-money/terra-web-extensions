@@ -1,3 +1,4 @@
+import { Network } from '@terra-dev/network';
 import { ClientStates } from '@terra-dev/terra-connect';
 import {
   SerializedTx,
@@ -27,6 +28,9 @@ export interface ExecuteExtensionTx {
 
   /** target terra wallet address */
   terraAddress: string;
+  
+  /** target network */
+  network: Network;
 
   /** transaction payload */
   payload: SerializedTx;

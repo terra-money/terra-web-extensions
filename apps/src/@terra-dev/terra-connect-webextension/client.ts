@@ -1,3 +1,4 @@
+import { Network } from '@terra-dev/network';
 import {
   ClientStates,
   ClientStatus,
@@ -44,14 +45,14 @@ export class TerraConnectWebExtensionClient implements TerraConnectClient {
       type: FromWebToContentScriptMessage.REFETCH_CLIENT_STATES,
     };
 
-    window.postMessage(msg);
+    this.hostWindow.postMessage(msg, '*');
   };
 
   status = () => {
     return this._status.asObservable();
   };
 
-  execute = (terraAddress: string, tx: Tx) => {
+  execute = (terraAddress: string, network: Network, tx: Tx) => {
     return new Observable<TxProgress | TxSucceed | TxFail | TxDenied>(
       (subscriber) => {
         subscriber.next({
@@ -64,12 +65,13 @@ export class TerraConnectWebExtensionClient implements TerraConnectClient {
           type: FromWebToContentScriptMessage.EXECUTE_TX,
           id,
           terraAddress,
+          network,
           payload: serializeTx(tx),
         };
 
-        window.postMessage(msg);
+        this.hostWindow.postMessage(msg, '*');
 
-        function callback(event: MessageEvent) {
+        const callback = (event: MessageEvent) => {
           if (
             !isExtensionMessage(event.data) ||
             event.data.type !== FromContentScriptToWebMessage.TX_RESPONSE ||
@@ -86,14 +88,14 @@ export class TerraConnectWebExtensionClient implements TerraConnectClient {
             event.data.payload.status === TxStatus.DENIED
           ) {
             subscriber.complete();
-            window.removeEventListener('message', callback);
+            this.hostWindow.removeEventListener('message', callback);
           }
-        }
+        };
 
-        window.addEventListener('message', callback);
+        this.hostWindow.addEventListener('message', callback);
 
         return () => {
-          window.removeEventListener('message', callback);
+          this.hostWindow.removeEventListener('message', callback);
         };
       },
     );
