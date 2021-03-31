@@ -2,9 +2,8 @@ import { Network } from '@terra-dev/network';
 import {
   ClientStates,
   ClientStatus,
-  StatusInitializing,
-  StatusNoAvailable,
-  StatusReady,
+  Message,
+  Status,
   TerraConnectClient,
 } from '@terra-dev/terra-connect';
 import {
@@ -17,7 +16,7 @@ import {
   TxSucceed,
 } from '@terra-dev/tx';
 import { getParser } from 'bowser';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import {
   ExecuteExtensionTx,
   FromContentScriptToWebMessage,
@@ -27,17 +26,15 @@ import {
 } from './internal';
 
 export class TerraConnectWebExtensionClient implements TerraConnectClient {
-  private _status: BehaviorSubject<
-    StatusInitializing | StatusNoAvailable | StatusReady
-  >;
+  private _status: BehaviorSubject<Status>;
+  private _message: Subject<Message<unknown>>;
   private _clientStates: BehaviorSubject<ClientStates | null>;
 
   constructor(private hostWindow: Window) {
-    this._status = new BehaviorSubject<
-      StatusInitializing | StatusNoAvailable | StatusReady
-    >({
+    this._status = new BehaviorSubject<Status>({
       type: ClientStatus.INITIALIZING,
     });
+    this._message = new Subject<Message<unknown>>();
     this._clientStates = new BehaviorSubject<ClientStates | null>(null);
 
     const meta = document.querySelector('head > meta[name="terra-connect"]');
@@ -67,7 +64,7 @@ export class TerraConnectWebExtensionClient implements TerraConnectClient {
     }
 
     hostWindow.addEventListener('message', this.onMessage);
-    
+
     this.refetchClientStates();
 
     setTimeout(() => {
@@ -112,6 +109,10 @@ export class TerraConnectWebExtensionClient implements TerraConnectClient {
 
   status = () => {
     return this._status.asObservable();
+  };
+
+  message = () => {
+    return this._message.asObservable();
   };
 
   execute = (terraAddress: string, network: Network, tx: Tx) => {

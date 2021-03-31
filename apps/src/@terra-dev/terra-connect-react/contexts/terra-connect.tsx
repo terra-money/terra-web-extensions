@@ -2,6 +2,7 @@ import { Network } from '@terra-dev/network';
 import {
   ClientStates,
   ClientStatus,
+  Status,
   StatusInitializing,
   StatusNoAvailable,
   StatusReady,
@@ -27,7 +28,8 @@ export interface TerraConnectProviderProps {
 }
 
 export interface TerraConnect {
-  status: StatusInitializing | StatusNoAvailable | StatusReady;
+  client: TerraConnectClient;
+  status: Status;
   clientStates: ClientStates | null;
   refetchClientStates: () => void;
   execute: (
@@ -59,14 +61,12 @@ export function TerraConnectProvider({
     client.refetchClientStates();
 
     const statusSubscription = client.status().subscribe((status) => {
-      console.log('terra-connect.tsx..() status is', status);
       setStatus(status);
     });
 
     const statesSubscription = client
       .clientStates()
       .subscribe((clientStates) => {
-        console.log('terra-connect.tsx..() clientStates are', clientStates);
         setClientStates(clientStates);
       });
 
@@ -78,12 +78,13 @@ export function TerraConnectProvider({
 
   const state = useMemo<TerraConnect>(
     () => ({
+      client,
       status,
       clientStates,
       refetchClientStates,
       execute: client.execute,
     }),
-    [client.execute, clientStates, refetchClientStates, status],
+    [client, clientStates, refetchClientStates, status],
   );
 
   return (

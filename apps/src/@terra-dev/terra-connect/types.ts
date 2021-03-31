@@ -24,15 +24,22 @@ export interface StatusReady {
   type: ClientStatus.READY;
 }
 
+export type Status = StatusInitializing | StatusNoAvailable | StatusReady;
+
 export interface ClientStates {
   wallets: WalletInfo[];
   network: Network;
 }
 
+export interface Message<T> {
+  type: string;
+  payload: T;
+}
+
 export interface TerraConnectClient {
-  status: () => Observable<
-    StatusInitializing | StatusNoAvailable | StatusReady
-  >;
+  status: () => Observable<Status>;
+
+  message: () => Observable<Message<unknown>>;
 
   /**
    * @example
