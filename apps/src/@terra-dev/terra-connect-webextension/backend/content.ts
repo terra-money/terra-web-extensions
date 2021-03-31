@@ -22,6 +22,7 @@ import {
 
 export interface ContentScriptOptions {
   onTx: (
+    id: string,
     terraAddress: string,
     network: Network,
     tx: SerializedTx,
@@ -48,6 +49,7 @@ export function initContentScript({ onTx }: ContentScriptOptions) {
           break;
         case FromWebToContentScriptMessage.EXECUTE_TX:
           onTx(
+            event.data.id.toString(),
             event.data.terraAddress,
             event.data.network,
             event.data.payload,

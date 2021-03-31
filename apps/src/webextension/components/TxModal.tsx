@@ -5,6 +5,7 @@ import styled from 'styled-components';
 
 export interface TxModalProps {
   className?: string;
+  id: string;
   src: string;
   terraAddress: string;
   network: Network;
@@ -14,6 +15,7 @@ export interface TxModalProps {
 
 function TxModalBase({
   className,
+  id,
   src,
   terraAddress,
   network,
@@ -28,7 +30,7 @@ function TxModalBase({
       <section>
         <iframe
           title="Tx"
-          src={`${src}?terraAddress=${terraAddress}&network=${networkBase64}&tx=${txBase64}`}
+          src={`${src}?id=${id}&terraAddress=${terraAddress}&network=${networkBase64}&tx=${txBase64}`}
         ></iframe>
         <button onClick={onClose}>Close</button>
       </section>

@@ -1,11 +1,11 @@
 import { Network } from '@terra-dev/network';
-import { deserializeTx, SerializedTx } from '@terra-dev/tx';
+import { executeTx, SerializedTx, TxFail, TxStatus } from '@terra-dev/tx';
 import { decryptWallet, EncryptedWallet, Wallet } from '@terra-dev/wallet';
 import { findWallet } from '@terra-dev/webextension-wallet-storage';
-import { LCDClient, RawKey } from '@terra-money/terra.js';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { render } from 'react-dom';
 import styled from 'styled-components';
+import { browser } from 'webextension-polyfill-ts';
 
 function MainBase({ className }: { className?: string }) {
   const txInfo = useMemo(() => {
@@ -14,11 +14,12 @@ function MainBase({ className }: { className?: string }) {
 
       const params = new URLSearchParams(queries);
 
+      const id = params.get('id');
       const terraAddress = params.get('terraAddress');
       const txBase64 = params.get('tx');
       const networkBase64 = params.get('network');
 
-      if (!terraAddress || !txBase64 || !networkBase64) {
+      if (!id || !terraAddress || !txBase64 || !networkBase64) {
         return undefined;
       }
 
@@ -26,6 +27,7 @@ function MainBase({ className }: { className?: string }) {
       const network: Network = JSON.parse(atob(networkBase64));
 
       return {
+        id,
         terraAddress,
         network,
         tx,
@@ -51,32 +53,36 @@ function MainBase({ className }: { className?: string }) {
 
   const submit = useCallback(
     async (
+      id: string,
       password: string,
       encryptedWallet: EncryptedWallet,
       network: Network,
       tx: SerializedTx,
     ) => {
-      const lcd = new LCDClient({
-        chainID: network.chainID,
-        URL: network.servers.lcd,
-        gasPrices: tx.gasPrices,
-        gasAdjustment: tx.gasAdjustment,
-      });
-
       const wallet: Wallet = decryptWallet(
         encryptedWallet.encryptedWallet,
         password,
       );
 
-      const { privateKey } = wallet;
+      const port = browser.runtime.connect(undefined, {
+        name: 'tx-' + id,
+      });
 
-      const key = new RawKey(Buffer.from(privateKey, 'hex'));
-
-      const signed = await lcd.wallet(key).createAndSignTx(deserializeTx(tx));
-
-      const data = await lcd.tx.broadcastSync(signed);
-
-      console.log('tx.tsx..()', data);
+      executeTx(wallet, network, tx).subscribe(
+        (result) => {
+          console.log('tx.tsx..()', result);
+          port.postMessage(result);
+        },
+        (error) => {
+          port.postMessage({
+            status: TxStatus.FAIL,
+            error,
+          } as TxFail);
+        },
+        () => {
+          port.disconnect();
+        },
+      );
     },
     [],
   );
@@ -102,7 +108,13 @@ function MainBase({ className }: { className?: string }) {
 
       <button
         onClick={() =>
-          submit(password, encryptedWallet, txInfo.network, txInfo.tx)
+          submit(
+            txInfo.id,
+            password,
+            encryptedWallet,
+            txInfo.network,
+            txInfo.tx,
+          )
         }
       >
         Submit!

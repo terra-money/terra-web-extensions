@@ -10,7 +10,8 @@ import { webpackPolyfills } from './webpackPolyfills';
       path.resolve(__dirname, '../public/webextension'),
     ],
     isolatedScripts: {
-      content: 'content.ts'
+      content: 'content.ts',
+      background: 'background.ts',
     },
     webpackConfig: webpackPolyfills,
   });

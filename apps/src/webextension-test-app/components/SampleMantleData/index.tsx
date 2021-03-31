@@ -7,13 +7,15 @@ import {
   MICRO,
 } from '@anchor-protocol/notation';
 import { aUST, UST } from '@anchor-protocol/types';
+import { useApolloClient } from '@apollo/client';
 import {
   useTerraConnect,
   useWalletSelect,
 } from '@terra-dev/terra-connect-react';
-import { Tx } from '@terra-dev/tx';
+import { Tx, TxStatus } from '@terra-dev/tx';
 import { Coins, Int, MsgExecuteContract, StdFee } from '@terra-money/terra.js';
 import React, { useCallback } from 'react';
+import { pollTxInfo } from 'webextension-test-app/components/SampleMantleData/queries/txInfos';
 import { useConstants } from 'webextension-test-app/contexts/constants';
 import { useContractAddress } from 'webextension-test-app/contexts/contract';
 import { useUserBalances } from './queries/userBalances';
@@ -22,12 +24,15 @@ export function SampleMantleData() {
   const { clientStates, execute } = useTerraConnect();
   const { selectedWallet } = useWalletSelect();
 
+  const client = useApolloClient();
+
   const address = useContractAddress();
 
   const { gasFee, gasAdjustment } = useConstants();
 
   const {
     data: { uUSD, uaUST },
+    refetch,
   } = useUserBalances();
 
   const deposit = useCallback(() => {
@@ -56,14 +61,22 @@ export function SampleMantleData() {
     };
 
     execute(selectedWallet.terraAddress, clientStates.network, tx).subscribe(
-      console.log,
+      (txResult) => {
+        console.log(txResult);
+        if (txResult.status === TxStatus.SUCCEED) {
+          pollTxInfo(client, txResult.payload.txhash).then(() => refetch());
+        }
+      },
+      (error) => console.error(error),
     );
   }, [
     address.moneyMarket.market,
+    client,
     clientStates?.network,
     execute,
     gasAdjustment,
     gasFee,
+    refetch,
     selectedWallet,
   ]);
 
@@ -92,15 +105,23 @@ export function SampleMantleData() {
     };
 
     execute(selectedWallet.terraAddress, clientStates.network, tx).subscribe(
-      console.log,
+      (txResult) => {
+        console.log(txResult);
+        if (txResult.status === TxStatus.SUCCEED) {
+          pollTxInfo(client, txResult.payload.txhash).then(() => refetch());
+        }
+      },
+      (error) => console.error(error),
     );
   }, [
     address.cw20.aUST,
     address.moneyMarket.market,
+    client,
     clientStates?.network,
     execute,
     gasAdjustment,
     gasFee,
+    refetch,
     selectedWallet,
   ]);
 

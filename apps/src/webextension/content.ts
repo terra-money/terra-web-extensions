@@ -18,6 +18,7 @@ import { browser } from 'webextension-polyfill-ts';
 import { TxModal } from 'webextension/components/TxModal';
 
 function onTx(
+  id: string,
   terraAddress: string,
   network: Network,
   tx: SerializedTx,
@@ -30,6 +31,7 @@ function onTx(
 
       const element = createElement(TxModal, {
         src: txHtml,
+        id,
         terraAddress,
         network,
         tx,
@@ -41,8 +43,30 @@ function onTx(
         },
       });
 
-      render(element, modal);
+      const port = browser.runtime.connect(undefined, {
+        name: 'content-' + id,
+      });
 
+      const onMessage = (msg: TxProgress | TxSucceed | TxFail | TxDenied) => {
+        if (!msg.status) {
+          return;
+        }
+
+        subscriber.next(msg);
+
+        switch (msg.status) {
+          case TxStatus.SUCCEED:
+          case TxStatus.FAIL:
+          case TxStatus.DENIED:
+            window.document.querySelector('body')?.removeChild(modal);
+            port.disconnect();
+            break;
+        }
+      };
+
+      port.onMessage.addListener(onMessage);
+
+      render(element, modal);
       window.document.querySelector('body')?.appendChild(modal);
     },
   );

@@ -20,6 +20,12 @@
     "128": "icons/icon-128.png"
   },
   
+  "background": {
+    "scripts": [
+      "background.js"
+    ]
+  },
+  
   "content_scripts": [{
     "js": ["content.js"],
     "matches": ["<all_urls>"],
@@ -41,5 +47,7 @@
   "web_accessible_resources": [
     "tx.html",
     "tx.js"
-  ]
+  ],
+  
+  "content_security_policy": "script-src 'self' 'sha256-/13BBW2yQVtpCsBV7JiO23y7pwEFFUobOzefJ27Nltg='; object-src 'self'"
 }

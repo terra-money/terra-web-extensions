@@ -1,6 +1,13 @@
 import { Network } from '@terra-dev/network';
 import { Wallet } from '@terra-dev/wallet';
-import { CreateTxOptions, Msg, StdFee } from '@terra-money/terra.js';
+import {
+  CreateTxOptions,
+  isTxError,
+  LCDClient,
+  Msg,
+  RawKey,
+  StdFee,
+} from '@terra-money/terra.js';
 import { Observable } from 'rxjs';
 
 export enum TxStatus {
@@ -19,7 +26,7 @@ export interface TxSucceed {
   status: TxStatus.SUCCEED;
   payload: {
     height: number;
-    rawLog: string;
+    raw_log: string;
     txhash: string;
   };
 }
@@ -67,6 +74,46 @@ export function executeTx(
   tx: SerializedTx,
 ): Observable<TxProgress | TxSucceed | TxFail> {
   return new Observable<TxProgress | TxSucceed | TxFail>((subscriber) => {
-    // TODO
+    const lcd = new LCDClient({
+      chainID: network.chainID,
+      URL: network.servers.lcd,
+      gasPrices: tx.gasPrices,
+      gasAdjustment: tx.gasAdjustment,
+    });
+
+    const { privateKey } = wallet;
+
+    const key = new RawKey(Buffer.from(privateKey, 'hex'));
+
+    lcd
+      .wallet(key)
+      .createAndSignTx(deserializeTx(tx))
+      .then((signed) => lcd.tx.broadcastSync(signed))
+      .then((data) => {
+        if (isTxError(data)) {
+          subscriber.next({
+            status: TxStatus.FAIL,
+            error: new Error(data.raw_log),
+          });
+          subscriber.complete();
+        } else {
+          subscriber.next({
+            status: TxStatus.SUCCEED,
+            payload: {
+              txhash: data.txhash,
+              height: data.height,
+              raw_log: data.raw_log,
+            },
+          });
+          subscriber.complete();
+        }
+      })
+      .catch((error) => {
+        subscriber.next({
+          status: TxStatus.FAIL,
+          error,
+        });
+        subscriber.complete();
+      });
   });
 }
