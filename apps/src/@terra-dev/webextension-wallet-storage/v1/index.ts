@@ -66,7 +66,7 @@ export function observeWalletStorage(): Observable<EncryptedWallet[]> {
     ) {
       if (areaName === 'local' && changes[storageKey]) {
         const { newValue } = changes[storageKey];
-        subscriber.next(newValue);
+        subscriber.next(newValue ?? []);
       }
     }
 
@@ -75,7 +75,7 @@ export function observeWalletStorage(): Observable<EncryptedWallet[]> {
     const safariChangeSubscription: Subscription = safariWebExtensionStorageChangeListener<
       EncryptedWallet[]
     >(storageKey).subscribe((nextValue) => {
-      subscriber.next(nextValue);
+      subscriber.next(nextValue ?? []);
     });
 
     readWalletStorage().then((wallets) => {

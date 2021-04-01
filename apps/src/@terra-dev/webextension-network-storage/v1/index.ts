@@ -87,7 +87,12 @@ export function observeNetworkStorage(): Observable<NetworkStorage> {
     ) {
       if (areaName === 'local' && changes[storageKey]) {
         const { newValue } = changes[storageKey];
-        subscriber.next(newValue);
+        subscriber.next(
+          newValue ?? {
+            networks: [],
+            selectedNetwork: undefined,
+          },
+        );
       }
     }
 
@@ -96,7 +101,12 @@ export function observeNetworkStorage(): Observable<NetworkStorage> {
     const safariChangeSubscription: Subscription = safariWebExtensionStorageChangeListener<NetworkStorage>(
       storageKey,
     ).subscribe((nextValue) => {
-      subscriber.next(nextValue);
+      subscriber.next(
+        nextValue ?? {
+          networks: [],
+          selectedNetwork: undefined,
+        },
+      );
     });
 
     readNetworkStorage().then((storage) => {
