@@ -3,7 +3,7 @@ import React from 'react';
 
 export function WalletSelector() {
   const { wallets, selectedWallet, selectWallet } = useWalletSelect();
-
+  
   return (
     <div>
       <ul>

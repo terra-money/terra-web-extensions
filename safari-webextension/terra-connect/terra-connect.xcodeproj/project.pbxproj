@@ -16,18 +16,18 @@
 		C697B8BE26131E0D0063FC79 /* terra-connect Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = C697B8BD26131E0D0063FC79 /* terra-connect Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C697B8C326131E0D0063FC79 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C697B8C226131E0D0063FC79 /* Cocoa.framework */; };
 		C697B8C626131E0D0063FC79 /* SafariWebExtensionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C697B8C526131E0D0063FC79 /* SafariWebExtensionHandler.swift */; };
-		C69D93552614C10900B6A848 /* options.html in Resources */ = {isa = PBXBuildFile; fileRef = C69D93432614C10900B6A848 /* options.html */; };
-		C69D93562614C10900B6A848 /* content.js in Resources */ = {isa = PBXBuildFile; fileRef = C69D93452614C10900B6A848 /* content.js */; };
-		C69D93572614C10900B6A848 /* icons in Resources */ = {isa = PBXBuildFile; fileRef = C69D93472614C10900B6A848 /* icons */; };
-		C69D93582614C10900B6A848 /* dashboard.js in Resources */ = {isa = PBXBuildFile; fileRef = C69D93482614C10900B6A848 /* dashboard.js */; };
-		C69D93592614C10900B6A848 /* tx.html in Resources */ = {isa = PBXBuildFile; fileRef = C69D93492614C10900B6A848 /* tx.html */; };
-		C69D935A2614C10900B6A848 /* popup.js in Resources */ = {isa = PBXBuildFile; fileRef = C69D934B2614C10900B6A848 /* popup.js */; };
-		C69D935B2614C10900B6A848 /* dashboard.html in Resources */ = {isa = PBXBuildFile; fileRef = C69D934C2614C10900B6A848 /* dashboard.html */; };
-		C69D935C2614C10900B6A848 /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = C69D934D2614C10900B6A848 /* manifest.json */; };
-		C69D935D2614C10900B6A848 /* tx.js in Resources */ = {isa = PBXBuildFile; fileRef = C69D93502614C10900B6A848 /* tx.js */; };
-		C69D935E2614C10900B6A848 /* background.js in Resources */ = {isa = PBXBuildFile; fileRef = C69D93512614C10900B6A848 /* background.js */; };
-		C69D935F2614C10900B6A848 /* options.js in Resources */ = {isa = PBXBuildFile; fileRef = C69D93522614C10900B6A848 /* options.js */; };
-		C69D93602614C10900B6A848 /* popup.html in Resources */ = {isa = PBXBuildFile; fileRef = C69D93542614C10900B6A848 /* popup.html */; };
+		C6E1C613261582FD00F7F542 /* options.js in Resources */ = {isa = PBXBuildFile; fileRef = C6E1C601261582FD00F7F542 /* options.js */; };
+		C6E1C614261582FD00F7F542 /* tx.js in Resources */ = {isa = PBXBuildFile; fileRef = C6E1C602261582FD00F7F542 /* tx.js */; };
+		C6E1C615261582FD00F7F542 /* background.js in Resources */ = {isa = PBXBuildFile; fileRef = C6E1C603261582FD00F7F542 /* background.js */; };
+		C6E1C616261582FD00F7F542 /* icons in Resources */ = {isa = PBXBuildFile; fileRef = C6E1C605261582FD00F7F542 /* icons */; };
+		C6E1C617261582FD00F7F542 /* dashboard.html in Resources */ = {isa = PBXBuildFile; fileRef = C6E1C607261582FD00F7F542 /* dashboard.html */; };
+		C6E1C618261582FD00F7F542 /* content.js in Resources */ = {isa = PBXBuildFile; fileRef = C6E1C60A261582FD00F7F542 /* content.js */; };
+		C6E1C619261582FD00F7F542 /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = C6E1C60B261582FD00F7F542 /* manifest.json */; };
+		C6E1C61A261582FD00F7F542 /* tx.html in Resources */ = {isa = PBXBuildFile; fileRef = C6E1C60C261582FD00F7F542 /* tx.html */; };
+		C6E1C61B261582FD00F7F542 /* dashboard.js in Resources */ = {isa = PBXBuildFile; fileRef = C6E1C60D261582FD00F7F542 /* dashboard.js */; };
+		C6E1C61C261582FD00F7F542 /* popup.html in Resources */ = {isa = PBXBuildFile; fileRef = C6E1C610261582FD00F7F542 /* popup.html */; };
+		C6E1C61D261582FD00F7F542 /* options.html in Resources */ = {isa = PBXBuildFile; fileRef = C6E1C611261582FD00F7F542 /* options.html */; };
+		C6E1C61E261582FD00F7F542 /* popup.js in Resources */ = {isa = PBXBuildFile; fileRef = C6E1C612261582FD00F7F542 /* popup.js */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -87,24 +87,24 @@
 		C697B8C526131E0D0063FC79 /* SafariWebExtensionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariWebExtensionHandler.swift; sourceTree = "<group>"; };
 		C697B8D826131E0D0063FC79 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C697B8D926131E0D0063FC79 /* terra_connect_Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = terra_connect_Extension.entitlements; sourceTree = "<group>"; };
-		C69D93432614C10900B6A848 /* options.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = options.html; path = ../../../../apps/dev/webextension/options.html; sourceTree = "<group>"; };
-		C69D93442614C10900B6A848 /* dashboard.js.map */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; name = dashboard.js.map; path = ../../../../apps/dev/webextension/dashboard.js.map; sourceTree = "<group>"; };
-		C69D93452614C10900B6A848 /* content.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = content.js; path = ../../../../apps/dev/webextension/content.js; sourceTree = "<group>"; };
-		C69D93462614C10900B6A848 /* content.js.map */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; name = content.js.map; path = ../../../../apps/dev/webextension/content.js.map; sourceTree = "<group>"; };
-		C69D93472614C10900B6A848 /* icons */ = {isa = PBXFileReference; lastKnownFileType = folder; name = icons; path = ../../../../apps/dev/webextension/icons; sourceTree = "<group>"; };
-		C69D93482614C10900B6A848 /* dashboard.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = dashboard.js; path = ../../../../apps/dev/webextension/dashboard.js; sourceTree = "<group>"; };
-		C69D93492614C10900B6A848 /* tx.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = tx.html; path = ../../../../apps/dev/webextension/tx.html; sourceTree = "<group>"; };
-		C69D934A2614C10900B6A848 /* tx.js.map */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; name = tx.js.map; path = ../../../../apps/dev/webextension/tx.js.map; sourceTree = "<group>"; };
-		C69D934B2614C10900B6A848 /* popup.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = popup.js; path = ../../../../apps/dev/webextension/popup.js; sourceTree = "<group>"; };
-		C69D934C2614C10900B6A848 /* dashboard.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = dashboard.html; path = ../../../../apps/dev/webextension/dashboard.html; sourceTree = "<group>"; };
-		C69D934D2614C10900B6A848 /* manifest.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = manifest.json; path = ../../../../apps/dev/webextension/manifest.json; sourceTree = "<group>"; };
-		C69D934E2614C10900B6A848 /* popup.js.map */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; name = popup.js.map; path = ../../../../apps/dev/webextension/popup.js.map; sourceTree = "<group>"; };
-		C69D934F2614C10900B6A848 /* background.js.map */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; name = background.js.map; path = ../../../../apps/dev/webextension/background.js.map; sourceTree = "<group>"; };
-		C69D93502614C10900B6A848 /* tx.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = tx.js; path = ../../../../apps/dev/webextension/tx.js; sourceTree = "<group>"; };
-		C69D93512614C10900B6A848 /* background.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = background.js; path = ../../../../apps/dev/webextension/background.js; sourceTree = "<group>"; };
-		C69D93522614C10900B6A848 /* options.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = options.js; path = ../../../../apps/dev/webextension/options.js; sourceTree = "<group>"; };
-		C69D93532614C10900B6A848 /* options.js.map */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; name = options.js.map; path = ../../../../apps/dev/webextension/options.js.map; sourceTree = "<group>"; };
-		C69D93542614C10900B6A848 /* popup.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = popup.html; path = ../../../../apps/dev/webextension/popup.html; sourceTree = "<group>"; };
+		C6E1C601261582FD00F7F542 /* options.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = options.js; path = ../../../../apps/dev/webextension/options.js; sourceTree = "<group>"; };
+		C6E1C602261582FD00F7F542 /* tx.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = tx.js; path = ../../../../apps/dev/webextension/tx.js; sourceTree = "<group>"; };
+		C6E1C603261582FD00F7F542 /* background.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = background.js; path = ../../../../apps/dev/webextension/background.js; sourceTree = "<group>"; };
+		C6E1C604261582FD00F7F542 /* options.js.map */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; name = options.js.map; path = ../../../../apps/dev/webextension/options.js.map; sourceTree = "<group>"; };
+		C6E1C605261582FD00F7F542 /* icons */ = {isa = PBXFileReference; lastKnownFileType = folder; name = icons; path = ../../../../apps/dev/webextension/icons; sourceTree = "<group>"; };
+		C6E1C606261582FD00F7F542 /* content.js.map */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; name = content.js.map; path = ../../../../apps/dev/webextension/content.js.map; sourceTree = "<group>"; };
+		C6E1C607261582FD00F7F542 /* dashboard.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = dashboard.html; path = ../../../../apps/dev/webextension/dashboard.html; sourceTree = "<group>"; };
+		C6E1C608261582FD00F7F542 /* tx.js.map */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; name = tx.js.map; path = ../../../../apps/dev/webextension/tx.js.map; sourceTree = "<group>"; };
+		C6E1C609261582FD00F7F542 /* dashboard.js.map */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; name = dashboard.js.map; path = ../../../../apps/dev/webextension/dashboard.js.map; sourceTree = "<group>"; };
+		C6E1C60A261582FD00F7F542 /* content.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = content.js; path = ../../../../apps/dev/webextension/content.js; sourceTree = "<group>"; };
+		C6E1C60B261582FD00F7F542 /* manifest.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = manifest.json; path = ../../../../apps/dev/webextension/manifest.json; sourceTree = "<group>"; };
+		C6E1C60C261582FD00F7F542 /* tx.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = tx.html; path = ../../../../apps/dev/webextension/tx.html; sourceTree = "<group>"; };
+		C6E1C60D261582FD00F7F542 /* dashboard.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = dashboard.js; path = ../../../../apps/dev/webextension/dashboard.js; sourceTree = "<group>"; };
+		C6E1C60E261582FD00F7F542 /* popup.js.map */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; name = popup.js.map; path = ../../../../apps/dev/webextension/popup.js.map; sourceTree = "<group>"; };
+		C6E1C60F261582FD00F7F542 /* background.js.map */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; name = background.js.map; path = ../../../../apps/dev/webextension/background.js.map; sourceTree = "<group>"; };
+		C6E1C610261582FD00F7F542 /* popup.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = popup.html; path = ../../../../apps/dev/webextension/popup.html; sourceTree = "<group>"; };
+		C6E1C611261582FD00F7F542 /* options.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = options.html; path = ../../../../apps/dev/webextension/options.html; sourceTree = "<group>"; };
+		C6E1C612261582FD00F7F542 /* popup.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = popup.js; path = ../../../../apps/dev/webextension/popup.js; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -216,24 +216,24 @@
 		C697B8C726131E0D0063FC79 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				C69D93512614C10900B6A848 /* background.js */,
-				C69D934F2614C10900B6A848 /* background.js.map */,
-				C69D93452614C10900B6A848 /* content.js */,
-				C69D93462614C10900B6A848 /* content.js.map */,
-				C69D934C2614C10900B6A848 /* dashboard.html */,
-				C69D93482614C10900B6A848 /* dashboard.js */,
-				C69D93442614C10900B6A848 /* dashboard.js.map */,
-				C69D93472614C10900B6A848 /* icons */,
-				C69D934D2614C10900B6A848 /* manifest.json */,
-				C69D93432614C10900B6A848 /* options.html */,
-				C69D93522614C10900B6A848 /* options.js */,
-				C69D93532614C10900B6A848 /* options.js.map */,
-				C69D93542614C10900B6A848 /* popup.html */,
-				C69D934B2614C10900B6A848 /* popup.js */,
-				C69D934E2614C10900B6A848 /* popup.js.map */,
-				C69D93492614C10900B6A848 /* tx.html */,
-				C69D93502614C10900B6A848 /* tx.js */,
-				C69D934A2614C10900B6A848 /* tx.js.map */,
+				C6E1C603261582FD00F7F542 /* background.js */,
+				C6E1C60F261582FD00F7F542 /* background.js.map */,
+				C6E1C60A261582FD00F7F542 /* content.js */,
+				C6E1C606261582FD00F7F542 /* content.js.map */,
+				C6E1C607261582FD00F7F542 /* dashboard.html */,
+				C6E1C60D261582FD00F7F542 /* dashboard.js */,
+				C6E1C609261582FD00F7F542 /* dashboard.js.map */,
+				C6E1C605261582FD00F7F542 /* icons */,
+				C6E1C60B261582FD00F7F542 /* manifest.json */,
+				C6E1C611261582FD00F7F542 /* options.html */,
+				C6E1C601261582FD00F7F542 /* options.js */,
+				C6E1C604261582FD00F7F542 /* options.js.map */,
+				C6E1C610261582FD00F7F542 /* popup.html */,
+				C6E1C612261582FD00F7F542 /* popup.js */,
+				C6E1C60E261582FD00F7F542 /* popup.js.map */,
+				C6E1C60C261582FD00F7F542 /* tx.html */,
+				C6E1C602261582FD00F7F542 /* tx.js */,
+				C6E1C608261582FD00F7F542 /* tx.js.map */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -387,18 +387,18 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C69D935D2614C10900B6A848 /* tx.js in Resources */,
-				C69D93602614C10900B6A848 /* popup.html in Resources */,
-				C69D93572614C10900B6A848 /* icons in Resources */,
-				C69D935A2614C10900B6A848 /* popup.js in Resources */,
-				C69D935F2614C10900B6A848 /* options.js in Resources */,
-				C69D93562614C10900B6A848 /* content.js in Resources */,
-				C69D935E2614C10900B6A848 /* background.js in Resources */,
-				C69D935B2614C10900B6A848 /* dashboard.html in Resources */,
-				C69D935C2614C10900B6A848 /* manifest.json in Resources */,
-				C69D93552614C10900B6A848 /* options.html in Resources */,
-				C69D93592614C10900B6A848 /* tx.html in Resources */,
-				C69D93582614C10900B6A848 /* dashboard.js in Resources */,
+				C6E1C618261582FD00F7F542 /* content.js in Resources */,
+				C6E1C61C261582FD00F7F542 /* popup.html in Resources */,
+				C6E1C619261582FD00F7F542 /* manifest.json in Resources */,
+				C6E1C61B261582FD00F7F542 /* dashboard.js in Resources */,
+				C6E1C61D261582FD00F7F542 /* options.html in Resources */,
+				C6E1C614261582FD00F7F542 /* tx.js in Resources */,
+				C6E1C616261582FD00F7F542 /* icons in Resources */,
+				C6E1C61E261582FD00F7F542 /* popup.js in Resources */,
+				C6E1C617261582FD00F7F542 /* dashboard.html in Resources */,
+				C6E1C615261582FD00F7F542 /* background.js in Resources */,
+				C6E1C61A261582FD00F7F542 /* tx.html in Resources */,
+				C6E1C613261582FD00F7F542 /* options.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

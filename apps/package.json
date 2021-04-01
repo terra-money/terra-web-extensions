@@ -4,6 +4,7 @@
   "scripts": {
     "webextension:dev": "multiplerun webextension-dev",
     "webextension:watch": "cross-env TS_NODE_PROJECT=tsconfig.script.json INSPECT_CHROME=9222 node -r ts-node/register -r tsconfig-paths/register scripts/webextension.watch.ts",
+    "webextension:build": "cross-env TS_NODE_PROJECT=tsconfig.script.json INSPECT_CHROME=9222 node -r ts-node/register -r tsconfig-paths/register scripts/webextension.build.ts",
     "webextension-test-app:start": "cross-env TS_NODE_PROJECT=tsconfig.script.json INSPECT_CHROME=9222 node -r ts-node/register -r tsconfig-paths/register scripts/webextension-test-app.start.ts",
     "storybook:start": "start-storybook",
     "storybook:build": "build-storybook --output-dir out/storybook",
@@ -54,6 +55,7 @@
     "@types/chrome": "^0.0.133",
     "@types/crypto-js": "^4.0.1",
     "@types/jest": "^26.0.22",
+    "@types/node": "^14.14.37",
     "@types/puppeteer": "^5.4.3",
     "@types/react": "^17.0.3",
     "@types/react-dom": "^17.0.3",

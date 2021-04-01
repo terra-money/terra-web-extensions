@@ -3751,7 +3751,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*":
+"@types/node@npm:*, @types/node@npm:^14.14.37":
   version: 14.14.37
   resolution: "@types/node@npm:14.14.37"
   checksum: 5e2d9baf7594ebacaf016716515f30de0765169412787f981481c2fb8b468923149bb9e2e3219ee672399811672ceddc339a7372a61cf15bc656836a5494d991
@@ -20194,6 +20194,7 @@ fsevents@^1.2.7:
     "@types/chrome": ^0.0.133
     "@types/crypto-js": ^4.0.1
     "@types/jest": ^26.0.22
+    "@types/node": ^14.14.37
     "@types/puppeteer": ^5.4.3
     "@types/react": ^17.0.3
     "@types/react-dom": ^17.0.3

@@ -149,6 +149,10 @@ export function SampleMantleData() {
     selectedWallet,
   ]);
 
+  if (!selectedWallet) {
+    return <section>No Wallets (Please add a wallet)</section>;
+  }
+
   return (
     <section>
       <h3>Balances</h3>

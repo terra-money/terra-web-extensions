@@ -95,7 +95,7 @@ export class TerraConnectWebExtensionClient implements TerraConnectClient {
           installLink,
         });
       }
-    }, 5000);
+    }, 2000);
   }
 
   refetchClientStates = () => {
