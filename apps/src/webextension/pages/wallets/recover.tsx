@@ -9,7 +9,7 @@ import { addWallet } from '@terra-dev/webextension-wallet-storage';
 import React, { useCallback, useState } from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
 
-export function WalletRespotre({ history }: RouteComponentProps<{}>) {
+export function WalletRecover({ history }: RouteComponentProps<{}>) {
   const [name, setName] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [mnemonic, setMnemonic] = useState<string>('');

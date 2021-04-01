@@ -36,7 +36,9 @@ export function NetworkSelector() {
               [{network.name === selectedNetwork.name ? 'X' : ' '}]{' '}
               {network.name} ({network.chainID})
             </span>
-            <button onClick={() => removeNetwork(network)}>Delete</button>
+            {defaultNetworks.indexOf(network) === -1 && (
+              <button onClick={() => removeNetwork(network)}>Delete</button>
+            )}
           </li>
         ))}
       </ul>
