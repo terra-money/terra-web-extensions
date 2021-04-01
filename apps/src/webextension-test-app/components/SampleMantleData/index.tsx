@@ -8,13 +8,21 @@ import {
 } from '@anchor-protocol/notation';
 import { aUST, UST } from '@anchor-protocol/types';
 import { useApolloClient } from '@apollo/client';
+import { streamPipe, StreamStatus, useStream } from '@terra-dev/stream-pipe';
 import {
   useTerraConnect,
   useWalletSelect,
 } from '@terra-dev/terra-connect-react';
-import { Tx, TxStatus } from '@terra-dev/tx';
+import {
+  Tx,
+  TxDenied,
+  TxFail,
+  TxProgress,
+  TxStatus,
+  TxSucceed,
+} from '@terra-dev/tx';
 import { Coins, Int, MsgExecuteContract, StdFee } from '@terra-money/terra.js';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { GuardSpinner } from 'react-spinners-kit';
 import { useConstants } from '../../contexts/constants';
 import { useContractAddress } from '../../contexts/contract';
@@ -22,8 +30,6 @@ import { pollTxInfo } from './queries/txInfos';
 import { useUserBalances } from './queries/userBalances';
 
 export function SampleMantleData() {
-  const [inProgress, setInProgress] = useState<boolean>(false);
-
   const { clientStates, execute } = useTerraConnect();
 
   const { selectedWallet } = useWalletSelect();
@@ -39,10 +45,22 @@ export function SampleMantleData() {
     refetch,
   } = useUserBalances();
 
+  const txStream = useMemo(
+    () =>
+      streamPipe(
+        execute,
+        (txResult: TxProgress | TxSucceed | TxFail | TxDenied) =>
+          txResult.status === TxStatus.SUCCEED
+            ? pollTxInfo(client, txResult.payload.txhash)
+            : null,
+      ),
+    [client, execute],
+  );
+
+  const [execTx, txResult] = useStream(txStream);
+
   const deposit = useCallback(() => {
     if (!clientStates?.network || !selectedWallet) return;
-
-    setInProgress(true);
 
     const tx: Tx = {
       fee: new StdFee(
@@ -66,28 +84,17 @@ export function SampleMantleData() {
       ],
     };
 
-    execute({
+    execTx({
       terraAddress: selectedWallet.terraAddress,
       network: clientStates.network,
       tx,
-    }).subscribe((txResult) => {
-      switch (txResult.status) {
-        case TxStatus.SUCCEED:
-          pollTxInfo(client, txResult.payload.txhash).then(() => {
-            refetch();
-            setInProgress(false);
-          });
-          break;
-        case TxStatus.FAIL:
-        case TxStatus.DENIED:
-          setInProgress(false);
-      }
+    }).subscribe({
+      complete: refetch,
     });
   }, [
     address.moneyMarket.market,
-    client,
     clientStates?.network,
-    execute,
+    execTx,
     gasAdjustment,
     gasFee,
     refetch,
@@ -96,8 +103,6 @@ export function SampleMantleData() {
 
   const withdraw = useCallback(() => {
     if (!clientStates?.network || !selectedWallet) return;
-
-    setInProgress(true);
 
     const tx: Tx = {
       fee: new StdFee(
@@ -120,29 +125,18 @@ export function SampleMantleData() {
       ],
     };
 
-    execute({
+    execTx({
       terraAddress: selectedWallet.terraAddress,
       network: clientStates.network,
       tx,
-    }).subscribe((txResult) => {
-      switch (txResult.status) {
-        case TxStatus.SUCCEED:
-          pollTxInfo(client, txResult.payload.txhash).then(() => {
-            refetch();
-            setInProgress(false);
-          });
-          break;
-        case TxStatus.FAIL:
-        case TxStatus.DENIED:
-          setInProgress(false);
-      }
+    }).subscribe({
+      complete: refetch,
     });
   }, [
     address.cw20.aUST,
     address.moneyMarket.market,
-    client,
     clientStates?.network,
-    execute,
+    execTx,
     gasAdjustment,
     gasFee,
     refetch,
@@ -172,9 +166,22 @@ export function SampleMantleData() {
       </ul>
 
       <h3>Anchor Depost / Withdraw</h3>
-      {inProgress ? (
-        <GuardSpinner />
-      ) : (
+      {txResult.status === StreamStatus.IN_PROGRESS && <GuardSpinner />}
+      {txResult.status === StreamStatus.DONE && (
+        <div>
+          <h4>Tx Succeed</h4>
+          <button onClick={txResult.reset}>Exit Result</button>
+          <pre>{JSON.stringify(txResult.result, null, 2)}</pre>
+        </div>
+      )}
+      {txResult.status === StreamStatus.ERROR && (
+        <div>
+          <h4>Tx Fail</h4>
+          <button onClick={txResult.reset}>Exit Error</button>
+          <pre>{String(txResult.error)}</pre>
+        </div>
+      )}
+      {txResult.status === StreamStatus.READY && (
         <div>
           <button onClick={deposit}>Deposit 10 UST</button>
           <button onClick={withdraw}>Withdraw 10 aUST</button>
