@@ -1,44 +1,25 @@
-import { Network } from '@terra-dev/network';
-import { SerializedTx } from '@terra-dev/tx';
 import React from 'react';
 import styled from 'styled-components';
 
-export interface TxModalProps {
+export interface IFrameModalProps {
   className?: string;
-  id: string;
+  title: string;
   src: string;
-  terraAddress: string;
-  network: Network;
-  tx: SerializedTx;
   onClose: () => void;
 }
 
-function TxModalBase({
-  className,
-  id,
-  src,
-  terraAddress,
-  network,
-  tx,
-  onClose,
-}: TxModalProps) {
-  const txBase64 = btoa(JSON.stringify(tx));
-  const networkBase64 = btoa(JSON.stringify(network));
-
+function IFrameModalBase({ className, title, src, onClose }: IFrameModalProps) {
   return (
     <div className={className}>
       <section>
-        <iframe
-          title="Tx"
-          src={`${src}?id=${id}&terraAddress=${terraAddress}&network=${networkBase64}&tx=${txBase64}`}
-        ></iframe>
+        <iframe title={title} src={src}></iframe>
         <button onClick={onClose}>Close</button>
       </section>
     </div>
   );
 }
 
-export const TxModal = styled(TxModalBase)`
+export const IFrameModal = styled(IFrameModalBase)`
   position: fixed;
   box-sizing: border-box;
 

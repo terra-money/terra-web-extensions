@@ -1,14 +1,14 @@
-import { Network } from '@terra-dev/network';
 import {
   ClientStates,
   ClientStatus,
+  ExecuteParams,
   Status,
   StatusInitializing,
   StatusNoAvailable,
   StatusReady,
   TerraConnectClient,
 } from '@terra-dev/terra-connect';
-import { Tx, TxDenied, TxFail, TxProgress, TxSucceed } from '@terra-dev/tx';
+import { TxDenied, TxFail, TxProgress, TxSucceed } from '@terra-dev/tx';
 import React, {
   Consumer,
   Context,
@@ -33,9 +33,7 @@ export interface TerraConnect {
   clientStates: ClientStates | null;
   refetchClientStates: () => void;
   execute: (
-    terraAddress: string,
-    network: Network,
-    tx: Tx,
+    params: ExecuteParams,
   ) => Observable<TxProgress | TxSucceed | TxFail | TxDenied>;
 }
 

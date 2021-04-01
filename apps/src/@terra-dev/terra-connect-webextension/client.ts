@@ -1,14 +1,13 @@
-import { Network } from '@terra-dev/network';
 import {
   ClientStates,
   ClientStatus,
+  ExecuteParams,
   Message,
   Status,
   TerraConnectClient,
 } from '@terra-dev/terra-connect';
 import {
   serializeTx,
-  Tx,
   TxDenied,
   TxFail,
   TxProgress,
@@ -21,9 +20,9 @@ import {
   ExecuteExtensionTx,
   FromContentScriptToWebMessage,
   FromWebToContentScriptMessage,
-  isExtensionMessage,
+  isWebExtensionMessage,
   RefetchExtensionClientStates,
-} from './internal';
+} from './internal/messages';
 
 export class TerraConnectWebExtensionClient implements TerraConnectClient {
   private _status: BehaviorSubject<Status>;
@@ -115,7 +114,7 @@ export class TerraConnectWebExtensionClient implements TerraConnectClient {
     return this._message.asObservable();
   };
 
-  execute = (terraAddress: string, network: Network, tx: Tx) => {
+  execute = ({ terraAddress, network, tx }: ExecuteParams) => {
     return new Observable<TxProgress | TxSucceed | TxFail | TxDenied>(
       (subscriber) => {
         subscriber.next({
@@ -136,7 +135,7 @@ export class TerraConnectWebExtensionClient implements TerraConnectClient {
 
         const callback = (event: MessageEvent) => {
           if (
-            !isExtensionMessage(event.data) ||
+            !isWebExtensionMessage(event.data) ||
             event.data.type !== FromContentScriptToWebMessage.TX_RESPONSE ||
             event.data.id !== id
           ) {
@@ -173,7 +172,7 @@ export class TerraConnectWebExtensionClient implements TerraConnectClient {
   };
 
   private onMessage = (event: MessageEvent) => {
-    if (!isExtensionMessage(event.data)) {
+    if (!isWebExtensionMessage(event.data)) {
       return;
     }
 

@@ -9,6 +9,9 @@ import { browser } from 'webextension-polyfill-ts';
 import { txPortPrefix } from 'webextension/env';
 
 function MainBase({ className }: { className?: string }) {
+  // ---------------------------------------------
+  // read hash urls
+  // ---------------------------------------------
   const txInfo = useMemo(() => {
     try {
       const queries = window.location.search;
@@ -38,12 +41,19 @@ function MainBase({ className }: { className?: string }) {
     }
   }, []);
 
+  // ---------------------------------------------
+  // states
+  // ---------------------------------------------
   const [password, setPassword] = useState<string>('');
 
   const [encryptedWallet, setEncryptedWallet] = useState<
     EncryptedWallet | undefined
   >(undefined);
 
+  // ---------------------------------------------
+  // effects
+  // ---------------------------------------------
+  // initialize
   useEffect(() => {
     if (!txInfo) return;
 
@@ -52,24 +62,27 @@ function MainBase({ className }: { className?: string }) {
     );
   }, [txInfo]);
 
-  const submit = useCallback(
-    async (
-      id: string,
-      password: string,
-      encryptedWallet: EncryptedWallet,
-      network: Network,
-      tx: SerializedTx,
-    ) => {
+  // ---------------------------------------------
+  // callback
+  // ---------------------------------------------
+  const proceed = useCallback(
+    async (param: {
+      id: string;
+      password: string;
+      encryptedWallet: EncryptedWallet;
+      network: Network;
+      tx: SerializedTx;
+    }) => {
       const wallet: Wallet = decryptWallet(
-        encryptedWallet.encryptedWallet,
-        password,
+        param.encryptedWallet.encryptedWallet,
+        param.password,
       );
 
       const port = browser.runtime.connect(undefined, {
-        name: txPortPrefix + id,
+        name: txPortPrefix + param.id,
       });
 
-      executeTx(wallet, network, tx).subscribe(
+      executeTx(wallet, param.network, param.tx).subscribe(
         (result) => {
           console.log('tx.tsx..()', result);
           port.postMessage(result);
@@ -88,6 +101,9 @@ function MainBase({ className }: { className?: string }) {
     [],
   );
 
+  // ---------------------------------------------
+  // presentation
+  // ---------------------------------------------
   if (!txInfo) {
     return <div className={className}>Can't find Transaction!</div>;
   }
@@ -108,14 +124,13 @@ function MainBase({ className }: { className?: string }) {
       />
 
       <button
+        disabled={password.length === 0}
         onClick={() =>
-          submit(
-            txInfo.id,
+          proceed({
+            ...txInfo,
             password,
             encryptedWallet,
-            txInfo.network,
-            txInfo.tx,
-          )
+          })
         }
       >
         Submit!

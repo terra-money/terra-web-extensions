@@ -13,15 +13,15 @@ import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { defaultNetworks } from 'webextension/env';
 import {
-  ExtensionClientStatesUpdated,
-  ExtensionTxResponse,
   FromContentScriptToWebMessage,
   FromWebToContentScriptMessage,
-  isExtensionMessage,
-} from '../internal';
+  isWebExtensionMessage,
+  WebExtensionClientStatesUpdated,
+  WebExtensionTxResponse,
+} from '../internal/messages';
 
 export interface ContentScriptOptions {
-  onTx: (
+  startTx: (
     id: string,
     terraAddress: string,
     network: Network,
@@ -29,7 +29,9 @@ export interface ContentScriptOptions {
   ) => Observable<TxProgress | TxSucceed | TxFail | TxDenied>;
 }
 
-export function initContentScript({ onTx }: ContentScriptOptions) {
+export function initContentScriptAndWebappConnection({
+  startTx,
+}: ContentScriptOptions) {
   const meta = document.querySelector('head > meta[name="terra-connect"]');
 
   if (!meta) return;
@@ -39,7 +41,7 @@ export function initContentScript({ onTx }: ContentScriptOptions) {
   window.addEventListener(
     'message',
     (event) => {
-      if (!isExtensionMessage(event.data)) {
+      if (!isWebExtensionMessage(event.data)) {
         return;
       }
 
@@ -48,13 +50,13 @@ export function initContentScript({ onTx }: ContentScriptOptions) {
           extensionStateLastUpdated.next(Date.now());
           break;
         case FromWebToContentScriptMessage.EXECUTE_TX:
-          onTx(
+          startTx(
             event.data.id.toString(),
             event.data.terraAddress,
             event.data.network,
             event.data.payload,
           ).subscribe((txResult) => {
-            const msg: ExtensionTxResponse = {
+            const msg: WebExtensionTxResponse = {
               type: FromContentScriptToWebMessage.TX_RESPONSE,
               id: event.data.id,
               payload: txResult,
@@ -96,7 +98,7 @@ export function initContentScript({ onTx }: ContentScriptOptions) {
       }),
     )
     .subscribe((clientStates) => {
-      const msg: ExtensionClientStatesUpdated = {
+      const msg: WebExtensionClientStatesUpdated = {
         type: FromContentScriptToWebMessage.CLIENT_STATES_UPDATED,
         payload: clientStates,
       };

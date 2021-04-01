@@ -1,7 +1,7 @@
 import { Network } from '@terra-dev/network';
 import {
   ContentScriptOptions,
-  initContentScript,
+  initContentScriptAndWebappConnection,
 } from '@terra-dev/terra-connect-webextension/backend/contentScript';
 import {
   SerializedTx,
@@ -15,10 +15,10 @@ import { createElement } from 'react';
 import { render } from 'react-dom';
 import { Observable } from 'rxjs';
 import { browser } from 'webextension-polyfill-ts';
-import { TxModal } from 'webextension/components/TxModal';
+import { IFrameModal } from 'webextension/components/IFrameModal';
 import { contentScriptPortPrefix } from 'webextension/env';
 
-function onTx(
+function startTxWithIframeModal(
   id: string,
   terraAddress: string,
   network: Network,
@@ -26,28 +26,46 @@ function onTx(
 ): Observable<TxProgress | TxSucceed | TxFail | TxDenied> {
   return new Observable<TxProgress | TxSucceed | TxFail | TxDenied>(
     (subscriber) => {
+      // ---------------------------------------------
+      // assets
+      // ---------------------------------------------
+      const modalContainer = window.document.createElement('div');
+
+      const port = browser.runtime.connect(undefined, {
+        name: contentScriptPortPrefix + id,
+      });
+
+      const endTx = () => {
+        window.document.querySelector('body')?.removeChild(modalContainer);
+        port.disconnect();
+        subscriber.unsubscribe();
+      };
+
+      // ---------------------------------------------
+      // create and append modal
+      // ---------------------------------------------
       const txHtml = browser.runtime.getURL('tx.html');
 
-      const modal = window.document.createElement('div');
+      const txBase64 = btoa(JSON.stringify(tx));
+      const networkBase64 = btoa(JSON.stringify(network));
 
-      const element = createElement(TxModal, {
-        src: txHtml,
-        id,
-        terraAddress,
-        network,
-        tx,
+      const modal = createElement(IFrameModal, {
+        src: `${txHtml}?id=${id}&terraAddress=${terraAddress}&network=${networkBase64}&tx=${txBase64}`,
+        title: 'Tx',
         onClose: () => {
-          window.document.querySelector('body')?.removeChild(modal);
+          endTx();
           subscriber.next({
             status: TxStatus.DENIED,
           });
         },
       });
 
-      const port = browser.runtime.connect(undefined, {
-        name: contentScriptPortPrefix + id,
-      });
+      render(modal, modalContainer);
+      window.document.querySelector('body')?.appendChild(modalContainer);
 
+      // ---------------------------------------------
+      // connect port (content_script -> background)
+      // ---------------------------------------------
       const onMessage = (msg: TxProgress | TxSucceed | TxFail | TxDenied) => {
         if (!msg.status) {
           return;
@@ -59,32 +77,28 @@ function onTx(
           case TxStatus.SUCCEED:
           case TxStatus.FAIL:
           case TxStatus.DENIED:
-            window.document.querySelector('body')?.removeChild(modal);
-            port.disconnect();
+            endTx();
             break;
         }
       };
 
       port.onMessage.addListener(onMessage);
-
-      render(element, modal);
-      window.document.querySelector('body')?.appendChild(modal);
     },
   );
 }
 
 const contentScriptOptions: ContentScriptOptions = {
-  onTx,
+  startTx: startTxWithIframeModal,
 };
 
 if (document.readyState === 'loading') {
   window.addEventListener(
     'DOMContentLoaded',
-    () => initContentScript(contentScriptOptions),
+    () => initContentScriptAndWebappConnection(contentScriptOptions),
     {
       once: true,
     },
   );
 } else {
-  initContentScript(contentScriptOptions);
+  initContentScriptAndWebappConnection(contentScriptOptions);
 }

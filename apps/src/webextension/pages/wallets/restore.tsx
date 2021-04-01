@@ -49,7 +49,7 @@ export function WalletRespotre() {
           onChange={({ target }) => setPassword(target.value)}
         />
 
-        <h3>비밀번호</h3>
+        <h3>Mnemonic 입력</h3>
         <textarea
           value={mnemonic}
           onChange={({ target }) => setMnemonic(target.value)}

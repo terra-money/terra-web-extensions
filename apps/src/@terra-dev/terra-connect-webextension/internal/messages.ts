@@ -28,7 +28,7 @@ export interface ExecuteExtensionTx {
 
   /** target terra wallet address */
   terraAddress: string;
-  
+
   /** target network */
   network: Network;
 
@@ -44,12 +44,12 @@ export enum FromContentScriptToWebMessage {
   TX_RESPONSE = 'tx_response',
 }
 
-export interface ExtensionClientStatesUpdated {
+export interface WebExtensionClientStatesUpdated {
   type: FromContentScriptToWebMessage.CLIENT_STATES_UPDATED;
   payload: ClientStates;
 }
 
-export interface ExtensionTxResponse {
+export interface WebExtensionTxResponse {
   type: FromContentScriptToWebMessage.TX_RESPONSE;
 
   /** primary id of this tx */
@@ -59,20 +59,22 @@ export interface ExtensionTxResponse {
   payload: TxProgress | TxSucceed | TxFail | TxDenied;
 }
 
-export type ExtensionMessage =
+export type WebExtensionMessage =
   // web -> content script
   | RefetchExtensionClientStates
   | ExecuteExtensionTx
   // content script -> web
-  | ExtensionClientStatesUpdated
-  | ExtensionTxResponse;
+  | WebExtensionClientStatesUpdated
+  | WebExtensionTxResponse;
 
-export function isExtensionMessage(value: unknown): value is ExtensionMessage {
+export function isWebExtensionMessage(
+  value: unknown,
+): value is WebExtensionMessage {
   if (!value || typeof value !== 'object' || !('type' in (value ?? {}))) {
     return false;
   }
 
-  const msg = value as ExtensionMessage;
+  const msg = value as WebExtensionMessage;
 
   switch (msg.type) {
     // web -> content script

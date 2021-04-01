@@ -66,17 +66,23 @@ export function SampleMantleData() {
       ],
     };
 
-    execute(selectedWallet.terraAddress, clientStates.network, tx).subscribe(
-      (txResult) => {
-        if (txResult.status === TxStatus.SUCCEED) {
+    execute({
+      terraAddress: selectedWallet.terraAddress,
+      network: clientStates.network,
+      tx,
+    }).subscribe((txResult) => {
+      switch (txResult.status) {
+        case TxStatus.SUCCEED:
           pollTxInfo(client, txResult.payload.txhash).then(() => {
             refetch();
             setInProgress(false);
           });
-        }
-      },
-      (error) => console.error(error),
-    );
+          break;
+        case TxStatus.FAIL:
+        case TxStatus.DENIED:
+          setInProgress(false);
+      }
+    });
   }, [
     address.moneyMarket.market,
     client,
@@ -114,18 +120,23 @@ export function SampleMantleData() {
       ],
     };
 
-    execute(selectedWallet.terraAddress, clientStates.network, tx).subscribe(
-      (txResult) => {
-        console.log(txResult);
-        if (txResult.status === TxStatus.SUCCEED) {
+    execute({
+      terraAddress: selectedWallet.terraAddress,
+      network: clientStates.network,
+      tx,
+    }).subscribe((txResult) => {
+      switch (txResult.status) {
+        case TxStatus.SUCCEED:
           pollTxInfo(client, txResult.payload.txhash).then(() => {
             refetch();
             setInProgress(false);
           });
-        }
-      },
-      (error) => console.error(error),
-    );
+          break;
+        case TxStatus.FAIL:
+        case TxStatus.DENIED:
+          setInProgress(false);
+      }
+    });
   }, [
     address.cw20.aUST,
     address.moneyMarket.market,

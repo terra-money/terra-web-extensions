@@ -36,6 +36,12 @@ export interface Message<T> {
   payload: T;
 }
 
+export interface ExecuteParams {
+  terraAddress: string;
+  network: Network;
+  tx: Tx;
+}
+
 export interface TerraConnectClient {
   status: () => Observable<Status>;
 
@@ -105,9 +111,7 @@ export interface TerraConnectClient {
    * - Tx is Succeed : TxProgress -> [...TxProgress] -> TxSucceed
    */
   execute: (
-    terraAddress: string,
-    network: Network,
-    tx: Tx,
+    params: ExecuteParams,
   ) => Observable<TxProgress | TxSucceed | TxFail | TxDenied>;
 
   /**
