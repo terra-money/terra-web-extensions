@@ -151,7 +151,7 @@ export function SampleMantleData() {
 
   return (
     <section>
-      <h2>Balances</h2>
+      <h3>Balances</h3>
       <ul>
         <li>
           UST:{' '}
@@ -167,7 +167,7 @@ export function SampleMantleData() {
         </li>
       </ul>
 
-      <h2>Anchor Depost / Withdraw</h2>
+      <h3>Anchor Depost / Withdraw</h3>
       {inProgress ? (
         <GuardSpinner />
       ) : (

@@ -1,4 +1,3 @@
-import { addWallet } from '@terra-dev/webextension-wallet-storage';
 import {
   createWallet,
   EncryptedWallet,
@@ -6,12 +5,11 @@ import {
   restoreMnemonicKey,
   Wallet,
 } from '@terra-dev/wallet';
+import { addWallet } from '@terra-dev/webextension-wallet-storage';
 import React, { useCallback, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { Link, RouteComponentProps } from 'react-router-dom';
 
-export function WalletRespotre() {
-  const history = useHistory();
-
+export function WalletRespotre({ history }: RouteComponentProps<{}>) {
   const [name, setName] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [mnemonic, setMnemonic] = useState<string>('');
@@ -35,22 +33,25 @@ export function WalletRespotre() {
   return (
     <section>
       <div>
-        <h3>지갑 이름</h3>
+        <Link to="/">Back to Main</Link>
+
+        <h3>Wallet Name</h3>
         <input
           type="text"
           value={name}
           onChange={({ target }) => setName(target.value)}
         />
 
-        <h3>비밀번호</h3>
+        <h3>Password</h3>
         <input
           type="text"
           value={password}
           onChange={({ target }) => setPassword(target.value)}
         />
 
-        <h3>Mnemonic 입력</h3>
+        <h3>Mnemonic</h3>
         <textarea
+          style={{ width: '100%' }}
           value={mnemonic}
           onChange={({ target }) => setMnemonic(target.value)}
         />

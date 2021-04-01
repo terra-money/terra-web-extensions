@@ -24,8 +24,10 @@ export function Dashboard() {
 
   return (
     <section>
+      <h3>Network Select</h3>
       <NetworkSelector />
 
+      <h3>Wallets</h3>
       {encryptedWallets.length > 0 ? (
         <ul>
           {encryptedWallets.map((wallet) => (

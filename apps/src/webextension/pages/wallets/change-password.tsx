@@ -9,7 +9,7 @@ import {
   updateWallet,
 } from '@terra-dev/webextension-wallet-storage';
 import React, { useCallback, useEffect, useState } from 'react';
-import { RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps, Link } from 'react-router-dom';
 
 export function WalletChangePassword({
   match,
@@ -60,17 +60,19 @@ export function WalletChangePassword({
   return (
     <section>
       <div>
-        <h3>지갑 이름</h3>
+        <Link to="/">Back to Main</Link>
+        
+        <h3>Wallet Name</h3>
         <input type="text" readOnly value={encryptedWallet.name} />
 
-        <h3>현재 비밀번호</h3>
+        <h3>Current Password</h3>
         <input
           type="text"
           value={currentPassword}
           onChange={({ target }) => setCurrentPassword(target.value)}
         />
 
-        <h3>새 비밀번호</h3>
+        <h3>New Password</h3>
         <input
           type="text"
           value={newPassword}

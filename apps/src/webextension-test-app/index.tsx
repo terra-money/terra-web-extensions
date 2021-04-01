@@ -102,13 +102,17 @@ function App() {
       <WalletSelectProvider>
         <AppProviders>
           <header>
+            <h1>Wallet Select</h1>
             <WalletSelector />
           </header>
           <section>
+            <h1>Current Client Status</h1>
             <CurrentStatus />
+            <h1>Current Network</h1>
             <CurrentNetwork />
+            <h1>Current Wallet</h1>
             <CurrentWallet />
-            <hr />
+            <h1>Sample Application</h1>
             <SampleMantleData />
           </section>
         </AppProviders>
