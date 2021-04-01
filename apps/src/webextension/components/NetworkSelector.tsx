@@ -1,9 +1,11 @@
 import { Network } from '@terra-dev/network';
 import {
   observeNetworkStorage,
+  removeNetwork,
   selectNetwork,
 } from '@terra-dev/webextension-network-storage';
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { defaultNetworks } from '../env';
 
 export function NetworkSelector() {
@@ -26,13 +28,22 @@ export function NetworkSelector() {
   }, []);
 
   return (
-    <ul>
-      {networks.map((network) => (
-        <li key={network.name} onClick={() => selectNetwork(network)}>
-          [{network.name === selectedNetwork.name ? 'X' : ' '}] {network.name} (
-          {network.chainID})
-        </li>
-      ))}
-    </ul>
+    <div>
+      <ul>
+        {networks.map((network) => (
+          <li key={network.name}>
+            <span onClick={() => selectNetwork(network)}>
+              [{network.name === selectedNetwork.name ? 'X' : ' '}]{' '}
+              {network.name} ({network.chainID})
+            </span>
+            <button onClick={() => removeNetwork(network)}>Delete</button>
+          </li>
+        ))}
+      </ul>
+
+      <div>
+        <Link to="/network/create">Add a new network</Link>
+      </div>
+    </div>
   );
 }

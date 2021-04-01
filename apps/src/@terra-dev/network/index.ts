@@ -14,8 +14,9 @@ export interface Network {
   chainID: string;
   servers: {
     lcd: string;
-    fcd: string;
-    ws: string;
-    mantle: string;
+    fcd?: string;
+    ws?: string;
+    mantle?: string;
+    [server: string]: string | undefined;
   };
 }

@@ -3,6 +3,7 @@ import { render } from 'react-dom';
 import { HashRouter, Redirect, Route, Switch } from 'react-router-dom';
 import styled from 'styled-components';
 import { Dashboard } from './pages/dashboard';
+import { NetworkCreate } from './pages/networks/create';
 import { WalletChangePassword } from './pages/wallets/change-password';
 import { WalletCreate } from './pages/wallets/create';
 import { WalletRespotre } from './pages/wallets/restore';
@@ -50,8 +51,7 @@ const ErrorView = styled.pre`
   font-size: 12px;
 `;
 
-
-function MainBase({className}: {className?: string}) {
+function MainBase({ className }: { className?: string }) {
   return (
     <div className={className}>
       <section>
@@ -63,6 +63,7 @@ function MainBase({className}: {className?: string}) {
             path="/wallets/:terraAddress/password"
             component={WalletChangePassword}
           />
+          <Route path="/network/create" component={NetworkCreate} />
           <Redirect to="/" />
         </Switch>
       </section>
@@ -72,10 +73,10 @@ function MainBase({className}: {className?: string}) {
 
 const Main = styled(MainBase)`
   min-width: 400px;
-  
+
   word-break: keep-all;
   white-space: nowrap;
-`
+`;
 
 render(
   <HashRouter>
