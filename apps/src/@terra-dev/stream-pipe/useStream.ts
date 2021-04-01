@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState } from 'react';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subject, Subscription } from 'rxjs';
 
 export enum StreamStatus {
   IN_PROGRESS = 'IN_PROGRESS',
@@ -51,49 +51,69 @@ export function useStream<Params, Result>(
     () => ready,
   );
 
-  const subscription = useRef<Subscription | undefined>(undefined);
+  const subscriptionRef = useRef<Subscription | undefined>(undefined);
+  const subscriberRef = useRef<Subject<Result> | undefined>(undefined);
 
   const exec = useCallback(
-    (params: Params) =>
-      new Observable<Result>((subscriber) => {
-        if (subscription.current) {
-          subscription.current.unsubscribe();
-        }
+    (params: Params) => {
+      const subscriber = new Subject<Result>();
 
-        let latestResult: Result;
+      if (subscriptionRef.current) {
+        subscriptionRef.current.unsubscribe();
+      }
 
-        subscription.current = fn(params).subscribe(
-          (result) => {
-            subscriber.next(result);
+      if (subscriberRef.current) {
+        subscriberRef.current.unsubscribe();
+      }
 
-            latestResult = result;
+      let latestResult: Result;
 
-            setPayload({
-              status: StreamStatus.IN_PROGRESS,
-              result,
-            });
-          },
-          (error) => {
-            subscriber.error(error);
+      const subscription = fn(params).subscribe(
+        (result) => {
+          subscriber.next(result);
 
-            setPayload({
-              status: StreamStatus.ERROR,
-              error,
-              reset: () => setPayload(ready),
-            });
-          },
-          () => {
-            subscriber.complete();
+          latestResult = result;
 
-            subscription.current = undefined;
-            setPayload({
-              status: StreamStatus.DONE,
-              result: latestResult,
-              reset: () => setPayload(ready),
-            });
-          },
-        );
-      }),
+          setPayload({
+            status: StreamStatus.IN_PROGRESS,
+            result,
+          });
+        },
+        (error) => {
+          subscriber.error(error);
+
+          setPayload({
+            status: StreamStatus.ERROR,
+            error,
+            reset: () => setPayload(ready),
+          });
+
+          subscriptionRef.current = undefined;
+          subscriberRef.current = undefined;
+          subscriber.unsubscribe();
+          subscription.unsubscribe();
+        },
+        () => {
+          subscriber.complete();
+
+          setPayload({
+            status: StreamStatus.DONE,
+            result: latestResult,
+            reset: () => setPayload(ready),
+          });
+
+          subscriptionRef.current = undefined;
+          subscriberRef.current = undefined;
+          subscriber.unsubscribe();
+          subscription.unsubscribe();
+        },
+      );
+
+      subscriberRef.current = subscriber;
+      subscriptionRef.current = subscription;
+
+      return subscriber.asObservable();
+    },
     [fn],
   );
 

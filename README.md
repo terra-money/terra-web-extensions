@@ -24,7 +24,7 @@ yarn run webextension:dev
 
 ## 2-3. Safari
 
-1. Allow `Develop / Allow Unsigned Extensions` on the Safari Menubar 
+1. Allow `Develop / Allow Unsigned Extensions` on the Safari Menubar
 2. Open XCode project the `~/safari-webextension/terra-connect`
 3. Run
 
