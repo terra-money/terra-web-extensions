@@ -31,4 +31,4 @@ export const isContentScriptPort = (name: string) =>
   /^content-[0-9]+$/.test(name);
 
 export const getIdFromTxPort = (name: string) => name.substr(3);
-export const getIdFromContentScriptPort = (name: string) => name.substr(3);
+export const getIdFromContentScriptPort = (name: string) => name.substr(8);
