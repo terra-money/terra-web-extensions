@@ -1,14 +1,14 @@
 # Process
 
 - [ ] Tx
-    - [ ] `execute(Tx, { wait }): Observable<TxProgress | TxSuccess | TxFail | TxDeny | TxResult>`
+    - [x] `execute(Tx, { wait }): Observable<TxProgress | TxSuccess | TxFail | TxDeny | TxResult>`
         - TxProgress : in progress tx `{...}`
         - TxSuccess : success `{txhash}`
         - TxFail : fail `{error}`
         - TxDeny : user denied (cancel tx)
         - TxResult : if execute with wait option `{ txResult... }`
         - Stream : `TxProgress -> (TxSuccess | TxFail | TxDeny) -> [TxResult]`
-    - [ ] Open exetension web accessible html page with `<iframe>` modal
+    - [x] Open exetension web accessible html page with `<iframe>` modal
 - [ ] Add / Remove network
 - [ ] Display Assets
 - [ ] Send Assets (Is it required? just link to terraswap webapp?)
