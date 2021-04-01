@@ -6,6 +6,7 @@
     "webextension:watch": "cross-env TS_NODE_PROJECT=tsconfig.script.json INSPECT_CHROME=9222 node -r ts-node/register -r tsconfig-paths/register scripts/webextension.watch.ts",
     "webextension:build": "cross-env TS_NODE_PROJECT=tsconfig.script.json INSPECT_CHROME=9222 node -r ts-node/register -r tsconfig-paths/register scripts/webextension.build.ts",
     "webextension-test-app:start": "cross-env TS_NODE_PROJECT=tsconfig.script.json INSPECT_CHROME=9222 node -r ts-node/register -r tsconfig-paths/register scripts/webextension-test-app.start.ts",
+    "webextension-test-app:build": "cross-env TS_NODE_PROJECT=tsconfig.script.json INSPECT_CHROME=9222 node -r ts-node/register -r tsconfig-paths/register scripts/webextension-test-app.build.ts",
     "storybook:start": "start-storybook",
     "storybook:build": "build-storybook --output-dir out/storybook",
     "test": "jest --colors",
