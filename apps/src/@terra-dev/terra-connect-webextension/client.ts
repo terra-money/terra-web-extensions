@@ -6,14 +6,7 @@ import {
   Status,
   TerraConnectClient,
 } from '@terra-dev/terra-connect';
-import {
-  serializeTx,
-  TxDenied,
-  TxFail,
-  TxProgress,
-  TxStatus,
-  TxSucceed,
-} from '@terra-dev/tx';
+import { serializeTx, TxResult, TxStatus } from '@terra-dev/tx';
 import { getParser } from 'bowser';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import {
@@ -115,52 +108,50 @@ export class TerraConnectWebExtensionClient implements TerraConnectClient {
   };
 
   execute = ({ terraAddress, network, tx }: ExecuteParams) => {
-    return new Observable<TxProgress | TxSucceed | TxFail | TxDenied>(
-      (subscriber) => {
-        subscriber.next({
-          status: TxStatus.PROGRESS,
-        });
+    return new Observable<TxResult>((subscriber) => {
+      subscriber.next({
+        status: TxStatus.PROGRESS,
+      });
 
-        const id = Date.now();
+      const id = Date.now();
 
-        const msg: ExecuteExtensionTx = {
-          type: FromWebToContentScriptMessage.EXECUTE_TX,
-          id,
-          terraAddress,
-          network,
-          payload: serializeTx(tx),
-        };
+      const msg: ExecuteExtensionTx = {
+        type: FromWebToContentScriptMessage.EXECUTE_TX,
+        id,
+        terraAddress,
+        network,
+        payload: serializeTx(tx),
+      };
 
-        this.hostWindow.postMessage(msg, '*');
+      this.hostWindow.postMessage(msg, '*');
 
-        const callback = (event: MessageEvent) => {
-          if (
-            !isWebExtensionMessage(event.data) ||
-            event.data.type !== FromContentScriptToWebMessage.TX_RESPONSE ||
-            event.data.id !== id
-          ) {
-            return;
-          }
+      const callback = (event: MessageEvent) => {
+        if (
+          !isWebExtensionMessage(event.data) ||
+          event.data.type !== FromContentScriptToWebMessage.TX_RESPONSE ||
+          event.data.id !== id
+        ) {
+          return;
+        }
 
-          subscriber.next(event.data.payload);
+        subscriber.next(event.data.payload);
 
-          if (
-            event.data.payload.status === TxStatus.SUCCEED ||
-            event.data.payload.status === TxStatus.FAIL ||
-            event.data.payload.status === TxStatus.DENIED
-          ) {
-            subscriber.complete();
-            this.hostWindow.removeEventListener('message', callback);
-          }
-        };
-
-        this.hostWindow.addEventListener('message', callback);
-
-        return () => {
+        if (
+          event.data.payload.status === TxStatus.SUCCEED ||
+          event.data.payload.status === TxStatus.FAIL ||
+          event.data.payload.status === TxStatus.DENIED
+        ) {
+          subscriber.complete();
           this.hostWindow.removeEventListener('message', callback);
-        };
-      },
-    );
+        }
+      };
+
+      this.hostWindow.addEventListener('message', callback);
+
+      return () => {
+        this.hostWindow.removeEventListener('message', callback);
+      };
+    });
   };
 
   clientStates = () => {

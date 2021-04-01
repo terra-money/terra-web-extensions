@@ -1,5 +1,5 @@
 import { Network } from '@terra-dev/network';
-import { Tx, TxDenied, TxFail, TxProgress, TxSucceed } from '@terra-dev/tx';
+import { Tx, TxResult } from '@terra-dev/tx';
 import { WalletInfo } from '@terra-dev/wallet';
 import { Observable } from 'rxjs';
 
@@ -86,7 +86,7 @@ export interface TerraConnectClient {
    *
    * @example
    * client.execute(your_terraAddress, {...your_tx})
-   *       .subscribe((result: TxProgress | TxSucceed | TxFail | TxDenied) => {
+   *       .subscribe((result: TxResult) => {
    *          switch (result.status) {
    *            case TxStatus.PROGRESS:
    *              console.log('in progress', result.payload)
@@ -110,9 +110,7 @@ export interface TerraConnectClient {
    * - Tx is Failed : TxProgress -> [...TxProgress] -> TxFail
    * - Tx is Succeed : TxProgress -> [...TxProgress] -> TxSucceed
    */
-  execute: (
-    params: ExecuteParams,
-  ) => Observable<TxProgress | TxSucceed | TxFail | TxDenied>;
+  execute: (params: ExecuteParams) => Observable<TxResult>;
 
   /**
    * Destroy this client

@@ -24,15 +24,15 @@ export type RawLogMsg = {
   events: RawLogEvent[];
 };
 
-export type Data = {
+export type TxInfos = {
   TxHash: string;
   Success: boolean;
   RawLog: RawLogMsg[] | string;
 }[];
 
-export function mapData({ TxInfos }: RawData): Data {
+export function mapData({ TxInfos }: RawData): TxInfos {
   return TxInfos.map(({ TxHash, Success, RawLog }) => {
-    let rawLog: Data[number]['RawLog'] | string;
+    let rawLog: TxInfos[number]['RawLog'] | string;
 
     try {
       rawLog = JSON.parse(RawLog);
@@ -71,7 +71,7 @@ export const query = gql`
 export function queryTxInfo(
   client: ApolloClient<any>,
   txHash: string,
-): Promise<Omit<ApolloQueryResult<RawData>, 'data'> & { data: Data }> {
+): Promise<Omit<ApolloQueryResult<RawData>, 'data'> & { data: TxInfos }> {
   return client
     .query<RawData, RawVariables>({
       query,
@@ -108,7 +108,10 @@ export async function pollTxInfo(client: ApolloClient<any>, txHash: string) {
   }
 }
 
-export function pickRawLog(txInfo: Data, index: number): RawLogMsg | undefined {
+export function pickRawLog(
+  txInfo: TxInfos,
+  index: number,
+): RawLogMsg | undefined {
   return Array.isArray(txInfo[0].RawLog) ? txInfo[0].RawLog[index] : undefined;
 }
 

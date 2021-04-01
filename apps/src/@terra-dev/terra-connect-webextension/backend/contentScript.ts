@@ -1,12 +1,6 @@
 import { Network } from '@terra-dev/network';
 import { ClientStates } from '@terra-dev/terra-connect';
-import {
-  SerializedTx,
-  TxDenied,
-  TxFail,
-  TxProgress,
-  TxSucceed,
-} from '@terra-dev/tx';
+import { SerializedTx, TxResult } from '@terra-dev/tx';
 import { observeNetworkStorage } from '@terra-dev/webextension-network-storage';
 import { observeWalletStorage } from '@terra-dev/webextension-wallet-storage';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
@@ -26,7 +20,7 @@ export interface ContentScriptOptions {
     terraAddress: string,
     network: Network,
     tx: SerializedTx,
-  ) => Observable<TxProgress | TxSucceed | TxFail | TxDenied>;
+  ) => Observable<TxResult>;
 }
 
 export function initContentScriptAndWebappConnection({

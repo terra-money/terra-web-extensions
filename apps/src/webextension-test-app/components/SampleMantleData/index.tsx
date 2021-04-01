@@ -8,25 +8,23 @@ import {
 } from '@anchor-protocol/notation';
 import { aUST, UST } from '@anchor-protocol/types';
 import { useApolloClient } from '@apollo/client';
-import { streamPipe, StreamStatus, useStream } from '@terra-dev/stream-pipe';
+import {
+  Operator,
+  streamPipe,
+  StreamStatus,
+  useStream,
+} from '@terra-dev/stream-pipe';
 import {
   useTerraConnect,
   useWalletSelect,
 } from '@terra-dev/terra-connect-react';
-import {
-  Tx,
-  TxDenied,
-  TxFail,
-  TxProgress,
-  TxStatus,
-  TxSucceed,
-} from '@terra-dev/tx';
+import { Tx, TxResult, TxStatus } from '@terra-dev/tx';
 import { Coins, Int, MsgExecuteContract, StdFee } from '@terra-money/terra.js';
 import React, { useCallback, useMemo } from 'react';
 import { GuardSpinner } from 'react-spinners-kit';
 import { useConstants } from '../../contexts/constants';
 import { useContractAddress } from '../../contexts/contract';
-import { pollTxInfo } from './queries/txInfos';
+import { pollTxInfo, TxInfos } from './queries/txInfos';
 import { useUserBalances } from './queries/userBalances';
 
 export function SampleMantleData() {
@@ -48,13 +46,22 @@ export function SampleMantleData() {
   const txStream = useMemo(
     () =>
       streamPipe(
+        // execute transaction
         execute,
-        (txResult: TxProgress | TxSucceed | TxFail | TxDenied) =>
+        // poll txInfo if txResult is succeed
+        ((txResult: TxResult) =>
           txResult.status === TxStatus.SUCCEED
             ? pollTxInfo(client, txResult.payload.txhash)
-            : null,
+            : txResult) as Operator<TxResult, TxInfos | TxResult>,
+        // side effect if result is txInfos(=Array)
+        (result) => {
+          if (Array.isArray(result)) {
+            refetch();
+          }
+          return result;
+        },
       ),
-    [client, execute],
+    [client, execute, refetch],
   );
 
   const [execTx, txResult] = useStream(txStream);
@@ -86,10 +93,8 @@ export function SampleMantleData() {
 
     execTx({
       terraAddress: selectedWallet.terraAddress,
-      network: clientStates.network,
+      network: clientStates?.network,
       tx,
-    }).subscribe({
-      complete: refetch,
     });
   }, [
     address.moneyMarket.market,
@@ -97,7 +102,6 @@ export function SampleMantleData() {
     execTx,
     gasAdjustment,
     gasFee,
-    refetch,
     selectedWallet,
   ]);
 
@@ -127,10 +131,8 @@ export function SampleMantleData() {
 
     execTx({
       terraAddress: selectedWallet.terraAddress,
-      network: clientStates.network,
+      network: clientStates?.network,
       tx,
-    }).subscribe({
-      complete: refetch,
     });
   }, [
     address.cw20.aUST,
@@ -139,7 +141,6 @@ export function SampleMantleData() {
     execTx,
     gasAdjustment,
     gasFee,
-    refetch,
     selectedWallet,
   ]);
 

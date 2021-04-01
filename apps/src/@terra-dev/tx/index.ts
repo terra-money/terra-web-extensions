@@ -40,6 +40,8 @@ export interface TxDenied {
   status: TxStatus.DENIED;
 }
 
+export type TxResult = TxProgress | TxSucceed | TxFail | TxDenied;
+
 export interface Tx extends CreateTxOptions {}
 
 export interface SerializedTx extends Omit<CreateTxOptions, 'msgs' | 'fee'> {

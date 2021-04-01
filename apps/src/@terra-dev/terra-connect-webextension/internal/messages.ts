@@ -1,12 +1,6 @@
 import { Network } from '@terra-dev/network';
 import { ClientStates } from '@terra-dev/terra-connect';
-import {
-  SerializedTx,
-  TxDenied,
-  TxFail,
-  TxProgress,
-  TxSucceed,
-} from '@terra-dev/tx';
+import { SerializedTx, TxResult } from '@terra-dev/tx';
 
 // ---------------------------------------------
 // web -> content script
@@ -56,7 +50,7 @@ export interface WebExtensionTxResponse {
   id: number;
 
   /** tx response */
-  payload: TxProgress | TxSucceed | TxFail | TxDenied;
+  payload: TxResult;
 }
 
 export type WebExtensionMessage =

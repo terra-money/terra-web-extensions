@@ -8,6 +8,7 @@ import {
   TxDenied,
   TxFail,
   TxProgress,
+  TxResult,
   TxStatus,
   TxSucceed,
 } from '@terra-dev/tx';
@@ -23,68 +24,67 @@ function startTxWithIframeModal(
   terraAddress: string,
   network: Network,
   tx: SerializedTx,
-): Observable<TxProgress | TxSucceed | TxFail | TxDenied> {
-  return new Observable<TxProgress | TxSucceed | TxFail | TxDenied>(
-    (subscriber) => {
-      // ---------------------------------------------
-      // assets
-      // ---------------------------------------------
-      const modalContainer = window.document.createElement('div');
+): Observable<TxResult> {
+  return new Observable<TxResult>((subscriber) => {
+    // ---------------------------------------------
+    // assets
+    // ---------------------------------------------
+    const modalContainer = window.document.createElement('div');
 
-      const port = browser.runtime.connect(undefined, {
-        name: contentScriptPortPrefix + id,
-      });
+    const port = browser.runtime.connect(undefined, {
+      name: contentScriptPortPrefix + id,
+    });
 
-      const endTx = () => {
-        window.document.querySelector('body')?.removeChild(modalContainer);
-        port.disconnect();
-        subscriber.unsubscribe();
-      };
+    // do not call before latest subscriber.next()
+    const endTx = () => {
+      window.document.querySelector('body')?.removeChild(modalContainer);
+      port.disconnect();
+      subscriber.unsubscribe();
+    };
 
-      // ---------------------------------------------
-      // create and append modal
-      // ---------------------------------------------
-      const txHtml = browser.runtime.getURL('tx.html');
+    // ---------------------------------------------
+    // create and append modal
+    // ---------------------------------------------
+    const txHtml = browser.runtime.getURL('tx.html');
 
-      const txBase64 = btoa(JSON.stringify(tx));
-      const networkBase64 = btoa(JSON.stringify(network));
+    const txBase64 = btoa(JSON.stringify(tx));
+    const networkBase64 = btoa(JSON.stringify(network));
 
-      const modal = createElement(IFrameModal, {
-        src: `${txHtml}?id=${id}&terraAddress=${terraAddress}&network=${networkBase64}&tx=${txBase64}`,
-        title: 'Tx',
-        onClose: () => {
+    const modal = createElement(IFrameModal, {
+      src: `${txHtml}?id=${id}&terraAddress=${terraAddress}&network=${networkBase64}&tx=${txBase64}`,
+      title: 'Tx',
+      onClose: () => {
+        subscriber.next({
+          status: TxStatus.DENIED,
+        });
+        endTx();
+      },
+    });
+
+    render(modal, modalContainer);
+    window.document.querySelector('body')?.appendChild(modalContainer);
+
+    // ---------------------------------------------
+    // connect port (content_script -> background)
+    // ---------------------------------------------
+    const onMessage = (msg: TxProgress | TxSucceed | TxFail | TxDenied) => {
+      if (!msg.status) {
+        return;
+      }
+
+      subscriber.next(msg);
+
+      switch (msg.status) {
+        case TxStatus.SUCCEED:
+        case TxStatus.FAIL:
+        case TxStatus.DENIED:
           endTx();
-          subscriber.next({
-            status: TxStatus.DENIED,
-          });
-        },
-      });
+          break;
+      }
+    };
 
-      render(modal, modalContainer);
-      window.document.querySelector('body')?.appendChild(modalContainer);
-
-      // ---------------------------------------------
-      // connect port (content_script -> background)
-      // ---------------------------------------------
-      const onMessage = (msg: TxProgress | TxSucceed | TxFail | TxDenied) => {
-        if (!msg.status) {
-          return;
-        }
-
-        subscriber.next(msg);
-
-        switch (msg.status) {
-          case TxStatus.SUCCEED:
-          case TxStatus.FAIL:
-          case TxStatus.DENIED:
-            endTx();
-            break;
-        }
-      };
-
-      port.onMessage.addListener(onMessage);
-    },
-  );
+    port.onMessage.addListener(onMessage);
+  });
 }
 
 const contentScriptOptions: ContentScriptOptions = {
