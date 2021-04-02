@@ -1,3 +1,4 @@
+import { truncate } from '@anchor-protocol/notation';
 import { EncryptedWallet } from '@terra-dev/wallet';
 import {
   observeWalletStorage,
@@ -37,13 +38,21 @@ export function Dashboard() {
         <ul>
           {encryptedWallets.map((wallet) => (
             <li key={wallet.terraAddress}>
-              {wallet.name} ({wallet.terraAddress}){' '}
-              <Link to={`/wallets/${wallet.terraAddress}/password`}>
-                <FormattedMessage id="wallet.change-password" />
-              </Link>
-              <button onClick={() => removeWallet(wallet)}>
-                <FormattedMessage id="wallet.delete" />
-              </button>
+              <ul>
+                <li>
+                  {wallet.name} ({truncate(wallet.terraAddress)})
+                </li>
+                <li>
+                  <Link to={`/wallets/${wallet.terraAddress}/password`}>
+                    <FormattedMessage id="wallet.change-password" />
+                  </Link>
+                </li>
+                <li>
+                  <button onClick={() => removeWallet(wallet)}>
+                    <FormattedMessage id="wallet.delete" />
+                  </button>
+                </li>
+              </ul>
             </li>
           ))}
         </ul>
