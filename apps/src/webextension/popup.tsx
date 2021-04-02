@@ -8,6 +8,7 @@ import {
   Switch,
   useLocation,
 } from 'react-router-dom';
+import { animated, useTransition } from 'react-spring';
 import styled, { createGlobalStyle, keyframes } from 'styled-components';
 import { ErrorBoundary } from 'webextension/components/ErrorBoundary';
 import { PopupHeader } from 'webextension/components/PopupHeader';
@@ -22,32 +23,46 @@ import { WalletCreate } from './pages/wallets/create';
 function MainBase({ className }: { className?: string }) {
   const { locale, messages } = useIntlProps();
 
-  const { pathname } = useLocation();
+  const location = useLocation();
 
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    containerRef.current?.scrollTo({ top: 0 });
-  }, [pathname]);
+    containerRef.current?.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+  }, [location.pathname]);
+
+  const transitions = useTransition(location, (location) => location.pathname, {
+    from: { opacity: 0, transform: 'translateX(100%)' },
+    enter: { opacity: 1, transform: 'translateX(0%)' },
+    leave: { opacity: 0, transform: 'translateX(-100%)' },
+  });
 
   return (
     <IntlProvider locale={locale} messages={messages}>
       <div className={className} ref={containerRef}>
         <PopupHeader />
         <section>
-          <div>
-            <Switch>
-              <Route exact path="/" component={Dashboard} />
-              <Route path="/wallet/create" component={WalletCreate} />
-              <Route path="/wallet/recover" component={WalletRecover} />
-              <Route
-                path="/wallets/:terraAddress/password"
-                component={WalletChangePassword}
-              />
-              <Route path="/network/create" component={NetworkCreate} />
-              <Redirect to="/" />
-            </Switch>
-          </div>
+          {transitions.map(({ item: location, props, key }) => (
+            <animated.div
+              key={key}
+              style={{ ...props, transformOrigin: 'top' }}
+            >
+              <Switch location={location}>
+                <Route exact path="/" component={Dashboard} />
+                <Route path="/wallet/create" component={WalletCreate} />
+                <Route path="/wallet/recover" component={WalletRecover} />
+                <Route
+                  path="/wallets/:terraAddress/password"
+                  component={WalletChangePassword}
+                />
+                <Route path="/network/create" component={NetworkCreate} />
+                <Redirect to="/" />
+              </Switch>
+            </animated.div>
+          ))}
         </section>
         <GlobalStyle />
       </div>
@@ -116,8 +131,15 @@ const Main = styled(MainBase)`
 
     animation: ${sectionEnter} 0.6s ease-in;
 
+    position: relative;
+
     > div {
       padding: 20px;
+
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
     }
   }
 `;
