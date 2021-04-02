@@ -38,11 +38,9 @@
       "16": "icons/icon-32.png",
       "32": "icons/icon-32.png"
     },
-    "default_title": "TODO: Browser Action Title",
-    "default_popup": "dashboard.html"
+    "default_title": "Terra Connect",
+    "default_popup": "popup.html"
   },
-  
-  "options_page": "dashboard.html",
   
   "web_accessible_resources": [
     "tx.html",

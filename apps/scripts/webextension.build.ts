@@ -1,11 +1,17 @@
 import { build } from '@rocket-scripts/web';
 import { execSync } from 'child_process';
 import path from 'path';
-import { webpackPolyfills } from './webpackPolyfills';
 import rimraf from 'rimraf';
+import { webpackPolyfills } from './webpackPolyfills';
 
 (async () => {
+  const zip = path.resolve(
+    __dirname,
+    '../public/webextension-test-app/webextension.zip',
+  );
+
   rimraf.sync(path.resolve(__dirname, '../out/webextension'));
+  rimraf.sync(zip);
 
   await build({
     app: 'webextension',
@@ -19,11 +25,6 @@ import rimraf from 'rimraf';
     },
     webpackConfig: webpackPolyfills,
   });
-
-  const zip = path.resolve(
-    __dirname,
-    '../public/webextension-test-app/webextension.zip',
-  );
 
   const result = execSync(`zip -r ${zip} ./webextension/`, {
     cwd: path.resolve(__dirname, '../out/'),
