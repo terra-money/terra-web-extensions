@@ -57,8 +57,8 @@ function MainBase({ className }: { className?: string }) {
   useEffect(() => {
     if (!txInfo) return;
 
-    findWallet(txInfo.terraAddress).then((encryptedWallet) =>
-      setEncryptedWallet(encryptedWallet),
+    findWallet(txInfo.terraAddress).then((nextEncryptedWallet) =>
+      setEncryptedWallet(nextEncryptedWallet),
     );
   }, [txInfo]);
 

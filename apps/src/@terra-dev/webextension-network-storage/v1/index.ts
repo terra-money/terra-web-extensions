@@ -61,7 +61,9 @@ export async function updateNetwork(
   network: Network,
 ): Promise<void> {
   const { networks, selectedNetwork } = await readNetworkStorage();
-  const index = networks.findIndex((network) => network.name === name);
+  const index = networks.findIndex(
+    (findingNetwork) => findingNetwork.name === name,
+  );
 
   if (index === -1) {
     return;

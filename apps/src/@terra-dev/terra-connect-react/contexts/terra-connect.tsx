@@ -56,14 +56,14 @@ export function TerraConnectProvider({
   useEffect(() => {
     client.refetchClientStates();
 
-    const statusSubscription = client.status().subscribe((status) => {
-      setStatus(status);
+    const statusSubscription = client.status().subscribe((nextStatus) => {
+      setStatus(nextStatus);
     });
 
     const statesSubscription = client
       .clientStates()
-      .subscribe((clientStates) => {
-        setClientStates(clientStates);
+      .subscribe((nextClientStates) => {
+        setClientStates(nextClientStates);
       });
 
     return () => {

@@ -45,7 +45,7 @@ export async function updateWallet(
 ): Promise<void> {
   const wallets = await readWalletStorage();
   const index = wallets.findIndex(
-    (wallet) => wallet.terraAddress === terraAddress,
+    (findingWallet) => findingWallet.terraAddress === terraAddress,
   );
 
   if (index === -1) {

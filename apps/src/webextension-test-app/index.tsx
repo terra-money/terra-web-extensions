@@ -48,7 +48,7 @@ function AppProviders({ children }: { children: ReactNode }) {
     return new AddressProviderFromJson(addressMap);
   }, [addressMap]);
 
-  const client = useMemo<ApolloClient<any>>(() => {
+  const apolloClient = useMemo<ApolloClient<any>>(() => {
     const httpLink = new HttpLink({
       uri: ({ operationName }) =>
         `${
@@ -90,7 +90,7 @@ function AppProviders({ children }: { children: ReactNode }) {
         addressProvider={addressProvider}
         addressMap={addressMap}
       >
-        <ApolloProvider client={client}>{children}</ApolloProvider>
+        <ApolloProvider client={apolloClient}>{children}</ApolloProvider>
       </ContractProvider>
     </ConstantsProvider>
   );

@@ -16,9 +16,9 @@ export function NetworkSelector() {
 
   useEffect(() => {
     const subscription = observeNetworkStorage().subscribe(
-      ({ networks, selectedNetwork }) => {
-        setNetworks([...defaultNetworks, ...networks]);
-        setSelectedNetwork(selectedNetwork ?? defaultNetworks[0]);
+      ({ networks: nextNetworks, selectedNetwork: nextSelectedNetwork }) => {
+        setNetworks([...defaultNetworks, ...nextNetworks]);
+        setSelectedNetwork(nextSelectedNetwork ?? defaultNetworks[0]);
       },
     );
 

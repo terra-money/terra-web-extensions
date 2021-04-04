@@ -34,7 +34,7 @@ function MainBase({ className }: { className?: string }) {
     });
   }, [location.pathname]);
 
-  const transitions = useTransition(location, (location) => location.pathname, {
+  const transitions = useTransition(location, ({ pathname }) => pathname, {
     from: { opacity: 0, transform: 'translateX(100%)' },
     enter: { opacity: 1, transform: 'translateX(0%)' },
     leave: { opacity: 0, transform: 'translateX(-100%)' },
@@ -45,12 +45,12 @@ function MainBase({ className }: { className?: string }) {
       <div className={className} ref={containerRef}>
         <PopupHeader />
         <section>
-          {transitions.map(({ item: location, props, key }) => (
+          {transitions.map(({ item: targetLocation, props, key }) => (
             <animated.div
               key={key}
               style={{ ...props, transformOrigin: 'top' }}
             >
-              <Switch location={location}>
+              <Switch location={targetLocation}>
                 <Route exact path="/" component={Dashboard} />
                 <Route path="/wallet/create" component={WalletCreate} />
                 <Route path="/wallet/recover" component={WalletRecover} />

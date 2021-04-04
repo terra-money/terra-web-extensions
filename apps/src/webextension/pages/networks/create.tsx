@@ -23,7 +23,7 @@ export function NetworkCreate({ history }: RouteComponentProps<{}>) {
         setError('lcd is required!');
         return;
       }
-    } catch (error) {
+    } catch (e) {
       setError('servers is not a json string');
       return;
     }
