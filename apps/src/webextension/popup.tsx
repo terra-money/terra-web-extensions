@@ -36,9 +36,9 @@ function MainBase({ className }: { className?: string }) {
 
   return (
     <IntlProvider locale={locale} messages={messages}>
-      <div className={className} ref={containerRef}>
+      <div className={className}>
         <PopupHeader />
-        <section>
+        <section ref={containerRef}>
           <Switch>
             <Route exact path="/" component={Dashboard} />
             <Route path="/wallet/create" component={WalletCreate} />

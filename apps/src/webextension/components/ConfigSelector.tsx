@@ -4,7 +4,12 @@ import {
   ClickAwayListener,
   Popper,
 } from '@material-ui/core';
-import { Language, WifiTethering } from '@material-ui/icons';
+import {
+  AddCircleOutline,
+  DeleteForever,
+  Language,
+  WifiTethering,
+} from '@material-ui/icons';
 import { Network } from '@terra-dev/network';
 import {
   observeNetworkStorage,
@@ -14,7 +19,7 @@ import {
 import React, { ComponentType, MouseEvent, useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useHistory } from 'react-router-dom';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { useLocales } from 'webextension/contexts/locales';
 import { defaultNetworks } from '../env';
 
@@ -62,7 +67,7 @@ export function ConfigSelectorBase({ className }: { className?: string }) {
       <div className={className}>
         <AnchorButton
           onClick={({ currentTarget }: MouseEvent<HTMLElement>) => {
-            setAnchorElement(currentTarget);
+            setAnchorElement((prev) => (prev ? null : currentTarget));
           }}
         >
           <div>
@@ -81,52 +86,73 @@ export function ConfigSelectorBase({ className }: { className?: string }) {
 
         <Popper open={openDropdown} anchorEl={anchorElement} placement="bottom">
           <DropdownContainer>
-            <ul>
-              {networks.map((network) => (
-                <li key={network.name}>
-                  <span
+            <h2>Network</h2>
+
+            <SelectList>
+              {networks.map((itemNetwork) => (
+                <li
+                  key={itemNetwork.name}
+                  data-selected={itemNetwork.name === selectedNetwork.name}
+                >
+                  <div
                     onClick={() => {
-                      selectNetwork(network);
+                      selectNetwork(itemNetwork);
                       setAnchorElement(null);
                     }}
                   >
-                    [{network.name === selectedNetwork.name ? 'X' : ' '}]{' '}
-                    {network.name} ({network.chainID})
-                  </span>
-                  {defaultNetworks.indexOf(network) === -1 && (
+                    <i>
+                      <WifiTethering />
+                    </i>
+                    <span>{itemNetwork.name}</span>
+                  </div>
+                  {defaultNetworks.indexOf(itemNetwork) === -1 && (
                     <button
                       onClick={() => {
-                        removeNetwork(network);
+                        removeNetwork(itemNetwork);
                         setAnchorElement(null);
                       }}
                     >
-                      Delete
+                      <DeleteForever />
                     </button>
                   )}
                 </li>
               ))}
-            </ul>
+              <li>
+                <div
+                  onClick={() => {
+                    history.push('/network/create');
+                    setAnchorElement(null);
+                  }}
+                >
+                  <i>
+                    <AddCircleOutline />
+                  </i>
+                  <span>Add a new network</span>
+                </div>
+              </li>
+            </SelectList>
 
-            <div>
-              <Button
-                onClick={() => {
-                  history.push('/network/create');
-                  setAnchorElement(null);
-                }}
-              >
-                Add a new network
-              </Button>
-            </div>
+            <h2>Language</h2>
 
-            <ul>
-              {locales.map((l) => (
-                <li key={l}>
-                  <span onClick={() => updateLocale(l)}>
-                    [{l === locale ? 'X' : ' '}] {l}
-                  </span>
+            <SelectList>
+              {locales.map((itemLocale) => (
+                <li key={itemLocale} data-selected={itemLocale === locale}>
+                  <div
+                    onClick={() => {
+                      updateLocale(itemLocale);
+                      setAnchorElement(null);
+                    }}
+                  >
+                    <i>
+                      <Language />
+                    </i>
+                    <span>
+                      <FormattedMessage id={'locale.' + itemLocale} />
+                    </span>
+                  </div>
                 </li>
               ))}
-            </ul>
+            </SelectList>
           </DropdownContainer>
         </Popper>
       </div>
@@ -146,10 +172,9 @@ export const AnchorButton: ComponentType<ButtonProps> = styled(Button)`
       align-items: center;
 
       i {
-        transform: translateY(0.2em);
-
         svg {
           font-size: 1.2em;
+          transform: translateY(0.2em);
         }
 
         margin-right: 0.3em;
@@ -171,14 +196,102 @@ export const ConfigSelector = styled(ConfigSelectorBase)`
   display: inline-block;
 `;
 
+const dropdownEnter = keyframes`
+  0% {
+    opacity: 0;
+    transform: scale(1, 0.4);
+  }
+  
+  100% {
+    opacity: 1;
+    transform: scale(1, 1);
+  }
+`;
+
 const DropdownContainer = styled.div`
-  min-width: 260px;
+  min-width: 200px;
 
   background-color: #ffffff;
   box-shadow: 0 0 21px 4px rgba(0, 0, 0, 0.3);
-  border-radius: 15px;
+  border-radius: 12px;
 
-  button {
-    cursor: pointer;
+  padding: 1em;
+
+  transform-origin: top;
+  animation: ${dropdownEnter} 0.1s ease-out;
+
+  h2 {
+    font-size: 1.2em;
+    font-weight: normal;
+    text-align: center;
+
+    margin-bottom: 0.5em;
+
+    &:not(:first-child) {
+      margin-top: 1.2em;
+    }
+  }
+`;
+
+const SelectList = styled.ul`
+  list-style: none;
+  padding: 0;
+
+  li {
+    height: 2.5em;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    &:not(:first-child) {
+      border-top: 1px dashed #eeeeee;
+    }
+
+    color: #bbbbbb;
+
+    &:hover {
+      color: #555555;
+    }
+
+    &[data-selected='true'] {
+      color: #000000;
+    }
+
+    div {
+      cursor: pointer;
+    }
+
+    svg {
+      font-size: 1.2em;
+      transform: translateY(0.17em);
+    }
+
+    i {
+      margin-right: 0.2em;
+    }
+
+    span {
+      display: inline-block;
+
+      &:first-letter {
+        text-transform: uppercase;
+      }
+    }
+
+    button {
+      border: none;
+      outline: none;
+      background-color: transparent;
+      padding: 0;
+
+      cursor: pointer;
+
+      color: #bbbbbb;
+
+      &:hover {
+        color: #555555;
+      }
+    }
   }
 `;

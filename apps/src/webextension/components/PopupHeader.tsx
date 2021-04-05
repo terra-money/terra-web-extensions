@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { headerHeight, headerPadding } from '../env';
 import { ConfigSelector } from 'webextension/components/ConfigSelector';
 import { ReactComponent as Logo } from '../assets/Logo.svg';
+import { Link } from 'react-router-dom';
 
 export interface PopupHeaderProps {
   className?: string;
@@ -11,9 +12,9 @@ export interface PopupHeaderProps {
 function PopupHeaderBase({ className }: PopupHeaderProps) {
   return (
     <header className={className}>
-      <i className="logo">
+      <Link className="logo" to="/">
         <Logo />
-      </i>
+      </Link>
       <ConfigSelector />
     </header>
   );
