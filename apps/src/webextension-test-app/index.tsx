@@ -13,8 +13,9 @@ import {
   WalletSelectProvider,
 } from '@terra-dev/terra-connect-react';
 import { TerraConnectWebExtensionClient } from '@terra-dev/terra-connect-webextension';
-import { WalletCard, WalletCardProps } from '@terra-dev/wallet-card';
+import { WalletBrandCard, WalletBrandCardProps } from '@terra-dev/wallet-card';
 import { WalletCardSelector } from '@terra-dev/wallet-card/components/WalletCardSelector';
+import { WalletFlatCard } from '@terra-dev/wallet-card/components/WalletFlatCard';
 import React, { ReactNode, useMemo, useState } from 'react';
 import { render } from 'react-dom';
 import { CurrentNetwork } from './components/CurrentNetwork';
@@ -109,6 +110,7 @@ function App() {
           </header>
           <section>
             <CardSelectorSample variant="medium" cardWidth={300} />
+            <CardSelectorBlankSample variant="medium" cardWidth={300} />
             <CardSelectorSample variant="small" cardWidth={170} />
 
             <h1>Current Client Status</h1>
@@ -130,7 +132,7 @@ function CardSelectorSample({
   variant,
   cardWidth,
 }: {
-  variant: WalletCardProps['variant'];
+  variant: WalletBrandCardProps['variant'];
   cardWidth: number;
 }) {
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
@@ -139,35 +141,57 @@ function CardSelectorSample({
     <WalletCardSelector
       selectedIndex={selectedIndex}
       onSelect={setSelectedIndex}
+      onCreate={() => {}}
       cardWidth={cardWidth}
       style={{ margin: '0 auto' }}
     >
-      <WalletCard
+      <WalletBrandCard
+        variant={variant}
+        name="anchor-dev2"
+        design="anchor"
+        terraAddress="terra12hnhh5vtyg5juqnzm43970nh4fw42pt27nw9g9"
+      />
+      <WalletFlatCard
+        variant={variant}
+        name="anchor-dev2"
+        backgroundColor="purple"
+        terraAddress="terra12hnhh5vtyg5juqnzm43970nh4fw42pt27nw9g9"
+      />
+      <WalletBrandCard
         variant={variant}
         name="anchor-dev2"
         terraAddress="terra12hnhh5vtyg5juqnzm43970nh4fw42pt27nw9g9"
       />
-      <WalletCard
+      <WalletBrandCard
         variant={variant}
         name="anchor-dev2"
         terraAddress="terra12hnhh5vtyg5juqnzm43970nh4fw42pt27nw9g9"
       />
-      <WalletCard
-        variant={variant}
-        name="anchor-dev2"
-        terraAddress="terra12hnhh5vtyg5juqnzm43970nh4fw42pt27nw9g9"
-      />
-      <WalletCard
-        variant={variant}
-        name="anchor-dev2"
-        terraAddress="terra12hnhh5vtyg5juqnzm43970nh4fw42pt27nw9g9"
-      />
-      <WalletCard
+      <WalletBrandCard
         variant={variant}
         name="anchor-dev2"
         terraAddress="terra12hnhh5vtyg5juqnzm43970nh4fw42pt27nw9g9"
       />
     </WalletCardSelector>
+  );
+}
+
+function CardSelectorBlankSample({
+  cardWidth,
+}: {
+  variant: WalletBrandCardProps['variant'];
+  cardWidth: number;
+}) {
+  const [selectedIndex, setSelectedIndex] = useState<number>(0);
+
+  return (
+    <WalletCardSelector
+      selectedIndex={selectedIndex}
+      onSelect={setSelectedIndex}
+      onCreate={() => {}}
+      cardWidth={cardWidth}
+      style={{ margin: '0 auto' }}
+    ></WalletCardSelector>
   );
 }
 

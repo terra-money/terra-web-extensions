@@ -1,3 +1,4 @@
+import { Add } from '@material-ui/icons';
 import React, {
   DetailedHTMLProps,
   HTMLAttributes,
@@ -5,7 +6,8 @@ import React, {
   useMemo,
 } from 'react';
 import styled from 'styled-components';
-import { WalletCardProps } from './WalletCard';
+import { WalletBlankCard } from './WalletBlankCard';
+import { WalletCardContainerProps } from './WalletCardContainer';
 
 export interface CardSelectorProps
   extends Omit<
@@ -14,13 +16,14 @@ export interface CardSelectorProps
   > {
   className?: string;
   cardWidth: number;
-  children:
-    | ReactElement<WalletCardProps>
-    | ReactElement<WalletCardProps>[]
+  children?:
+    | ReactElement<WalletCardContainerProps>
+    | ReactElement<WalletCardContainerProps>[]
     | null
     | undefined;
   selectedIndex: number;
   onSelect: (nextSelectedIndex: number) => void;
+  onCreate: () => void;
 }
 
 function CardSelectorBase({
@@ -28,12 +31,15 @@ function CardSelectorBase({
   children,
   selectedIndex,
   onSelect,
+  onCreate,
   ...ulProps
 }: CardSelectorProps) {
   const cards = useMemo(() => {
     if (!children) return null;
 
     const arrayedChildren = Array.isArray(children) ? children : [children];
+
+    if (arrayedChildren.length === 0) return null;
 
     return arrayedChildren.map((card, i) => {
       const translateX = cardWidth * (i - selectedIndex);
@@ -43,7 +49,6 @@ function CardSelectorBase({
       return (
         <li
           key={'card' + i}
-          data-select={i - selectedIndex}
           onClick={() => selectedIndex !== i && onSelect(i)}
           style={{
             transform: `translateX(${translateX}px) scale(${scale})`,
@@ -58,7 +63,21 @@ function CardSelectorBase({
     });
   }, [cardWidth, children, onSelect, selectedIndex]);
 
-  return <ul {...ulProps}>{cards ?? <li>No Cards</li>}</ul>;
+  return (
+    <ul {...ulProps}>
+      {cards ?? (
+        <li onClick={onCreate} style={{ cursor: 'pointer' }}>
+          <WalletBlankCard>
+            <g transform="translate(350 190)">
+              <g transform="translate(-100 -100)">
+                <Add width="200" height="200" />
+              </g>
+            </g>
+          </WalletBlankCard>
+        </li>
+      )}
+    </ul>
+  );
 }
 
 export const WalletCardSelector = styled(CardSelectorBase)`

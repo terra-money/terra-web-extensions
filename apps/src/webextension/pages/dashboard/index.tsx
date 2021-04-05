@@ -1,16 +1,18 @@
 import { truncate } from '@anchor-protocol/notation';
 import { EncryptedWallet } from '@terra-dev/wallet';
-import { WalletCard, WalletCardSelector } from '@terra-dev/wallet-card';
+import { WalletBrandCard, WalletCardSelector } from '@terra-dev/wallet-card';
 import {
   observeWalletStorage,
   removeWallet,
 } from '@terra-dev/webextension-wallet-storage';
 import React, { useEffect, useMemo, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 
 function DashboardBase({ className }: { className?: string }) {
+  const history = useHistory();
+
   const [encryptedWallets, setEncryptedWallets] = useState<EncryptedWallet[]>(
     [],
   );
@@ -27,7 +29,7 @@ function DashboardBase({ className }: { className?: string }) {
 
   const walletCards = useMemo(() => {
     return encryptedWallets.map(({ name, terraAddress }) => (
-      <WalletCard name={name} terraAddress={terraAddress} />
+      <WalletBrandCard name={name} terraAddress={terraAddress} />
     ));
   }, [encryptedWallets]);
 
@@ -40,6 +42,7 @@ function DashboardBase({ className }: { className?: string }) {
         cardWidth={280}
         selectedIndex={selectedIndex}
         onSelect={setSelectedIndex}
+        onCreate={() => history.push('/wallet/create')}
       >
         {walletCards}
       </WalletCardSelector>
