@@ -1,6 +1,6 @@
 import { truncate } from '@anchor-protocol/notation';
 import { EncryptedWallet } from '@terra-dev/wallet';
-import { WalletBrandCard, WalletCardSelector } from '@terra-dev/wallet-card';
+import { WalletCard, WalletCardSelector } from '@terra-dev/wallet-card';
 import {
   observeWalletStorage,
   removeWallet,
@@ -29,7 +29,7 @@ function DashboardBase({ className }: { className?: string }) {
 
   const walletCards = useMemo(() => {
     return encryptedWallets.map(({ name, terraAddress }) => (
-      <WalletBrandCard name={name} terraAddress={terraAddress} />
+      <WalletCard name={name} terraAddress={terraAddress} />
     ));
   }, [encryptedWallets]);
 

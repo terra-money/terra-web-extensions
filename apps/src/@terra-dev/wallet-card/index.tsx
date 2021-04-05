@@ -1,2 +1,5 @@
-export * from '@terra-dev/wallet-card/components/WalletBrandCard';
+export * from './components/WalletBlankCard';
+export * from './components/WalletCard';
+export * from './components/WalletCardContainer';
 export * from './components/WalletCardSelector';
+export * from './components/WalletCardTexts';

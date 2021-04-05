@@ -13,9 +13,11 @@ import {
   WalletSelectProvider,
 } from '@terra-dev/terra-connect-react';
 import { TerraConnectWebExtensionClient } from '@terra-dev/terra-connect-webextension';
-import { WalletBrandCard, WalletBrandCardProps } from '@terra-dev/wallet-card';
-import { WalletCardSelector } from '@terra-dev/wallet-card/components/WalletCardSelector';
-import { WalletFlatCard } from '@terra-dev/wallet-card/components/WalletFlatCard';
+import {
+  WalletCard,
+  WalletCardProps,
+  WalletCardSelector,
+} from '@terra-dev/wallet-card';
 import React, { ReactNode, useMemo, useState } from 'react';
 import { render } from 'react-dom';
 import { CurrentNetwork } from './components/CurrentNetwork';
@@ -132,7 +134,7 @@ function CardSelectorSample({
   variant,
   cardWidth,
 }: {
-  variant: WalletBrandCardProps['variant'];
+  variant: WalletCardProps['variant'];
   cardWidth: number;
 }) {
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
@@ -145,29 +147,29 @@ function CardSelectorSample({
       cardWidth={cardWidth}
       style={{ margin: '0 auto' }}
     >
-      <WalletBrandCard
+      <WalletCard
         variant={variant}
         name="anchor-dev2"
         design="anchor"
         terraAddress="terra12hnhh5vtyg5juqnzm43970nh4fw42pt27nw9g9"
       />
-      <WalletFlatCard
+      <WalletCard
         variant={variant}
         name="anchor-dev2"
-        backgroundColor="purple"
+        design="purple"
         terraAddress="terra12hnhh5vtyg5juqnzm43970nh4fw42pt27nw9g9"
       />
-      <WalletBrandCard
-        variant={variant}
-        name="anchor-dev2"
-        terraAddress="terra12hnhh5vtyg5juqnzm43970nh4fw42pt27nw9g9"
-      />
-      <WalletBrandCard
+      <WalletCard
         variant={variant}
         name="anchor-dev2"
         terraAddress="terra12hnhh5vtyg5juqnzm43970nh4fw42pt27nw9g9"
       />
-      <WalletBrandCard
+      <WalletCard
+        variant={variant}
+        name="anchor-dev2"
+        terraAddress="terra12hnhh5vtyg5juqnzm43970nh4fw42pt27nw9g9"
+      />
+      <WalletCard
         variant={variant}
         name="anchor-dev2"
         terraAddress="terra12hnhh5vtyg5juqnzm43970nh4fw42pt27nw9g9"
@@ -179,7 +181,7 @@ function CardSelectorSample({
 function CardSelectorBlankSample({
   cardWidth,
 }: {
-  variant: WalletBrandCardProps['variant'];
+  variant: WalletCardProps['variant'];
   cardWidth: number;
 }) {
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
