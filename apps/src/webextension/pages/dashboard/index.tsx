@@ -7,8 +7,6 @@ import {
 import React, { useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
-import { LocaleSelector } from 'webextension/components/LocaleSelector';
-import { NetworkSelector } from '../../components/NetworkSelector';
 
 export function Dashboard() {
   const [encryptedWallets, setEncryptedWallets] = useState<EncryptedWallet[]>(
@@ -27,12 +25,6 @@ export function Dashboard() {
 
   return (
     <section>
-      <h3>Language</h3>
-      <LocaleSelector />
-
-      <h3>Network Select</h3>
-      <NetworkSelector />
-
       <h3>Wallets</h3>
       {encryptedWallets.length > 0 ? (
         <ul>

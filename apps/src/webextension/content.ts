@@ -50,8 +50,11 @@ function startTxWithIframeModal(
     const txBase64 = btoa(JSON.stringify(tx));
     const networkBase64 = btoa(JSON.stringify(network));
 
+    const origin = window.location.hostname;
+    const timestamp = Date.now();
+
     const modal = createElement(IFrameModal, {
-      src: `${txHtml}?id=${id}&terraAddress=${terraAddress}&network=${networkBase64}&tx=${txBase64}`,
+      src: `${txHtml}?id=${id}&terraAddress=${terraAddress}&network=${networkBase64}&tx=${txBase64}&origin=${origin}&timestamp=${timestamp}`,
       title: 'Tx',
       onClose: () => {
         subscriber.next({

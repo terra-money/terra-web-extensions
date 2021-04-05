@@ -34,5 +34,6 @@ export const getIdFromTxPort = (name: string) => name.substr(3);
 export const getIdFromContentScriptPort = (name: string) => name.substr(8);
 
 export const width = 400;
-export const height = 600;
-export const headerHeight = 40;
+export const headerHeight = 50;
+export const contentHeight = 600;
+export const headerPadding = 20;

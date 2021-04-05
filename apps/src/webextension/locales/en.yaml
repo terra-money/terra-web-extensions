@@ -3,3 +3,6 @@ wallet.delete: Delete wallet
 wallet.recover: Recover existing wallet
 wallet.new: New wallet
 wallet.empty: No Wallet
+
+locale.en-US: English
+locale.ko-KR: Korean

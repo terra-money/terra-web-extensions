@@ -1,5 +1,9 @@
+import { IconButton } from '@material-ui/core';
+import { Close } from '@material-ui/icons';
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
+import { contentHeight, headerHeight, headerPadding } from 'webextension/env';
+import { ReactComponent as Logo } from '../assets/Logo.svg';
 import { WaveEffect } from './WaveEffect';
 
 export interface IFrameModalProps {
@@ -15,7 +19,12 @@ function IFrameModalBase({ className, title, src, onClose }: IFrameModalProps) {
       <WaveEffect />
       <section>
         <header>
-          <button onClick={onClose}>Close</button>
+          <i className="logo">
+            <Logo />
+          </i>
+          <IconButton onClick={onClose} size="small">
+            <Close style={{ color: '#ffffff' }} />
+          </IconButton>
         </header>
         <iframe title={title} src={src} frameBorder={0} />
       </section>
@@ -45,7 +54,7 @@ const iframeEnter = keyframes`
   }
   
   100% {
-    transform: translateY(60px);
+    transform: translateY(${headerHeight}px);
   }
 `;
 
@@ -67,7 +76,7 @@ export const IFrameModal = styled(IFrameModalBase)`
     box-shadow: 0px 4px 18px 3px rgba(0, 0, 0, 0.43);
 
     width: 400px;
-    height: 640px;
+    height: ${headerHeight + contentHeight}px;
 
     box-sizing: border-box;
     overflow: hidden;
@@ -76,17 +85,31 @@ export const IFrameModal = styled(IFrameModalBase)`
 
     border-radius: 24px;
 
-    display: grid;
-    justify-content: right;
-    align-items: start;
-
     animation: ${sectionEnter} 0.27s ease-in-out;
 
     header {
-      padding: 20px;
+      height: ${headerHeight}px;
       display: flex;
-      justify-content: flex-end;
-      align-items: flex-start;
+      justify-content: space-between;
+      align-items: center;
+
+      padding: 0 ${headerPadding}px;
+
+      .logo {
+        color: #ffffff;
+        font-size: 0;
+
+        svg {
+          color: currentColor;
+          width: 100px;
+        }
+      }
+
+      button {
+        svg {
+          font-size: 1em;
+        }
+      }
     }
 
     iframe {
@@ -100,10 +123,10 @@ export const IFrameModal = styled(IFrameModalBase)`
 
       background-color: #ffffff;
 
-      transform: translateY(60px);
+      transform: translateY(${headerHeight}px);
 
       width: 400px;
-      height: 640px;
+      height: ${contentHeight}px;
 
       animation: ${iframeEnter} 0.5s ease-in;
     }
