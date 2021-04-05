@@ -50,9 +50,6 @@ function MainBase({ className }: { className?: string }) {
             <Route path="/network/create" component={NetworkCreate} />
             <Redirect to="/" />
           </Switch>
-          {Array.from({ length: 100 }).map((_, a) => (
-            <p key={'scroll' + a}>A</p>
-          ))}
         </section>
         <GlobalStyle />
       </div>
@@ -84,7 +81,7 @@ const Main = styled(MainBase)`
 
   > section {
     min-height: ${headerHeight + contentHeight}px;
-    padding-bottom: ${headerHeight}px;
+    padding: 20px 20px ${headerHeight + 100}px 20px;
 
     overflow-x: hidden;
     overflow-y: auto;

@@ -1,14 +1,16 @@
 import { truncate } from '@anchor-protocol/notation';
 import { EncryptedWallet } from '@terra-dev/wallet';
+import { WalletCard, WalletCardSelector } from '@terra-dev/wallet-card';
 import {
   observeWalletStorage,
   removeWallet,
 } from '@terra-dev/webextension-wallet-storage';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
+import styled from 'styled-components';
 
-export function Dashboard() {
+function DashboardBase({ className }: { className?: string }) {
   const [encryptedWallets, setEncryptedWallets] = useState<EncryptedWallet[]>(
     [],
   );
@@ -23,8 +25,25 @@ export function Dashboard() {
     };
   }, []);
 
+  const walletCards = useMemo(() => {
+    return encryptedWallets.map(({ name, terraAddress }) => (
+      <WalletCard name={name} terraAddress={terraAddress} />
+    ));
+  }, [encryptedWallets]);
+
+  const [selectedIndex, setSelectedIndex] = useState<number>(0);
+
   return (
-    <section>
+    <section className={className}>
+      <WalletCardSelector
+        className="wallet-cards"
+        cardWidth={280}
+        selectedIndex={selectedIndex}
+        onSelect={setSelectedIndex}
+      >
+        {walletCards}
+      </WalletCardSelector>
+
       <h3>Wallets</h3>
       {encryptedWallets.length > 0 ? (
         <ul>
@@ -67,3 +86,9 @@ export function Dashboard() {
     </section>
   );
 }
+
+export const Dashboard = styled(DashboardBase)`
+  .wallet-cards {
+    margin: 20px auto 0 auto;
+  }
+`;
