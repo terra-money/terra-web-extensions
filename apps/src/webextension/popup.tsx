@@ -1,3 +1,4 @@
+import { createMuiTheme } from '@material-ui/core';
 import React, { useEffect, useRef } from 'react';
 import { render } from 'react-dom';
 import { IntlProvider } from 'react-intl';
@@ -8,7 +9,8 @@ import {
   Switch,
   useLocation,
 } from 'react-router-dom';
-import styled, { keyframes } from 'styled-components';
+import styled, { DefaultTheme, keyframes } from 'styled-components';
+import { ThemeProvider } from 'webextension/contexts/theme';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { GlobalStyle } from './components/GlobalStyle';
 import { PopupHeader } from './components/PopupHeader';
@@ -19,6 +21,14 @@ import { NetworkCreate } from './pages/networks/create';
 import { WalletChangePassword } from './pages/wallets/change-password';
 import { WalletCreate } from './pages/wallets/create';
 import { WalletRecover } from './pages/wallets/recover';
+
+const theme: DefaultTheme = createMuiTheme({
+  typography: {
+    button: {
+      textTransform: 'none',
+    },
+  },
+});
 
 function MainBase({ className }: { className?: string }) {
   const { locale, messages } = useIntlProps();
@@ -36,23 +46,25 @@ function MainBase({ className }: { className?: string }) {
 
   return (
     <IntlProvider locale={locale} messages={messages}>
-      <div className={className}>
-        <PopupHeader />
-        <section ref={containerRef}>
-          <Switch>
-            <Route exact path="/" component={Dashboard} />
-            <Route path="/wallet/create" component={WalletCreate} />
-            <Route path="/wallet/recover" component={WalletRecover} />
-            <Route
-              path="/wallets/:terraAddress/password"
-              component={WalletChangePassword}
-            />
-            <Route path="/network/create" component={NetworkCreate} />
-            <Redirect to="/" />
-          </Switch>
-        </section>
-        <GlobalStyle />
-      </div>
+      <ThemeProvider theme={theme}>
+        <div className={className}>
+          <PopupHeader />
+          <section ref={containerRef}>
+            <Switch>
+              <Route exact path="/" component={Dashboard} />
+              <Route path="/wallet/create" component={WalletCreate} />
+              <Route path="/wallet/recover" component={WalletRecover} />
+              <Route
+                path="/wallets/:terraAddress/password"
+                component={WalletChangePassword}
+              />
+              <Route path="/network/create" component={NetworkCreate} />
+              <Redirect to="/" />
+            </Switch>
+          </section>
+          <GlobalStyle />
+        </div>
+      </ThemeProvider>
     </IntlProvider>
   );
 }

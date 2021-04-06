@@ -10,12 +10,11 @@ import styled from 'styled-components';
 import { WalletBlankCard } from './WalletBlankCard';
 import { WalletCardContainerProps } from './WalletCardContainer';
 
-export interface CardSelectorProps
+export interface WalletCardSelectorProps
   extends Omit<
     DetailedHTMLProps<HTMLAttributes<HTMLUListElement>, HTMLUListElement>,
     'children' | 'onSelect'
   > {
-  className?: string;
   cardWidth: number;
   children?:
     | ReactElement<WalletCardContainerProps>
@@ -34,7 +33,7 @@ function CardSelectorBase({
   onSelect,
   onCreate,
   ...ulProps
-}: CardSelectorProps) {
+}: WalletCardSelectorProps) {
   const cards = useMemo(() => {
     if (!children) return null;
 

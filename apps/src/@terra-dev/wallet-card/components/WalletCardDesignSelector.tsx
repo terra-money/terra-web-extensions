@@ -1,16 +1,56 @@
-import styled from 'styled-components';
-import React from 'react';
+import { WalletCard } from '@terra-dev/wallet-card/components/WalletCard';
+import React, { useCallback, useMemo } from 'react';
+import {
+  WalletCardSelector,
+  WalletCardSelectorProps,
+} from './WalletCardSelector';
 
-export interface WalletCardDesignSelectorProps {
-  className?: string;
+export interface WalletCardDesignSelectorProps
+  extends Omit<
+    WalletCardSelectorProps,
+    'selectedIndex' | 'onSelect' | 'onCreate' | 'children' | 'onChange'
+  > {
+  name: string;
+  terraAddress: string;
+  designs: string[];
+  design: string;
+  onChange: (nextDesign: string) => void;
 }
 
-function WalletCardDesignSelectorBase({
-  className,
+export function WalletCardDesignSelector({
+  name,
+  terraAddress,
+  designs,
+  design,
+  onChange,
+  ref,
+  ...selectorProps
 }: WalletCardDesignSelectorProps) {
-  return <div className={className}>...</div>;
-}
+  const selectedIndex = useMemo<number>(() => {
+    return designs.findIndex((itemDesign) => itemDesign === design);
+  }, [design, designs]);
 
-export const WalletCardDesignSelector = styled(WalletCardDesignSelectorBase)`
-  // TODO
-`;
+  const updateSelectedIndex = useCallback(
+    (nextSelectedIndex: number) => {
+      onChange(designs[nextSelectedIndex]);
+    },
+    [designs, onChange],
+  );
+
+  return (
+    <WalletCardSelector
+      selectedIndex={selectedIndex}
+      onSelect={updateSelectedIndex}
+      onCreate={() => {}}
+      {...selectorProps}
+    >
+      {designs.map((itemDesign) => (
+        <WalletCard
+          name={name}
+          terraAddress={terraAddress}
+          design={itemDesign}
+        />
+      ))}
+    </WalletCardSelector>
+  );
+}

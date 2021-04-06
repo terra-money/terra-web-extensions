@@ -1,3 +1,4 @@
+import { createMuiTheme } from '@material-ui/core';
 import { Network } from '@terra-dev/network';
 import {
   deserializeTx,
@@ -11,12 +12,16 @@ import { findWallet } from '@terra-dev/webextension-wallet-storage';
 import { MsgExecuteContract } from '@terra-money/terra.js';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { render } from 'react-dom';
-import styled from 'styled-components';
+import { IntlProvider } from 'react-intl';
+import styled, { DefaultTheme } from 'styled-components';
 import { browser } from 'webextension-polyfill-ts';
+import { ErrorBoundary } from 'webextension/components/ErrorBoundary';
 import { GlobalStyle } from 'webextension/components/GlobalStyle';
+import { LocalesProvider, useIntlProps } from 'webextension/contexts/locales';
+import { ThemeProvider } from 'webextension/contexts/theme';
 import { txPortPrefix } from 'webextension/env';
 
-function MainBase({ className }: { className?: string }) {
+function AppBase({ className }: { className?: string }) {
   // ---------------------------------------------
   // read hash urls
   // ---------------------------------------------
@@ -218,7 +223,7 @@ function MainBase({ className }: { className?: string }) {
   );
 }
 
-const Main = styled(MainBase)`
+const App = styled(AppBase)`
   max-width: 100vw;
 
   pre {
@@ -227,4 +232,25 @@ const Main = styled(MainBase)`
   }
 `;
 
-render(<Main />, document.querySelector('#app'));
+const theme: DefaultTheme = createMuiTheme();
+
+function Main() {
+  const { locale, messages } = useIntlProps();
+
+  return (
+    <IntlProvider locale={locale} messages={messages}>
+      <ThemeProvider theme={theme}>
+        <App />
+      </ThemeProvider>
+    </IntlProvider>
+  );
+}
+
+render(
+  <ErrorBoundary>
+    <LocalesProvider>
+      <Main />
+    </LocalesProvider>
+  </ErrorBoundary>,
+  document.querySelector('#app'),
+);

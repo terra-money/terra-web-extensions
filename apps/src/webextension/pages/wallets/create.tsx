@@ -1,3 +1,6 @@
+import { Button, TextField } from '@material-ui/core';
+import { FormLayout } from '@terra-dev/station-ui/components/FormLayout';
+import { FormSection } from '@terra-dev/station-ui/components/FormSection';
 import {
   createMnemonicKey,
   createWallet,
@@ -5,13 +8,16 @@ import {
   encryptWallet,
   Wallet,
 } from '@terra-dev/wallet';
+import { WalletCardDesignSelector } from '@terra-dev/wallet-card/components/WalletCardDesignSelector';
 import { addWallet } from '@terra-dev/webextension-wallet-storage';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { ChangeEvent, useCallback, useMemo, useState } from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
+import styled from 'styled-components';
+import { cardDesigns } from 'webextension/env';
 
 export function WalletCreate({ history }: RouteComponentProps<{}>) {
   const [name, setName] = useState<string>('');
-  const [design, setDesign] = useState<string>('');
+  const [design, setDesign] = useState<string>(() => cardDesigns[0]);
   const [password, setPassword] = useState<string>('');
 
   const mk = useMemo(() => {
@@ -34,48 +40,64 @@ export function WalletCreate({ history }: RouteComponentProps<{}>) {
   }, [design, history, mk, name, password]);
 
   return (
-    <section>
-      <div>
-        <Link to="/">Back to Main</Link>
+    <FormSection>
+      <header>
+        <h1>Add New Wallet</h1>
 
-        <h3>Wallet Neme</h3>
-        <input
+        <WalletCardDesignSelector
+          style={{ margin: '1em auto 3em auto' }}
+          name={name}
+          design={design}
+          terraAddress="XXXXXXXXXXXXXXXXXXXXXXX"
+          designs={cardDesigns}
+          onChange={setDesign}
+          cardWidth={280}
+        />
+      </header>
+
+      <FormLayout>
+        <TextField
           type="text"
+          size="small"
+          label="WALLET NAME"
+          InputLabelProps={{ shrink: true }}
           value={name}
-          onChange={({ target }) => setName(target.value)}
+          onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
+            setName(target.value)
+          }
         />
 
-        <h3>Wallet Design</h3>
-        <input
-          type="text"
-          value={design}
-          onChange={({ target }) => setDesign(target.value)}
-        />
-
-        <h3>Password</h3>
-        <input
-          type="text"
+        <TextField
+          type="password"
+          size="small"
+          label="WALLET PASSWORD"
+          InputLabelProps={{ shrink: true }}
           value={password}
-          onChange={({ target }) => setPassword(target.value)}
+          onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
+            setPassword(target.value)
+          }
         />
-      </div>
+      </FormLayout>
 
-      <div>
-        <h3>Mnemonic</h3>
-        <p
-          style={{
-            maxWidth: 400,
-            wordBreak: 'break-all',
-            whiteSpace: 'break-spaces',
-          }}
-        >
-          {mk.mnemonic}
-        </p>
-      </div>
+      <MnemonicSection style={{ margin: '1em 0' }}>
+        {mk.mnemonic}
+      </MnemonicSection>
 
-      <div>
-        <button onClick={create}>Create Wallet</button>
-      </div>
-    </section>
+      <footer>
+        <Button variant="contained" color="secondary" component={Link} to="/">
+          Cancel
+        </Button>
+        <Button variant="contained" color="primary" onClick={create}>
+          Create Wallet
+        </Button>
+      </footer>
+    </FormSection>
   );
 }
+
+const MnemonicSection = styled.section`
+  border: 1px solid red;
+  border-radius: 12px;
+
+  padding: 1em;
+`;

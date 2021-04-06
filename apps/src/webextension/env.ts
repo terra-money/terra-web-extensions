@@ -37,3 +37,12 @@ export const width = 400;
 export const headerHeight = 50;
 export const contentHeight = 600;
 export const headerPadding = 20;
+
+export const cardDesigns = [
+  'anchor',
+  'terra',
+  '#147368',
+  '#7e1d7b',
+  '#113558',
+  '#c35942',
+];

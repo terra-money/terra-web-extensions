@@ -11,6 +11,7 @@ import {
   WifiTethering,
 } from '@material-ui/icons';
 import { Network } from '@terra-dev/network';
+import { LinedList } from '@terra-dev/station-ui/components/LinedList';
 import {
   observeNetworkStorage,
   removeNetwork,
@@ -88,13 +89,14 @@ export function ConfigSelectorBase({ className }: { className?: string }) {
           <DropdownContainer>
             <h2>Network</h2>
 
-            <SelectList>
+            <LinedList>
               {networks.map((itemNetwork) => (
                 <li
                   key={itemNetwork.name}
                   data-selected={itemNetwork.name === selectedNetwork.name}
                 >
                   <div
+                    style={{ cursor: 'pointer' }}
                     onClick={() => {
                       selectNetwork(itemNetwork);
                       setAnchorElement(null);
@@ -117,8 +119,9 @@ export function ConfigSelectorBase({ className }: { className?: string }) {
                   )}
                 </li>
               ))}
-              <li>
+              <li data-selected="false">
                 <div
+                  style={{ cursor: 'pointer' }}
                   onClick={() => {
                     history.push('/network/create');
                     setAnchorElement(null);
@@ -130,14 +133,15 @@ export function ConfigSelectorBase({ className }: { className?: string }) {
                   <span>Add a new network</span>
                 </div>
               </li>
-            </SelectList>
+            </LinedList>
 
             <h2>Language</h2>
 
-            <SelectList>
+            <LinedList>
               {locales.map((itemLocale) => (
                 <li key={itemLocale} data-selected={itemLocale === locale}>
                   <div
+                    style={{ cursor: 'pointer' }}
                     onClick={() => {
                       updateLocale(itemLocale);
                       setAnchorElement(null);
@@ -152,7 +156,7 @@ export function ConfigSelectorBase({ className }: { className?: string }) {
                   </div>
                 </li>
               ))}
-            </SelectList>
+            </LinedList>
           </DropdownContainer>
         </Popper>
       </div>
@@ -229,69 +233,6 @@ const DropdownContainer = styled.div`
 
     &:not(:first-child) {
       margin-top: 1.2em;
-    }
-  }
-`;
-
-const SelectList = styled.ul`
-  list-style: none;
-  padding: 0;
-
-  li {
-    height: 2.5em;
-
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    &:not(:first-child) {
-      border-top: 1px dashed #eeeeee;
-    }
-
-    color: #bbbbbb;
-
-    &:hover {
-      color: #555555;
-    }
-
-    &[data-selected='true'] {
-      color: #000000;
-    }
-
-    div {
-      cursor: pointer;
-    }
-
-    svg {
-      font-size: 1.2em;
-      transform: translateY(0.17em);
-    }
-
-    i {
-      margin-right: 0.2em;
-    }
-
-    span {
-      display: inline-block;
-
-      &:first-letter {
-        text-transform: uppercase;
-      }
-    }
-
-    button {
-      border: none;
-      outline: none;
-      background-color: transparent;
-      padding: 0;
-
-      cursor: pointer;
-
-      color: #bbbbbb;
-
-      &:hover {
-        color: #555555;
-      }
     }
   }
 `;

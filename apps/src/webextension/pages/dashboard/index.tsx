@@ -1,4 +1,11 @@
-import { truncate } from '@anchor-protocol/notation';
+import {
+  AddCircleOutline,
+  DeleteForever,
+  SettingsBackupRestore,
+  VpnKey,
+} from '@material-ui/icons';
+import { LinedList } from '@terra-dev/station-ui/components/LinedList';
+import { MiniButton } from '@terra-dev/station-ui/components/MiniButton';
 import { EncryptedWallet } from '@terra-dev/wallet';
 import { WalletCard, WalletCardSelector } from '@terra-dev/wallet-card';
 import {
@@ -29,7 +36,12 @@ function DashboardBase({ className }: { className?: string }) {
 
   const walletCards = useMemo(() => {
     return encryptedWallets.map(({ name, terraAddress, design }) => (
-      <WalletCard name={name} terraAddress={terraAddress} design={design} />
+      <WalletCard
+        key={name}
+        name={name}
+        terraAddress={terraAddress}
+        design={design}
+      />
     ));
   }, [encryptedWallets]);
 
@@ -37,55 +49,65 @@ function DashboardBase({ className }: { className?: string }) {
 
   return (
     <section className={className}>
-      <WalletCardSelector
-        className="wallet-cards"
-        cardWidth={280}
-        selectedIndex={selectedIndex}
-        onSelect={setSelectedIndex}
-        onCreate={() => history.push('/wallet/create')}
-      >
-        {walletCards}
-      </WalletCardSelector>
+      <header>
+        <WalletCardSelector
+          className="wallet-cards"
+          cardWidth={280}
+          selectedIndex={selectedIndex}
+          onSelect={setSelectedIndex}
+          onCreate={() => history.push('/wallet/create')}
+        >
+          {walletCards}
+        </WalletCardSelector>
 
-      <h3>Wallets</h3>
-      {encryptedWallets.length > 0 ? (
-        <ul>
-          {encryptedWallets.map((wallet) => (
-            <li key={wallet.terraAddress}>
-              <ul>
-                <li>
-                  {wallet.name} ({truncate(wallet.terraAddress)})
-                </li>
-                <li>
-                  <Link to={`/wallets/${wallet.terraAddress}/password`}>
-                    <FormattedMessage id="wallet.change-password" />
-                  </Link>
-                </li>
-                <li>
-                  <button onClick={() => removeWallet(wallet)}>
-                    <FormattedMessage id="wallet.delete" />
-                  </button>
-                </li>
-              </ul>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <FormattedMessage id="wallet.empty" />
+        {encryptedWallets.length > 0 && !!encryptedWallets[selectedIndex] && (
+          <div className="wallet-actions">
+            <MiniButton
+              startIcon={<VpnKey />}
+              component={Link}
+              to={`/wallets/${encryptedWallets[selectedIndex].terraAddress}/password`}
+            >
+              <FormattedMessage id="wallet.change-password" />
+            </MiniButton>
+
+            <MiniButton
+              startIcon={<DeleteForever />}
+              onClick={() => removeWallet(encryptedWallets[selectedIndex])}
+            >
+              <FormattedMessage id="wallet.delete" />
+            </MiniButton>
+          </div>
+        )}
+      </header>
+
+      {encryptedWallets.length === 0 && (
+        <section className="empty-wallets">
+          <FormattedMessage id="wallet.empty" />
+        </section>
       )}
 
-      <ul>
+      <LinedList className="wallets-actions" iconMarginRight="0.6em">
         <li>
           <Link to="/wallet/create">
-            <FormattedMessage id="wallet.new" />
+            <i>
+              <AddCircleOutline />
+            </i>
+            <span>
+              <FormattedMessage id="wallet.new" />
+            </span>
           </Link>
         </li>
         <li>
           <Link to="/wallet/recover">
-            <FormattedMessage id="wallet.recover" />
+            <i>
+              <SettingsBackupRestore />
+            </i>
+            <span>
+              <FormattedMessage id="wallet.recover" />
+            </span>
           </Link>
         </li>
-      </ul>
+      </LinedList>
     </section>
   );
 }
@@ -93,5 +115,24 @@ function DashboardBase({ className }: { className?: string }) {
 export const Dashboard = styled(DashboardBase)`
   .wallet-cards {
     margin: 20px auto 0 auto;
+  }
+
+  .wallet-actions {
+    height: 50px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .empty-wallets {
+    margin: 30px 0 20px 0;
+    text-align: center;
+  }
+
+  .wallets-actions {
+    margin-top: 10px;
+    font-size: 17px;
   }
 `;

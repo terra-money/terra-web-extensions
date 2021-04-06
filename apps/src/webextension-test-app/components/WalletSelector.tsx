@@ -34,6 +34,7 @@ export function WalletSelector() {
         {wallets.map((wallet) => (
           <WalletCard
             variant="small"
+            key={wallet.name}
             name={wallet.name}
             terraAddress={wallet.terraAddress}
             design={wallet.design}

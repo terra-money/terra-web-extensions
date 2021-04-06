@@ -1,3 +1,6 @@
+import { Button, TextField } from '@material-ui/core';
+import { FormLayout } from '@terra-dev/station-ui/components/FormLayout';
+import { FormSection } from '@terra-dev/station-ui/components/FormSection';
 import {
   decryptWallet,
   EncryptedWallet,
@@ -8,8 +11,8 @@ import {
   findWallet,
   updateWallet,
 } from '@terra-dev/webextension-wallet-storage';
-import React, { useCallback, useEffect, useState } from 'react';
-import { RouteComponentProps, Link } from 'react-router-dom';
+import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
+import { Link, RouteComponentProps } from 'react-router-dom';
 
 export function WalletChangePassword({
   match,
@@ -58,31 +61,52 @@ export function WalletChangePassword({
   }
 
   return (
-    <section>
-      <div>
-        <Link to="/">Back to Main</Link>
-        
-        <h3>Wallet Name</h3>
-        <input type="text" readOnly value={encryptedWallet.name} />
+    <FormSection>
+      <header>
+        <h1>Change Wallet Password</h1>
+      </header>
 
-        <h3>Current Password</h3>
-        <input
+      <FormLayout>
+        <TextField
           type="text"
+          size="small"
+          label="WALLET NAME"
+          InputLabelProps={{ shrink: true }}
+          value={encryptedWallet.name}
+          readOnly
+        />
+
+        <TextField
+          type="password"
+          size="small"
+          label="CURRENT PASSWORD"
+          InputLabelProps={{ shrink: true }}
           value={currentPassword}
-          onChange={({ target }) => setCurrentPassword(target.value)}
+          onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
+            setCurrentPassword(target.value)
+          }
         />
 
-        <h3>New Password</h3>
-        <input
-          type="text"
+        <TextField
+          type="password"
+          size="small"
+          label="NEW PASSWORD"
+          InputLabelProps={{ shrink: true }}
           value={newPassword}
-          onChange={({ target }) => setNewPassword(target.value)}
+          onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
+            setNewPassword(target.value)
+          }
         />
-      </div>
+      </FormLayout>
 
-      <div>
-        <button onClick={changePassword}>Change Password</button>
-      </div>
-    </section>
+      <footer>
+        <Button variant="contained" color="secondary" component={Link} to="/">
+          Cancel
+        </Button>
+        <Button variant="contained" color="primary" onClick={changePassword}>
+          Change Password
+        </Button>
+      </footer>
+    </FormSection>
   );
 }
