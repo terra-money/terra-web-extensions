@@ -1,12 +1,17 @@
 import { useWalletSelect } from '@terra-dev/terra-connect-react';
 import { WalletCard, WalletCardSelector } from '@terra-dev/wallet-card';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import styled from 'styled-components';
 
 export function WalletSelector() {
-  const { wallets, selectWallet } = useWalletSelect();
+  const { wallets, selectWallet, selectedWallet } = useWalletSelect();
 
-  const [selectedIndex, setSelectedIndex] = useState<number>(0);
+  const selectedIndex = useMemo<number>(() => {
+    if (!selectedWallet) return 0;
+    return wallets.findIndex(
+      (itemWallet) => itemWallet.terraAddress === selectedWallet.terraAddress,
+    );
+  }, [selectedWallet, wallets]);
 
   const selectCard = useCallback(
     (nextSelectedIndex: number) => {
@@ -14,7 +19,6 @@ export function WalletSelector() {
         Math.max(nextSelectedIndex, 0),
         wallets.length - 1,
       );
-      setSelectedIndex(nextIndex);
       selectWallet(wallets[nextIndex]);
     },
     [selectWallet, wallets],
