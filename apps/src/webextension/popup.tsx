@@ -11,6 +11,7 @@ import {
 } from '@apollo/client';
 import { createMuiTheme } from '@material-ui/core';
 import { Network } from '@terra-dev/network';
+import { yScroller } from '@terra-dev/station-ui/styles/yScroller';
 import { observeNetworkStorage } from '@terra-dev/webextension-network-storage';
 import { Constants, ConstantsProvider } from 'common/contexts/constants';
 import { ContractProvider } from 'common/contexts/contract';
@@ -143,6 +144,14 @@ function MainBase({ className }: { className?: string }) {
     });
   }, [location.pathname]);
 
+  useEffect(() => {
+    setTimeout(() => {
+      if (!containerRef.current) return;
+      containerRef.current.style.minHeight = contentHeight + 'px';
+      containerRef.current.style.maxHeight = contentHeight + 'px';
+    }, 2000);
+  }, []);
+
   return (
     <NetworkProviders>
       <IntlProvider locale={locale} messages={messages}>
@@ -194,10 +203,10 @@ const Main = styled(MainBase)`
 
   > section {
     min-height: ${headerHeight + contentHeight}px;
-    padding: 20px 20px ${headerHeight + 100}px 20px;
+    max-height: ${headerHeight + contentHeight}px;
+    padding: 20px;
 
-    overflow-x: hidden;
-    overflow-y: scroll;
+    ${yScroller};
 
     background-color: #ffffff;
 

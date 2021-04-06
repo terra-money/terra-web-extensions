@@ -234,7 +234,10 @@ export const Dashboard = styled(DashboardBase)`
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 10px;
+
+    > :not(:first-child) {
+      margin-left: 10px;
+    }
   }
 
   .empty-wallets {

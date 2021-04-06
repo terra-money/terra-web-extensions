@@ -215,6 +215,8 @@ const dropdownEnter = keyframes`
 const DropdownContainer = styled.div`
   min-width: 200px;
 
+  font-size: 13px;
+
   background-color: #ffffff;
   box-shadow: 0 0 21px 4px rgba(0, 0, 0, 0.3);
   border-radius: 12px;
