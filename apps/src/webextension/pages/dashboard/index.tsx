@@ -28,8 +28,8 @@ function DashboardBase({ className }: { className?: string }) {
   }, []);
 
   const walletCards = useMemo(() => {
-    return encryptedWallets.map(({ name, terraAddress }) => (
-      <WalletCard name={name} terraAddress={terraAddress} />
+    return encryptedWallets.map(({ name, terraAddress, design }) => (
+      <WalletCard name={name} terraAddress={terraAddress} design={design} />
     ));
   }, [encryptedWallets]);
 

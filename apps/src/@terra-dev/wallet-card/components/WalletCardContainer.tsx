@@ -1,5 +1,6 @@
 import React, { SVGProps } from 'react';
 import styled from 'styled-components';
+import { cardHeight, cardWidth } from '../env';
 
 export interface WalletCardContainerProps extends SVGProps<SVGSVGElement> {
   variant?: 'small' | 'medium';
@@ -13,7 +14,7 @@ function WalletCardContainerBase({
   textColor,
   ...svgProps
 }: WalletCardContainerProps) {
-  return <svg viewBox="0 0 700 380" {...svgProps} />;
+  return <svg viewBox={`0 0 ${cardWidth} ${cardHeight}`} {...svgProps} />;
 }
 
 export const WalletCardContainer = styled(WalletCardContainerBase)`

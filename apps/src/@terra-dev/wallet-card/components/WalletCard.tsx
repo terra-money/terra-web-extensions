@@ -1,3 +1,4 @@
+import { cardHeight, cardWidth } from '../env';
 import React, { isValidElement, ReactNode, useMemo } from 'react';
 import anchorImage from '../designs/Anchor.svg';
 import terraImage from '../designs/Terra.svg';
@@ -10,7 +11,7 @@ import { WalletCardTexts, WalletCardTextsProps } from './WalletCardTexts';
 export interface WalletCardProps
   extends Omit<WalletCardContainerProps, 'name'>,
     WalletCardTextsProps {
-  design?: ReactNode | 'anchor' | 'terra';
+  design?: ReactNode | 'anchor' | 'terra' | string;
 }
 
 export function WalletCard({
@@ -25,13 +26,13 @@ export function WalletCard({
     return isValidElement(design) ? (
       design
     ) : design === 'anchor' ? (
-      <image xlinkHref={anchorImage} width={700} height={380} />
+      <image xlinkHref={anchorImage} width={cardWidth} height={cardHeight} />
     ) : design === 'terra' ? (
-      <image xlinkHref={terraImage} width={700} height={380} />
+      <image xlinkHref={terraImage} width={cardWidth} height={cardHeight} />
     ) : typeof design === 'string' ? (
-      <rect width={700} height={380} fill={design} />
+      <rect fill={design} width={cardWidth} height={cardHeight} />
     ) : (
-      <image xlinkHref={terraImage} width={700} height={380} />
+      <image xlinkHref={terraImage} width={cardWidth} height={cardHeight} />
     );
   }, [design]);
 

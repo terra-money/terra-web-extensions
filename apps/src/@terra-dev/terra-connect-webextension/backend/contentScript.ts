@@ -1,6 +1,7 @@
 import { Network } from '@terra-dev/network';
 import { ClientStates } from '@terra-dev/terra-connect';
 import { SerializedTx, TxResult } from '@terra-dev/tx';
+import { WalletInfo } from '@terra-dev/wallet';
 import { observeNetworkStorage } from '@terra-dev/webextension-network-storage';
 import { observeWalletStorage } from '@terra-dev/webextension-wallet-storage';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
@@ -64,13 +65,18 @@ export function initContentScriptAndWebappConnection({
     false,
   );
 
-  const walletInfosObservable = observeWalletStorage().pipe(
+  const walletInfosObservable: Observable<
+    WalletInfo[]
+  > = observeWalletStorage().pipe(
     // remove sensitive informations
     map((wallets) =>
-      wallets.map(({ name, terraAddress }) => ({
-        name,
-        terraAddress,
-      })),
+      wallets.map(({ name, terraAddress, design }) => {
+        return {
+          name,
+          terraAddress,
+          design,
+        };
+      }),
     ),
   );
 

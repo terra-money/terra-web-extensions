@@ -1,4 +1,5 @@
 import { Add } from '@material-ui/icons';
+import { cardRatioHW } from '@terra-dev/wallet-card/env';
 import React, {
   DetailedHTMLProps,
   HTMLAttributes,
@@ -23,7 +24,7 @@ export interface CardSelectorProps
     | undefined;
   selectedIndex: number;
   onSelect: (nextSelectedIndex: number) => void;
-  onCreate: () => void;
+  onCreate?: () => void;
 }
 
 function CardSelectorBase({
@@ -65,7 +66,9 @@ function CardSelectorBase({
 
   return (
     <ul {...ulProps}>
-      {cards ?? (
+      {cards ? (
+        cards
+      ) : typeof onCreate === 'function' ? (
         <li onClick={onCreate} style={{ cursor: 'pointer' }}>
           <WalletBlankCard>
             <g transform="translate(350 190)">
@@ -75,7 +78,7 @@ function CardSelectorBase({
             </g>
           </WalletBlankCard>
         </li>
-      )}
+      ) : null}
     </ul>
   );
 }
@@ -88,7 +91,7 @@ export const WalletCardSelector = styled(CardSelectorBase)`
 
   min-width: ${({ cardWidth }) => cardWidth}px;
   max-width: ${({ cardWidth }) => cardWidth}px;
-  height: 200px;
+  height: ${({ cardWidth }) => Math.ceil(cardWidth * cardRatioHW)}px;
 
   > li {
     position: absolute;

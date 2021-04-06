@@ -11,6 +11,7 @@ import { Link, RouteComponentProps } from 'react-router-dom';
 
 export function WalletCreate({ history }: RouteComponentProps<{}>) {
   const [name, setName] = useState<string>('');
+  const [design, setDesign] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
   const mk = useMemo(() => {
@@ -22,6 +23,7 @@ export function WalletCreate({ history }: RouteComponentProps<{}>) {
 
     const encryptedWallet: EncryptedWallet = {
       name,
+      design,
       terraAddress: mk.accAddress,
       encryptedWallet: encryptWallet(wallet, password),
     };
@@ -29,7 +31,7 @@ export function WalletCreate({ history }: RouteComponentProps<{}>) {
     await addWallet(encryptedWallet);
 
     history.push('/');
-  }, [history, mk, name, password]);
+  }, [design, history, mk, name, password]);
 
   return (
     <section>
@@ -41,6 +43,13 @@ export function WalletCreate({ history }: RouteComponentProps<{}>) {
           type="text"
           value={name}
           onChange={({ target }) => setName(target.value)}
+        />
+
+        <h3>Wallet Design</h3>
+        <input
+          type="text"
+          value={design}
+          onChange={({ target }) => setDesign(target.value)}
         />
 
         <h3>Password</h3>

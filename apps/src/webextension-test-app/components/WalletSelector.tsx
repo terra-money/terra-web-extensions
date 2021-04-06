@@ -1,19 +1,52 @@
 import { useWalletSelect } from '@terra-dev/terra-connect-react';
-import React from 'react';
+import { WalletCard, WalletCardSelector } from '@terra-dev/wallet-card';
+import React, { useCallback, useState } from 'react';
+import styled from 'styled-components';
 
 export function WalletSelector() {
-  const { wallets, selectedWallet, selectWallet } = useWalletSelect();
-  
+  const { wallets, selectWallet } = useWalletSelect();
+
+  const [selectedIndex, setSelectedIndex] = useState<number>(0);
+
+  const selectCard = useCallback(
+    (nextSelectedIndex: number) => {
+      const nextIndex = Math.min(
+        Math.max(nextSelectedIndex, 0),
+        wallets.length - 1,
+      );
+      setSelectedIndex(nextIndex);
+      selectWallet(wallets[nextIndex]);
+    },
+    [selectWallet, wallets],
+  );
+
+  if (wallets.length === 0) {
+    return null;
+  }
+
   return (
-    <div>
-      <ul>
+    <Layout>
+      <WalletCardSelector
+        cardWidth={180}
+        selectedIndex={selectedIndex}
+        onSelect={selectCard}
+      >
         {wallets.map((wallet) => (
-          <li key={wallet.terraAddress} onClick={() => selectWallet(wallet)}>
-            [{wallet.terraAddress === selectedWallet?.terraAddress ? 'X' : ' '}]{' '}
-            {wallet.name} ({wallet.terraAddress})
-          </li>
+          <WalletCard
+            variant="small"
+            name={wallet.name}
+            terraAddress={wallet.terraAddress}
+            design={wallet.design}
+          />
         ))}
-      </ul>
-    </div>
+      </WalletCardSelector>
+    </Layout>
   );
 }
+
+const Layout = styled.div`
+  width: 280px;
+  overflow-x: hidden;
+  display: flex;
+  justify-content: center;
+`;

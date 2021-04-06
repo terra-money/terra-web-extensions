@@ -1,17 +1,39 @@
 import { decrypt, encrypt } from '@terra-dev/crypto';
 import { MnemonicKey } from '@terra-money/terra.js';
 
-export type EncryptedWalletString = string & { __nominal: 'encrypted-wallet' };
-
 export interface Wallet {
   privateKey: string;
   publicKey: string;
   terraAddress: string;
 }
 
+/**
+ * EncryptedWalletString = encrypt(JSON.stringify(Wallet))
+ */
+export type EncryptedWalletString = string & { __nominal: 'encrypted-wallet' };
+
+/**
+ * Data type for storage and UI
+ * This information is not protected (someone access)
+ */
 export interface WalletInfo {
+  /**
+   * Wallet display name
+   * This should be primary key
+   */
   name: string;
+
+  /**
+   * Wallet address
+   */
   terraAddress: string;
+
+  /**
+   * Wallet design
+   * 1. some theme name (terra, anchor...)
+   * 2. color hex (#ffffff, #000000...)
+   */
+  design: string;
 }
 
 export interface EncryptedWallet extends WalletInfo {
