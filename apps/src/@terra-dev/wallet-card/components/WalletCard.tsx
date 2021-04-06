@@ -36,7 +36,7 @@ export function WalletCard({
         height={cardHeight}
       />
     ) : typeof design === 'string' ? (
-      <rect fill={design} width={cardWidth} height={cardHeight} />
+      <rect fill={design} width={cardWidth + 20} height={cardHeight + 20} />
     ) : (
       <image
         xlinkHref="/assets/wallet/Terra.svg"

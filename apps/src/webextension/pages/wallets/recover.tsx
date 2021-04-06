@@ -51,7 +51,7 @@ export function WalletRecover({ history }: RouteComponentProps<{}>) {
           terraAddress="XXXXXXXXXXXXXXXXXXXXXXX"
           designs={cardDesigns}
           onChange={setDesign}
-          cardWidth={280}
+          cardWidth={276}
         />
       </header>
 

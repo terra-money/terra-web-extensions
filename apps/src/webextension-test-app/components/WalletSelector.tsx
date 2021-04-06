@@ -52,6 +52,7 @@ export function WalletSelector() {
 const Layout = styled.div`
   width: 280px;
   overflow-x: hidden;
+  overflow-y: hidden;
   display: flex;
   justify-content: center;
 `;

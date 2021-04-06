@@ -13,6 +13,7 @@ import {
   WalletSelectProvider,
 } from '@terra-dev/terra-connect-react';
 import { TerraConnectWebExtensionClient } from '@terra-dev/terra-connect-webextension';
+import { GlobalStyle } from 'common/components/GlobalStyle';
 import { Constants, ConstantsProvider } from 'common/contexts/constants';
 import { ContractProvider } from 'common/contexts/contract';
 import {
@@ -118,6 +119,7 @@ function App() {
             <h1>Sample Application</h1>
             <SampleMantleData />
           </section>
+          <GlobalStyle backgroundColor="#ffffff" />
         </AppProviders>
       </WalletSelectProvider>
     </TerraConnectProvider>

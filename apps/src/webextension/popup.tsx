@@ -13,6 +13,7 @@ import { createMuiTheme } from '@material-ui/core';
 import { Network } from '@terra-dev/network';
 import { yScroller } from '@terra-dev/station-ui/styles/yScroller';
 import { observeNetworkStorage } from '@terra-dev/webextension-network-storage';
+import { GlobalStyle } from 'common/components/GlobalStyle';
 import { Constants, ConstantsProvider } from 'common/contexts/constants';
 import { ContractProvider } from 'common/contexts/contract';
 import {
@@ -31,7 +32,6 @@ import {
 } from 'react-router-dom';
 import styled, { DefaultTheme, keyframes } from 'styled-components';
 import { ErrorBoundary } from './components/ErrorBoundary';
-import { GlobalStyle } from './components/GlobalStyle';
 import { PopupHeader } from './components/PopupHeader';
 import { LocalesProvider, useIntlProps } from './contexts/locales';
 import { ThemeProvider } from './contexts/theme';

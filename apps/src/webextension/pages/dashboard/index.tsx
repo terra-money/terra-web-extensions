@@ -66,7 +66,7 @@ function DashboardBase({ className }: { className?: string }) {
       <header>
         <WalletCardSelector
           className="wallet-cards"
-          cardWidth={280}
+          cardWidth={276}
           selectedIndex={selectedIndex}
           onSelect={setSelectedIndex}
           onCreate={() => history.push('/wallet/create')}

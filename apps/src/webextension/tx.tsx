@@ -16,6 +16,7 @@ import {
 import { decryptWallet, EncryptedWallet, Wallet } from '@terra-dev/wallet';
 import { WalletCard } from '@terra-dev/wallet-card';
 import { findWallet } from '@terra-dev/webextension-wallet-storage';
+import { GlobalStyle } from 'common/components/GlobalStyle';
 import React, {
   ChangeEvent,
   useCallback,
@@ -27,12 +28,11 @@ import { render } from 'react-dom';
 import { IntlProvider } from 'react-intl';
 import styled, { DefaultTheme } from 'styled-components';
 import { browser } from 'webextension-polyfill-ts';
-import { ErrorBoundary } from 'webextension/components/ErrorBoundary';
-import { GlobalStyle } from 'webextension/components/GlobalStyle';
-import { TxDetail } from 'webextension/components/TxDetail';
-import { LocalesProvider, useIntlProps } from 'webextension/contexts/locales';
-import { ThemeProvider } from 'webextension/contexts/theme';
-import { txPortPrefix } from 'webextension/env';
+import { ErrorBoundary } from './components/ErrorBoundary';
+import { TxDetail } from './components/TxDetail';
+import { LocalesProvider, useIntlProps } from './contexts/locales';
+import { ThemeProvider } from './contexts/theme';
+import { txPortPrefix } from './env';
 
 function AppBase({ className }: { className?: string }) {
   // ---------------------------------------------
@@ -163,7 +163,7 @@ function AppBase({ className }: { className?: string }) {
   }
 
   if (!encryptedWallet) {
-    return <div className={className}>지갑이 없음</div>;
+    return <div className={className}></div>;
   }
 
   return (
@@ -265,12 +265,14 @@ const App = styled(AppBase)`
 
   padding: 20px;
 
+  font-size: 13px;
+
   header {
     display: flex;
     justify-content: center;
 
     .wallet-card {
-      width: 280px;
+      width: 276px;
     }
 
     margin-bottom: 30px;

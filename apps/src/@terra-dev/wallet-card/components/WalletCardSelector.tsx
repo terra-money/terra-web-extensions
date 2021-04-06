@@ -26,7 +26,9 @@ export interface WalletCardSelectorProps
   onCreate?: () => void;
 }
 
-function CardSelectorBase({
+const shadowPadding: number = 20;
+
+function WalletCardSelectorBase({
   cardWidth,
   children,
   selectedIndex,
@@ -51,7 +53,9 @@ function CardSelectorBase({
           key={'card' + i}
           onClick={() => selectedIndex !== i && onSelect(i)}
           style={{
-            transform: `translateX(${translateX}px) scale(${scale})`,
+            transform: `translate(${
+              translateX - shadowPadding
+            }px, ${-shadowPadding}px) scale(${scale})`,
             opacity,
             filter: Math.abs(i - selectedIndex) === 1 ? 'blur(2px)' : undefined,
             cursor: selectedIndex !== i ? 'pointer' : undefined,
@@ -82,9 +86,10 @@ function CardSelectorBase({
   );
 }
 
-export const WalletCardSelector = styled(CardSelectorBase)`
+export const WalletCardSelector = styled(WalletCardSelectorBase)`
   list-style: none;
   padding: 0;
+  margin: 20px 0;
 
   position: relative;
 
@@ -96,6 +101,7 @@ export const WalletCardSelector = styled(CardSelectorBase)`
     position: absolute;
     left: 0;
     top: 0;
+    padding: ${shadowPadding}px;
 
     user-select: none;
 
