@@ -1,5 +1,11 @@
-import { createMuiTheme } from '@material-ui/core';
+import { Button, createMuiTheme, TextField } from '@material-ui/core';
+import {
+  MyLocationOutlined,
+  Schedule,
+  WifiTethering,
+} from '@material-ui/icons';
 import { Network } from '@terra-dev/network';
+import { LinedList } from '@terra-dev/station-ui/components/LinedList';
 import {
   deserializeTx,
   executeTx,
@@ -8,15 +14,22 @@ import {
   TxStatus,
 } from '@terra-dev/tx';
 import { decryptWallet, EncryptedWallet, Wallet } from '@terra-dev/wallet';
+import { WalletCard } from '@terra-dev/wallet-card';
 import { findWallet } from '@terra-dev/webextension-wallet-storage';
-import { MsgExecuteContract } from '@terra-money/terra.js';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, {
+  ChangeEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { render } from 'react-dom';
 import { IntlProvider } from 'react-intl';
 import styled, { DefaultTheme } from 'styled-components';
 import { browser } from 'webextension-polyfill-ts';
 import { ErrorBoundary } from 'webextension/components/ErrorBoundary';
 import { GlobalStyle } from 'webextension/components/GlobalStyle';
+import { TxDetail } from 'webextension/components/TxDetail';
 import { LocalesProvider, useIntlProps } from 'webextension/contexts/locales';
 import { ThemeProvider } from 'webextension/contexts/theme';
 import { txPortPrefix } from 'webextension/env';
@@ -154,55 +167,81 @@ function AppBase({ className }: { className?: string }) {
   }
 
   return (
-    <div className={className}>
-      <h3>Wallet Name</h3>
-      <p>{encryptedWallet.name}</p>
-      <h3>Wallet Address</h3>
-      <p>{txInfo.terraAddress}</p>
-      <h3>Network</h3>
-      <p>
-        {txInfo.network.name} ({txInfo.network.chainID})
-      </p>
-      <h3>Origin</h3>
-      <p>{txInfo.origin}</p>
-      <h3>Timestamp</h3>
-      <p>{txInfo.timestamp.toLocaleString()}</p>
-      <h3>Tx</h3>
-      <ul>
-        {tx?.msgs.map((msg, i) => (
-          <li key={'msg' + i}>
-            {msg instanceof MsgExecuteContract && (
-              <ul>
-                <li>
-                  <h4>Sender</h4>
-                  <p>{msg.sender}</p>
-                </li>
-                <li>
-                  <h4>Contract</h4>
-                  <p>{msg.contract}</p>
-                </li>
-                <li>
-                  <h4>execute_msg</h4>
-                  <pre>{JSON.stringify(msg.execute_msg, null, 2)}</pre>
-                </li>
-                <li>
-                  <h4>Coins</h4>
-                  <p>{msg.coins.toJSON()}</p>
-                </li>
-              </ul>
-            )}
-          </li>
-        ))}
-      </ul>
+    <section className={className}>
+      <header>
+        <WalletCard
+          className="wallet-card"
+          name={encryptedWallet.name}
+          terraAddress={encryptedWallet.terraAddress}
+          design={encryptedWallet.design}
+        />
+      </header>
 
-      <input
-        type="text"
-        value={password}
-        onChange={({ target }) => setPassword(target.value)}
-      />
+      <LinedList
+        className="wallets-actions"
+        iconMarginRight="0.6em"
+        firstLetterUpperCase={false}
+      >
+        <li>
+          <div>
+            <i>
+              <WifiTethering />
+            </i>
+            <span>NETWORK</span>
+          </div>
+          <span>
+            {txInfo.network.name} ({txInfo.network.chainID})
+          </span>
+        </li>
+        <li>
+          <div>
+            <i>
+              <MyLocationOutlined />
+            </i>
+            <span>ORIGIN</span>
+          </div>
+          <span>{txInfo.origin}</span>
+        </li>
+        <li>
+          <div>
+            <i>
+              <Schedule />
+            </i>
+            <span>TIMESTAMP</span>
+          </div>
+          <span>{txInfo.timestamp.toLocaleString()}</span>
+        </li>
+      </LinedList>
+
+      <TxDetail tx={tx} className="tx" />
+
+      <section className="form">
+        <TextField
+          variant="outlined"
+          type="password"
+          size="small"
+          fullWidth
+          label="WALLET PASSWORD"
+          InputLabelProps={{ shrink: true }}
+          value={password}
+          onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
+            setPassword(target.value)
+          }
+        />
+      </section>
 
       <footer>
-        <button
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={() => deny({ ...txInfo })}
+        >
+          Deny
+        </Button>
+
+        <Button
+          variant="contained"
+          color="primary"
           disabled={password.length === 0}
           onClick={() =>
             proceed({
@@ -213,22 +252,48 @@ function AppBase({ className }: { className?: string }) {
           }
         >
           Submit
-        </button>
-
-        <button onClick={() => deny({ ...txInfo })}>Deny</button>
+        </Button>
       </footer>
 
       <GlobalStyle backgroundColor="#ffffff" />
-    </div>
+    </section>
   );
 }
 
 const App = styled(AppBase)`
   max-width: 100vw;
 
-  pre {
-    word-break: break-all;
-    white-space: break-spaces;
+  padding: 20px;
+
+  header {
+    display: flex;
+    justify-content: center;
+
+    .wallet-card {
+      width: 280px;
+    }
+
+    margin-bottom: 30px;
+  }
+
+  .tx {
+    margin: 30px 0;
+  }
+
+  .form {
+    margin: 30px 0;
+  }
+
+  footer {
+    display: flex;
+
+    > * {
+      flex: 1;
+
+      &:not(:first-child) {
+        margin-left: 10px;
+      }
+    }
   }
 `;
 
