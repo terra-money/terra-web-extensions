@@ -8,10 +8,10 @@ import type {
   uUST,
 } from '@anchor-protocol/types';
 import { gql, useQuery } from '@apollo/client';
-import { useWalletSelect } from '@terra-dev/terra-connect-react';
 import { createMap, Mapped, useMap } from '@terra-dev/use-map';
+import { WalletInfo } from '@terra-dev/wallet';
 import { useMemo } from 'react';
-import { useContractAddress } from '../../../contexts/contract';
+import { useContractAddress } from '../contexts/contract';
 import { MappedQueryResult } from './types';
 import { useRefetch } from './useRefetch';
 
@@ -240,14 +240,12 @@ export const query = gql`
   }
 `;
 
-export function useUserBalances(): MappedQueryResult<
-  RawVariables,
-  RawData,
-  Data
-> {
+export function useUserBalances({
+  selectedWallet,
+}: {
+  selectedWallet: WalletInfo | null;
+}): MappedQueryResult<RawVariables, RawData, Data> {
   const { cw20 } = useContractAddress();
-
-  const { selectedWallet } = useWalletSelect();
 
   const variables = useMemo(() => {
     if (!selectedWallet) return undefined;

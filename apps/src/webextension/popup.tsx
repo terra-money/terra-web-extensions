@@ -1,5 +1,24 @@
+import {
+  AddressProvider,
+  AddressProviderFromJson,
+} from '@anchor-protocol/anchor.js';
+import { Rate, uUST } from '@anchor-protocol/types';
+import {
+  ApolloClient,
+  ApolloProvider,
+  HttpLink,
+  InMemoryCache,
+} from '@apollo/client';
 import { createMuiTheme } from '@material-ui/core';
-import React, { useEffect, useRef } from 'react';
+import { Network } from '@terra-dev/network';
+import { observeNetworkStorage } from '@terra-dev/webextension-network-storage';
+import { Constants, ConstantsProvider } from 'common/contexts/constants';
+import { ContractProvider } from 'common/contexts/contract';
+import {
+  columbusContractAddresses,
+  tequilaContractAddresses,
+} from 'common/env';
+import React, { ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 import { render } from 'react-dom';
 import { IntlProvider } from 'react-intl';
 import {
@@ -10,12 +29,12 @@ import {
   useLocation,
 } from 'react-router-dom';
 import styled, { DefaultTheme, keyframes } from 'styled-components';
-import { ThemeProvider } from 'webextension/contexts/theme';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { GlobalStyle } from './components/GlobalStyle';
 import { PopupHeader } from './components/PopupHeader';
 import { LocalesProvider, useIntlProps } from './contexts/locales';
-import { headerHeight, contentHeight, width } from './env';
+import { ThemeProvider } from './contexts/theme';
+import { contentHeight, defaultNetworks, headerHeight, width } from './env';
 import { Dashboard } from './pages/dashboard';
 import { NetworkCreate } from './pages/networks/create';
 import { WalletChangePassword } from './pages/wallets/change-password';
@@ -29,6 +48,86 @@ const theme: DefaultTheme = createMuiTheme({
     },
   },
 });
+
+function NetworkProviders({ children }: { children: ReactNode }) {
+  // ---------------------------------------------
+  // graphql settings
+  // ---------------------------------------------
+  const [selectedNetwork, setSelectedNetwork] = useState<Network>(
+    () => defaultNetworks[0],
+  );
+
+  const isMainnet = useMemo(() => {
+    return /^columbus/.test(selectedNetwork.chainID);
+  }, [selectedNetwork.chainID]);
+
+  const addressMap = useMemo(() => {
+    return isMainnet ? columbusContractAddresses : tequilaContractAddresses;
+  }, [isMainnet]);
+
+  const addressProvider = useMemo<AddressProvider>(() => {
+    return new AddressProviderFromJson(addressMap);
+  }, [addressMap]);
+
+  const apolloClient = useMemo<ApolloClient<any>>(() => {
+    const httpLink = new HttpLink({
+      uri: ({ operationName }) =>
+        `${
+          selectedNetwork.servers.mantle ??
+          'https://tequila-mantle.anchorprotocol.com'
+        }?${operationName}`,
+    });
+
+    return new ApolloClient({
+      cache: new InMemoryCache(),
+      link: httpLink,
+    });
+  }, [selectedNetwork.servers.mantle]);
+
+  const constants = useMemo<Constants>(
+    () =>
+      isMainnet
+        ? {
+            gasFee: 1000000 as uUST<number>,
+            fixedGas: 500000 as uUST<number>,
+            blocksPerYear: 4906443,
+            gasAdjustment: 1.6 as Rate<number>,
+          }
+        : {
+            gasFee: 6000000 as uUST<number>,
+            fixedGas: 3500000 as uUST<number>,
+            blocksPerYear: 4906443,
+            gasAdjustment: 1.4 as Rate<number>,
+          },
+    [isMainnet],
+  );
+
+  useEffect(() => {
+    const subscription = observeNetworkStorage().subscribe(
+      ({ selectedNetwork: nextSelectedNetwork }) => {
+        setSelectedNetwork(nextSelectedNetwork ?? defaultNetworks[0]);
+      },
+    );
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  // ---------------------------------------------
+  // presentation
+  // ---------------------------------------------
+  return (
+    <ConstantsProvider {...constants}>
+      <ContractProvider
+        addressProvider={addressProvider}
+        addressMap={addressMap}
+      >
+        <ApolloProvider client={apolloClient}>{children}</ApolloProvider>
+      </ContractProvider>
+    </ConstantsProvider>
+  );
+}
 
 function MainBase({ className }: { className?: string }) {
   const { locale, messages } = useIntlProps();
@@ -45,27 +144,29 @@ function MainBase({ className }: { className?: string }) {
   }, [location.pathname]);
 
   return (
-    <IntlProvider locale={locale} messages={messages}>
-      <ThemeProvider theme={theme}>
-        <div className={className}>
-          <PopupHeader />
-          <section ref={containerRef}>
-            <Switch>
-              <Route exact path="/" component={Dashboard} />
-              <Route path="/wallet/create" component={WalletCreate} />
-              <Route path="/wallet/recover" component={WalletRecover} />
-              <Route
-                path="/wallets/:terraAddress/password"
-                component={WalletChangePassword}
-              />
-              <Route path="/network/create" component={NetworkCreate} />
-              <Redirect to="/" />
-            </Switch>
-          </section>
-          <GlobalStyle />
-        </div>
-      </ThemeProvider>
-    </IntlProvider>
+    <NetworkProviders>
+      <IntlProvider locale={locale} messages={messages}>
+        <ThemeProvider theme={theme}>
+          <div className={className}>
+            <PopupHeader />
+            <section ref={containerRef}>
+              <Switch>
+                <Route exact path="/" component={Dashboard} />
+                <Route path="/wallet/create" component={WalletCreate} />
+                <Route path="/wallet/recover" component={WalletRecover} />
+                <Route
+                  path="/wallets/:terraAddress/password"
+                  component={WalletChangePassword}
+                />
+                <Route path="/network/create" component={NetworkCreate} />
+                <Redirect to="/" />
+              </Switch>
+            </section>
+            <GlobalStyle />
+          </div>
+        </ThemeProvider>
+      </IntlProvider>
+    </NetworkProviders>
   );
 }
 

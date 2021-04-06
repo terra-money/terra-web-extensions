@@ -16,7 +16,9 @@ import { cardDesigns } from 'webextension/env';
 
 export function WalletRecover({ history }: RouteComponentProps<{}>) {
   const [name, setName] = useState<string>('');
-  const [design, setDesign] = useState<string>(() => cardDesigns[0]);
+  const [design, setDesign] = useState<string>(
+    () => cardDesigns[Math.floor(Math.random() * cardDesigns.length)],
+  );
   const [password, setPassword] = useState<string>('');
   const [mnemonic, setMnemonic] = useState<string>('');
 

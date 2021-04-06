@@ -13,6 +13,12 @@ import {
   WalletSelectProvider,
 } from '@terra-dev/terra-connect-react';
 import { TerraConnectWebExtensionClient } from '@terra-dev/terra-connect-webextension';
+import { Constants, ConstantsProvider } from 'common/contexts/constants';
+import { ContractProvider } from 'common/contexts/contract';
+import {
+  columbusContractAddresses,
+  tequilaContractAddresses,
+} from 'common/env';
 import React, { ReactNode, useMemo } from 'react';
 import { render } from 'react-dom';
 import { CurrentNetwork } from './components/CurrentNetwork';
@@ -20,9 +26,6 @@ import { CurrentStatus } from './components/CurrentStatus';
 import { CurrentWallet } from './components/CurrentWallet';
 import { SampleMantleData } from './components/SampleMantleData';
 import { WalletSelector } from './components/WalletSelector';
-import { Constants, ConstantsProvider } from './contexts/constants';
-import { ContractProvider } from './contexts/contract';
-import { columbusContractAddresses, tequilaContractAddresses } from './env';
 
 const client = new TerraConnectWebExtensionClient(window);
 

@@ -17,7 +17,9 @@ import { cardDesigns } from 'webextension/env';
 
 export function WalletCreate({ history }: RouteComponentProps<{}>) {
   const [name, setName] = useState<string>('');
-  const [design, setDesign] = useState<string>(() => cardDesigns[0]);
+  const [design, setDesign] = useState<string>(
+    () => cardDesigns[Math.floor(Math.random() * cardDesigns.length)],
+  );
   const [password, setPassword] = useState<string>('');
 
   const mk = useMemo(() => {

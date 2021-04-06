@@ -20,12 +20,12 @@ import {
 } from '@terra-dev/terra-connect-react';
 import { Tx, TxResult, TxStatus } from '@terra-dev/tx';
 import { Coins, Int, MsgExecuteContract, StdFee } from '@terra-money/terra.js';
+import { useConstants } from 'common/contexts/constants';
+import { useContractAddress } from 'common/contexts/contract';
+import { pollTxInfo, TxInfos } from 'common/queries/txInfos';
+import { useUserBalances } from 'common/queries/userBalances';
 import React, { useCallback, useMemo } from 'react';
 import { GuardSpinner } from 'react-spinners-kit';
-import { useConstants } from '../../contexts/constants';
-import { useContractAddress } from '../../contexts/contract';
-import { pollTxInfo, TxInfos } from './queries/txInfos';
-import { useUserBalances } from './queries/userBalances';
 
 export function SampleMantleData() {
   const { clientStates, execute } = useTerraConnect();
@@ -41,7 +41,7 @@ export function SampleMantleData() {
   const {
     data: { uUSD, uaUST },
     refetch,
-  } = useUserBalances();
+  } = useUserBalances({ selectedWallet });
 
   const txStream = useMemo(
     () =>
