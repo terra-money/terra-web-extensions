@@ -1,7 +1,5 @@
 import { cardHeight, cardWidth } from '../env';
 import React, { isValidElement, ReactNode, useMemo } from 'react';
-import anchorImage from '../designs/Anchor.svg';
-import terraImage from '../designs/Terra.svg';
 import {
   WalletCardContainer,
   WalletCardContainerProps,
@@ -26,13 +24,25 @@ export function WalletCard({
     return isValidElement(design) ? (
       design
     ) : design === 'anchor' ? (
-      <image xlinkHref={anchorImage} width={cardWidth} height={cardHeight} />
+      <image
+        xlinkHref="/assets/wallet/Anchor.svg"
+        width={cardWidth}
+        height={cardHeight}
+      />
     ) : design === 'terra' ? (
-      <image xlinkHref={terraImage} width={cardWidth} height={cardHeight} />
+      <image
+        xlinkHref="/assets/wallet/Terra.svg"
+        width={cardWidth}
+        height={cardHeight}
+      />
     ) : typeof design === 'string' ? (
       <rect fill={design} width={cardWidth} height={cardHeight} />
     ) : (
-      <image xlinkHref={terraImage} width={cardWidth} height={cardHeight} />
+      <image
+        xlinkHref="/assets/wallet/Terra.svg"
+        width={cardWidth}
+        height={cardHeight}
+      />
     );
   }, [design]);
 

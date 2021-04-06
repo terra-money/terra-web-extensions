@@ -197,7 +197,7 @@ const Main = styled(MainBase)`
     padding: 20px 20px ${headerHeight + 100}px 20px;
 
     overflow-x: hidden;
-    overflow-y: auto;
+    overflow-y: scroll;
 
     background-color: #ffffff;
 
