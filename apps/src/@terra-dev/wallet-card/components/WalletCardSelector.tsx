@@ -73,7 +73,11 @@ function WalletCardSelectorBase({
         cards
       ) : typeof onCreate === 'function' ? (
         <li onClick={onCreate} style={{ cursor: 'pointer' }}>
-          <WalletBlankCard>
+          <WalletBlankCard
+            style={{
+              transform: `translate(${-shadowPadding}px, ${-shadowPadding}px)`,
+            }}
+          >
             <g transform="translate(350 190)">
               <g transform="translate(-100 -100)">
                 <Add width="200" height="200" />
