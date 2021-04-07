@@ -22,11 +22,12 @@ import {
 } from 'common/env';
 import React, { ReactNode, useMemo } from 'react';
 import { render } from 'react-dom';
-import { CurrentNetwork } from './components/CurrentNetwork';
-import { CurrentStatus } from './components/CurrentStatus';
-import { CurrentWallet } from './components/CurrentWallet';
-import { SampleMantleData } from './components/SampleMantleData';
-import { WalletSelector } from './components/WalletSelector';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { AppLayout } from 'webextension-test-app/components/AppLayout';
+import { Overview } from 'webextension-test-app/pages/overview';
+import TerraConnectAPI from './pages/apis/terra-connect/api.mdx';
+import TerraConnectExample from './pages/apis/terra-connect/example.mdx';
+import './markdown.css';
 
 const client = new TerraConnectWebExtensionClient(window);
 
@@ -105,20 +106,19 @@ function App() {
     <TerraConnectProvider client={client}>
       <WalletSelectProvider>
         <AppProviders>
-          <header>
-            <h1>Wallet Select</h1>
-            <WalletSelector />
-          </header>
-          <section>
-            <h1>Current Client Status</h1>
-            <CurrentStatus />
-            <h1>Current Network</h1>
-            <CurrentNetwork />
-            <h1>Current Wallet</h1>
-            <CurrentWallet />
-            <h1>Sample Application</h1>
-            <SampleMantleData />
-          </section>
+          <AppLayout>
+            <Switch>
+              <Route exact path="/" component={Overview} />
+              <Route
+                path="/apis/terra-connect/api"
+                component={TerraConnectAPI}
+              />
+              <Route
+                path="/apis/terra-connect/example"
+                component={TerraConnectExample}
+              />
+            </Switch>
+          </AppLayout>
           <GlobalStyle backgroundColor="#ffffff" />
         </AppProviders>
       </WalletSelectProvider>
@@ -126,7 +126,12 @@ function App() {
   );
 }
 
-render(<App />, document.querySelector('#app'));
+render(
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>,
+  document.querySelector('#app'),
+);
 
 // Hot Module Replacement
 if (module.hot) {

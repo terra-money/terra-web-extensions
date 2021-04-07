@@ -1804,6 +1804,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@handbook/code-block@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "@handbook/code-block@npm:1.1.0"
+  dependencies:
+    prism-react-renderer: ^1.1.1
+    react: ^17.0.1
+  checksum: b3b98a91ac00d4906723c2d8c8ac643376f6d086f4256534415856eaaa5657b38fb17b6e57aa26c4af8c2188ef65405327be9069b434835a5f284368cc51376f
+  languageName: node
+  linkType: hard
+
 "@handbook/markdown-source-import@npm:^1.1.0":
   version: 1.1.0
   resolution: "@handbook/markdown-source-import@npm:1.1.0"
@@ -15622,6 +15632,15 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"prism-react-renderer@npm:^1.1.1":
+  version: 1.2.0
+  resolution: "prism-react-renderer@npm:1.2.0"
+  peerDependencies:
+    react: ">=0.14.9"
+  checksum: 794de7917da61f185c82e16766dfd0bdfbf78d36bc30136a7a94c3e05ce6994790508a09858a6065bad615641c5a8f32b0f4e546a6179538fe7dafb5c2a6e5d0
+  languageName: node
+  linkType: hard
+
 "prismjs@npm:^1.21.0, prismjs@npm:~1.23.0":
   version: 1.23.0
   resolution: "prismjs@npm:1.23.0"
@@ -19792,6 +19811,7 @@ resolve@^2.0.0-next.3:
     "@anchor-protocol/notation": ^0.1.0
     "@anchor-protocol/types": ^0.1.0
     "@apollo/client": ^3.3.13
+    "@handbook/code-block": ^1.1.0
     "@material-ui/core": ^4.11.3
     "@material-ui/icons": ^4.11.2
     "@rocket-scripts/web": ^3.0.1
