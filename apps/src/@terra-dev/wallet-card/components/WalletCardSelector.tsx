@@ -1,5 +1,4 @@
 import { Add } from '@material-ui/icons';
-import { cardRatioHW } from '@terra-dev/wallet-card/env';
 import React, {
   DetailedHTMLProps,
   HTMLAttributes,
@@ -7,6 +6,7 @@ import React, {
   useMemo,
 } from 'react';
 import styled from 'styled-components';
+import { cardRatioHW } from '../env';
 import { WalletBlankCard } from './WalletBlankCard';
 import { WalletCardContainerProps } from './WalletCardContainer';
 

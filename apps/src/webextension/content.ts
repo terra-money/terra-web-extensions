@@ -17,7 +17,7 @@ import { render } from 'react-dom';
 import { Observable } from 'rxjs';
 import { browser } from 'webextension-polyfill-ts';
 import { IFrameModal } from 'webextension/components/IFrameModal';
-import { contentScriptPortPrefix } from 'webextension/env';
+import { contentScriptPortPrefix, defaultNetworks } from 'webextension/env';
 
 function startTxWithIframeModal(
   id: string,
@@ -92,6 +92,7 @@ function startTxWithIframeModal(
 
 const contentScriptOptions: ContentScriptOptions = {
   startTx: startTxWithIframeModal,
+  defaultNetworks,
 };
 
 if (document.readyState === 'loading') {

@@ -1,5 +1,5 @@
-import { WalletCard } from '@terra-dev/wallet-card/components/WalletCard';
 import React, { useCallback, useMemo } from 'react';
+import { WalletCard } from './WalletCard';
 import {
   WalletCardSelector,
   WalletCardSelectorProps,

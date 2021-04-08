@@ -6,7 +6,6 @@ import { observeNetworkStorage } from '@terra-dev/webextension-network-storage';
 import { observeWalletStorage } from '@terra-dev/webextension-wallet-storage';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { defaultNetworks } from 'webextension/env';
 import {
   FromContentScriptToWebMessage,
   FromWebToContentScriptMessage,
@@ -16,6 +15,7 @@ import {
 } from '../internal/messages';
 
 export interface ContentScriptOptions {
+  defaultNetworks: Network[];
   startTx: (
     id: string,
     terraAddress: string,
@@ -26,6 +26,7 @@ export interface ContentScriptOptions {
 
 export function initContentScriptAndWebappConnection({
   startTx,
+  defaultNetworks,
 }: ContentScriptOptions) {
   const meta = document.querySelector('head > meta[name="terra-connect"]');
 
