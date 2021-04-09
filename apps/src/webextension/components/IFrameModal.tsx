@@ -1,4 +1,3 @@
-import { IconButton } from '@material-ui/core';
 import { Close } from '@material-ui/icons';
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
@@ -22,9 +21,9 @@ function IFrameModalBase({ className, title, src, onClose }: IFrameModalProps) {
           <i className="logo">
             <Logo />
           </i>
-          <IconButton onClick={onClose} size="small">
+          <button onClick={onClose}>
             <Close style={{ color: '#ffffff' }} />
-          </IconButton>
+          </button>
         </header>
         <iframe title={title} src={src} frameBorder={0} />
       </section>
@@ -59,6 +58,9 @@ const iframeEnter = keyframes`
 `;
 
 export const IFrameModal = styled(IFrameModalBase)`
+  position: fixed;
+  z-index: 100000;
+
   div {
     position: fixed;
     left: 0;
@@ -106,6 +108,14 @@ export const IFrameModal = styled(IFrameModalBase)`
       }
 
       button {
+        border: none;
+        outline: none;
+        background-color: transparent;
+        padding: 0;
+        cursor: pointer;
+
+        font-size: 16px;
+
         svg {
           font-size: 1em;
         }
