@@ -94,7 +94,7 @@ describe('stream-pipe', () => {
               i += 1;
 
               if (i > 5) {
-                subscriber.error('error!');
+                subscriber.error(new Error('error!'));
               } else {
                 run();
               }
@@ -117,7 +117,54 @@ describe('stream-pipe', () => {
         expect(JSON.stringify(recorder.records)).toBe(
           JSON.stringify([0, '10', 20, '30', 40, '50']),
         );
-        expect(error).toBe('error!');
+        expect(error.message).toBe('error!');
+        done();
+      },
+      () => {
+        throw new Error('never come here!');
+      },
+    );
+  });
+
+  test('error test with throw', (done) => {
+    const fn = streamPipe(
+      (n: number) =>
+        new Observable<number | string>((subscriber) => {
+          let i: number = 0;
+
+          function run() {
+            if (i % 2 === 0) {
+              subscriber.next(n * i);
+            } else {
+              subscriber.next((n * i).toString());
+            }
+
+            i += 1;
+
+            if (i > 5) {
+              throw new Error('error!');
+            } else {
+              run();
+            }
+          }
+
+          run();
+        }),
+      (s: number | string) =>
+        new Promise<string>((resolve) =>
+          setTimeout(() => resolve(s + '?'), 1000),
+        ),
+    );
+
+    const recorder = new StreamRecorder();
+
+    fn(10).subscribe(
+      recorder.record,
+      (error) => {
+        expect(JSON.stringify(recorder.records)).toBe(
+          JSON.stringify([0, '10', 20, '30', 40, '50']),
+        );
+        expect(error.message).toBe('error!');
         done();
       },
       () => {

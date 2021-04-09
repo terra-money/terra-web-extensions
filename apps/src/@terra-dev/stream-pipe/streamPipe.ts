@@ -1,6 +1,5 @@
 import { isObservable, Observable } from 'rxjs';
-
-export type Operator<T, R> = (param: T) => Observable<R> | Promise<R> | R;
+import { Operator } from './types';
 
 export function streamPipe<Params, R1>(
   o1: Operator<Params, R1>,
@@ -84,14 +83,13 @@ export function streamPipe(
           if (isObservable(operation)) {
             let latestValue: any;
 
-            const subscription = operation.subscribe(
+            operation.subscribe(
               (r) => {
                 latestValue = r;
                 subscriber.next(r);
               },
               (error) => {
                 subscriber.error(error);
-                subscription.unsubscribe();
               },
               () => {
                 run(latestValue);
