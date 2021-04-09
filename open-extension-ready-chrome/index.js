@@ -6,6 +6,10 @@ const path = require('path');
 (async () => {
   const extensionPath = path.resolve(__dirname, './webextension/');
 
+  const url =
+    process.argv[2] ||
+    'https://anchor-web-app-git-feature-support-new-extension-anchor-2216ab.vercel.app/';
+
   const browser = await puppeteer.launch({
     userDataDir: process.env.EXTENSION_READY_CHROME_USER_DATA,
     headless: false,
@@ -18,9 +22,9 @@ const path = require('path');
   });
 
   const page = await browser.newPage();
-  await page.goto(
-    'https://anchor-web-app-git-feature-support-new-extension-anchor-2216ab.vercel.app/',
+  await page.goto(url);
+
+  console.log(
+    `🌏 Test Chromium is ready. A shortcut "Ctrl + C" is close the browser.`,
   );
-  
-  console.log(`🌏 Test Chromium is ready (maybe?). A shortcut "Ctrl + C" is close the browser.`);
 })();
