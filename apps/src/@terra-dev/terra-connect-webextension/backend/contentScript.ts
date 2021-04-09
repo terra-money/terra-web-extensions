@@ -32,6 +32,8 @@ export function initContentScriptAndWebappConnection({
 
   if (!meta) return;
 
+  meta.setAttribute('connected', 'true');
+
   const extensionStateLastUpdated = new BehaviorSubject<number>(Date.now());
 
   window.addEventListener(
