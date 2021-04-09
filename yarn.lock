@@ -14803,6 +14803,14 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"open-extension-ready-chrome@workspace:open-extension-ready-chrome":
+  version: 0.0.0-use.local
+  resolution: "open-extension-ready-chrome@workspace:open-extension-ready-chrome"
+  dependencies:
+    puppeteer: ^8.0.0
+  languageName: unknown
+  linkType: soft
+
 "open@npm:^7.0.2, open@npm:^7.0.3, open@npm:^7.4.2":
   version: 7.4.2
   resolution: "open@npm:7.4.2"

@@ -5,7 +5,8 @@
   "license": "MIT",
   "repository": "github:githubid/repository",
   "workspaces": [
-    "apps"
+    "apps",
+    "open-extension-ready-chrome"
   ],
   "scripts": {
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx}\"",

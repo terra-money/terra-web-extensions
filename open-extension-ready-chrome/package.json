@@ -1,0 +1,18 @@
+{
+  "name": "open-extension-ready-chrome",
+  "version": "0.1.3",
+  "description": "",
+  "main": "index.js",
+  "author": "SSen",
+  "license": "MIT",
+  "files": [
+    "webextension",
+    "index.js"
+  ],
+  "bin": {
+    "open-extension-ready-chrome": "index.js"
+  },
+  "dependencies": {
+    "puppeteer": "^8.0.0"
+  }
+}
