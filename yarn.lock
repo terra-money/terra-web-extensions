@@ -4326,15 +4326,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/puppeteer@npm:^5.4.3":
-  version: 5.4.3
-  resolution: "@types/puppeteer@npm:5.4.3"
-  dependencies:
-    "@types/node": "*"
-  checksum: 8b3aeeb686d71793ac55908cd6b63f71e8e8e447869137f5279f977bded877dc8a17cf84e167cea6841ea46ca9be76f2b3e80785208e0fb5981f0bff5ee7775a
-  languageName: node
-  linkType: hard
-
 "@types/qs@npm:^6.9.5":
   version: 6.9.6
   resolution: "@types/qs@npm:6.9.6"
@@ -14808,6 +14799,8 @@ fsevents@^1.2.7:
   resolution: "open-extension-ready-chrome@workspace:open-extension-ready-chrome"
   dependencies:
     puppeteer: ^8.0.0
+  bin:
+    open-extension-ready-chrome: index.js
   languageName: unknown
   linkType: soft
 
@@ -20539,7 +20532,6 @@ resolve@^2.0.0-next.3:
     "@types/d3-timer": ^2.0.0
     "@types/jest": ^26.0.22
     "@types/node": ^14.14.37
-    "@types/puppeteer": ^5.4.3
     "@types/react": ^17.0.3
     "@types/react-dom": ^17.0.3
     "@types/react-router-dom": ^5.1.7
