@@ -31,3 +31,4 @@ test/storage/
 .eslintcache
 tsconfig.tsbuildinfo
 open-extension-ready-chrome/webextension
+puppeteer-user-data/
