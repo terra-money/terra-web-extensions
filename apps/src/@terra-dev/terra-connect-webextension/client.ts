@@ -15,7 +15,7 @@ import {
   FromWebToContentScriptMessage,
   isWebExtensionMessage,
   RefetchExtensionClientStates,
-} from './internal/messages';
+} from './contentScripts/messages';
 
 export class TerraConnectWebExtensionClient implements TerraConnectClient {
   private _status: BehaviorSubject<Status>;

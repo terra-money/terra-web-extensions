@@ -2,7 +2,7 @@ import { Network } from '@terra-dev/network';
 import {
   ContentScriptOptions,
   initContentScriptAndWebappConnection,
-} from '@terra-dev/terra-connect-webextension/backend/contentScript';
+} from '@terra-dev/terra-connect-webextension/contentScripts/initContentScriptAndWebappConnection';
 import {
   SerializedTx,
   TxDenied,

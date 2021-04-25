@@ -17,12 +17,13 @@ import { MiniButton } from '@terra-dev/station-ui/components/MiniButton';
 import { EncryptedWallet } from '@terra-dev/wallet';
 import { WalletCard, WalletCardSelector } from '@terra-dev/wallet-card';
 import {
+  focusWallet,
   observeWalletStorage,
   removeWallet,
 } from '@terra-dev/webextension-wallet-storage';
 import big from 'big.js';
 import { useUserBalances } from 'common/queries/userBalances';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
@@ -34,15 +35,7 @@ function DashboardBase({ className }: { className?: string }) {
     [],
   );
 
-  useEffect(() => {
-    const subscription = observeWalletStorage().subscribe((wallets) => {
-      setEncryptedWallets(wallets);
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, []);
+  const [selectedIndex, setSelectedIndex] = useState<number>(0);
 
   const walletCards = useMemo(() => {
     return encryptedWallets.map(({ name, terraAddress, design }) => (
@@ -55,7 +48,33 @@ function DashboardBase({ className }: { className?: string }) {
     ));
   }, [encryptedWallets]);
 
-  const [selectedIndex, setSelectedIndex] = useState<number>(0);
+  const updateSelectedIndex = useCallback(
+    async (nextSelectedIndex) => {
+      const nextWallet = encryptedWallets[nextSelectedIndex];
+      if (nextWallet) {
+        await focusWallet(nextWallet.terraAddress);
+        setSelectedIndex(nextSelectedIndex);
+      }
+    },
+    [encryptedWallets],
+  );
+
+  useEffect(() => {
+    const subscription = observeWalletStorage().subscribe(
+      ({ wallets, focusedWalletAddress }) => {
+        const nextSelectedIndex = wallets.findIndex(
+          (itemWallet) => itemWallet.terraAddress === focusedWalletAddress,
+        );
+
+        setEncryptedWallets(wallets);
+        setSelectedIndex(nextSelectedIndex > -1 ? nextSelectedIndex : 0);
+      },
+    );
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
 
   const {
     data: { uUSD, uaUST, uLuna, ubLuna, uANC },
@@ -68,7 +87,7 @@ function DashboardBase({ className }: { className?: string }) {
           className="wallet-cards"
           cardWidth={276}
           selectedIndex={selectedIndex}
-          onSelect={setSelectedIndex}
+          onSelect={updateSelectedIndex}
           onCreate={() => history.push('/wallet/create')}
         >
           {walletCards}

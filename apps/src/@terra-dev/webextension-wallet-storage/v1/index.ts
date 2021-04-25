@@ -3,47 +3,97 @@ import { EncryptedWallet } from '@terra-dev/wallet';
 import { Observable, Subscription } from 'rxjs';
 import { browser, Storage } from 'webextension-polyfill-ts';
 
-const storageKey = 'terra_wallet_storage_v1';
+const storageKey = 'terra_wallet_storage_v1-alpha.1';
 
-export async function readWalletStorage(): Promise<EncryptedWallet[]> {
+export interface WalletStorageData {
+  wallets: EncryptedWallet[];
+
+  /**
+   * extension focused wallet
+   */
+  focusedWalletAddress?: string;
+
+  /**
+   * approved wallet addresses per hostname
+   *
+   * Record<hostname, terraAddress[]>
+   */
+  approvedAddresses: Record<string, string[]>;
+}
+
+// ---------------------------------------------
+// storage
+// ---------------------------------------------
+export async function readWalletStorage(): Promise<WalletStorageData> {
   const values = await browser.storage.local.get(storageKey);
-  return values[storageKey] ?? [];
+  return values[storageKey] ?? { wallets: [], approvedAddresses: {} };
 }
 
 export async function writeWalletStorage(
-  wallets: EncryptedWallet[],
+  data: WalletStorageData,
 ): Promise<void> {
   await browser.storage.local.set({
-    [storageKey]: wallets,
+    [storageKey]: data,
   });
 }
 
 export async function findWallet(
   terraAddress: string,
 ): Promise<EncryptedWallet | undefined> {
-  const wallets = await readWalletStorage();
+  const { wallets } = await readWalletStorage();
   return wallets.find((wallet) => wallet.terraAddress === terraAddress);
 }
 
 export async function addWallet(wallet: EncryptedWallet): Promise<void> {
-  const wallets = await readWalletStorage();
-  const nextWallets = [...wallets, wallet];
-  await writeWalletStorage(nextWallets);
+  const { wallets, focusedWalletAddress, ...data } = await readWalletStorage();
+  const nextData = {
+    wallets: [...wallets, wallet],
+    focusedWalletAddress: wallet.terraAddress,
+    ...data,
+  };
+  await writeWalletStorage(nextData);
 }
 
 export async function removeWallet(wallet: EncryptedWallet): Promise<void> {
-  const wallets = await readWalletStorage();
-  const nextWallets = wallets.filter(
-    ({ terraAddress }) => terraAddress !== wallet.terraAddress,
+  const { wallets, approvedAddresses } = await readWalletStorage();
+  const removeIndex: number = wallets.findIndex(
+    (itemWallet) => itemWallet.terraAddress === wallet.terraAddress,
   );
-  await writeWalletStorage(nextWallets);
+
+  if (removeIndex === -1) {
+    return;
+  }
+
+  const nextWallets = [...wallets].splice(removeIndex, 1);
+  const nextFocusedWallet: EncryptedWallet =
+    nextWallets[Math.max(0, Math.min(nextWallets.length - 1, removeIndex - 1))];
+  const nextApprovedAddresses = Object.keys(approvedAddresses).reduce(
+    (addresses, hostname) => {
+      const prevAddresses = approvedAddresses[hostname];
+      if (prevAddresses.indexOf(wallet.terraAddress) > -1) {
+        addresses[hostname] = prevAddresses.filter(
+          (itemAddress) => itemAddress !== wallet.terraAddress,
+        );
+      } else {
+        addresses[hostname] = prevAddresses;
+      }
+      return addresses;
+    },
+    {} as Record<string, string[]>,
+  );
+  const nextData: WalletStorageData = {
+    wallets: nextWallets,
+    focusedWalletAddress: nextFocusedWallet.terraAddress,
+    approvedAddresses: nextApprovedAddresses,
+  };
+  await writeWalletStorage(nextData);
 }
 
 export async function updateWallet(
   terraAddress: string,
   wallet: EncryptedWallet,
 ): Promise<void> {
-  const wallets = await readWalletStorage();
+  const { wallets, ...data } = await readWalletStorage();
   const index = wallets.findIndex(
     (findingWallet) => findingWallet.terraAddress === terraAddress,
   );
@@ -55,11 +105,37 @@ export async function updateWallet(
   const nextWallets = [...wallets];
   nextWallets.splice(index, 1, wallet);
 
-  await writeWalletStorage(nextWallets);
+  await writeWalletStorage({ wallets: nextWallets, ...data });
 }
 
-export function observeWalletStorage(): Observable<EncryptedWallet[]> {
-  return new Observable<EncryptedWallet[]>((subscriber) => {
+export async function focusWallet(terraAddress: string): Promise<void> {
+  const data = await readWalletStorage();
+
+  await writeWalletStorage({
+    ...data,
+    focusedWalletAddress: terraAddress,
+  });
+}
+
+export async function approveAddresses(
+  hostname: string,
+  walletTerraAddresses: string[],
+): Promise<void> {
+  const { approvedAddresses, ...data } = await readWalletStorage();
+
+  const nextApprovedAddresses = {
+    ...approvedAddresses,
+    [hostname]: walletTerraAddresses,
+  };
+
+  await writeWalletStorage({
+    ...data,
+    approvedAddresses: nextApprovedAddresses,
+  });
+}
+
+export function observeWalletStorage(): Observable<WalletStorageData> {
+  return new Observable<WalletStorageData>((subscriber) => {
     function callback(
       changes: Record<string, Storage.StorageChange>,
       areaName: string,
@@ -72,14 +148,14 @@ export function observeWalletStorage(): Observable<EncryptedWallet[]> {
 
     browser.storage.onChanged.addListener(callback);
 
-    const safariChangeSubscription: Subscription = safariWebExtensionStorageChangeListener<
-      EncryptedWallet[]
-    >(storageKey).subscribe((nextValue) => {
+    const safariChangeSubscription: Subscription = safariWebExtensionStorageChangeListener<WalletStorageData>(
+      storageKey,
+    ).subscribe((nextValue) => {
       subscriber.next(nextValue ?? []);
     });
 
-    readWalletStorage().then((wallets) => {
-      subscriber.next(wallets);
+    readWalletStorage().then((data) => {
+      subscriber.next(data);
     });
 
     return () => {

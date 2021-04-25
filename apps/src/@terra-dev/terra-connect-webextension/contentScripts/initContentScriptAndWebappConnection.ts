@@ -12,7 +12,7 @@ import {
   isWebExtensionMessage,
   WebExtensionClientStatesUpdated,
   WebExtensionTxResponse,
-} from '../internal/messages';
+} from './messages';
 
 export interface ContentScriptOptions {
   defaultNetworks: Network[];
@@ -33,6 +33,12 @@ export function initContentScriptAndWebappConnection({
   if (!meta) return;
 
   meta.setAttribute('connected', 'true');
+
+  const inpage = document.createElement('script');
+  inpage.innerText = 'window.isTerraExtensionAvailable = true';
+
+  const head = document.querySelector('head');
+  head?.appendChild(inpage);
 
   const extensionStateLastUpdated = new BehaviorSubject<number>(Date.now());
 
@@ -72,15 +78,15 @@ export function initContentScriptAndWebappConnection({
     WalletInfo[]
   > = observeWalletStorage().pipe(
     // remove sensitive informations
-    map((wallets) =>
-      wallets.map(({ name, terraAddress, design }) => {
+    map(({ wallets, ...data }) => {
+      return wallets.map(({ name, terraAddress, design }) => {
         return {
           name,
           terraAddress,
           design,
         };
-      }),
-    ),
+      });
+    }),
   );
 
   const networkObservable = observeNetworkStorage().pipe(
