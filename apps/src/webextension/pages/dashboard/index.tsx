@@ -237,6 +237,14 @@ function DashboardBase({ className }: { className?: string }) {
             </span>
           </Link>
         </li>
+        <li>
+          <Link to="/approved-hostnames">
+            <i>
+              <SettingsBackupRestore />
+            </i>
+            <span>Approved Hostnames</span>
+          </Link>
+        </li>
       </LinedList>
     </section>
   );

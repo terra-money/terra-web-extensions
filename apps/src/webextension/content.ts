@@ -90,8 +90,48 @@ function startTxWithIframeModal(
   });
 }
 
+function startConnectWithIframeModal(
+  id: string,
+  hostname: string,
+): Promise<boolean> {
+  return new Promise<boolean>((resolve) => {
+    const modalContainer = window.document.createElement('div');
+
+    const port = browser.runtime.connect(undefined, {
+      name: contentScriptPortPrefix + id,
+    });
+
+    const endConnect = () => {
+      window.document.querySelector('body')?.removeChild(modalContainer);
+      port.disconnect();
+    };
+
+    const connectHtml = browser.runtime.getURL('connect.html');
+
+    const modal = createElement(IFrameModal, {
+      src: `${connectHtml}?id=${id}&hostname=${hostname}`,
+      title: 'Connect',
+      onClose: () => {
+        resolve(false);
+        endConnect();
+      },
+    });
+
+    render(modal, modalContainer);
+    window.document.querySelector('body')?.appendChild(modalContainer);
+
+    const onMessage = (msg: boolean) => {
+      resolve(msg);
+      endConnect();
+    };
+
+    port.onMessage.addListener(onMessage);
+  });
+}
+
 const contentScriptOptions: ContentScriptOptions = {
   startTx: startTxWithIframeModal,
+  startConnect: startConnectWithIframeModal,
   defaultNetworks,
 };
 

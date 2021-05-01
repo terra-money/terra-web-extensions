@@ -38,6 +38,7 @@ import { ThemeProvider } from './contexts/theme';
 import { contentHeight, defaultNetworks, headerHeight, width } from './env';
 import { Dashboard } from './pages/dashboard';
 import { NetworkCreate } from './pages/networks/create';
+import { ApprovedHostnames } from './pages/wallets/approved-hostnames';
 import { WalletChangePassword } from './pages/wallets/change-password';
 import { WalletCreate } from './pages/wallets/create';
 import { WalletRecover } from './pages/wallets/recover';
@@ -166,6 +167,10 @@ function MainBase({ className }: { className?: string }) {
                 <Route
                   path="/wallets/:terraAddress/password"
                   component={WalletChangePassword}
+                />
+                <Route
+                  path="/approved-hostnames"
+                  component={ApprovedHostnames}
                 />
                 <Route path="/network/create" component={NetworkCreate} />
                 <Redirect to="/" />

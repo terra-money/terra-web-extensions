@@ -15020,6 +15020,15 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"post-message-stream@npm:^3":
+  version: 3.0.0
+  resolution: "post-message-stream@npm:3.0.0"
+  dependencies:
+    readable-stream: ^2.1.4
+  checksum: 32366b30a1e50887b83867bc093edf86e0a26e8a145f4ea164dfc08d3ce219780de5a15a8e96315aae19a4b37bb672519b724e7ac9d95b196053cc88841b731b
+  languageName: node
+  linkType: hard
+
 "postcss-attribute-case-insensitive@npm:^4.0.1":
   version: 4.0.2
   resolution: "postcss-attribute-case-insensitive@npm:4.0.2"
@@ -16480,7 +16489,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"readable-stream@npm:1 || 2, readable-stream@npm:^2.0.0, readable-stream@npm:^2.0.1, readable-stream@npm:^2.0.2, readable-stream@npm:^2.0.6, readable-stream@npm:^2.1.5, readable-stream@npm:^2.2.2, readable-stream@npm:^2.3.3, readable-stream@npm:^2.3.6, readable-stream@npm:~2.3.6":
+"readable-stream@npm:1 || 2, readable-stream@npm:^2.0.0, readable-stream@npm:^2.0.1, readable-stream@npm:^2.0.2, readable-stream@npm:^2.0.6, readable-stream@npm:^2.1.4, readable-stream@npm:^2.1.5, readable-stream@npm:^2.2.2, readable-stream@npm:^2.3.3, readable-stream@npm:^2.3.6, readable-stream@npm:~2.3.6":
   version: 2.3.7
   resolution: "readable-stream@npm:2.3.7"
   dependencies:
@@ -19837,6 +19846,7 @@ resolve@^2.0.0-next.3:
     jest: ^26.6.3
     lint-staged: ^10.5.4
     multiplerun: ^2.0.1
+    post-message-stream: ^3
     process: ^0.11.10
     puppeteer: ^9.0.0
     react: ^17.0.2

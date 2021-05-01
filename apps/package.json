@@ -3,11 +3,13 @@
   "version": "1.0.0",
   "scripts": {
     "webextension:dev": "multiplerun webextension-dev",
+    "webextension:dev-legacy": "multiplerun webextension-dev-legacy",
     "webextension:watch": "cross-env TS_NODE_PROJECT=tsconfig.script.json INSPECT_CHROME=9222 node -r ts-node/register -r tsconfig-paths/register scripts/webextension.watch.ts",
     "webextension:build": "cross-env TS_NODE_PROJECT=tsconfig.script.json INSPECT_CHROME=9222 node -r ts-node/register -r tsconfig-paths/register scripts/webextension.build.ts",
     "webextension-reloader:watch": "cross-env TS_NODE_PROJECT=tsconfig.script.json INSPECT_CHROME=9222 node -r ts-node/register -r tsconfig-paths/register scripts/webextension-reloader.watch.ts",
     "webextension-test-app:start": "cross-env TS_NODE_PROJECT=tsconfig.script.json INSPECT_CHROME=9222 node -r ts-node/register -r tsconfig-paths/register scripts/webextension-test-app.start.ts",
     "webextension-test-app:build": "cross-env TS_NODE_PROJECT=tsconfig.script.json INSPECT_CHROME=9222 node -r ts-node/register -r tsconfig-paths/register scripts/webextension-test-app.build.ts",
+    "webextension-legacy-anchor:start": "cross-env TS_NODE_PROJECT=tsconfig.script.json INSPECT_CHROME=9222 node -r ts-node/register -r tsconfig-paths/register scripts/webextension-legacy-anchor.start.ts",
     "storybook:start": "start-storybook",
     "storybook:build": "build-storybook --output-dir out/storybook",
     "build": "yarn run webextension:build",
@@ -21,6 +23,10 @@
     "webextension-dev": [
       "yarn run webextension:watch",
       "yarn run webextension-test-app:start"
+    ],
+    "webextension-dev-legacy": [
+      "yarn run webextension:watch",
+      "yarn run webextension-legacy-anchor:start"
     ]
   },
   "lint-staged": {
@@ -47,6 +53,7 @@
     "d3-timer": "^2.0.0",
     "fast-deep-equal": "^3.1.3",
     "graphql": "^15.5.0",
+    "post-message-stream": "^3",
     "process": "^0.11.10",
     "react-intl": "^5.16.0",
     "react-router-dom": "^5.2.0",

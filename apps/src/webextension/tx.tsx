@@ -34,48 +34,48 @@ import { LocalesProvider, useIntlProps } from './contexts/locales';
 import { ThemeProvider } from './contexts/theme';
 import { txPortPrefix } from './env';
 
-function AppBase({ className }: { className?: string }) {
+export interface AppProps {
+  className?: string;
+}
+
+function AppBase({ className }: AppProps) {
   // ---------------------------------------------
   // read hash urls
   // ---------------------------------------------
   const txInfo = useMemo(() => {
-    try {
-      const queries = window.location.search;
+    const queries = window.location.search;
 
-      const params = new URLSearchParams(queries);
+    const params = new URLSearchParams(queries);
 
-      const id = params.get('id');
-      const terraAddress = params.get('terraAddress');
-      const txBase64 = params.get('tx');
-      const networkBase64 = params.get('network');
-      const origin = params.get('origin');
-      const timestamp = params.get('timestamp');
+    const id = params.get('id');
+    const terraAddress = params.get('terraAddress');
+    const txBase64 = params.get('tx');
+    const networkBase64 = params.get('network');
+    const origin = params.get('origin');
+    const timestamp = params.get('timestamp');
 
-      if (
-        !id ||
-        !terraAddress ||
-        !txBase64 ||
-        !networkBase64 ||
-        !origin ||
-        !timestamp
-      ) {
-        return undefined;
-      }
-
-      const serializedTx: SerializedTx = JSON.parse(atob(txBase64));
-      const network: Network = JSON.parse(atob(networkBase64));
-
-      return {
-        id,
-        terraAddress,
-        network,
-        serializedTx,
-        origin,
-        timestamp: new Date(parseInt(timestamp)),
-      };
-    } catch {
-      return undefined;
+    if (
+      !id ||
+      !terraAddress ||
+      !txBase64 ||
+      !networkBase64 ||
+      !origin ||
+      !timestamp
+    ) {
+      throw new Error(`Can't find Transaction!`);
     }
+
+    const serializedTx: SerializedTx = JSON.parse(atob(txBase64));
+    const network: Network = JSON.parse(atob(networkBase64));
+
+    return {
+      id,
+      terraAddress,
+      network,
+      serializedTx,
+      origin,
+      timestamp: new Date(parseInt(timestamp)),
+    };
   }, []);
 
   const tx = useMemo(() => {
@@ -158,10 +158,6 @@ function AppBase({ className }: { className?: string }) {
   // ---------------------------------------------
   // presentation
   // ---------------------------------------------
-  if (!txInfo) {
-    return <div className={className}>Can't find Transaction!</div>;
-  }
-
   if (!encryptedWallet) {
     return <div className={className}></div>;
   }

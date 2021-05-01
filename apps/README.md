@@ -1,8 +1,4 @@
-# TODOs
+# Playground
 
-- [ ] 기반
-  - [ ] polyfill
-  - [ ] content_scripts, background.scripts, browser_action 간의 통신 구조
-- [ ] 기본 시나리오
-  - [ ] Web 상에서 Extension 팝업 열기 (New tab or Popup)
-  - [ ] Extension 팝업이 닫히는 상태 알아내기
+- `yarn run webextension:dev-legacy` Old Extension Mode : Anchor Web App 기반으로 테스트
+- `yarn run webextension:dev` New Extension Mode : 내부 Test App 기반으로 테스트

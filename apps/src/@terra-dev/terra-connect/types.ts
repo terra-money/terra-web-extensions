@@ -27,6 +27,7 @@ export interface StatusReady {
 export type Status = StatusInitializing | StatusNoAvailable | StatusReady;
 
 export interface ClientStates {
+  focusedWalletAddress: string | undefined;
   wallets: WalletInfo[];
   network: Network;
 }
