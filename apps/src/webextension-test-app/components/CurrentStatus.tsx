@@ -7,12 +7,15 @@ import { getParser } from 'bowser';
 import React from 'react';
 
 export function CurrentStatus() {
-  const { status } = useWebExtension();
+  const { status, requestApproval } = useWebExtension();
 
   return (
     <section>
       <p>{JSON.stringify(status)}</p>
       <InstallMessage status={status} />
+      {requestApproval && (
+        <button onClick={() => requestApproval()}>Connect</button>
+      )}
     </section>
   );
 }

@@ -5,7 +5,8 @@ import {
   FromContentScriptToWebMessage,
   FromWebToContentScriptMessage,
   isWebExtensionMessage,
-  RefetchExtensionClientStates,
+  RefetchExtensionStates,
+  RequestApproval,
 } from './internal/webapp-contentScripts-messages';
 import {
   PostParams,
@@ -16,6 +17,13 @@ import {
   WebExtensionTxResult,
   WebExtensionTxStatus,
 } from './models';
+
+export function canRequestApproval(status: WebExtensionStatus): boolean {
+  return (
+    status.type === WebExtensionStatusType.NO_AVAILABLE &&
+    status.isApproved === false
+  );
+}
 
 export class WebExtensionController {
   private _status: BehaviorSubject<WebExtensionStatus>;
@@ -50,7 +58,6 @@ export class WebExtensionController {
       this._status.next({
         type: WebExtensionStatusType.NO_AVAILABLE,
         isSupportBrowser: false,
-        isInstalled: false,
       });
       return;
     }
@@ -59,6 +66,7 @@ export class WebExtensionController {
 
     this.refetchStates();
 
+    // TODO improve first status check
     setTimeout(() => {
       if (
         this._status.getValue().type === WebExtensionStatusType.INITIALIZING
@@ -91,6 +99,8 @@ export class WebExtensionController {
         });
       }
     }, 2000);
+
+    // TODO refetchStates() on visibilitychange event
   }
 
   /**
@@ -112,11 +122,31 @@ export class WebExtensionController {
    * }
    */
   refetchStates = () => {
-    const msg: RefetchExtensionClientStates = {
-      type: FromWebToContentScriptMessage.REFETCH_CLIENT_STATES,
+    const msg: RefetchExtensionStates = {
+      type: FromWebToContentScriptMessage.REFETCH_STATES,
     };
 
     this.hostWindow.postMessage(msg, '*');
+  };
+
+  /**
+   * Request approval connection to the Extension. (Connect)
+   */
+  requestApproval = () => {
+    const currentStatus = this._status.getValue();
+    if (canRequestApproval(currentStatus)) {
+      const msg: RequestApproval = {
+        type: FromWebToContentScriptMessage.REQUEST_APPROVAL,
+      };
+
+      this.hostWindow.postMessage(msg, '*');
+    } else {
+      console.warn(
+        `requestApproval() is ignored. do not call at this status is "${JSON.stringify(
+          currentStatus,
+        )}"`,
+      );
+    }
   };
 
   status = () => {
@@ -230,13 +260,28 @@ export class WebExtensionController {
     }
 
     switch (event.data.type) {
-      case FromContentScriptToWebMessage.CLIENT_STATES_UPDATED:
-        if (this._status.getValue().type !== WebExtensionStatusType.READY) {
-          this._status.next({
-            type: WebExtensionStatusType.READY,
-          });
+      case FromContentScriptToWebMessage.STATES_UPDATED:
+        const currentStatus = this._status.getValue();
+        const { isApproved, ...nextStates } = event.data.payload;
+
+        if (isApproved) {
+          if (currentStatus.type !== WebExtensionStatusType.READY) {
+            this._status.next({
+              type: WebExtensionStatusType.READY,
+            });
+          }
+        } else {
+          if (currentStatus.type !== WebExtensionStatusType.NO_AVAILABLE) {
+            this._status.next({
+              type: WebExtensionStatusType.NO_AVAILABLE,
+              isSupportBrowser: true,
+              isInstalled: true,
+              isApproved: false,
+            });
+          }
         }
-        this._states.next(event.data.payload);
+
+        this._states.next(nextStates);
         break;
     }
   };

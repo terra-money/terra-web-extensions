@@ -1,4 +1,5 @@
 import {
+  canRequestApproval,
   PostParams,
   WebExtensionController,
   WebExtensionStates,
@@ -32,6 +33,7 @@ export interface WebExtensionState {
   status: WebExtensionStatus;
   states: WebExtensionStates | null;
   refetchStates: () => void;
+  requestApproval: (() => void) | null;
   post: (params: PostParams) => Observable<WebExtensionTxResult>;
 }
 
@@ -54,6 +56,10 @@ export function WebExtensionProvider({
   const refetchStates = useCallback(() => {
     controller.refetchStates();
   }, [controller]);
+
+  const requestApproval = useMemo(() => {
+    return canRequestApproval(status) ? controller.requestApproval : null;
+  }, [controller.requestApproval, status]);
 
   useEffect(() => {
     controller.refetchStates();
@@ -78,9 +84,10 @@ export function WebExtensionProvider({
       status,
       states,
       refetchStates,
+      requestApproval,
       post: controller.post,
     }),
-    [states, controller, refetchStates, status],
+    [controller, status, states, refetchStates, requestApproval],
   );
 
   return (

@@ -7,12 +7,12 @@ import {
   FromContentScriptToWebMessage,
   FromWebToContentScriptMessage,
   isWebExtensionMessage,
-  WebExtensionClientStatesUpdated,
+  WebExtensionStatesUpdated,
   WebExtensionTxResponse,
 } from '../internal/webapp-contentScripts-messages';
 import {
-  WebExtensionNetworkInfo,
   SerializedCreateTxOptions,
+  WebExtensionNetworkInfo,
   WebExtensionStates,
   WebExtensionTxResult,
   WebExtensionTxStatus,
@@ -71,16 +71,19 @@ export function startWebExtensionContentScript({
   // ---------------------------------------------
   // listen extension storage states
   // ---------------------------------------------
-  const walletsObservable: Observable<{
+  type WalletsStates = {
     wallets: WalletInfo[];
     focusedWalletAddress: string | undefined;
-  }> = observeWalletStorage().pipe(
+    isApproved: boolean;
+  };
+
+  const walletsObservable: Observable<WalletsStates> = observeWalletStorage().pipe(
     map(({ wallets, focusedWalletAddress, approvedHostnames }) => {
       const hostname: string = window.location.hostname;
 
       return approvedHostnames.includes(hostname)
-        ? { wallets, focusedWalletAddress }
-        : { wallets: [], focusedWalletAddress: undefined };
+        ? { wallets, focusedWalletAddress, isApproved: true }
+        : { wallets: [], focusedWalletAddress: undefined, isApproved: false };
     }),
   );
 
@@ -93,12 +96,13 @@ export function startWebExtensionContentScript({
     walletsObservable,
     networkObservable,
   ]).pipe(
-    map(([_, { wallets, focusedWalletAddress }, network]) => {
+    map(([_, { wallets, focusedWalletAddress, isApproved }, network]) => {
       return {
         wallets,
         network,
         focusedWalletAddress,
-      } as WebExtensionStates;
+        isApproved,
+      } as WebExtensionStates & { isApproved: boolean };
     }),
   );
 
@@ -116,16 +120,14 @@ export function startWebExtensionContentScript({
       target: 'station:inpage',
     });
 
-    let _clientStates: WebExtensionStates | null = null;
-    let _clientStatesResolvers: Set<
-      (_: WebExtensionStates) => void
-    > = new Set();
+    let _states: WebExtensionStates | null = null;
+    let _statesResolvers: Set<(_: WebExtensionStates) => void> = new Set();
 
-    function resolveClientStates(callback: (_: WebExtensionStates) => void) {
-      if (_clientStates) {
-        callback(_clientStates);
+    function resolveStates(callback: (_: WebExtensionStates) => void) {
+      if (_states) {
+        callback(_states);
       } else {
-        _clientStatesResolvers.add(callback);
+        _statesResolvers.add(callback);
       }
     }
 
@@ -145,14 +147,14 @@ export function startWebExtensionContentScript({
       return wallets[focusedWalletIndex];
     }
 
-    extensionStates.subscribe((nextClientStates) => {
-      _clientStates = nextClientStates;
+    extensionStates.subscribe((nextStates) => {
+      _states = nextStates;
 
-      if (_clientStatesResolvers.size > 0) {
-        for (const clientStatesResolver of _clientStatesResolvers) {
-          clientStatesResolver(nextClientStates);
+      if (_statesResolvers.size > 0) {
+        for (const clientStatesResolver of _statesResolvers) {
+          clientStatesResolver(nextStates);
         }
-        _clientStatesResolvers.clear();
+        _statesResolvers.clear();
       }
     });
 
@@ -177,7 +179,7 @@ export function startWebExtensionContentScript({
         // info
         // ---------------------------------------------
         case 'info':
-          resolveClientStates(({ network }) => {
+          resolveStates(({ network }) => {
             pageStream.write({
               name: 'onInfo',
               id: data.id,
@@ -195,8 +197,8 @@ export function startWebExtensionContentScript({
         // connect
         // ---------------------------------------------
         case 'connect':
-          function approveConnect(clientStates: WebExtensionStates) {
-            const focusedWallet = getFocusedWallet(clientStates);
+          function approveConnect(states: WebExtensionStates) {
+            const focusedWallet = getFocusedWallet(states);
 
             pageStream.write({
               name: 'onConnect',
@@ -215,14 +217,14 @@ export function startWebExtensionContentScript({
             });
           }
 
-          resolveClientStates((clientStates) => {
-            if (clientStates.wallets.length > 0) {
-              approveConnect(clientStates);
+          resolveStates((states) => {
+            if (states.wallets.length > 0) {
+              approveConnect(states);
             } else {
               startConnect(data.id.toString(), window.location.hostname).then(
                 (approvingConnection: boolean) => {
                   if (approvingConnection) {
-                    resolveClientStates((updatedClientStates) => {
+                    resolveStates((updatedClientStates) => {
                       approveConnect(updatedClientStates);
                     });
                   } else {
@@ -237,13 +239,13 @@ export function startWebExtensionContentScript({
         // post
         // ---------------------------------------------
         case 'post':
-          resolveClientStates((clientStates) => {
-            if (clientStates.wallets.length > 0) {
-              const focusedWallet = getFocusedWallet(clientStates);
+          resolveStates((states) => {
+            if (states.wallets.length > 0) {
+              const focusedWallet = getFocusedWallet(states);
               startTx(
                 data.id.toString(),
                 focusedWallet.terraAddress,
-                clientStates.network,
+                states.network,
                 data,
               ).subscribe((txResult) => {
                 switch (txResult.status) {
@@ -327,8 +329,15 @@ export function startWebExtensionContentScript({
         }
 
         switch (event.data.type) {
-          case FromWebToContentScriptMessage.REFETCH_CLIENT_STATES:
+          case FromWebToContentScriptMessage.REFETCH_STATES:
             extensionStateLastUpdated.next(Date.now());
+            break;
+          case FromWebToContentScriptMessage.REQUEST_APPROVAL:
+            startConnect(Date.now().toString(), window.location.hostname).then(
+              () => {
+                extensionStateLastUpdated.next(Date.now());
+              },
+            );
             break;
           case FromWebToContentScriptMessage.EXECUTE_TX:
             startTx(
@@ -351,10 +360,10 @@ export function startWebExtensionContentScript({
       false,
     );
 
-    extensionStates.subscribe((clientStates) => {
-      const msg: WebExtensionClientStatesUpdated = {
-        type: FromContentScriptToWebMessage.CLIENT_STATES_UPDATED,
-        payload: clientStates,
+    extensionStates.subscribe((states) => {
+      const msg: WebExtensionStatesUpdated = {
+        type: FromContentScriptToWebMessage.STATES_UPDATED,
+        payload: states,
       };
       window.postMessage(msg, '*');
     });

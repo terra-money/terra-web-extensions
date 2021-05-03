@@ -2,7 +2,12 @@ import { useWebExtension } from '@terra-dev/web-extension-react';
 import React from 'react';
 
 export function StatusExample() {
-  const { status } = useWebExtension();
+  const { status, requestApproval } = useWebExtension();
 
-  return <div>{JSON.stringify(status)}</div>;
+  return (
+    <div>
+      <p>{JSON.stringify(status)}</p>
+      {requestApproval && <button onClick={requestApproval}>Connect</button>}
+    </div>
+  );
 }

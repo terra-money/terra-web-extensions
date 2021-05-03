@@ -1,6 +1,6 @@
 import {
-  WebExtensionNetworkInfo,
   SerializedCreateTxOptions,
+  WebExtensionNetworkInfo,
   WebExtensionStates,
   WebExtensionTxResult,
 } from '../models';
@@ -9,12 +9,13 @@ import {
 // web -> content script
 // ---------------------------------------------
 export enum FromWebToContentScriptMessage {
-  REFETCH_CLIENT_STATES = 'refetch_client_states',
+  REFETCH_STATES = 'refetch_states',
   EXECUTE_TX = 'execute_tx',
+  REQUEST_APPROVAL = 'request_approval',
 }
 
-export interface RefetchExtensionClientStates {
-  type: FromWebToContentScriptMessage.REFETCH_CLIENT_STATES;
+export interface RefetchExtensionStates {
+  type: FromWebToContentScriptMessage.REFETCH_STATES;
 }
 
 export interface ExecuteExtensionTx {
@@ -33,17 +34,21 @@ export interface ExecuteExtensionTx {
   payload: SerializedCreateTxOptions;
 }
 
+export interface RequestApproval {
+  type: FromWebToContentScriptMessage.REQUEST_APPROVAL;
+}
+
 // ---------------------------------------------
 // content script -> web
 // ---------------------------------------------
 export enum FromContentScriptToWebMessage {
-  CLIENT_STATES_UPDATED = 'client_states_updated',
+  STATES_UPDATED = 'states_updated',
   TX_RESPONSE = 'tx_response',
 }
 
-export interface WebExtensionClientStatesUpdated {
-  type: FromContentScriptToWebMessage.CLIENT_STATES_UPDATED;
-  payload: WebExtensionStates;
+export interface WebExtensionStatesUpdated {
+  type: FromContentScriptToWebMessage.STATES_UPDATED;
+  payload: WebExtensionStates & { isApproved: boolean };
 }
 
 export interface WebExtensionTxResponse {
@@ -58,10 +63,11 @@ export interface WebExtensionTxResponse {
 
 export type WebExtensionMessage =
   // web -> content script
-  | RefetchExtensionClientStates
+  | RefetchExtensionStates
   | ExecuteExtensionTx
+  | RequestApproval
   // content script -> web
-  | WebExtensionClientStatesUpdated
+  | WebExtensionStatesUpdated
   | WebExtensionTxResponse;
 
 export function isWebExtensionMessage(
@@ -75,12 +81,14 @@ export function isWebExtensionMessage(
 
   switch (msg.type) {
     // web -> content script
-    case FromWebToContentScriptMessage.REFETCH_CLIENT_STATES:
+    case FromWebToContentScriptMessage.REFETCH_STATES:
       return true;
     case FromWebToContentScriptMessage.EXECUTE_TX:
       return typeof msg.id === 'number' && !!msg.payload;
+    case FromWebToContentScriptMessage.REQUEST_APPROVAL:
+      return true;
     // content script -> web
-    case FromContentScriptToWebMessage.CLIENT_STATES_UPDATED:
+    case FromContentScriptToWebMessage.STATES_UPDATED:
       return !!msg.payload;
     case FromContentScriptToWebMessage.TX_RESPONSE:
       return typeof msg.id === 'number' && !!msg.payload;

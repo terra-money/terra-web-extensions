@@ -11,7 +11,8 @@ export interface WebExtensionStatusInitializing {
 export interface WebExtensionStatusNoAvailable {
   type: WebExtensionStatusType.NO_AVAILABLE;
   isSupportBrowser: boolean;
-  isInstalled: boolean;
+  isInstalled?: boolean;
+  isApproved?: boolean;
   installLink?: string;
 }
 
