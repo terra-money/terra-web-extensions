@@ -49,5 +49,5 @@
     "connect.js"
   ],
   
-  "content_security_policy": "script-src 'self' 'sha256-/13BBW2yQVtpCsBV7JiO23y7pwEFFUobOzefJ27Nltg='; object-src 'self'"
+  "content_security_policy": "script-src 'self' 'unsafe-eval' 'sha256-/13BBW2yQVtpCsBV7JiO23y7pwEFFUobOzefJ27Nltg='; object-src 'self'"
 }

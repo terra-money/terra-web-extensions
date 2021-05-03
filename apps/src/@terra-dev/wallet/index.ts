@@ -1,4 +1,4 @@
-import { decrypt, encrypt } from '@terra-dev/crypto';
+import { decrypt, encrypt } from '@terra-money/key-utils';
 import { MnemonicKey } from '@terra-money/terra.js';
 
 export interface Wallet {

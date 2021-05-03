@@ -1,4 +1,3 @@
-import { useTerraConnect } from '@terra-dev/terra-connect-react';
 import { WalletInfo } from '@terra-dev/wallet';
 import React, {
   Consumer,
@@ -12,6 +11,7 @@ import React, {
   useState,
 } from 'react';
 import { useStateRef } from 'use-state-ref';
+import { useWebExtension } from './web-extension';
 
 export interface WalletSelectProviderProps {
   children: ReactNode;
@@ -29,7 +29,7 @@ const WalletSelectContext: Context<WalletSelect> = createContext<WalletSelect>()
 const CURRENT_WALLET_ADDRESS = '__current_wallet_address__';
 
 export function WalletSelectProvider({ children }: WalletSelectProviderProps) {
-  const { clientStates } = useTerraConnect();
+  const { clientStates } = useWebExtension();
 
   const [selectedWallet, setSelectedWallet] = useState<WalletInfo | null>(null);
 

@@ -1,4 +1,4 @@
-import { useWalletSelect } from '@terra-dev/terra-connect-react';
+import { useWalletSelect } from '@terra-dev/web-extension-react';
 import React from 'react';
 
 export function CurrentWallet() {

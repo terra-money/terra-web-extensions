@@ -14,11 +14,20 @@ import {
   useStream,
 } from '@terra-dev/stream-pipe';
 import {
-  useTerraConnect,
+  WebExtensionTxResult,
+  WebExtensionTxStatus,
+} from '@terra-dev/web-extension';
+import {
   useWalletSelect,
-} from '@terra-dev/terra-connect-react';
-import { Tx, TxResult, TxStatus } from '@terra-dev/tx';
-import { Coins, Int, MsgExecuteContract, StdFee } from '@terra-money/terra.js';
+  useWebExtension,
+} from '@terra-dev/web-extension-react';
+import {
+  Coins,
+  CreateTxOptions,
+  Int,
+  MsgExecuteContract,
+  StdFee,
+} from '@terra-money/terra.js';
 import { useConstants } from 'common/contexts/constants';
 import { useContractAddress } from 'common/contexts/contract';
 import { pollTxInfo, TxInfos } from 'common/queries/txInfos';
@@ -29,7 +38,7 @@ export function TxExample() {
   // ---------------------------------------------
   // dependencies
   // ---------------------------------------------
-  const { clientStates, post } = useTerraConnect();
+  const { clientStates, post } = useWebExtension();
 
   const { selectedWallet } = useWalletSelect();
 
@@ -59,10 +68,13 @@ export function TxExample() {
         post,
         // poll txInfo if txResult is succeed
         // -> Observable(TxProgress | TxSucceed | TxFail | TxDenied | TxInfos)
-        ((txResult: TxResult) =>
-          txResult.status === TxStatus.SUCCEED
+        ((txResult: WebExtensionTxResult) =>
+          txResult.status === WebExtensionTxStatus.SUCCEED
             ? pollTxInfo(client, txResult.payload.txhash)
-            : txResult) as Operator<TxResult, TxInfos | TxResult>,
+            : txResult) as Operator<
+          WebExtensionTxResult,
+          TxInfos | WebExtensionTxResult
+        >,
         // side effect (refetch user balances) if result is txInfos(=Array)
         // -> Observable(TxProgress | TxSucceed | TxFail | TxDenied | TxInfos)
         (result) => {
@@ -84,7 +96,7 @@ export function TxExample() {
   const deposit = useCallback(() => {
     if (!clientStates?.network || !selectedWallet) return;
 
-    const tx: Tx = {
+    const tx: CreateTxOptions = {
       fee: new StdFee(
         gasFee,
         new Coins({
@@ -123,7 +135,7 @@ export function TxExample() {
   const withdraw = useCallback(() => {
     if (!clientStates?.network || !selectedWallet) return;
 
-    const tx: Tx = {
+    const tx: CreateTxOptions = {
       fee: new StdFee(
         gasFee,
         new Coins({

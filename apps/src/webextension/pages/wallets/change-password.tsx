@@ -7,10 +7,7 @@ import {
   encryptWallet,
   Wallet,
 } from '@terra-dev/wallet';
-import {
-  findWallet,
-  updateWallet,
-} from '@terra-dev/webextension-wallet-storage';
+import { findWallet, updateWallet } from '@terra-dev/web-extension/backend';
 import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
 

@@ -1,6 +1,6 @@
 import { Dashboard, Functions, WifiTethering } from '@material-ui/icons';
 import { LinedList } from '@terra-dev/station-ui/components/LinedList';
-import { useTerraConnect } from '@terra-dev/terra-connect-react';
+import { useWebExtension } from '@terra-dev/web-extension-react';
 import React, { ReactNode } from 'react';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
@@ -13,7 +13,7 @@ export interface AppLayoutProps {
 }
 
 function AppLayoutBase({ className, children }: AppLayoutProps) {
-  const { clientStates } = useTerraConnect();
+  const { clientStates } = useWebExtension();
 
   return (
     <div className={className}>

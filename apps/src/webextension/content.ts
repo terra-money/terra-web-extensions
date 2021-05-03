@@ -1,17 +1,17 @@
-import { Network } from '@terra-dev/network';
+import {
+  Network,
+  SerializedCreateTxOptions,
+  WebExtensionTxDenied,
+  WebExtensionTxFail,
+  WebExtensionTxProgress,
+  WebExtensionTxResult,
+  WebExtensionTxStatus,
+  WebExtensionTxSucceed,
+} from '@terra-dev/web-extension';
 import {
   ContentScriptOptions,
-  initContentScriptAndWebappConnection,
-} from '@terra-dev/terra-connect-webextension/contentScripts/initContentScriptAndWebappConnection';
-import {
-  SerializedTx,
-  TxDenied,
-  TxFail,
-  TxProgress,
-  TxResult,
-  TxStatus,
-  TxSucceed,
-} from '@terra-dev/tx';
+  startWebExtensionContentScript,
+} from '@terra-dev/web-extension/backend';
 import { createElement } from 'react';
 import { render } from 'react-dom';
 import { Observable } from 'rxjs';
@@ -23,9 +23,9 @@ function startTxWithIframeModal(
   id: string,
   terraAddress: string,
   network: Network,
-  tx: SerializedTx,
-): Observable<TxResult> {
-  return new Observable<TxResult>((subscriber) => {
+  tx: SerializedCreateTxOptions,
+): Observable<WebExtensionTxResult> {
+  return new Observable<WebExtensionTxResult>((subscriber) => {
     // ---------------------------------------------
     // assets
     // ---------------------------------------------
@@ -58,7 +58,7 @@ function startTxWithIframeModal(
       title: 'Tx',
       onClose: () => {
         subscriber.next({
-          status: TxStatus.DENIED,
+          status: WebExtensionTxStatus.DENIED,
         });
         endTx();
       },
@@ -70,7 +70,13 @@ function startTxWithIframeModal(
     // ---------------------------------------------
     // connect port (content_script -> background)
     // ---------------------------------------------
-    const onMessage = (msg: TxProgress | TxSucceed | TxFail | TxDenied) => {
+    const onMessage = (
+      msg:
+        | WebExtensionTxProgress
+        | WebExtensionTxSucceed
+        | WebExtensionTxFail
+        | WebExtensionTxDenied,
+    ) => {
       if (!msg.status) {
         return;
       }
@@ -78,9 +84,9 @@ function startTxWithIframeModal(
       subscriber.next(msg);
 
       switch (msg.status) {
-        case TxStatus.SUCCEED:
-        case TxStatus.FAIL:
-        case TxStatus.DENIED:
+        case WebExtensionTxStatus.SUCCEED:
+        case WebExtensionTxStatus.FAIL:
+        case WebExtensionTxStatus.DENIED:
           endTx();
           break;
       }
@@ -138,11 +144,11 @@ const contentScriptOptions: ContentScriptOptions = {
 if (document.readyState === 'loading') {
   window.addEventListener(
     'DOMContentLoaded',
-    () => initContentScriptAndWebappConnection(contentScriptOptions),
+    () => startWebExtensionContentScript(contentScriptOptions),
     {
       once: true,
     },
   );
 } else {
-  initContentScriptAndWebappConnection(contentScriptOptions);
+  startWebExtensionContentScript(contentScriptOptions);
 }

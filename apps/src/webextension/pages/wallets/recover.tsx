@@ -9,7 +9,7 @@ import {
   Wallet,
 } from '@terra-dev/wallet';
 import { WalletCardDesignSelector } from '@terra-dev/wallet-card/components/WalletCardDesignSelector';
-import { addWallet } from '@terra-dev/webextension-wallet-storage';
+import { addWallet } from '@terra-dev/web-extension/backend';
 import React, { ChangeEvent, useCallback, useState } from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { cardDesigns } from 'webextension/env';

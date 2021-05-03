@@ -4,18 +4,18 @@ import {
   Schedule,
   WifiTethering,
 } from '@material-ui/icons';
-import { Network } from '@terra-dev/network';
 import { LinedList } from '@terra-dev/station-ui/components/LinedList';
+import { decryptWallet, EncryptedWallet, Wallet } from '@terra-dev/wallet';
+import { WalletCard } from '@terra-dev/wallet-card';
 import {
   deserializeTx,
   executeTx,
-  SerializedTx,
-  TxFail,
-  TxStatus,
-} from '@terra-dev/tx';
-import { decryptWallet, EncryptedWallet, Wallet } from '@terra-dev/wallet';
-import { WalletCard } from '@terra-dev/wallet-card';
-import { findWallet } from '@terra-dev/webextension-wallet-storage';
+  Network,
+  SerializedCreateTxOptions,
+  WebExtensionTxFail,
+  WebExtensionTxStatus,
+} from '@terra-dev/web-extension';
+import { findWallet } from '@terra-dev/web-extension/backend';
 import { GlobalStyle } from 'common/components/GlobalStyle';
 import React, {
   ChangeEvent,
@@ -65,7 +65,7 @@ function AppBase({ className }: AppProps) {
       throw new Error(`Can't find Transaction!`);
     }
 
-    const serializedTx: SerializedTx = JSON.parse(atob(txBase64));
+    const serializedTx: SerializedCreateTxOptions = JSON.parse(atob(txBase64));
     const network: Network = JSON.parse(atob(networkBase64));
 
     return {
@@ -114,7 +114,7 @@ function AppBase({ className }: AppProps) {
       password: string;
       encryptedWallet: EncryptedWallet;
       network: Network;
-      serializedTx: SerializedTx;
+      serializedTx: SerializedCreateTxOptions;
     }) => {
       const wallet: Wallet = decryptWallet(
         param.encryptedWallet.encryptedWallet,
@@ -131,9 +131,9 @@ function AppBase({ className }: AppProps) {
         },
         (error) => {
           port.postMessage({
-            status: TxStatus.FAIL,
+            status: WebExtensionTxStatus.FAIL,
             error,
-          } as TxFail);
+          } as WebExtensionTxFail);
         },
         () => {
           port.disconnect();
@@ -149,7 +149,7 @@ function AppBase({ className }: AppProps) {
     });
 
     port.postMessage({
-      status: TxStatus.DENIED,
+      status: WebExtensionTxStatus.DENIED,
     });
 
     port.disconnect();

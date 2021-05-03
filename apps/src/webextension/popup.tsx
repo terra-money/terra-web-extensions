@@ -10,9 +10,9 @@ import {
   InMemoryCache,
 } from '@apollo/client';
 import { createMuiTheme } from '@material-ui/core';
-import { Network } from '@terra-dev/network';
 import { yScroller } from '@terra-dev/station-ui/styles/yScroller';
-import { observeNetworkStorage } from '@terra-dev/webextension-network-storage';
+import { Network } from '@terra-dev/web-extension';
+import { observeNetworkStorage } from '@terra-dev/web-extension/backend';
 import { GlobalStyle } from 'common/components/GlobalStyle';
 import { Constants, ConstantsProvider } from 'common/contexts/constants';
 import { ContractProvider } from 'common/contexts/contract';
@@ -75,8 +75,9 @@ function NetworkProviders({ children }: { children: ReactNode }) {
     const httpLink = new HttpLink({
       uri: ({ operationName }) =>
         `${
-          selectedNetwork.servers.mantle ??
-          'https://tequila-mantle.anchorprotocol.com'
+          selectedNetwork.chainID.startsWith('tequila')
+            ? 'https://tequila-mantle.anchorprotocol.com'
+            : 'https://mantle.anchorprotocol.com'
         }?${operationName}`,
     });
 
@@ -84,7 +85,7 @@ function NetworkProviders({ children }: { children: ReactNode }) {
       cache: new InMemoryCache(),
       link: httpLink,
     });
-  }, [selectedNetwork.servers.mantle]);
+  }, [selectedNetwork.chainID]);
 
   const constants = useMemo<Constants>(
     () =>

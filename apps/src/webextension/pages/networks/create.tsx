@@ -1,10 +1,11 @@
-import { Network } from '@terra-dev/network';
-import { addNetwork } from '@terra-dev/webextension-network-storage';
+import { Network } from '@terra-dev/web-extension';
+import { addNetwork } from '@terra-dev/web-extension/backend';
 import React, { useCallback, useState } from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { defaultNetworks } from '../../env';
 
-const serversPlaceHolder = JSON.stringify(defaultNetworks[0].servers, null, 2);
+const { lcd, fcd, ws } = defaultNetworks[0];
+const serversPlaceHolder = JSON.stringify({ lcd, fcd, ws }, null, 2);
 
 export function NetworkCreate({ history }: RouteComponentProps<{}>) {
   const [name, setName] = useState<string>('');
@@ -14,7 +15,7 @@ export function NetworkCreate({ history }: RouteComponentProps<{}>) {
   const [error, setError] = useState<string | null>(null);
 
   const create = useCallback(async () => {
-    let serversJson: Network['servers'];
+    let serversJson: Pick<Network, 'lcd' | 'fcd' | 'ws'>;
 
     try {
       serversJson = JSON.parse(servers);
@@ -31,7 +32,7 @@ export function NetworkCreate({ history }: RouteComponentProps<{}>) {
     const network: Network = {
       name,
       chainID,
-      servers: serversJson,
+      ...serversJson,
     };
 
     await addNetwork(network);

@@ -1,7 +1,7 @@
 import {
   disapproveHostname,
   observeWalletStorage,
-} from '@terra-dev/webextension-wallet-storage';
+} from '@terra-dev/web-extension/backend';
 import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 

@@ -1,8 +1,8 @@
-import { useTerraConnect } from '@terra-dev/terra-connect-react';
+import { useWebExtension } from '@terra-dev/web-extension-react';
 import React from 'react';
 
 export function NetworkExample() {
-  const { clientStates } = useTerraConnect();
+  const { clientStates } = useWebExtension();
 
   if (!clientStates) return null;
 

@@ -12,7 +12,7 @@ import {
   addWallet,
   approveHostnames,
   readWalletStorage,
-} from '@terra-dev/webextension-wallet-storage';
+} from '@terra-dev/web-extension/backend';
 import React, { useCallback, useMemo, useState } from 'react';
 import { render } from 'react-dom';
 import { IntlProvider } from 'react-intl';

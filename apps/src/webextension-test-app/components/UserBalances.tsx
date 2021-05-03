@@ -6,7 +6,7 @@ import {
   formatLuna,
   formatUST,
 } from '@anchor-protocol/notation';
-import { useWalletSelect } from '@terra-dev/terra-connect-react';
+import { useWalletSelect } from '@terra-dev/web-extension-react';
 import big from 'big.js';
 import { useUserBalances } from 'common/queries/userBalances';
 import React from 'react';

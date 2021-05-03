@@ -1,2 +1,2 @@
-export * from './contexts/terra-connect';
+export * from './contexts/web-extension';
 export * from './contexts/wallet-select';

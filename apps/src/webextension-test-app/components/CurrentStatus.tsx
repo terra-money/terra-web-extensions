@@ -1,10 +1,13 @@
-import { ClientStatus, Status } from '@terra-dev/terra-connect';
-import { useTerraConnect } from '@terra-dev/terra-connect-react';
+import {
+  WebExtensionStatus,
+  WebExtensionStatusType,
+} from '@terra-dev/web-extension';
+import { useWebExtension } from '@terra-dev/web-extension-react';
 import { getParser } from 'bowser';
 import React from 'react';
 
 export function CurrentStatus() {
-  const { status } = useTerraConnect();
+  const { status } = useWebExtension();
 
   return (
     <section>
@@ -14,8 +17,11 @@ export function CurrentStatus() {
   );
 }
 
-function InstallMessage({ status }: { status: Status }) {
-  if (status.type !== ClientStatus.NO_AVAILABLE || status.isInstalled) {
+function InstallMessage({ status }: { status: WebExtensionStatus }) {
+  if (
+    status.type !== WebExtensionStatusType.NO_AVAILABLE ||
+    status.isInstalled
+  ) {
     return null;
   }
 

@@ -103,16 +103,16 @@ client.execute({
   // 진행 상태, 결과를 Rx Observable 로 지속적으로 받는다
   next: result => {
     switch (result.status) {
-      case TxStatus.PROGRESS:
+      case WebExtensionTxStatus.PROGRESS:
         console.log('In Progress...')
         break
-      case TxStatus.SUCCEED:
+      case WebExtensionTxStatus.SUCCEED:
         console.log('Succeed!', result.payload)
         break
-      case TxStatus.FAIL:
+      case WebExtensionTxStatus.FAIL:
         console.log('Fail!', result.error)
         break
-      case TxStatus.DENIED:
+      case WebExtensionTxStatus.DENIED:
         console.log('User Denied!')
         break
     }

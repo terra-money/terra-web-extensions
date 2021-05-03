@@ -20,7 +20,7 @@ import {
   focusWallet,
   observeWalletStorage,
   removeWallet,
-} from '@terra-dev/webextension-wallet-storage';
+} from '@terra-dev/web-extension/backend';
 import big from 'big.js';
 import { useUserBalances } from 'common/queries/userBalances';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';

@@ -1,9 +1,4 @@
-import { Network } from '@terra-dev/network';
-import { ClientStates } from '@terra-dev/terra-connect';
-import { SerializedTx, TxResult, TxStatus } from '@terra-dev/tx';
 import { WalletInfo } from '@terra-dev/wallet';
-import { observeNetworkStorage } from '@terra-dev/webextension-network-storage';
-import { observeWalletStorage } from '@terra-dev/webextension-wallet-storage';
 //@ts-ignore
 import LocalMessageDuplexStream from 'post-message-stream';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
@@ -14,7 +9,16 @@ import {
   isWebExtensionMessage,
   WebExtensionClientStatesUpdated,
   WebExtensionTxResponse,
-} from './messages';
+} from '../internal/webapp-contentScripts-messages';
+import {
+  Network,
+  SerializedCreateTxOptions,
+  WebExtensionStates,
+  WebExtensionTxResult,
+  WebExtensionTxStatus,
+} from '../models';
+import { observeNetworkStorage } from './network-storage';
+import { observeWalletStorage } from './wallet-storage';
 
 export interface ContentScriptOptions {
   defaultNetworks: Network[];
@@ -22,12 +26,12 @@ export interface ContentScriptOptions {
     id: string,
     terraAddress: string,
     network: Network,
-    tx: SerializedTx,
-  ) => Observable<TxResult>;
+    tx: SerializedCreateTxOptions,
+  ) => Observable<WebExtensionTxResult>;
   startConnect: (id: string, hostname: string) => Promise<boolean>;
 }
 
-export function initContentScriptAndWebappConnection({
+export function startWebExtensionContentScript({
   startTx,
   startConnect,
   defaultNetworks,
@@ -94,7 +98,7 @@ export function initContentScriptAndWebappConnection({
         wallets,
         network,
         focusedWalletAddress,
-      } as ClientStates;
+      } as WebExtensionStates;
     }),
   );
 
@@ -112,10 +116,12 @@ export function initContentScriptAndWebappConnection({
       target: 'station:inpage',
     });
 
-    let _clientStates: ClientStates | null = null;
-    let _clientStatesResolvers: Set<(_: ClientStates) => void> = new Set();
+    let _clientStates: WebExtensionStates | null = null;
+    let _clientStatesResolvers: Set<
+      (_: WebExtensionStates) => void
+    > = new Set();
 
-    function resolveClientStates(callback: (_: ClientStates) => void) {
+    function resolveClientStates(callback: (_: WebExtensionStates) => void) {
       if (_clientStates) {
         callback(_clientStates);
       } else {
@@ -126,7 +132,7 @@ export function initContentScriptAndWebappConnection({
     function getFocusedWallet({
       wallets,
       focusedWalletAddress,
-    }: ClientStates): WalletInfo {
+    }: WebExtensionStates): WalletInfo {
       if (wallets.length === 0) {
         throw new Error('the wallets should have at least one more wallet!!!');
       }
@@ -163,7 +169,7 @@ export function initContentScriptAndWebappConnection({
     type Post = {
       id: number;
       type: 'post';
-    } & SerializedTx;
+    } & SerializedCreateTxOptions;
 
     pageStream.on('data', async (data: Info | Connect | Post) => {
       switch (data.type) {
@@ -178,9 +184,9 @@ export function initContentScriptAndWebappConnection({
               payload: {
                 chainID: network.chainID,
                 name: network.name,
-                fcd: network.servers.fcd,
-                lcd: network.servers.lcd,
-                ws: network.servers.ws,
+                fcd: network.fcd,
+                lcd: network.lcd,
+                ws: network.ws,
               },
             });
           });
@@ -189,7 +195,7 @@ export function initContentScriptAndWebappConnection({
         // connect
         // ---------------------------------------------
         case 'connect':
-          function approveConnect(clientStates: ClientStates) {
+          function approveConnect(clientStates: WebExtensionStates) {
             const focusedWallet = getFocusedWallet(clientStates);
 
             pageStream.write({
@@ -241,7 +247,7 @@ export function initContentScriptAndWebappConnection({
                 data,
               ).subscribe((txResult) => {
                 switch (txResult.status) {
-                  case TxStatus.DENIED:
+                  case WebExtensionTxStatus.DENIED:
                     pageStream.write({
                       name: 'onPost',
                       id: data.id,
@@ -254,7 +260,7 @@ export function initContentScriptAndWebappConnection({
                       },
                     });
                     break;
-                  case TxStatus.FAIL:
+                  case WebExtensionTxStatus.FAIL:
                     pageStream.write({
                       name: 'onPost',
                       id: data.id,
@@ -268,7 +274,7 @@ export function initContentScriptAndWebappConnection({
                       },
                     });
                     break;
-                  case TxStatus.SUCCEED:
+                  case WebExtensionTxStatus.SUCCEED:
                     pageStream.write({
                       name: 'onPost',
                       id: data.id,

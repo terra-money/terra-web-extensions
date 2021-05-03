@@ -10,13 +10,13 @@ import {
   Language,
   WifiTethering,
 } from '@material-ui/icons';
-import { Network } from '@terra-dev/network';
 import { LinedList } from '@terra-dev/station-ui/components/LinedList';
+import { Network } from '@terra-dev/web-extension';
 import {
   observeNetworkStorage,
   removeNetwork,
   selectNetwork,
-} from '@terra-dev/webextension-network-storage';
+} from '@terra-dev/web-extension/backend';
 import React, { ComponentType, MouseEvent, useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useHistory } from 'react-router-dom';

@@ -1,4 +1,3 @@
-import { Network } from '@terra-dev/network';
 import { Wallet } from '@terra-dev/wallet';
 import {
   CreateTxOptions,
@@ -9,21 +8,22 @@ import {
   StdFee,
 } from '@terra-money/terra.js';
 import { Observable } from 'rxjs';
+import { Network } from './network';
 
-export enum TxStatus {
+export enum WebExtensionTxStatus {
   PROGRESS = 'progress',
   SUCCEED = 'succeed',
   FAIL = 'fail',
   DENIED = 'denied',
 }
 
-export interface TxProgress {
-  status: TxStatus.PROGRESS;
+export interface WebExtensionTxProgress {
+  status: WebExtensionTxStatus.PROGRESS;
   payload?: unknown;
 }
 
-export interface TxSucceed {
-  status: TxStatus.SUCCEED;
+export interface WebExtensionTxSucceed {
+  status: WebExtensionTxStatus.SUCCEED;
   payload: {
     height: number;
     raw_log: string;
@@ -31,25 +31,28 @@ export interface TxSucceed {
   };
 }
 
-export interface TxFail {
-  status: TxStatus.FAIL;
+export interface WebExtensionTxFail {
+  status: WebExtensionTxStatus.FAIL;
   error: unknown;
 }
 
-export interface TxDenied {
-  status: TxStatus.DENIED;
+export interface WebExtensionTxDenied {
+  status: WebExtensionTxStatus.DENIED;
 }
 
-export type TxResult = TxProgress | TxSucceed | TxFail | TxDenied;
+export type WebExtensionTxResult =
+  | WebExtensionTxProgress
+  | WebExtensionTxSucceed
+  | WebExtensionTxFail
+  | WebExtensionTxDenied;
 
-export interface Tx extends CreateTxOptions {}
-
-export interface SerializedTx extends Omit<CreateTxOptions, 'msgs' | 'fee'> {
+export interface SerializedCreateTxOptions
+  extends Omit<CreateTxOptions, 'msgs' | 'fee'> {
   msgs: string[];
   fee: string | undefined;
 }
 
-export function serializeTx(tx: Tx): SerializedTx {
+export function serializeTx(tx: CreateTxOptions): SerializedCreateTxOptions {
   return {
     msgs: tx.msgs.map((msg) => msg.toJSON()),
     fee: tx.fee?.toJSON(),
@@ -62,7 +65,7 @@ export function serializeTx(tx: Tx): SerializedTx {
   };
 }
 
-export function deserializeTx(tx: SerializedTx): Tx {
+export function deserializeTx(tx: SerializedCreateTxOptions): CreateTxOptions {
   return {
     ...tx,
     msgs: tx.msgs.map((msg) => Msg.fromData(JSON.parse(msg))),
@@ -73,12 +76,16 @@ export function deserializeTx(tx: SerializedTx): Tx {
 export function executeTx(
   wallet: Wallet,
   network: Network,
-  tx: SerializedTx,
-): Observable<TxProgress | TxSucceed | TxFail> {
-  return new Observable<TxProgress | TxSucceed | TxFail>((subscriber) => {
+  tx: SerializedCreateTxOptions,
+): Observable<
+  WebExtensionTxProgress | WebExtensionTxSucceed | WebExtensionTxFail
+> {
+  return new Observable<
+    WebExtensionTxProgress | WebExtensionTxSucceed | WebExtensionTxFail
+  >((subscriber) => {
     const lcd = new LCDClient({
       chainID: network.chainID,
-      URL: network.servers.lcd,
+      URL: network.lcd,
       gasPrices: tx.gasPrices,
       gasAdjustment: tx.gasAdjustment,
     });
@@ -94,13 +101,13 @@ export function executeTx(
       .then((data) => {
         if (isTxError(data)) {
           subscriber.next({
-            status: TxStatus.FAIL,
+            status: WebExtensionTxStatus.FAIL,
             error: new Error(data.raw_log),
           });
           subscriber.complete();
         } else {
           subscriber.next({
-            status: TxStatus.SUCCEED,
+            status: WebExtensionTxStatus.SUCCEED,
             payload: {
               txhash: data.txhash,
               height: data.height,
@@ -112,7 +119,7 @@ export function executeTx(
       })
       .catch((error) => {
         subscriber.next({
-          status: TxStatus.FAIL,
+          status: WebExtensionTxStatus.FAIL,
           error,
         });
         subscriber.complete();

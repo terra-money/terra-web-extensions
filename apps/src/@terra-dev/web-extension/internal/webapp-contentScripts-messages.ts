@@ -1,6 +1,9 @@
-import { Network } from '@terra-dev/network';
-import { ClientStates } from '@terra-dev/terra-connect';
-import { SerializedTx, TxResult } from '@terra-dev/tx';
+import {
+  Network,
+  SerializedCreateTxOptions,
+  WebExtensionStates,
+  WebExtensionTxResult,
+} from '../models';
 
 // ---------------------------------------------
 // web -> content script
@@ -27,7 +30,7 @@ export interface ExecuteExtensionTx {
   network: Network;
 
   /** transaction payload */
-  payload: SerializedTx;
+  payload: SerializedCreateTxOptions;
 }
 
 // ---------------------------------------------
@@ -40,7 +43,7 @@ export enum FromContentScriptToWebMessage {
 
 export interface WebExtensionClientStatesUpdated {
   type: FromContentScriptToWebMessage.CLIENT_STATES_UPDATED;
-  payload: ClientStates;
+  payload: WebExtensionStates;
 }
 
 export interface WebExtensionTxResponse {
@@ -50,7 +53,7 @@ export interface WebExtensionTxResponse {
   id: number;
 
   /** tx response */
-  payload: TxResult;
+  payload: WebExtensionTxResult;
 }
 
 export type WebExtensionMessage =

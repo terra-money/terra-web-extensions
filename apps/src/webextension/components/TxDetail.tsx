@@ -1,12 +1,15 @@
-import { Tx } from '@terra-dev/tx';
-import { Msg, MsgExecuteContract } from '@terra-money/terra.js';
-import styled from 'styled-components';
-import React, { useState } from 'react';
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
+import {
+  CreateTxOptions,
+  Msg,
+  MsgExecuteContract,
+} from '@terra-money/terra.js';
+import React, { useState } from 'react';
+import styled from 'styled-components';
 
 export interface TxDetailProps {
   className?: string;
-  tx?: Tx;
+  tx?: CreateTxOptions;
 }
 
 function TxDetailBase({ className, tx }: TxDetailProps) {

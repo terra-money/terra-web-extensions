@@ -1,8 +1,8 @@
-import { useTerraConnect } from '@terra-dev/terra-connect-react';
+import { useWebExtension } from '@terra-dev/web-extension-react';
 import React from 'react';
 
 export function StatusExample() {
-  const { status } = useTerraConnect();
+  const { status } = useWebExtension();
 
   return <div>{JSON.stringify(status)}</div>;
 }

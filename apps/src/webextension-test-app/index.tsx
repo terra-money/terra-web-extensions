@@ -8,11 +8,11 @@ import {
   InMemoryCache,
 } from '@apollo/client';
 import {
-  TerraConnectProvider,
-  useTerraConnect,
+  WebExtensionProvider,
+  useWebExtension,
   WalletSelectProvider,
-} from '@terra-dev/terra-connect-react';
-import { TerraConnectWebExtensionClient } from '@terra-dev/terra-connect-webextension';
+} from '@terra-dev/web-extension-react';
+import { WebExtensionController } from '@terra-dev/web-extension';
 import { GlobalStyle } from 'common/components/GlobalStyle';
 import { Constants, ConstantsProvider } from 'common/contexts/constants';
 import { ContractProvider } from 'common/contexts/contract';
@@ -29,13 +29,13 @@ import TerraConnectAPI from './pages/apis/terra-connect/api.mdx';
 import TerraConnectExample from './pages/apis/terra-connect/example.mdx';
 import './markdown.css';
 
-const client = new TerraConnectWebExtensionClient(window);
+const client = new WebExtensionController(window);
 
 function AppProviders({ children }: { children: ReactNode }) {
   // ---------------------------------------------
   // terra connect
   // ---------------------------------------------
-  const { clientStates } = useTerraConnect();
+  const { clientStates } = useWebExtension();
 
   // ---------------------------------------------
   // graphql settings
@@ -57,8 +57,9 @@ function AppProviders({ children }: { children: ReactNode }) {
     const httpLink = new HttpLink({
       uri: ({ operationName }) =>
         `${
-          clientStates?.network.servers.mantle ??
-          'https://tequila-mantle.anchorprotocol.com'
+          clientStates?.network.chainID.startsWith('tequila')
+            ? 'https://tequila-mantle.anchorprotocol.com'
+            : 'https://mantle.anchorprotocol.com'
         }?${operationName}`,
     });
 
@@ -103,7 +104,7 @@ function AppProviders({ children }: { children: ReactNode }) {
 
 function App() {
   return (
-    <TerraConnectProvider client={client}>
+    <WebExtensionProvider controller={client}>
       <WalletSelectProvider>
         <AppProviders>
           <AppLayout>
@@ -122,7 +123,7 @@ function App() {
           <GlobalStyle backgroundColor="#ffffff" />
         </AppProviders>
       </WalletSelectProvider>
-    </TerraConnectProvider>
+    </WebExtensionProvider>
   );
 }
 
