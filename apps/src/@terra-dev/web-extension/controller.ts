@@ -153,6 +153,10 @@ export class WebExtensionController {
     return this._status.asObservable();
   };
 
+  getLastStatus = () => {
+    return this._status.getValue();
+  };
+
   /**
    * Execute transaction
    *
@@ -243,6 +247,10 @@ export class WebExtensionController {
    */
   states = () => {
     return this._states.asObservable();
+  };
+
+  getLastStates = () => {
+    return this._states.getValue();
   };
 
   /**
