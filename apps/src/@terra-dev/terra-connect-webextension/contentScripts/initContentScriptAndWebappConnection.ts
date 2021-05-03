@@ -1,6 +1,6 @@
 import { Network } from '@terra-dev/network';
 import { ClientStates } from '@terra-dev/terra-connect';
-import { SerializedTx, TxResult } from '@terra-dev/tx';
+import { SerializedTx, TxResult, TxStatus } from '@terra-dev/tx';
 import { WalletInfo } from '@terra-dev/wallet';
 import { observeNetworkStorage } from '@terra-dev/webextension-network-storage';
 import { observeWalletStorage } from '@terra-dev/webextension-wallet-storage';
@@ -123,6 +123,22 @@ export function initContentScriptAndWebappConnection({
       }
     }
 
+    function getFocusedWallet({
+      wallets,
+      focusedWalletAddress,
+    }: ClientStates): WalletInfo {
+      if (wallets.length === 0) {
+        throw new Error('the wallets should have at least one more wallet!!!');
+      }
+
+      const focusedWalletIndex: number = focusedWalletAddress
+        ? wallets.findIndex(
+            (itemWallet) => itemWallet.terraAddress === focusedWalletAddress,
+          ) ?? 0
+        : 0;
+      return wallets[focusedWalletIndex];
+    }
+
     extensionStates.subscribe((nextClientStates) => {
       _clientStates = nextClientStates;
 
@@ -144,7 +160,12 @@ export function initContentScriptAndWebappConnection({
       type: 'connect';
     };
 
-    pageStream.on('data', async (data: Info | Connect) => {
+    type Post = {
+      id: number;
+      type: 'post';
+    } & SerializedTx;
+
+    pageStream.on('data', async (data: Info | Connect | Post) => {
       switch (data.type) {
         // ---------------------------------------------
         // info
@@ -168,24 +189,14 @@ export function initContentScriptAndWebappConnection({
         // connect
         // ---------------------------------------------
         case 'connect':
-          function approveConnect({
-            focusedWalletAddress,
-            wallets,
-          }: ClientStates) {
-            const focusedWalletIndex: number = focusedWalletAddress
-              ? wallets.findIndex(
-                  (itemWallet) =>
-                    itemWallet.terraAddress === focusedWalletAddress,
-                ) ?? 0
-              : 0;
+          function approveConnect(clientStates: ClientStates) {
+            const focusedWallet = getFocusedWallet(clientStates);
 
             pageStream.write({
               name: 'onConnect',
               id: data.id,
               payload: {
-                name: wallets[focusedWalletIndex].name,
-                address: wallets[focusedWalletIndex].terraAddress,
-                design: wallets[focusedWalletIndex].design,
+                address: focusedWallet.terraAddress,
               },
             });
           }
@@ -218,6 +229,76 @@ export function initContentScriptAndWebappConnection({
           break;
         // ---------------------------------------------
         // post
+        // ---------------------------------------------
+        case 'post':
+          resolveClientStates((clientStates) => {
+            if (clientStates.wallets.length > 0) {
+              const focusedWallet = getFocusedWallet(clientStates);
+              startTx(
+                data.id.toString(),
+                focusedWallet.terraAddress,
+                clientStates.network,
+                data,
+              ).subscribe((txResult) => {
+                switch (txResult.status) {
+                  case TxStatus.DENIED:
+                    pageStream.write({
+                      name: 'onPost',
+                      id: data.id,
+                      payload: {
+                        ...data,
+                        success: false,
+                        error: {
+                          code: 1, // user denied
+                        },
+                      },
+                    });
+                    break;
+                  case TxStatus.FAIL:
+                    pageStream.write({
+                      name: 'onPost',
+                      id: data.id,
+                      payload: {
+                        ...data,
+                        success: false,
+                        error: {
+                          code: 3, // error before make txhash
+                          message: String(txResult.error),
+                        },
+                      },
+                    });
+                    break;
+                  case TxStatus.SUCCEED:
+                    pageStream.write({
+                      name: 'onPost',
+                      id: data.id,
+                      payload: {
+                        ...data,
+                        success: true,
+                        result: txResult.payload,
+                      },
+                    });
+                    break;
+                }
+              });
+            } else {
+              pageStream.write({
+                name: 'onPost',
+                id: data.id,
+                payload: {
+                  ...data,
+                  success: false,
+                  error: {
+                    code: 3, // error before make txhash
+                    message: 'no wallets',
+                  },
+                },
+              });
+            }
+          });
+          break;
+        // ---------------------------------------------
+        // TODO implement sign command
         // ---------------------------------------------
         default:
           console.log('initContentScriptAndWebappConnection.ts..()', data);
