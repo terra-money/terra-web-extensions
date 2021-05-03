@@ -111,7 +111,7 @@ export interface TerraConnectClient {
    * - Tx is Failed : TxProgress -> [...TxProgress] -> TxFail
    * - Tx is Succeed : TxProgress -> [...TxProgress] -> TxSucceed
    */
-  execute: (params: ExecuteParams) => Observable<TxResult>;
+  post: (params: ExecuteParams) => Observable<TxResult>;
 
   /**
    * Destroy this client

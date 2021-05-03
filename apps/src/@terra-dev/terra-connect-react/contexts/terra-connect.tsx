@@ -32,7 +32,7 @@ export interface TerraConnect {
   status: Status;
   clientStates: ClientStates | null;
   refetchClientStates: () => void;
-  execute: (params: ExecuteParams) => Observable<TxResult>;
+  post: (params: ExecuteParams) => Observable<TxResult>;
 }
 
 // @ts-ignore
@@ -78,7 +78,7 @@ export function TerraConnectProvider({
       status,
       clientStates,
       refetchClientStates,
-      execute: client.execute,
+      post: client.post,
     }),
     [client, clientStates, refetchClientStates, status],
   );

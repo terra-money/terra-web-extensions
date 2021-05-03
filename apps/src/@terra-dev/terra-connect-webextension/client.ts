@@ -29,7 +29,9 @@ export class TerraConnectWebExtensionClient implements TerraConnectClient {
     this._message = new Subject<Message<unknown>>();
     this._clientStates = new BehaviorSubject<ClientStates | null>(null);
 
-    const meta = document.querySelector('head > meta[name="terra-connect"]');
+    const meta = document.querySelector(
+      'head > meta[name="terra-webextension"]',
+    );
 
     if (!meta) {
       return;
@@ -107,7 +109,7 @@ export class TerraConnectWebExtensionClient implements TerraConnectClient {
     return this._message.asObservable();
   };
 
-  execute = ({ terraAddress, network, tx }: ExecuteParams) => {
+  post = ({ terraAddress, network, tx }: ExecuteParams) => {
     return new Observable<TxResult>((subscriber) => {
       subscriber.next({
         status: TxStatus.PROGRESS,

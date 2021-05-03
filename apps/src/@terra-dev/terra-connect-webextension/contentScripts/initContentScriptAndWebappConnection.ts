@@ -43,6 +43,11 @@ export function initContentScriptAndWebappConnection({
   );
 
   // ---------------------------------------------
+  // set the attribute <meta name="terra" connected="true">
+  // ---------------------------------------------
+  meta.setAttribute('connected', 'true');
+
+  // ---------------------------------------------
   // inject inpage scripts
   // TODO remove if every dapps migrated to newer api
   // ---------------------------------------------
@@ -53,11 +58,6 @@ export function initContentScriptAndWebappConnection({
     const head = document.querySelector('head');
     head?.appendChild(inpage);
   }
-
-  // ---------------------------------------------
-  // set the attribute <meta name="terra" connected="true">
-  // ---------------------------------------------
-  meta.setAttribute('connected', 'true');
 
   // ---------------------------------------------
   // states

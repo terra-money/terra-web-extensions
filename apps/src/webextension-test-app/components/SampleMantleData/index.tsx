@@ -28,7 +28,7 @@ import React, { useCallback, useMemo } from 'react';
 import { GuardSpinner } from 'react-spinners-kit';
 
 export function SampleMantleData() {
-  const { clientStates, execute } = useTerraConnect();
+  const { clientStates, post } = useTerraConnect();
 
   const { selectedWallet } = useWalletSelect();
 
@@ -47,7 +47,7 @@ export function SampleMantleData() {
     () =>
       streamPipe(
         // execute transaction
-        execute,
+        post,
         // poll txInfo if txResult is succeed
         ((txResult: TxResult) =>
           txResult.status === TxStatus.SUCCEED
@@ -61,7 +61,7 @@ export function SampleMantleData() {
           return result;
         },
       ),
-    [client, execute, refetch],
+    [client, post, refetch],
   );
 
   const [execTx, txResult] = useStream(txStream);

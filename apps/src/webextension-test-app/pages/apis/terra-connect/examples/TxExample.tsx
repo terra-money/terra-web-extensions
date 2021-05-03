@@ -29,7 +29,7 @@ export function TxExample() {
   // ---------------------------------------------
   // dependencies
   // ---------------------------------------------
-  const { clientStates, execute } = useTerraConnect();
+  const { clientStates, post } = useTerraConnect();
 
   const { selectedWallet } = useWalletSelect();
 
@@ -56,7 +56,7 @@ export function TxExample() {
       streamPipe(
         // execute transaction
         // -> Observable(TxProgress | TxSucceed | TxFail | TxDenied)
-        execute,
+        post,
         // poll txInfo if txResult is succeed
         // -> Observable(TxProgress | TxSucceed | TxFail | TxDenied | TxInfos)
         ((txResult: TxResult) =>
@@ -72,7 +72,7 @@ export function TxExample() {
           return result;
         },
       ),
-    [client, execute, refetchUserBalances],
+    [client, post, refetchUserBalances],
   );
 
   // bind to react
