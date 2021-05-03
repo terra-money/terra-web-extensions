@@ -29,7 +29,7 @@ const WalletSelectContext: Context<WalletSelect> = createContext<WalletSelect>()
 const CURRENT_WALLET_ADDRESS = '__current_wallet_address__';
 
 export function WalletSelectProvider({ children }: WalletSelectProviderProps) {
-  const { clientStates } = useWebExtension();
+  const { states } = useWebExtension();
 
   const [selectedWallet, setSelectedWallet] = useState<WalletInfo | null>(null);
 
@@ -42,35 +42,35 @@ export function WalletSelectProvider({ children }: WalletSelectProviderProps) {
 
   const state = useMemo<WalletSelect>(
     () => ({
-      wallets: clientStates?.wallets ?? [],
+      wallets: states?.wallets ?? [],
       selectedWallet: selectedWallet,
       selectWallet,
     }),
-    [clientStates?.wallets, selectedWallet, selectWallet],
+    [states?.wallets, selectedWallet, selectWallet],
   );
 
   useEffect(() => {
-    if (!clientStates) {
+    if (!states) {
       return;
     }
 
     // clientStates initialized
-    if (!selectedWalletRef.current && clientStates.wallets.length > 0) {
+    if (!selectedWalletRef.current && states.wallets.length > 0) {
       const currentWalletAddress = localStorage.getItem(CURRENT_WALLET_ADDRESS);
 
       if (currentWalletAddress) {
         setSelectedWallet(
-          clientStates.wallets.find(
+          states.wallets.find(
             (wallet) => wallet.terraAddress === currentWalletAddress,
-          ) ?? clientStates.wallets[0],
+          ) ?? states.wallets[0],
         );
       } else {
-        setSelectedWallet(clientStates.wallets[0]);
+        setSelectedWallet(states.wallets[0]);
       }
     }
 
     // all wallets deleted
-    if (clientStates.wallets.length === 0) {
+    if (states.wallets.length === 0) {
       setSelectedWallet(null);
       localStorage.removeItem(CURRENT_WALLET_ADDRESS);
       return;
@@ -81,19 +81,19 @@ export function WalletSelectProvider({ children }: WalletSelectProviderProps) {
       const currentWalletAddress = selectedWalletRef.current.terraAddress;
 
       if (
-        clientStates.wallets.every(
+        states.wallets.every(
           (wallet) => wallet.terraAddress !== currentWalletAddress,
         )
       ) {
-        setSelectedWallet(clientStates.wallets[0]);
+        setSelectedWallet(states.wallets[0]);
         localStorage.setItem(
           CURRENT_WALLET_ADDRESS,
-          clientStates.wallets[0].terraAddress,
+          states.wallets[0].terraAddress,
         );
         return;
       }
     }
-  }, [clientStates, selectedWalletRef]);
+  }, [states, selectedWalletRef]);
 
   return (
     <WalletSelectContext.Provider value={state}>

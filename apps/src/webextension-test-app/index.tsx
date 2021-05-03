@@ -35,15 +35,15 @@ function AppProviders({ children }: { children: ReactNode }) {
   // ---------------------------------------------
   // terra connect
   // ---------------------------------------------
-  const { clientStates } = useWebExtension();
+  const { states } = useWebExtension();
 
   // ---------------------------------------------
   // graphql settings
   // ---------------------------------------------
   const isMainnet = useMemo(() => {
-    if (!clientStates) return false;
-    return /^columbus/.test(clientStates.network.chainID);
-  }, [clientStates]);
+    if (!states) return false;
+    return /^columbus/.test(states.network.chainID);
+  }, [states]);
 
   const addressMap = useMemo(() => {
     return isMainnet ? columbusContractAddresses : tequilaContractAddresses;
@@ -57,7 +57,7 @@ function AppProviders({ children }: { children: ReactNode }) {
     const httpLink = new HttpLink({
       uri: ({ operationName }) =>
         `${
-          clientStates?.network.chainID.startsWith('tequila')
+          states?.network.chainID.startsWith('tequila')
             ? 'https://tequila-mantle.anchorprotocol.com'
             : 'https://mantle.anchorprotocol.com'
         }?${operationName}`,
@@ -67,7 +67,7 @@ function AppProviders({ children }: { children: ReactNode }) {
       cache: new InMemoryCache(),
       link: httpLink,
     });
-  }, [clientStates]);
+  }, [states]);
 
   const constants = useMemo<Constants>(
     () =>

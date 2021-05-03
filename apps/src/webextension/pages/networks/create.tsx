@@ -1,4 +1,4 @@
-import { Network } from '@terra-dev/web-extension';
+import { WebExtensionNetworkInfo } from '@terra-dev/web-extension';
 import { addNetwork } from '@terra-dev/web-extension/backend';
 import React, { useCallback, useState } from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
@@ -15,7 +15,7 @@ export function NetworkCreate({ history }: RouteComponentProps<{}>) {
   const [error, setError] = useState<string | null>(null);
 
   const create = useCallback(async () => {
-    let serversJson: Pick<Network, 'lcd' | 'fcd' | 'ws'>;
+    let serversJson: Pick<WebExtensionNetworkInfo, 'lcd' | 'fcd' | 'ws'>;
 
     try {
       serversJson = JSON.parse(servers);
@@ -29,7 +29,7 @@ export function NetworkCreate({ history }: RouteComponentProps<{}>) {
       return;
     }
 
-    const network: Network = {
+    const network: WebExtensionNetworkInfo = {
       name,
       chainID,
       ...serversJson,

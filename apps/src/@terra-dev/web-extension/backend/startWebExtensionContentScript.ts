@@ -11,7 +11,7 @@ import {
   WebExtensionTxResponse,
 } from '../internal/webapp-contentScripts-messages';
 import {
-  Network,
+  WebExtensionNetworkInfo,
   SerializedCreateTxOptions,
   WebExtensionStates,
   WebExtensionTxResult,
@@ -21,11 +21,11 @@ import { observeNetworkStorage } from './network-storage';
 import { observeWalletStorage } from './wallet-storage';
 
 export interface ContentScriptOptions {
-  defaultNetworks: Network[];
+  defaultNetworks: WebExtensionNetworkInfo[];
   startTx: (
     id: string,
     terraAddress: string,
-    network: Network,
+    network: WebExtensionNetworkInfo,
     tx: SerializedCreateTxOptions,
   ) => Observable<WebExtensionTxResult>;
   startConnect: (id: string, hostname: string) => Promise<boolean>;

@@ -3,7 +3,7 @@
  * name: 'mainnet',
  * chainID: 'columbus-4',
  */
-export interface Network {
+export interface WebExtensionNetworkInfo {
   name: string;
   chainID: string;
   fcd: string;

@@ -1,13 +1,13 @@
 import { safariWebExtensionStorageChangeListener } from '@terra-dev/safari-webextension-storage-change-listener';
 import { Observable, Subscription } from 'rxjs';
 import { browser, Storage } from 'webextension-polyfill-ts';
-import { Network } from '../../../models';
+import { WebExtensionNetworkInfo } from '../../../models';
 
 const storageKey = 'terra_network_storage_v1';
 
 export interface NetworkStorage {
-  networks: Network[];
-  selectedNetwork: Network | undefined;
+  networks: WebExtensionNetworkInfo[];
+  selectedNetwork: WebExtensionNetworkInfo | undefined;
 }
 
 export async function readNetworkStorage(): Promise<NetworkStorage> {
@@ -28,12 +28,16 @@ export async function writeNetworkStorage(
   });
 }
 
-export async function findNetwork(name: string): Promise<Network | undefined> {
+export async function findNetwork(
+  name: string,
+): Promise<WebExtensionNetworkInfo | undefined> {
   const { networks } = await readNetworkStorage();
   return networks.find((network) => network.name === name);
 }
 
-export async function addNetwork(network: Network): Promise<void> {
+export async function addNetwork(
+  network: WebExtensionNetworkInfo,
+): Promise<void> {
   const { networks, ...storage } = await readNetworkStorage();
   const nextNetworks = [...networks, network];
   await writeNetworkStorage({
@@ -42,7 +46,9 @@ export async function addNetwork(network: Network): Promise<void> {
   });
 }
 
-export async function removeNetwork(network: Network): Promise<void> {
+export async function removeNetwork(
+  network: WebExtensionNetworkInfo,
+): Promise<void> {
   const { networks, selectedNetwork } = await readNetworkStorage();
   const nextNetworks = networks.filter(({ name }) => network.name !== name);
   const nextSelectedNetwork =
@@ -58,7 +64,7 @@ export async function removeNetwork(network: Network): Promise<void> {
 
 export async function updateNetwork(
   name: string,
-  network: Network,
+  network: WebExtensionNetworkInfo,
 ): Promise<void> {
   const { networks, selectedNetwork } = await readNetworkStorage();
   const index = networks.findIndex(
@@ -122,7 +128,9 @@ export function observeNetworkStorage(): Observable<NetworkStorage> {
   });
 }
 
-export async function selectNetwork(network: Network): Promise<void> {
+export async function selectNetwork(
+  network: WebExtensionNetworkInfo,
+): Promise<void> {
   const { selectedNetwork, ...storage } = await readNetworkStorage();
   await writeNetworkStorage({
     selectedNetwork: network,

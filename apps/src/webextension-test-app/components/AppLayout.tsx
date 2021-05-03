@@ -13,7 +13,7 @@ export interface AppLayoutProps {
 }
 
 function AppLayoutBase({ className, children }: AppLayoutProps) {
-  const { clientStates } = useWebExtension();
+  const { states } = useWebExtension();
 
   return (
     <div className={className}>
@@ -57,7 +57,7 @@ function AppLayoutBase({ className, children }: AppLayoutProps) {
 
         <div />
 
-        {clientStates && (
+        {states && (
           <LinedList
             iconMarginRight="1em"
             firstLetterUpperCase={false}
@@ -71,7 +71,7 @@ function AppLayoutBase({ className, children }: AppLayoutProps) {
                 <span>Network</span>
               </div>
               <span>
-                {clientStates.network.name} ({clientStates.network.chainID})
+                {states.network.name} ({states.network.chainID})
               </span>
             </li>
           </LinedList>

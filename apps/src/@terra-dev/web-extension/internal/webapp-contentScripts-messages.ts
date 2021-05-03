@@ -1,5 +1,5 @@
 import {
-  Network,
+  WebExtensionNetworkInfo,
   SerializedCreateTxOptions,
   WebExtensionStates,
   WebExtensionTxResult,
@@ -27,7 +27,7 @@ export interface ExecuteExtensionTx {
   terraAddress: string;
 
   /** target network */
-  network: Network;
+  network: WebExtensionNetworkInfo;
 
   /** transaction payload */
   payload: SerializedCreateTxOptions;

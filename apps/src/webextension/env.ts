@@ -1,6 +1,6 @@
-import { Network } from '@terra-dev/web-extension';
+import { WebExtensionNetworkInfo } from '@terra-dev/web-extension';
 
-export const defaultNetworks: Network[] = [
+export const defaultNetworks: WebExtensionNetworkInfo[] = [
   {
     name: 'mainnet',
     chainID: 'columbus-4',

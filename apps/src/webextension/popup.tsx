@@ -11,7 +11,7 @@ import {
 } from '@apollo/client';
 import { createMuiTheme } from '@material-ui/core';
 import { yScroller } from '@terra-dev/station-ui/styles/yScroller';
-import { Network } from '@terra-dev/web-extension';
+import { WebExtensionNetworkInfo } from '@terra-dev/web-extension';
 import { observeNetworkStorage } from '@terra-dev/web-extension/backend';
 import { GlobalStyle } from 'common/components/GlobalStyle';
 import { Constants, ConstantsProvider } from 'common/contexts/constants';
@@ -55,9 +55,10 @@ function NetworkProviders({ children }: { children: ReactNode }) {
   // ---------------------------------------------
   // graphql settings
   // ---------------------------------------------
-  const [selectedNetwork, setSelectedNetwork] = useState<Network>(
-    () => defaultNetworks[0],
-  );
+  const [
+    selectedNetwork,
+    setSelectedNetwork,
+  ] = useState<WebExtensionNetworkInfo>(() => defaultNetworks[0]);
 
   const isMainnet = useMemo(() => {
     return /^columbus/.test(selectedNetwork.chainID);

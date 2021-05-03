@@ -11,7 +11,7 @@ import {
   WifiTethering,
 } from '@material-ui/icons';
 import { LinedList } from '@terra-dev/station-ui/components/LinedList';
-import { Network } from '@terra-dev/web-extension';
+import { WebExtensionNetworkInfo } from '@terra-dev/web-extension';
 import {
   observeNetworkStorage,
   removeNetwork,
@@ -35,10 +35,13 @@ export function ConfigSelectorBase({ className }: { className?: string }) {
   // ---------------------------------------------
   const { locale, locales, updateLocale } = useLocales();
 
-  const [networks, setNetworks] = useState<Network[]>(defaultNetworks);
-  const [selectedNetwork, setSelectedNetwork] = useState<Network>(
-    () => defaultNetworks[0],
+  const [networks, setNetworks] = useState<WebExtensionNetworkInfo[]>(
+    defaultNetworks,
   );
+  const [
+    selectedNetwork,
+    setSelectedNetwork,
+  ] = useState<WebExtensionNetworkInfo>(() => defaultNetworks[0]);
 
   const [anchorElement, setAnchorElement] = useState<HTMLElement | null>(null);
 

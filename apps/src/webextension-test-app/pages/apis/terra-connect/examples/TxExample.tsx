@@ -38,7 +38,7 @@ export function TxExample() {
   // ---------------------------------------------
   // dependencies
   // ---------------------------------------------
-  const { clientStates, post } = useWebExtension();
+  const { states, post } = useWebExtension();
 
   const { selectedWallet } = useWalletSelect();
 
@@ -77,12 +77,15 @@ export function TxExample() {
         >,
         // side effect (refetch user balances) if result is txInfos(=Array)
         // -> Observable(TxProgress | TxSucceed | TxFail | TxDenied | TxInfos)
-        (result) => {
+        ((result) => {
           if (Array.isArray(result)) {
             refetchUserBalances();
           }
           return result;
-        },
+        }) as Operator<
+          TxInfos | WebExtensionTxResult,
+          TxInfos | WebExtensionTxResult
+        >,
       ),
     [client, post, refetchUserBalances],
   );
@@ -94,7 +97,7 @@ export function TxExample() {
   // Anchor transactions
   // ---------------------------------------------
   const deposit = useCallback(() => {
-    if (!clientStates?.network || !selectedWallet) return;
+    if (!states?.network || !selectedWallet) return;
 
     const tx: CreateTxOptions = {
       fee: new StdFee(
@@ -120,12 +123,12 @@ export function TxExample() {
 
     execTx({
       terraAddress: selectedWallet.terraAddress,
-      network: clientStates?.network,
+      network: states?.network,
       tx,
     });
   }, [
     address.moneyMarket.market,
-    clientStates?.network,
+    states?.network,
     execTx,
     gasAdjustment,
     gasFee,
@@ -133,7 +136,7 @@ export function TxExample() {
   ]);
 
   const withdraw = useCallback(() => {
-    if (!clientStates?.network || !selectedWallet) return;
+    if (!states?.network || !selectedWallet) return;
 
     const tx: CreateTxOptions = {
       fee: new StdFee(
@@ -158,13 +161,13 @@ export function TxExample() {
 
     execTx({
       terraAddress: selectedWallet.terraAddress,
-      network: clientStates?.network,
+      network: states?.network,
       tx,
     });
   }, [
     address.cw20.aUST,
     address.moneyMarket.market,
-    clientStates?.network,
+    states?.network,
     execTx,
     gasAdjustment,
     gasFee,

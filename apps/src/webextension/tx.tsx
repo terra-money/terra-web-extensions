@@ -10,7 +10,7 @@ import { WalletCard } from '@terra-dev/wallet-card';
 import {
   deserializeTx,
   executeTx,
-  Network,
+  WebExtensionNetworkInfo,
   SerializedCreateTxOptions,
   WebExtensionTxFail,
   WebExtensionTxStatus,
@@ -66,7 +66,7 @@ function AppBase({ className }: AppProps) {
     }
 
     const serializedTx: SerializedCreateTxOptions = JSON.parse(atob(txBase64));
-    const network: Network = JSON.parse(atob(networkBase64));
+    const network: WebExtensionNetworkInfo = JSON.parse(atob(networkBase64));
 
     return {
       id,
@@ -113,7 +113,7 @@ function AppBase({ className }: AppProps) {
       id: string;
       password: string;
       encryptedWallet: EncryptedWallet;
-      network: Network;
+      network: WebExtensionNetworkInfo;
       serializedTx: SerializedCreateTxOptions;
     }) => {
       const wallet: Wallet = decryptWallet(

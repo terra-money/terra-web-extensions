@@ -2,13 +2,13 @@ import { useWebExtension } from '@terra-dev/web-extension-react';
 import React from 'react';
 
 export function WalletsExample() {
-  const { clientStates } = useWebExtension();
+  const { states } = useWebExtension();
 
-  if (!clientStates) return null;
+  if (!states) return null;
 
   return (
     <ol>
-      {clientStates.wallets.map((itemWallet) => (
+      {states.wallets.map((itemWallet) => (
         <li key={itemWallet.name}>
           <ul>
             <li>name: {itemWallet.name}</li>

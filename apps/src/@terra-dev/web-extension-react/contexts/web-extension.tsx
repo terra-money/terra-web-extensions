@@ -30,8 +30,8 @@ export interface WebExtensionProviderProps {
 export interface WebExtensionState {
   controller: WebExtensionController;
   status: WebExtensionStatus;
-  clientStates: WebExtensionStates | null;
-  refetchClientStates: () => void;
+  states: WebExtensionStates | null;
+  refetchStates: () => void;
   post: (params: PostParams) => Observable<WebExtensionTxResult>;
 }
 
@@ -49,26 +49,22 @@ export function WebExtensionProvider({
   >(() => ({
     type: WebExtensionStatusType.INITIALIZING,
   }));
-  const [clientStates, setClientStates] = useState<WebExtensionStates | null>(
-    null,
-  );
+  const [states, setStates] = useState<WebExtensionStates | null>(null);
 
-  const refetchClientStates = useCallback(() => {
-    controller.refetchClientStates();
+  const refetchStates = useCallback(() => {
+    controller.refetchStates();
   }, [controller]);
 
   useEffect(() => {
-    controller.refetchClientStates();
+    controller.refetchStates();
 
     const statusSubscription = controller.status().subscribe((nextStatus) => {
       setStatus(nextStatus);
     });
 
-    const statesSubscription = controller
-      .clientStates()
-      .subscribe((nextClientStates) => {
-        setClientStates(nextClientStates);
-      });
+    const statesSubscription = controller.states().subscribe((nextStates) => {
+      setStates(nextStates);
+    });
 
     return () => {
       statusSubscription.unsubscribe();
@@ -80,11 +76,11 @@ export function WebExtensionProvider({
     () => ({
       controller,
       status,
-      clientStates,
-      refetchClientStates,
+      states,
+      refetchStates,
       post: controller.post,
     }),
-    [clientStates, controller, refetchClientStates, status],
+    [states, controller, refetchStates, status],
   );
 
   return (

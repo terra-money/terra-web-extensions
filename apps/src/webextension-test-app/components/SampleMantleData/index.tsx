@@ -37,7 +37,7 @@ import React, { useCallback, useMemo } from 'react';
 import { GuardSpinner } from 'react-spinners-kit';
 
 export function SampleMantleData() {
-  const { clientStates, post } = useWebExtension();
+  const { states, post } = useWebExtension();
 
   const { selectedWallet } = useWalletSelect();
 
@@ -82,7 +82,7 @@ export function SampleMantleData() {
   const [execTx, txResult] = useStream(txStream);
 
   const deposit = useCallback(() => {
-    if (!clientStates?.network || !selectedWallet) return;
+    if (!states?.network || !selectedWallet) return;
 
     const tx: CreateTxOptions = {
       fee: new StdFee(
@@ -108,12 +108,12 @@ export function SampleMantleData() {
 
     execTx({
       terraAddress: selectedWallet.terraAddress,
-      network: clientStates?.network,
+      network: states?.network,
       tx,
     });
   }, [
     address.moneyMarket.market,
-    clientStates?.network,
+    states?.network,
     execTx,
     gasAdjustment,
     gasFee,
@@ -121,7 +121,7 @@ export function SampleMantleData() {
   ]);
 
   const withdraw = useCallback(() => {
-    if (!clientStates?.network || !selectedWallet) return;
+    if (!states?.network || !selectedWallet) return;
 
     const tx: CreateTxOptions = {
       fee: new StdFee(
@@ -146,13 +146,13 @@ export function SampleMantleData() {
 
     execTx({
       terraAddress: selectedWallet.terraAddress,
-      network: clientStates?.network,
+      network: states?.network,
       tx,
     });
   }, [
     address.cw20.aUST,
     address.moneyMarket.market,
-    clientStates?.network,
+    states?.network,
     execTx,
     gasAdjustment,
     gasFee,

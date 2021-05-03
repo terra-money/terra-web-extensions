@@ -1,5 +1,5 @@
 import {
-  Network,
+  WebExtensionNetworkInfo,
   SerializedCreateTxOptions,
   WebExtensionTxDenied,
   WebExtensionTxFail,
@@ -22,7 +22,7 @@ import { contentScriptPortPrefix, defaultNetworks } from 'webextension/env';
 function startTxWithIframeModal(
   id: string,
   terraAddress: string,
-  network: Network,
+  network: WebExtensionNetworkInfo,
   tx: SerializedCreateTxOptions,
 ): Observable<WebExtensionTxResult> {
   return new Observable<WebExtensionTxResult>((subscriber) => {

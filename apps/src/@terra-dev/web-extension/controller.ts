@@ -19,13 +19,13 @@ import {
 
 export class WebExtensionController {
   private _status: BehaviorSubject<WebExtensionStatus>;
-  private _clientStates: BehaviorSubject<WebExtensionStates | null>;
+  private _states: BehaviorSubject<WebExtensionStates | null>;
 
   constructor(private hostWindow: Window) {
     this._status = new BehaviorSubject<WebExtensionStatus>({
       type: WebExtensionStatusType.INITIALIZING,
     });
-    this._clientStates = new BehaviorSubject<WebExtensionStates | null>(null);
+    this._states = new BehaviorSubject<WebExtensionStates | null>(null);
 
     const meta = document.querySelector(
       'head > meta[name="terra-webextension"]',
@@ -57,7 +57,7 @@ export class WebExtensionController {
 
     hostWindow.addEventListener('message', this.onMessage);
 
-    this.refetchClientStates();
+    this.refetchStates();
 
     setTimeout(() => {
       if (
@@ -100,7 +100,7 @@ export class WebExtensionController {
    * Normally, when the clientStates is changed, states() get the new clientStates.
    *
    * @example
-   * client.clientStates()
+   * client.states()
    *       .subscribe(states => {
    *         // 2. will get new clientStates
    *         console.log('Got new states', Date.now())
@@ -108,10 +108,10 @@ export class WebExtensionController {
    *
    * function callback() {
    *   // 1. refetch client states
-   *   client.refetchClientStates()
+   *   client.refetchStates()
    * }
    */
-  refetchClientStates = () => {
+  refetchStates = () => {
     const msg: RefetchExtensionClientStates = {
       type: FromWebToContentScriptMessage.REFETCH_CLIENT_STATES,
     };
@@ -201,7 +201,7 @@ export class WebExtensionController {
 
   /**
    * @example
-   * client.clientStates()
+   * client.states()
    *       .subscribe(states => {
    *         if (!states) {
    *           console.log('client is still not ready')
@@ -211,8 +211,8 @@ export class WebExtensionController {
    *         }
    *       })
    */
-  clientStates = () => {
-    return this._clientStates.asObservable();
+  states = () => {
+    return this._states.asObservable();
   };
 
   /**
@@ -236,7 +236,7 @@ export class WebExtensionController {
             type: WebExtensionStatusType.READY,
           });
         }
-        this._clientStates.next(event.data.payload);
+        this._states.next(event.data.payload);
         break;
     }
   };

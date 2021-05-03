@@ -1,8 +1,8 @@
 import { WalletInfo } from '@terra-dev/wallet';
-import { Network } from './network';
+import { WebExtensionNetworkInfo } from './network';
 
 export interface WebExtensionStates {
   focusedWalletAddress: string | undefined;
   wallets: WalletInfo[];
-  network: Network;
+  network: WebExtensionNetworkInfo;
 }

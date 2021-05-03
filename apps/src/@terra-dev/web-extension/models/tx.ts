@@ -8,7 +8,7 @@ import {
   StdFee,
 } from '@terra-money/terra.js';
 import { Observable } from 'rxjs';
-import { Network } from './network';
+import { WebExtensionNetworkInfo } from './network';
 
 export enum WebExtensionTxStatus {
   PROGRESS = 'progress',
@@ -75,7 +75,7 @@ export function deserializeTx(tx: SerializedCreateTxOptions): CreateTxOptions {
 
 export function executeTx(
   wallet: Wallet,
-  network: Network,
+  network: WebExtensionNetworkInfo,
   tx: SerializedCreateTxOptions,
 ): Observable<
   WebExtensionTxProgress | WebExtensionTxSucceed | WebExtensionTxFail

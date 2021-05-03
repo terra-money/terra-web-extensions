@@ -2,9 +2,9 @@ import { useWebExtension } from '@terra-dev/web-extension-react';
 import React from 'react';
 
 export function NetworkExample() {
-  const { clientStates } = useWebExtension();
+  const { states } = useWebExtension();
 
-  if (!clientStates) return null;
+  if (!states) return null;
 
-  return <pre>{JSON.stringify(clientStates.network, null, 2)}</pre>;
+  return <pre>{JSON.stringify(states.network, null, 2)}</pre>;
 }
