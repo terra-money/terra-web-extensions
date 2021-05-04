@@ -8,7 +8,7 @@ const path = require('path');
 
   const url =
     process.argv[2] ||
-    'https://anchor-web-app-git-feature-support-new-extension-anchor-2216ab.vercel.app/';
+    'https://anchor-web-app-git-feature-wallet-connect-anchor-protocol.vercel.app/';
 
   const browser = await puppeteer.launch({
     userDataDir: process.env.EXTENSION_READY_CHROME_USER_DATA,

@@ -14,25 +14,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@anchor-protocol/notation@npm:^0.8.0":
-  version: 0.8.0
-  resolution: "@anchor-protocol/notation@npm:0.8.0"
+"@anchor-protocol/notation@npm:^0.10.0":
+  version: 0.10.0
+  resolution: "@anchor-protocol/notation@npm:0.10.0"
   dependencies:
-    "@anchor-protocol/types": ^0.8.0
-    "@terra-dev/big-interpolate": ^0.8.0
-    big.js: ^6.0.3
+    "@anchor-protocol/types": ^0.10.0
+    "@terra-dev/big-interpolate": ^0.10.0
+    big.js: ^6.1.0
     d3-ease: ^2.0.0
     d3-timer: ^2.0.0
     numeral: ^2.0.6
     react: ^17.0.2
-  checksum: 13361b17c507f16d34283c0e6a076ffad94a1f1709788339cbbc0942d399c2c0e58a49d530557043ecb5c7cddf952be4895cd5ce654da2e7f7baaba817bcb0c9
+  checksum: 1ffd47d325b056a4f872bc669ed06e39ea90ad39c015909aef8b5576cedbcf82d734d132455030d315ad349f9247d17f50ba9370edc55cf303a02f78121679a2
   languageName: node
   linkType: hard
 
-"@anchor-protocol/types@npm:^0.8.0":
-  version: 0.8.0
-  resolution: "@anchor-protocol/types@npm:0.8.0"
-  checksum: ae2d036df16acdb3baaf6627820c895843ec088c2186a52288cb48a8177c28183e000e2f3a1f52580faadf6840c6137929ff4cd2d2867840f8001a72bbed8082
+"@anchor-protocol/types@npm:^0.10.0":
+  version: 0.10.0
+  resolution: "@anchor-protocol/types@npm:0.10.0"
+  checksum: 74e25f93679507e66231134c648a1f86c08426491d45ed266e326ed8f8a62512d5becf90287f99e66c520ea8a7e2b3560adaa92e0039d00964aaef9df0ed714a
   languageName: node
   linkType: hard
 
@@ -3857,22 +3857,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@terra-dev/big-interpolate@npm:^0.8.0":
-  version: 0.8.0
-  resolution: "@terra-dev/big-interpolate@npm:0.8.0"
+"@terra-dev/big-interpolate@npm:^0.10.0":
+  version: 0.10.0
+  resolution: "@terra-dev/big-interpolate@npm:0.10.0"
   dependencies:
-    big.js: ^6.0.3
+    big.js: ^6.1.0
     d3-ease: ^2.0.0
-  checksum: 112e476499ca3b2c8d5c9aca777b857a453a0881d60374cc60f966b465225f4987bfef7f1f4ee50dcc501e53a94cd46c0fabe033a5fc681dc371191affd798b4
+  checksum: 12a3f9cad43d6e7c482c346d014f07e84ca3d1791f865c82547baa12dba83937407ce1e616ace7c527c0388c11d24aee444c2391d0531ac7e8d941fbcb590249
   languageName: node
   linkType: hard
 
-"@terra-dev/use-map@npm:^0.8.0":
-  version: 0.8.0
-  resolution: "@terra-dev/use-map@npm:0.8.0"
+"@terra-dev/use-map@npm:^0.10.0":
+  version: 0.10.0
+  resolution: "@terra-dev/use-map@npm:0.10.0"
   dependencies:
     react: ^17.0.2
-  checksum: 3cec2d9721a9f80aca6aa4d24fe15ce016a231a7af38c6f2a8c1e7067e77c487728f089d6e9abaae0ffde1f2d6d8825411c24f4487893bad8b2383a415ae45e8
+  checksum: cfddf2d2fb26fcec1ac2dc488e2c097ad0c1025a6a3443d36c71eb2f851458cc93904983a2e38fbed55bfbc5163edede9877588208aeb7809fabf4d5bf1375e2
   languageName: node
   linkType: hard
 
@@ -5466,8 +5466,8 @@ __metadata:
   resolution: "apps@workspace:apps"
   dependencies:
     "@anchor-protocol/anchor.js": ^1.0.1
-    "@anchor-protocol/notation": ^0.8.0
-    "@anchor-protocol/types": ^0.8.0
+    "@anchor-protocol/notation": ^0.10.0
+    "@anchor-protocol/types": ^0.10.0
     "@apollo/client": ^3.3.16
     "@handbook/code-block": ^1.1.0
     "@material-ui/core": ^4.11.4
@@ -5478,7 +5478,7 @@ __metadata:
     "@storybook/addon-essentials": ^6.2.9
     "@storybook/addon-storysource": ^6.2.9
     "@storybook/react": ^6.2.9
-    "@terra-dev/use-map": ^0.8.0
+    "@terra-dev/use-map": ^0.10.0
     "@terra-money/key-utils": ^1.0.2
     "@terra-money/terra.js": ^1.7.0
     "@types/big.js": ^6.0.2
@@ -5495,7 +5495,7 @@ __metadata:
     "@types/rimraf": ^3.0.0
     "@types/styled-components": ^5.1.9
     "@types/webpack-env": ^1.16.0
-    big.js: ^6.1.0
+    big.js: ^6.1.1
     bowser: ^2.11.0
     cross-env: ^7.0.3
     crypto-browserify: ^3.12.0
@@ -5510,7 +5510,7 @@ __metadata:
     multiplerun: ^2.0.1
     post-message-stream: ^3.0.0
     process: ^0.11.10
-    puppeteer: ^9.0.0
+    puppeteer: ^9.1.0
     react: ^17.0.2
     react-dom: ^17.0.2
     react-intl: ^5.17.4
@@ -6239,10 +6239,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"big.js@npm:^6.0.3, big.js@npm:^6.1.0":
+"big.js@npm:^6.1.0":
   version: 6.1.0
   resolution: "big.js@npm:6.1.0"
   checksum: 5bd3652ef32b44cdafbf3921b901f0dc747b5076d37c7ba2ddc7901a7a8ede7a3a27957ae8c1484499c8929abab9ebb0d774c00799eb818379bde31e6989a617
+  languageName: node
+  linkType: hard
+
+"big.js@npm:^6.1.1":
+  version: 6.1.1
+  resolution: "big.js@npm:6.1.1"
+  checksum: b1885aa6f80eb85c50fffe8ad6f295c238fe45091d02389ef5620469b381187d9ebc9d438476da0a34ccc28d4f946d0bb0fbf523d0ebceb46b26d02e3b6ceca3
   languageName: node
   linkType: hard
 
@@ -8254,6 +8261,13 @@ __metadata:
     detect: ./bin/detect-port
     detect-port: ./bin/detect-port
   checksum: 4ebfc40948cd3dc20c5bbef95018ead433d522b6ef0e2efae2d20943632a815db80435a78212525f05b492331b05e66af51d260e42f8bfe6145f66e2a223f054
+  languageName: node
+  linkType: hard
+
+"devtools-protocol@npm:0.0.854822":
+  version: 0.0.854822
+  resolution: "devtools-protocol@npm:0.0.854822"
+  checksum: 18cad06cae75b8c05b04d7532bab25da03f70f3637cdf070dd7140eb75427e75ee81f1b93fe643e7d21434afdf99f7cbba336ea5a30f5bcf9689d2fbd4077849
   languageName: node
   linkType: hard
 
@@ -14468,7 +14482,7 @@ fsevents@^1.2.7:
   version: 0.0.0-use.local
   resolution: "open-extension-ready-chrome@workspace:open-extension-ready-chrome"
   dependencies:
-    puppeteer: ^9.0.0
+    puppeteer: ^8.0.0
   bin:
     open-extension-ready-chrome: index.js
   languageName: unknown
@@ -15971,9 +15985,29 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"puppeteer@npm:^9.0.0":
-  version: 9.0.0
-  resolution: "puppeteer@npm:9.0.0"
+"puppeteer@npm:^8.0.0":
+  version: 8.0.0
+  resolution: "puppeteer@npm:8.0.0"
+  dependencies:
+    debug: ^4.1.0
+    devtools-protocol: 0.0.854822
+    extract-zip: ^2.0.0
+    https-proxy-agent: ^5.0.0
+    node-fetch: ^2.6.1
+    pkg-dir: ^4.2.0
+    progress: ^2.0.1
+    proxy-from-env: ^1.1.0
+    rimraf: ^3.0.2
+    tar-fs: ^2.0.0
+    unbzip2-stream: ^1.3.3
+    ws: ^7.2.3
+  checksum: d5fe2bbe40c65db645990dd2cee0b797d981a58e10c1274ffb0398372be7cbb667ec891f31d5e3f319500194217a446c48a0a2c32dfcef2348734da4616bade0
+  languageName: node
+  linkType: hard
+
+"puppeteer@npm:^9.1.0":
+  version: 9.1.0
+  resolution: "puppeteer@npm:9.1.0"
   dependencies:
     debug: ^4.1.0
     devtools-protocol: 0.0.869402
@@ -15987,7 +16021,7 @@ fsevents@^1.2.7:
     tar-fs: ^2.0.0
     unbzip2-stream: ^1.3.3
     ws: ^7.2.3
-  checksum: 35af7ab296f91cac69be93d99914b5b6c7fc8d5f38f5b3484c4fb917d34b4f819d93795580f8052793236414069f613469a208e23ba86e6f65ed812504be57dd
+  checksum: b081fd0ebd8fb0bf070bb572e722e9865f31bd335b19ca2f382f818bde6fde03ead7150c3a6716e84719d3f3f44416acda833a2312df7b36202274d503c32116
   languageName: node
   linkType: hard
 

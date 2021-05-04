@@ -1,6 +1,6 @@
 {
   "name": "open-extension-ready-chrome",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "",
   "main": "index.js",
   "author": "SSen",
@@ -14,6 +14,6 @@
   ],
   "bin": "index.js",
   "dependencies": {
-    "puppeteer": "^9.0.0"
+    "puppeteer": "^8.0.0"
   }
 }
