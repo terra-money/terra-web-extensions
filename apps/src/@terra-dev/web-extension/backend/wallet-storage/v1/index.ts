@@ -67,17 +67,23 @@ export async function removeWallet(wallet: EncryptedWallet): Promise<void> {
     return;
   }
 
-  const nextWallets = [...wallets].splice(removeIndex, 1);
-  const nextFocusedWallet: EncryptedWallet =
-    nextWallets.find(
-      (itemWallet) => itemWallet.terraAddress === focusedWalletAddress,
-    ) ??
-    nextWallets[Math.max(0, Math.min(nextWallets.length - 1, removeIndex - 1))];
+  const nextWallets = [...wallets];
+  nextWallets.splice(removeIndex, 1);
+
+  const nextFocusedWallet: EncryptedWallet | undefined =
+    nextWallets.length > 0
+      ? nextWallets.find(
+          (itemWallet) => itemWallet.terraAddress === focusedWalletAddress,
+        ) ??
+        nextWallets[
+          Math.max(0, Math.min(nextWallets.length - 1, removeIndex - 1))
+        ]
+      : undefined;
 
   const nextData: WalletStorageData = {
     ...data,
     wallets: nextWallets,
-    focusedWalletAddress: nextFocusedWallet.terraAddress,
+    focusedWalletAddress: nextFocusedWallet?.terraAddress,
   };
 
   await writeWalletStorage(nextData);

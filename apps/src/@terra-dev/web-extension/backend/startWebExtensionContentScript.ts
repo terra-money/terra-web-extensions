@@ -96,6 +96,8 @@ export function startWebExtensionContentScript({
     map(({ selectedNetwork }) => selectedNetwork ?? defaultNetworks[0]),
   );
 
+  type ExtensionStates = WebExtensionStates & { isApproved: boolean };
+
   const extensionStates = combineLatest([
     extensionStateLastUpdated,
     walletsObservable,
@@ -107,7 +109,7 @@ export function startWebExtensionContentScript({
         network,
         focusedWalletAddress,
         isApproved,
-      } as WebExtensionStates & { isApproved: boolean };
+      } as ExtensionStates;
     }),
   );
 
@@ -321,6 +323,8 @@ export function startWebExtensionContentScript({
   // new extension api
   // ================================================================
   else {
+    let lastStates: ExtensionStates | null = null;
+
     // ---------------------------------------------
     // listen web messages
     // ---------------------------------------------
@@ -336,6 +340,11 @@ export function startWebExtensionContentScript({
             extensionStateLastUpdated.next(Date.now());
             break;
           case FromWebToContentScriptMessage.REQUEST_APPROVAL:
+            if (lastStates?.isApproved === true) {
+              console.warn(`${window.location.hostname} is already approved!`);
+              break;
+            }
+
             startConnect(Date.now().toString(), window.location.hostname).then(
               () => {
                 extensionStateLastUpdated.next(Date.now());
@@ -363,7 +372,9 @@ export function startWebExtensionContentScript({
       false,
     );
 
-    extensionStates.subscribe((states) => {
+    extensionStates.subscribe((states: ExtensionStates) => {
+      lastStates = states;
+
       const msg: WebExtensionStatesUpdated = {
         type: FromContentScriptToWebMessage.STATES_UPDATED,
         payload: states,

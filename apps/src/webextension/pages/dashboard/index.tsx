@@ -105,7 +105,10 @@ function DashboardBase({ className }: { className?: string }) {
 
             <MiniButton
               startIcon={<DeleteForever />}
-              onClick={() => removeWallet(encryptedWallets[selectedIndex])}
+              onClick={() => {
+                console.log('index.tsx..()', selectedIndex);
+                removeWallet(encryptedWallets[selectedIndex]);
+              }}
             >
               <FormattedMessage id="wallet.delete" />
             </MiniButton>
@@ -238,11 +241,11 @@ function DashboardBase({ className }: { className?: string }) {
           </Link>
         </li>
         <li>
-          <Link to="/approved-hostnames">
+          <Link to="/hostnames">
             <i>
               <SettingsBackupRestore />
             </i>
-            <span>Approved Hostnames</span>
+            <span>Manage Sites</span>
           </Link>
         </li>
       </LinedList>

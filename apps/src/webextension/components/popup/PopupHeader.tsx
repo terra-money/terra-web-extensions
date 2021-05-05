@@ -1,9 +1,9 @@
 import React from 'react';
-import styled from 'styled-components';
-import { headerHeight, headerPadding } from '../env';
-import { ConfigSelector } from 'webextension/components/ConfigSelector';
-import { ReactComponent as Logo } from '../assets/Logo.svg';
 import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+import { ReactComponent as Logo } from '../../assets/Logo.svg';
+import { headerHeight, headerPadding } from '../../env';
+import { ConfigSelector } from './ConfigSelector';
 
 export interface PopupHeaderProps {
   className?: string;

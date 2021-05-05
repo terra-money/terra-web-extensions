@@ -31,14 +31,14 @@ import {
   useLocation,
 } from 'react-router-dom';
 import styled, { DefaultTheme, keyframes } from 'styled-components';
-import { ErrorBoundary } from './components/ErrorBoundary';
-import { PopupHeader } from './components/PopupHeader';
+import { ErrorBoundary } from './components/common/ErrorBoundary';
+import { PopupHeader } from './components/popup/PopupHeader';
 import { LocalesProvider, useIntlProps } from './contexts/locales';
 import { ThemeProvider } from './contexts/theme';
 import { contentHeight, defaultNetworks, headerHeight, width } from './env';
 import { Dashboard } from './pages/dashboard';
+import { ApprovedHostnames } from './pages/hostnames/approved-hostnames';
 import { NetworkCreate } from './pages/networks/create';
-import { ApprovedHostnames } from './pages/wallets/approved-hostnames';
 import { WalletChangePassword } from './pages/wallets/change-password';
 import { WalletCreate } from './pages/wallets/create';
 import { WalletRecover } from './pages/wallets/recover';
@@ -170,10 +170,7 @@ function MainBase({ className }: { className?: string }) {
                   path="/wallets/:terraAddress/password"
                   component={WalletChangePassword}
                 />
-                <Route
-                  path="/approved-hostnames"
-                  component={ApprovedHostnames}
-                />
+                <Route path="/hostnames" component={ApprovedHostnames} />
                 <Route path="/network/create" component={NetworkCreate} />
                 <Redirect to="/" />
               </Switch>

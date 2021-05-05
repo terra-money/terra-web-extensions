@@ -1,6 +1,6 @@
 import {
-  WebExtensionNetworkInfo,
   SerializedCreateTxOptions,
+  WebExtensionNetworkInfo,
   WebExtensionTxDenied,
   WebExtensionTxFail,
   WebExtensionTxProgress,
@@ -16,8 +16,8 @@ import { createElement } from 'react';
 import { render } from 'react-dom';
 import { Observable } from 'rxjs';
 import { browser } from 'webextension-polyfill-ts';
-import { IFrameModal } from 'webextension/components/IFrameModal';
-import { contentScriptPortPrefix, defaultNetworks } from 'webextension/env';
+import { IFrameModal } from './components/modal/IFrameModal';
+import { contentScriptPortPrefix, defaultNetworks } from './env';
 
 function startTxWithIframeModal(
   id: string,
@@ -50,11 +50,11 @@ function startTxWithIframeModal(
     const txBase64 = btoa(JSON.stringify(tx));
     const networkBase64 = btoa(JSON.stringify(network));
 
-    const origin = window.location.hostname;
+    const hostname = window.location.hostname;
     const timestamp = Date.now();
 
     const modal = createElement(IFrameModal, {
-      src: `${txHtml}?id=${id}&terraAddress=${terraAddress}&network=${networkBase64}&tx=${txBase64}&origin=${origin}&timestamp=${timestamp}`,
+      src: `${txHtml}?id=${id}&terraAddress=${terraAddress}&network=${networkBase64}&tx=${txBase64}&hostname=${hostname}&timestamp=${timestamp}`,
       title: 'Tx',
       onClose: () => {
         subscriber.next({

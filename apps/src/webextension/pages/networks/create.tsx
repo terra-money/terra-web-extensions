@@ -1,77 +1,55 @@
+import { Button } from '@material-ui/core';
+import { FormSection } from '@terra-dev/station-ui/components/FormSection';
 import { WebExtensionNetworkInfo } from '@terra-dev/web-extension';
 import { addNetwork } from '@terra-dev/web-extension/backend';
 import React, { useCallback, useState } from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { defaultNetworks } from '../../env';
-
-const { lcd } = defaultNetworks[0];
-const serversPlaceHolder = JSON.stringify({ lcd }, null, 2);
+import {
+  CreateNewNetworkForm,
+  CreateNewNetworkResult,
+} from '../../components/form/CreateNewNetworkForm';
 
 export function NetworkCreate({ history }: RouteComponentProps<{}>) {
-  const [name, setName] = useState<string>('');
-  const [chainID, setChainID] = useState<string>('');
-  const [servers, setServers] = useState<string>(serversPlaceHolder);
-
-  const [error, setError] = useState<string | null>(null);
+  const [result, setResult] = useState<CreateNewNetworkResult | null>(null);
 
   const create = useCallback(async () => {
-    let serversJson: Pick<WebExtensionNetworkInfo, 'lcd'>;
-
-    try {
-      serversJson = JSON.parse(servers);
-
-      if (typeof serversJson.lcd !== 'string') {
-        setError('lcd is required!');
-        return;
-      }
-    } catch (e) {
-      setError('servers is not a json string');
-      return;
+    if (!result) {
+      throw new Error(`Don't call when result is empty!`);
     }
 
     const network: WebExtensionNetworkInfo = {
-      name,
-      chainID,
-      ...serversJson,
+      name: result.name,
+      chainID: result.chainID,
+      lcd: result.lcd,
     };
 
     await addNetwork(network);
 
     history.push('/');
-  }, [chainID, history, name, servers]);
+  }, [history, result]);
 
   return (
-    <section>
-      <div>
-        <Link to="/">Back to Main</Link>
+    <FormSection>
+      <header>
+        <h1>Add New Network</h1>
+      </header>
 
-        <h3>Network Name</h3>
-        <input
-          type="text"
-          value={name}
-          onChange={({ target }) => setName(target.value)}
-        />
+      <CreateNewNetworkForm onChange={setResult} />
 
-        <h3>Chain ID</h3>
-        <input
-          type="text"
-          value={chainID}
-          onChange={({ target }) => setChainID(target.value)}
-        />
+      <footer>
+        <Button variant="contained" color="secondary" component={Link} to="/">
+          Cancel
+        </Button>
 
-        <h3>Servers</h3>
-        <textarea
-          style={{ width: '100%', height: 250 }}
-          placeholder={serversPlaceHolder}
-          value={servers}
-          onChange={({ target }) => setServers(target.value)}
-        />
-      </div>
-
-      <div>
-        {error && <div>{error}</div>}
-        <button onClick={create}>Create Network</button>
-      </div>
-    </section>
+        <Button
+          variant="contained"
+          color="primary"
+          disabled={!result}
+          onClick={create}
+        >
+          Create Network
+        </Button>
+      </footer>
+    </FormSection>
   );
 }

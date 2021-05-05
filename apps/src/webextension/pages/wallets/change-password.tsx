@@ -7,7 +7,11 @@ import {
   encryptWallet,
   Wallet,
 } from '@terra-dev/wallet';
-import { findWallet, updateWallet } from '@terra-dev/web-extension/backend';
+import {
+  findWallet,
+  updateWallet,
+  useValidateWalletPassword,
+} from '@terra-dev/web-extension/backend';
 import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
 
@@ -19,17 +23,27 @@ export function WalletChangePassword({
     encryptedWallet,
     setEncryptedWallet,
   ] = useState<EncryptedWallet | null>(null);
+
+  const [undefinedWallet, setUndefinedWallet] = useState<boolean>(false);
+
   const [currentPassword, setCurrentPassword] = useState<string>('');
+
   const [newPassword, setNewPassword] = useState<string>('');
+
+  const invalidPassword = useValidateWalletPassword(newPassword);
 
   useEffect(() => {
     if (!match) {
       setEncryptedWallet(null);
     } else {
       const { terraAddress } = match.params;
-      findWallet(terraAddress).then((wallet) =>
-        setEncryptedWallet(wallet ?? null),
-      );
+      findWallet(terraAddress).then((wallet) => {
+        if (wallet) {
+          setEncryptedWallet(wallet);
+        } else {
+          setUndefinedWallet(true);
+        }
+      });
     }
   }, [match]);
 
@@ -55,6 +69,20 @@ export function WalletChangePassword({
 
   if (!encryptedWallet) {
     return null;
+  }
+
+  if (undefinedWallet) {
+    return (
+      <FormSection>
+        <p>Undefined Wallet...</p>
+
+        <footer>
+          <Button variant="contained" color="secondary" component={Link} to="/">
+            Back to Home
+          </Button>
+        </footer>
+      </FormSection>
+    );
   }
 
   return (
@@ -90,6 +118,8 @@ export function WalletChangePassword({
           label="NEW PASSWORD"
           InputLabelProps={{ shrink: true }}
           value={newPassword}
+          error={!!invalidPassword}
+          helperText={invalidPassword}
           onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
             setNewPassword(target.value)
           }
@@ -100,7 +130,17 @@ export function WalletChangePassword({
         <Button variant="contained" color="secondary" component={Link} to="/">
           Cancel
         </Button>
-        <Button variant="contained" color="primary" onClick={changePassword}>
+
+        <Button
+          variant="contained"
+          color="primary"
+          disabled={
+            !!invalidPassword ||
+            currentPassword.length === 0 ||
+            newPassword.length === 0
+          }
+          onClick={changePassword}
+        >
           Change Password
         </Button>
       </footer>

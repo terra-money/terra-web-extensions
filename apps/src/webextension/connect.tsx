@@ -1,12 +1,11 @@
-// approved 되지 않았음 -> site 주소 보여주고 승인 / 거절? -> 승인 -> DB 바꾸고
-// <지갑이 한개도 없으면?> -> 새 지갑 만들기 / 복구하기 화면 보여주기
-
-import { createMuiTheme } from '@material-ui/core';
+import { Button, createMuiTheme } from '@material-ui/core';
+import { FormSection } from '@terra-dev/station-ui/components/FormSection';
 import {
   createWallet,
   EncryptedWallet,
   encryptWallet,
   restoreMnemonicKey,
+  Wallet,
 } from '@terra-dev/wallet';
 import {
   addWallet,
@@ -18,9 +17,17 @@ import { render } from 'react-dom';
 import { IntlProvider } from 'react-intl';
 import styled, { DefaultTheme } from 'styled-components';
 import { browser } from 'webextension-polyfill-ts';
-import { ErrorBoundary } from 'webextension/components/ErrorBoundary';
-import { LocalesProvider, useIntlProps } from 'webextension/contexts/locales';
-import { ThemeProvider } from 'webextension/contexts/theme';
+import { ErrorBoundary } from './components/common/ErrorBoundary';
+import {
+  CreateNewWalletForm,
+  CreateNewWalletResult,
+} from './components/form/CreateNewWalletForm';
+import {
+  RecoverMnemonicForm,
+  RecoverMnemonicResult,
+} from './components/form/RecoverMnemonicForm';
+import { LocalesProvider, useIntlProps } from './contexts/locales';
+import { ThemeProvider } from './contexts/theme';
 import { txPortPrefix } from './env';
 
 export interface AppProps {
@@ -46,27 +53,9 @@ function AppBase({ className }: AppProps) {
     };
   }, []);
 
-  const [needWalletCreate, setNeedWalletCreate] = useState<boolean>(false);
+  const [walletCreatePages, setWalletCreatePages] = useState<number>(-1);
 
   const approve = useCallback(async () => {
-    const { wallets } = await readWalletStorage();
-
-    // TODO form
-    if (wallets.length === 0) {
-      const mk = restoreMnemonicKey(
-        'length depend curious theory boat uncover host laugh kind pole gorilla subway knock dolphin decrease novel bottom enrich spawn clump sphere immense ranch tongue',
-      );
-      const wallet = createWallet(mk);
-      const encryptedWallet: EncryptedWallet = {
-        name: 'test-wallet',
-        terraAddress: wallet.terraAddress,
-        design: 'terra',
-        encryptedWallet: encryptWallet(wallet, '1234567890'),
-      };
-
-      await addWallet(encryptedWallet);
-    }
-
     await approveHostnames(connectInfo.hostname);
 
     const port = browser.runtime.connect(undefined, {
@@ -94,26 +83,163 @@ function AppBase({ className }: AppProps) {
     if (wallets.length > 0) {
       await approve();
     } else {
-      setNeedWalletCreate(true);
+      setWalletCreatePages(0);
     }
   }, [approve]);
 
-  if (needWalletCreate) {
+  if (walletCreatePages === 0) {
     return (
-      <div>
-        <p>TODO : Wallet Create Form</p>
-        <button onClick={approve}>Approve</button>
-        <button onClick={deny}>Deny</button>
-      </div>
+      <FormSection>
+        <header>
+          <h1>You don't have any wallets</h1>
+        </header>
+
+        <p>Do you want to create new wallet?</p>
+
+        <Button variant="contained" color="secondary" onClick={approve}>
+          Cancel
+        </Button>
+
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => setWalletCreatePages(1)}
+        >
+          Create New Wallet
+        </Button>
+
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => setWalletCreatePages(2)}
+        >
+          Recover Existing Wallet
+        </Button>
+      </FormSection>
     );
+  } else if (walletCreatePages === 1) {
+    return <CreateNewWallet onApprove={approve} />;
+  } else if (walletCreatePages === 2) {
+    return <RecoverMnemonic onApprove={approve} />;
   }
 
   return (
-    <section className={className}>
+    <FormSection className={className}>
+      <header>
+        <h1>Approve this site?</h1>
+      </header>
+
       <p>{connectInfo.hostname}</p>
-      <button onClick={approveConnect}>Approve</button>
-      <button onClick={deny}>Deny</button>
-    </section>
+
+      <footer>
+        <Button variant="contained" color="secondary" onClick={deny}>
+          Deny
+        </Button>
+        <Button variant="contained" color="primary" onClick={approveConnect}>
+          Approve
+        </Button>
+      </footer>
+    </FormSection>
+  );
+}
+
+interface ApproveWithWalletProps {
+  onApprove: () => void;
+}
+
+function CreateNewWallet({ onApprove }: ApproveWithWalletProps) {
+  const [result, setResult] = useState<CreateNewWalletResult | null>(null);
+
+  const approve = useCallback(async () => {
+    if (!result) {
+      throw new Error(`Don't call when result is empty!`);
+    }
+
+    const encryptedWallet: EncryptedWallet = {
+      name: result.name,
+      design: result.design,
+      terraAddress: result.mk.accAddress,
+      encryptedWallet: encryptWallet(createWallet(result.mk), result.password),
+    };
+
+    await addWallet(encryptedWallet);
+
+    onApprove();
+  }, [result, onApprove]);
+
+  return (
+    <FormSection>
+      <header>
+        <h1>Approve + Add New Wallet</h1>
+      </header>
+
+      <CreateNewWalletForm onChange={setResult} />
+
+      <footer>
+        <Button variant="contained" color="secondary" onClick={onApprove}>
+          Cancel
+        </Button>
+
+        <Button
+          variant="contained"
+          color="primary"
+          disabled={!result}
+          onClick={approve}
+        >
+          Create Wallet
+        </Button>
+      </footer>
+    </FormSection>
+  );
+}
+
+function RecoverMnemonic({ onApprove }: ApproveWithWalletProps) {
+  const [result, setResult] = useState<RecoverMnemonicResult | null>(null);
+
+  const recover = useCallback(async () => {
+    if (!result) {
+      throw new Error(`Don't call when result is empty!`);
+    }
+
+    const mk = restoreMnemonicKey(result.mnemonic);
+
+    const wallet: Wallet = createWallet(mk);
+
+    const encryptedWallet: EncryptedWallet = {
+      name: result.name,
+      design: result.design,
+      terraAddress: mk.accAddress,
+      encryptedWallet: encryptWallet(wallet, result.password),
+    };
+
+    await addWallet(encryptedWallet);
+
+    onApprove();
+  }, [onApprove, result]);
+
+  return (
+    <FormSection>
+      <header>
+        <h1>Approve + Recover Existing Wallet</h1>
+
+        <RecoverMnemonicForm onChange={setResult} />
+
+        <footer>
+          <Button variant="contained" color="secondary" onClick={onApprove}>
+            Cancel
+          </Button>
+
+          <Button
+            variant="contained"
+            color="primary"
+            disabled={!result}
+            onClick={recover}
+          >
+            Recover Wallet
+          </Button>
+        </footer>
+      </header>
+    </FormSection>
   );
 }
 

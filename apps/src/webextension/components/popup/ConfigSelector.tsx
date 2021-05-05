@@ -22,7 +22,7 @@ import { FormattedMessage } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
 import { useLocales } from 'webextension/contexts/locales';
-import { defaultNetworks } from '../env';
+import { defaultNetworks } from 'webextension/env';
 
 export function ConfigSelectorBase({ className }: { className?: string }) {
   // ---------------------------------------------

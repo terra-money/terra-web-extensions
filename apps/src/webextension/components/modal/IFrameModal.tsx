@@ -1,8 +1,8 @@
 import { Close } from '@material-ui/icons';
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
-import { contentHeight, headerHeight, headerPadding } from 'webextension/env';
-import { ReactComponent as Logo } from '../assets/Logo.svg';
+import { ReactComponent as Logo } from '../../assets/Logo.svg';
+import { contentHeight, headerHeight, headerPadding } from '../../env';
 import { WaveEffect } from './WaveEffect';
 
 export interface IFrameModalProps {

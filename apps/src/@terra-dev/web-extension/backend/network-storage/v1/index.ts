@@ -38,11 +38,11 @@ export async function findNetwork(
 export async function addNetwork(
   network: WebExtensionNetworkInfo,
 ): Promise<void> {
-  const { networks, ...storage } = await readNetworkStorage();
+  const { networks } = await readNetworkStorage();
   const nextNetworks = [...networks, network];
   await writeNetworkStorage({
     networks: nextNetworks,
-    ...storage,
+    selectedNetwork: network,
   });
 }
 

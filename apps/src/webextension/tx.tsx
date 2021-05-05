@@ -10,8 +10,8 @@ import { WalletCard } from '@terra-dev/wallet-card';
 import {
   deserializeTx,
   executeTx,
-  WebExtensionNetworkInfo,
   SerializedCreateTxOptions,
+  WebExtensionNetworkInfo,
   WebExtensionTxFail,
   WebExtensionTxStatus,
 } from '@terra-dev/web-extension';
@@ -28,8 +28,8 @@ import { render } from 'react-dom';
 import { IntlProvider } from 'react-intl';
 import styled, { DefaultTheme } from 'styled-components';
 import { browser } from 'webextension-polyfill-ts';
-import { ErrorBoundary } from './components/ErrorBoundary';
-import { TxDetail } from './components/TxDetail';
+import { ErrorBoundary } from './components/common/ErrorBoundary';
+import { TxDetail } from './components/tx/TxDetail';
 import { LocalesProvider, useIntlProps } from './contexts/locales';
 import { ThemeProvider } from './contexts/theme';
 import { txPortPrefix } from './env';
@@ -51,7 +51,7 @@ function AppBase({ className }: AppProps) {
     const terraAddress = params.get('terraAddress');
     const txBase64 = params.get('tx');
     const networkBase64 = params.get('network');
-    const origin = params.get('origin');
+    const hostname = params.get('hostname');
     const timestamp = params.get('timestamp');
 
     if (
@@ -59,7 +59,7 @@ function AppBase({ className }: AppProps) {
       !terraAddress ||
       !txBase64 ||
       !networkBase64 ||
-      !origin ||
+      !hostname ||
       !timestamp
     ) {
       throw new Error(`Can't find Transaction!`);
@@ -73,7 +73,7 @@ function AppBase({ className }: AppProps) {
       terraAddress,
       network,
       serializedTx,
-      origin,
+      hostname,
       timestamp: new Date(parseInt(timestamp)),
     };
   }, []);
@@ -196,7 +196,7 @@ function AppBase({ className }: AppProps) {
             </i>
             <span>ORIGIN</span>
           </div>
-          <span>{txInfo.origin}</span>
+          <span>{txInfo.hostname}</span>
         </li>
         <li>
           <div>

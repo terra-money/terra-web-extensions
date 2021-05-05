@@ -267,24 +267,22 @@ export function useUserBalances({
     selectedWallet,
   ]);
 
-  const {
-    previousData,
-    data: _data = previousData,
-    refetch: _refetch,
-    ...result
-  } = useQuery<RawData, RawVariables>(query, {
+  const { data: _data, refetch: _refetch, ...result } = useQuery<
+    RawData,
+    RawVariables
+  >(query, {
     skip: !variables,
     fetchPolicy: 'network-only',
     nextFetchPolicy: 'cache-first',
     variables,
   });
 
-  const data = useMap(_data, dataMap);
+  const data = useMap(_data, dataMap, { ignoreNullData: true });
   const refetch = useRefetch(_refetch, dataMap);
 
   return {
     ...result,
-    data,
+    data: selectedWallet ? data : mockupData,
     refetch,
   };
 }

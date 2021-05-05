@@ -46,6 +46,7 @@ export function WalletCardDesignSelector({
     >
       {designs.map((itemDesign) => (
         <WalletCard
+          key={itemDesign}
           name={name}
           terraAddress={terraAddress}
           design={itemDesign}
