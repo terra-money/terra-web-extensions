@@ -5,15 +5,11 @@ export const defaultNetworks: WebExtensionNetworkInfo[] = [
     name: 'mainnet',
     chainID: 'columbus-4',
     lcd: 'https://lcd.terra.dev',
-    fcd: 'https://fcd.terra.dev',
-    ws: 'wss://fcd.terra.dev',
   },
   {
     name: 'testnet',
     chainID: 'tequila-0004',
     lcd: 'https://tequila-lcd.terra.dev',
-    fcd: 'https://tequila-fcd.terra.dev',
-    ws: 'wss://tequila-ws.terra.dev',
   },
 ];
 

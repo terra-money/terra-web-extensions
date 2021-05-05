@@ -4,8 +4,8 @@ import React, { useCallback, useState } from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { defaultNetworks } from '../../env';
 
-const { lcd, fcd, ws } = defaultNetworks[0];
-const serversPlaceHolder = JSON.stringify({ lcd, fcd, ws }, null, 2);
+const { lcd } = defaultNetworks[0];
+const serversPlaceHolder = JSON.stringify({ lcd }, null, 2);
 
 export function NetworkCreate({ history }: RouteComponentProps<{}>) {
   const [name, setName] = useState<string>('');
@@ -15,7 +15,7 @@ export function NetworkCreate({ history }: RouteComponentProps<{}>) {
   const [error, setError] = useState<string | null>(null);
 
   const create = useCallback(async () => {
-    let serversJson: Pick<WebExtensionNetworkInfo, 'lcd' | 'fcd' | 'ws'>;
+    let serversJson: Pick<WebExtensionNetworkInfo, 'lcd'>;
 
     try {
       serversJson = JSON.parse(servers);

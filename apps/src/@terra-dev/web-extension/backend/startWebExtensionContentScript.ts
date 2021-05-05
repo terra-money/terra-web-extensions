@@ -82,7 +82,12 @@ export function startWebExtensionContentScript({
       const hostname: string = window.location.hostname;
 
       return approvedHostnames.includes(hostname)
-        ? { wallets, focusedWalletAddress, isApproved: true }
+        ? {
+            // remove sensitive information (e.g. encryptedWallet)
+            wallets: wallets.map(({ encryptedWallet, ...wallet }) => wallet),
+            focusedWalletAddress,
+            isApproved: true,
+          }
         : { wallets: [], focusedWalletAddress: undefined, isApproved: false };
     }),
   );
@@ -186,9 +191,7 @@ export function startWebExtensionContentScript({
               payload: {
                 chainID: network.chainID,
                 name: network.name,
-                fcd: network.fcd,
                 lcd: network.lcd,
-                ws: network.ws,
               },
             });
           });

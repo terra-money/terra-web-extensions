@@ -1,4 +1,4 @@
-import { decrypt, encrypt } from '@terra-money/key-utils';
+import { decrypt, encrypt, validateMnemonic } from '@terra-money/key-utils';
 import { MnemonicKey } from '@terra-money/terra.js';
 
 export interface Wallet {
@@ -45,6 +45,9 @@ export function createMnemonicKey(): MnemonicKey {
 }
 
 export function restoreMnemonicKey(mnemonic: string): MnemonicKey {
+  if (!validateMnemonic(mnemonic)) {
+    throw new Error(`mnemonic key is invalid!`);
+  }
   return new MnemonicKey({ mnemonic, coinType: 330 });
 }
 
