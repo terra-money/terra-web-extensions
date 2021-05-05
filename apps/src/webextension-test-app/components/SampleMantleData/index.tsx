@@ -8,12 +8,7 @@ import {
 } from '@anchor-protocol/notation';
 import { aUST, UST } from '@anchor-protocol/types';
 import { useApolloClient } from '@apollo/client';
-import {
-  Operator,
-  streamPipe,
-  StreamStatus,
-  useStream,
-} from '@terra-dev/stream-pipe';
+import { streamPipe, StreamStatus, useStream } from '@terra-dev/stream-pipe';
 import {
   WebExtensionTxResult,
   WebExtensionTxStatus,
@@ -31,7 +26,7 @@ import {
 } from '@terra-money/terra.js';
 import { useConstants } from 'common/contexts/constants';
 import { useContractAddress } from 'common/contexts/contract';
-import { pollTxInfo, TxInfos } from 'common/queries/txInfos';
+import { pollTxInfo } from 'common/queries/txInfos';
 import { useUserBalances } from 'common/queries/userBalances';
 import React, { useCallback, useMemo } from 'react';
 import { GuardSpinner } from 'react-spinners-kit';
@@ -58,23 +53,17 @@ export function SampleMantleData() {
         // execute transaction
         post,
         // poll txInfo if txResult is succeed
-        ((txResult: WebExtensionTxResult) =>
+        (txResult: WebExtensionTxResult) =>
           txResult.status === WebExtensionTxStatus.SUCCEED
             ? pollTxInfo(client, txResult.payload.txhash)
-            : txResult) as Operator<
-          WebExtensionTxResult,
-          TxInfos | WebExtensionTxResult
-        >,
+            : txResult,
         // side effect if result is txInfos(=Array)
-        ((result) => {
+        (result) => {
           if (Array.isArray(result)) {
             refetch();
           }
           return result;
-        }) as Operator<
-          TxInfos | WebExtensionTxResult,
-          TxInfos | WebExtensionTxResult
-        >,
+        },
       ),
     [client, post, refetch],
   );
@@ -182,7 +171,14 @@ export function SampleMantleData() {
       </ul>
 
       <h3>Anchor Depost / Withdraw</h3>
-      {txResult.status === StreamStatus.IN_PROGRESS && <GuardSpinner />}
+      {txResult.status === StreamStatus.IN_PROGRESS && (
+        <div>
+          <div>
+            <GuardSpinner />
+          </div>
+          <pre>{JSON.stringify(txResult.result, null, 2)}</pre>
+        </div>
+      )}
       {txResult.status === StreamStatus.DONE && (
         <div>
           <h4>Tx Succeed</h4>

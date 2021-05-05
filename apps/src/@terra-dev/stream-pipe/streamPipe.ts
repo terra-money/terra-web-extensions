@@ -1,5 +1,5 @@
 import { isObservable, Observable } from 'rxjs';
-import { Operator } from './types';
+import { Operator, StripOperatorResult } from './types';
 
 export function streamPipe<Params, R1>(
   o1: Operator<Params, R1>,
@@ -7,59 +7,110 @@ export function streamPipe<Params, R1>(
 
 export function streamPipe<Params, R1, R2>(
   o1: Operator<Params, R1>,
-  o2: Operator<R1, R2>,
-): (params: Params) => Observable<R1 | R2>;
+  o2: Operator<StripOperatorResult<R1>, R2>,
+): (
+  params: Params,
+) => Observable<StripOperatorResult<R1> | StripOperatorResult<R2>>;
 
 export function streamPipe<Params, R1, R2, R3>(
   o1: Operator<Params, R1>,
-  o2: Operator<R1, R2>,
-  o3: Operator<R2, R3>,
-): (params: Params) => Observable<R1 | R2 | R3>;
+  o2: Operator<StripOperatorResult<R1>, R2>,
+  o3: Operator<StripOperatorResult<R2>, R3>,
+): (
+  params: Params,
+) => Observable<
+  StripOperatorResult<R1> | StripOperatorResult<R2> | StripOperatorResult<R3>
+>;
 
 export function streamPipe<Params, R1, R2, R3, R4>(
   o1: Operator<Params, R1>,
-  o2: Operator<R1, R2>,
-  o3: Operator<R2, R3>,
-  o4: Operator<R3, R4>,
-): (params: Params) => Observable<R1 | R2 | R3 | R4>;
+  o2: Operator<StripOperatorResult<R1>, R2>,
+  o3: Operator<StripOperatorResult<R2>, R3>,
+  o4: Operator<StripOperatorResult<R3>, R4>,
+): (
+  params: Params,
+) => Observable<
+  | StripOperatorResult<R1>
+  | StripOperatorResult<R2>
+  | StripOperatorResult<R3>
+  | StripOperatorResult<R4>
+>;
 
 export function streamPipe<Params, R1, R2, R3, R4, R5>(
   o1: Operator<Params, R1>,
-  o2: Operator<R1, R2>,
-  o3: Operator<R2, R3>,
-  o4: Operator<R3, R4>,
-  o5: Operator<R4, R5>,
-): (params: Params) => Observable<R1 | R2 | R3 | R4 | R5>;
+  o2: Operator<StripOperatorResult<R1>, R2>,
+  o3: Operator<StripOperatorResult<R2>, R3>,
+  o4: Operator<StripOperatorResult<R3>, R4>,
+  o5: Operator<StripOperatorResult<R4>, R5>,
+): (
+  params: Params,
+) => Observable<
+  | StripOperatorResult<R1>
+  | StripOperatorResult<R2>
+  | StripOperatorResult<R3>
+  | StripOperatorResult<R4>
+  | StripOperatorResult<R5>
+>;
 
 export function streamPipe<Params, R1, R2, R3, R4, R5, R6>(
   o1: Operator<Params, R1>,
-  o2: Operator<R1, R2>,
-  o3: Operator<R2, R3>,
-  o4: Operator<R3, R4>,
-  o5: Operator<R4, R5>,
-  o6: Operator<R5, R6>,
-): (params: Params) => Observable<R1 | R2 | R3 | R4 | R5 | R6>;
+  o2: Operator<StripOperatorResult<R1>, R2>,
+  o3: Operator<StripOperatorResult<R2>, R3>,
+  o4: Operator<StripOperatorResult<R3>, R4>,
+  o5: Operator<StripOperatorResult<R4>, R5>,
+  o6: Operator<StripOperatorResult<R5>, R6>,
+): (
+  params: Params,
+) => Observable<
+  | StripOperatorResult<R1>
+  | StripOperatorResult<R2>
+  | StripOperatorResult<R3>
+  | StripOperatorResult<R4>
+  | StripOperatorResult<R5>
+  | StripOperatorResult<R6>
+>;
 
 export function streamPipe<Params, R1, R2, R3, R4, R5, R6, R7>(
   o1: Operator<Params, R1>,
-  o2: Operator<R1, R2>,
-  o3: Operator<R2, R3>,
-  o4: Operator<R3, R4>,
-  o5: Operator<R4, R5>,
-  o6: Operator<R5, R6>,
-  o7: Operator<R6, R7>,
-): (params: Params) => Observable<R1 | R2 | R3 | R4 | R5 | R6 | R7>;
+  o2: Operator<StripOperatorResult<R1>, R2>,
+  o3: Operator<StripOperatorResult<R2>, R3>,
+  o4: Operator<StripOperatorResult<R3>, R4>,
+  o5: Operator<StripOperatorResult<R4>, R5>,
+  o6: Operator<StripOperatorResult<R5>, R6>,
+  o7: Operator<StripOperatorResult<R6>, R7>,
+): (
+  params: Params,
+) => Observable<
+  | StripOperatorResult<R1>
+  | StripOperatorResult<R2>
+  | StripOperatorResult<R3>
+  | StripOperatorResult<R4>
+  | StripOperatorResult<R5>
+  | StripOperatorResult<R6>
+  | StripOperatorResult<R7>
+>;
 
 export function streamPipe<Params, R1, R2, R3, R4, R5, R6, R7, R8>(
   o1: Operator<Params, R1>,
-  o2: Operator<R1, R2>,
-  o3: Operator<R2, R3>,
-  o4: Operator<R3, R4>,
-  o5: Operator<R4, R5>,
-  o6: Operator<R5, R6>,
-  o7: Operator<R6, R7>,
-  o8: Operator<R7, R8>,
-): (params: Params) => Observable<R1 | R2 | R3 | R4 | R5 | R6 | R7 | R8>;
+  o2: Operator<StripOperatorResult<R1>, R2>,
+  o3: Operator<StripOperatorResult<R2>, R3>,
+  o4: Operator<StripOperatorResult<R3>, R4>,
+  o5: Operator<StripOperatorResult<R4>, R5>,
+  o6: Operator<StripOperatorResult<R5>, R6>,
+  o7: Operator<StripOperatorResult<R6>, R7>,
+  o8: Operator<StripOperatorResult<R7>, R8>,
+): (
+  params: Params,
+) => Observable<
+  | StripOperatorResult<R1>
+  | StripOperatorResult<R2>
+  | StripOperatorResult<R3>
+  | StripOperatorResult<R4>
+  | StripOperatorResult<R5>
+  | StripOperatorResult<R6>
+  | StripOperatorResult<R7>
+  | StripOperatorResult<R8>
+>;
 
 export function streamPipe(
   ...operators: Operator<any, any>[]
