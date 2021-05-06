@@ -127,7 +127,14 @@ function AppBase({ className }: AppProps) {
 
       executeTx(wallet, param.network, param.serializedTx).subscribe(
         (result) => {
-          port.postMessage(result);
+          if (result.status === WebExtensionTxStatus.FAIL) {
+            port.postMessage({
+              ...result,
+              error: result.error.toJSON(),
+            });
+          } else {
+            port.postMessage(result);
+          }
         },
         (error) => {
           port.postMessage({

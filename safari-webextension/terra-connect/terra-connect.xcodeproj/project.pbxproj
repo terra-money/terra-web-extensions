@@ -7,26 +7,29 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		C681D3C3261C53BE0041FACA /* dashboard.html in Resources */ = {isa = PBXBuildFile; fileRef = C681D3A9261C53BE0041FACA /* dashboard.html */; };
-		C681D3C4261C53BE0041FACA /* wallet-cards in Resources */ = {isa = PBXBuildFile; fileRef = C681D3AA261C53BE0041FACA /* wallet-cards */; };
-		C681D3C5261C53BE0041FACA /* anchor.07603c1a0d4f5a9de03bc63d79701b33.svg in Resources */ = {isa = PBXBuildFile; fileRef = C681D3AB261C53BE0041FACA /* anchor.07603c1a0d4f5a9de03bc63d79701b33.svg */; };
-		C681D3C6261C53BE0041FACA /* background.js in Resources */ = {isa = PBXBuildFile; fileRef = C681D3AD261C53BE0041FACA /* background.js */; };
-		C681D3C7261C53BE0041FACA /* Logo.378b6e808c79ab8303dcf59b2c7b4f88.svg in Resources */ = {isa = PBXBuildFile; fileRef = C681D3AF261C53BE0041FACA /* Logo.378b6e808c79ab8303dcf59b2c7b4f88.svg */; };
-		C681D3C8261C53BE0041FACA /* options.html in Resources */ = {isa = PBXBuildFile; fileRef = C681D3B0261C53BE0041FACA /* options.html */; };
-		C681D3C9261C53BE0041FACA /* popup.js in Resources */ = {isa = PBXBuildFile; fileRef = C681D3B1261C53BE0041FACA /* popup.js */; };
-		C681D3CA261C53BE0041FACA /* dashboard.js in Resources */ = {isa = PBXBuildFile; fileRef = C681D3B3261C53BE0041FACA /* dashboard.js */; };
-		C681D3CB261C53BE0041FACA /* tx.html in Resources */ = {isa = PBXBuildFile; fileRef = C681D3B4261C53BE0041FACA /* tx.html */; };
-		C681D3CC261C53BE0041FACA /* content.js in Resources */ = {isa = PBXBuildFile; fileRef = C681D3B5261C53BE0041FACA /* content.js */; };
-		C681D3CD261C53BE0041FACA /* options.js in Resources */ = {isa = PBXBuildFile; fileRef = C681D3B7261C53BE0041FACA /* options.js */; };
-		C681D3CE261C53BE0041FACA /* Logo.2bf95ab2fe0f078ce06486b8f700f339.svg in Resources */ = {isa = PBXBuildFile; fileRef = C681D3B8261C53BE0041FACA /* Logo.2bf95ab2fe0f078ce06486b8f700f339.svg */; };
-		C681D3CF261C53BE0041FACA /* assets in Resources */ = {isa = PBXBuildFile; fileRef = C681D3B9261C53BE0041FACA /* assets */; };
-		C681D3D0261C53BE0041FACA /* terra.35419c1154ed69ff458a7654f1a98079.svg in Resources */ = {isa = PBXBuildFile; fileRef = C681D3BA261C53BE0041FACA /* terra.35419c1154ed69ff458a7654f1a98079.svg */; };
-		C681D3D1261C53BE0041FACA /* terra.2e55ad542d4d0a0ac65cf5387745ab99.svg in Resources */ = {isa = PBXBuildFile; fileRef = C681D3BC261C53BE0041FACA /* terra.2e55ad542d4d0a0ac65cf5387745ab99.svg */; };
-		C681D3D2261C53BE0041FACA /* tx.js in Resources */ = {isa = PBXBuildFile; fileRef = C681D3BE261C53BE0041FACA /* tx.js */; };
-		C681D3D3261C53BE0041FACA /* icons in Resources */ = {isa = PBXBuildFile; fileRef = C681D3BF261C53BE0041FACA /* icons */; };
-		C681D3D4261C53BE0041FACA /* popup.html in Resources */ = {isa = PBXBuildFile; fileRef = C681D3C0261C53BE0041FACA /* popup.html */; };
-		C681D3D5261C53BE0041FACA /* terra.a4001110e1561b2b74b0bb82b2d1d793.svg in Resources */ = {isa = PBXBuildFile; fileRef = C681D3C1261C53BE0041FACA /* terra.a4001110e1561b2b74b0bb82b2d1d793.svg */; };
-		C681D3D6261C53BE0041FACA /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = C681D3C2261C53BE0041FACA /* manifest.json */; };
+		C6409E532643C73400BD996B /* terra.2e55ad542d4d0a0ac65cf5387745ab99.svg in Resources */ = {isa = PBXBuildFile; fileRef = C6409E352643C73300BD996B /* terra.2e55ad542d4d0a0ac65cf5387745ab99.svg */; };
+		C6409E542643C73400BD996B /* Logo.2bf95ab2fe0f078ce06486b8f700f339.svg in Resources */ = {isa = PBXBuildFile; fileRef = C6409E362643C73300BD996B /* Logo.2bf95ab2fe0f078ce06486b8f700f339.svg */; };
+		C6409E552643C73400BD996B /* terra.35419c1154ed69ff458a7654f1a98079.svg in Resources */ = {isa = PBXBuildFile; fileRef = C6409E372643C73300BD996B /* terra.35419c1154ed69ff458a7654f1a98079.svg */; };
+		C6409E562643C73400BD996B /* popup.js in Resources */ = {isa = PBXBuildFile; fileRef = C6409E392643C73300BD996B /* popup.js */; };
+		C6409E572643C73400BD996B /* connect.js in Resources */ = {isa = PBXBuildFile; fileRef = C6409E3A2643C73300BD996B /* connect.js */; };
+		C6409E582643C73400BD996B /* popup.html in Resources */ = {isa = PBXBuildFile; fileRef = C6409E3B2643C73300BD996B /* popup.html */; };
+		C6409E592643C73400BD996B /* dashboard.js in Resources */ = {isa = PBXBuildFile; fileRef = C6409E3C2643C73300BD996B /* dashboard.js */; };
+		C6409E5A2643C73400BD996B /* background.js in Resources */ = {isa = PBXBuildFile; fileRef = C6409E3D2643C73300BD996B /* background.js */; };
+		C6409E5B2643C73400BD996B /* icons in Resources */ = {isa = PBXBuildFile; fileRef = C6409E3E2643C73300BD996B /* icons */; };
+		C6409E5C2643C73400BD996B /* dashboard.html in Resources */ = {isa = PBXBuildFile; fileRef = C6409E3F2643C73300BD996B /* dashboard.html */; };
+		C6409E5D2643C73400BD996B /* content.js in Resources */ = {isa = PBXBuildFile; fileRef = C6409E402643C73300BD996B /* content.js */; };
+		C6409E5E2643C73400BD996B /* options.html in Resources */ = {isa = PBXBuildFile; fileRef = C6409E432643C73300BD996B /* options.html */; };
+		C6409E5F2643C73400BD996B /* tx.html in Resources */ = {isa = PBXBuildFile; fileRef = C6409E442643C73300BD996B /* tx.html */; };
+		C6409E602643C73400BD996B /* anchor.07603c1a0d4f5a9de03bc63d79701b33.svg in Resources */ = {isa = PBXBuildFile; fileRef = C6409E452643C73300BD996B /* anchor.07603c1a0d4f5a9de03bc63d79701b33.svg */; };
+		C6409E612643C73400BD996B /* options.js in Resources */ = {isa = PBXBuildFile; fileRef = C6409E462643C73400BD996B /* options.js */; };
+		C6409E622643C73400BD996B /* connect.html in Resources */ = {isa = PBXBuildFile; fileRef = C6409E482643C73400BD996B /* connect.html */; };
+		C6409E632643C73400BD996B /* assets in Resources */ = {isa = PBXBuildFile; fileRef = C6409E492643C73400BD996B /* assets */; };
+		C6409E642643C73400BD996B /* tx.js in Resources */ = {isa = PBXBuildFile; fileRef = C6409E4A2643C73400BD996B /* tx.js */; };
+		C6409E652643C73400BD996B /* wallet-cards in Resources */ = {isa = PBXBuildFile; fileRef = C6409E4C2643C73400BD996B /* wallet-cards */; };
+		C6409E662643C73400BD996B /* terra.a4001110e1561b2b74b0bb82b2d1d793.svg in Resources */ = {isa = PBXBuildFile; fileRef = C6409E4E2643C73400BD996B /* terra.a4001110e1561b2b74b0bb82b2d1d793.svg */; };
+		C6409E672643C73400BD996B /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = C6409E4F2643C73400BD996B /* manifest.json */; };
+		C6409E682643C73400BD996B /* javascript,__webpack_public_path__ = __webpack_base_uri__ = htmlWebpackPluginPublicPath;.1feff74faaf0efc6a044355c92cd15d9.bin in Resources */ = {isa = PBXBuildFile; fileRef = C6409E502643C73400BD996B /* javascript,__webpack_public_path__ = __webpack_base_uri__ = htmlWebpackPluginPublicPath;.1feff74faaf0efc6a044355c92cd15d9.bin */; };
+		C6409E692643C73400BD996B /* Logo.378b6e808c79ab8303dcf59b2c7b4f88.svg in Resources */ = {isa = PBXBuildFile; fileRef = C6409E522643C73400BD996B /* Logo.378b6e808c79ab8303dcf59b2c7b4f88.svg */; };
 		C697B89A26131E0B0063FC79 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C697B89926131E0B0063FC79 /* AppDelegate.swift */; };
 		C697B89D26131E0B0063FC79 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C697B89B26131E0B0063FC79 /* Main.storyboard */; };
 		C697B89F26131E0B0063FC79 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C697B89E26131E0B0063FC79 /* ViewController.swift */; };
@@ -77,32 +80,36 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		C681D3A9261C53BE0041FACA /* dashboard.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = dashboard.html; path = ../../../../apps/dev/webextension/dashboard.html; sourceTree = "<group>"; };
-		C681D3AA261C53BE0041FACA /* wallet-cards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "wallet-cards"; path = "../../../../apps/dev/webextension/wallet-cards"; sourceTree = "<group>"; };
-		C681D3AB261C53BE0041FACA /* anchor.07603c1a0d4f5a9de03bc63d79701b33.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = anchor.07603c1a0d4f5a9de03bc63d79701b33.svg; path = ../../../../apps/dev/webextension/anchor.07603c1a0d4f5a9de03bc63d79701b33.svg; sourceTree = "<group>"; };
-		C681D3AC261C53BE0041FACA /* dashboard.js.map */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; name = dashboard.js.map; path = ../../../../apps/dev/webextension/dashboard.js.map; sourceTree = "<group>"; };
-		C681D3AD261C53BE0041FACA /* background.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = background.js; path = ../../../../apps/dev/webextension/background.js; sourceTree = "<group>"; };
-		C681D3AE261C53BE0041FACA /* options.js.map */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; name = options.js.map; path = ../../../../apps/dev/webextension/options.js.map; sourceTree = "<group>"; };
-		C681D3AF261C53BE0041FACA /* Logo.378b6e808c79ab8303dcf59b2c7b4f88.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Logo.378b6e808c79ab8303dcf59b2c7b4f88.svg; path = ../../../../apps/dev/webextension/Logo.378b6e808c79ab8303dcf59b2c7b4f88.svg; sourceTree = "<group>"; };
-		C681D3B0261C53BE0041FACA /* options.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = options.html; path = ../../../../apps/dev/webextension/options.html; sourceTree = "<group>"; };
-		C681D3B1261C53BE0041FACA /* popup.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = popup.js; path = ../../../../apps/dev/webextension/popup.js; sourceTree = "<group>"; };
-		C681D3B2261C53BE0041FACA /* background.js.map */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; name = background.js.map; path = ../../../../apps/dev/webextension/background.js.map; sourceTree = "<group>"; };
-		C681D3B3261C53BE0041FACA /* dashboard.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = dashboard.js; path = ../../../../apps/dev/webextension/dashboard.js; sourceTree = "<group>"; };
-		C681D3B4261C53BE0041FACA /* tx.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = tx.html; path = ../../../../apps/dev/webextension/tx.html; sourceTree = "<group>"; };
-		C681D3B5261C53BE0041FACA /* content.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = content.js; path = ../../../../apps/dev/webextension/content.js; sourceTree = "<group>"; };
-		C681D3B6261C53BE0041FACA /* tx.js.map */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; name = tx.js.map; path = ../../../../apps/dev/webextension/tx.js.map; sourceTree = "<group>"; };
-		C681D3B7261C53BE0041FACA /* options.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = options.js; path = ../../../../apps/dev/webextension/options.js; sourceTree = "<group>"; };
-		C681D3B8261C53BE0041FACA /* Logo.2bf95ab2fe0f078ce06486b8f700f339.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Logo.2bf95ab2fe0f078ce06486b8f700f339.svg; path = ../../../../apps/dev/webextension/Logo.2bf95ab2fe0f078ce06486b8f700f339.svg; sourceTree = "<group>"; };
-		C681D3B9261C53BE0041FACA /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = assets; path = ../../../../apps/dev/webextension/assets; sourceTree = "<group>"; };
-		C681D3BA261C53BE0041FACA /* terra.35419c1154ed69ff458a7654f1a98079.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = terra.35419c1154ed69ff458a7654f1a98079.svg; path = ../../../../apps/dev/webextension/terra.35419c1154ed69ff458a7654f1a98079.svg; sourceTree = "<group>"; };
-		C681D3BB261C53BE0041FACA /* popup.js.map */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; name = popup.js.map; path = ../../../../apps/dev/webextension/popup.js.map; sourceTree = "<group>"; };
-		C681D3BC261C53BE0041FACA /* terra.2e55ad542d4d0a0ac65cf5387745ab99.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = terra.2e55ad542d4d0a0ac65cf5387745ab99.svg; path = ../../../../apps/dev/webextension/terra.2e55ad542d4d0a0ac65cf5387745ab99.svg; sourceTree = "<group>"; };
-		C681D3BD261C53BE0041FACA /* content.js.map */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; name = content.js.map; path = ../../../../apps/dev/webextension/content.js.map; sourceTree = "<group>"; };
-		C681D3BE261C53BE0041FACA /* tx.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = tx.js; path = ../../../../apps/dev/webextension/tx.js; sourceTree = "<group>"; };
-		C681D3BF261C53BE0041FACA /* icons */ = {isa = PBXFileReference; lastKnownFileType = folder; name = icons; path = ../../../../apps/dev/webextension/icons; sourceTree = "<group>"; };
-		C681D3C0261C53BE0041FACA /* popup.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = popup.html; path = ../../../../apps/dev/webextension/popup.html; sourceTree = "<group>"; };
-		C681D3C1261C53BE0041FACA /* terra.a4001110e1561b2b74b0bb82b2d1d793.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = terra.a4001110e1561b2b74b0bb82b2d1d793.svg; path = ../../../../apps/dev/webextension/terra.a4001110e1561b2b74b0bb82b2d1d793.svg; sourceTree = "<group>"; };
-		C681D3C2261C53BE0041FACA /* manifest.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = manifest.json; path = ../../../../apps/dev/webextension/manifest.json; sourceTree = "<group>"; };
+		C6409E352643C73300BD996B /* terra.2e55ad542d4d0a0ac65cf5387745ab99.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = terra.2e55ad542d4d0a0ac65cf5387745ab99.svg; path = ../../../../apps/dev/webextension/terra.2e55ad542d4d0a0ac65cf5387745ab99.svg; sourceTree = "<group>"; };
+		C6409E362643C73300BD996B /* Logo.2bf95ab2fe0f078ce06486b8f700f339.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Logo.2bf95ab2fe0f078ce06486b8f700f339.svg; path = ../../../../apps/dev/webextension/Logo.2bf95ab2fe0f078ce06486b8f700f339.svg; sourceTree = "<group>"; };
+		C6409E372643C73300BD996B /* terra.35419c1154ed69ff458a7654f1a98079.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = terra.35419c1154ed69ff458a7654f1a98079.svg; path = ../../../../apps/dev/webextension/terra.35419c1154ed69ff458a7654f1a98079.svg; sourceTree = "<group>"; };
+		C6409E382643C73300BD996B /* tx.js.map */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; name = tx.js.map; path = ../../../../apps/dev/webextension/tx.js.map; sourceTree = "<group>"; };
+		C6409E392643C73300BD996B /* popup.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = popup.js; path = ../../../../apps/dev/webextension/popup.js; sourceTree = "<group>"; };
+		C6409E3A2643C73300BD996B /* connect.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = connect.js; path = ../../../../apps/dev/webextension/connect.js; sourceTree = "<group>"; };
+		C6409E3B2643C73300BD996B /* popup.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = popup.html; path = ../../../../apps/dev/webextension/popup.html; sourceTree = "<group>"; };
+		C6409E3C2643C73300BD996B /* dashboard.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = dashboard.js; path = ../../../../apps/dev/webextension/dashboard.js; sourceTree = "<group>"; };
+		C6409E3D2643C73300BD996B /* background.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = background.js; path = ../../../../apps/dev/webextension/background.js; sourceTree = "<group>"; };
+		C6409E3E2643C73300BD996B /* icons */ = {isa = PBXFileReference; lastKnownFileType = folder; name = icons; path = ../../../../apps/dev/webextension/icons; sourceTree = "<group>"; };
+		C6409E3F2643C73300BD996B /* dashboard.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = dashboard.html; path = ../../../../apps/dev/webextension/dashboard.html; sourceTree = "<group>"; };
+		C6409E402643C73300BD996B /* content.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = content.js; path = ../../../../apps/dev/webextension/content.js; sourceTree = "<group>"; };
+		C6409E412643C73300BD996B /* content.js.map */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; name = content.js.map; path = ../../../../apps/dev/webextension/content.js.map; sourceTree = "<group>"; };
+		C6409E422643C73300BD996B /* connect.js.map */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; name = connect.js.map; path = ../../../../apps/dev/webextension/connect.js.map; sourceTree = "<group>"; };
+		C6409E432643C73300BD996B /* options.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = options.html; path = ../../../../apps/dev/webextension/options.html; sourceTree = "<group>"; };
+		C6409E442643C73300BD996B /* tx.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = tx.html; path = ../../../../apps/dev/webextension/tx.html; sourceTree = "<group>"; };
+		C6409E452643C73300BD996B /* anchor.07603c1a0d4f5a9de03bc63d79701b33.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = anchor.07603c1a0d4f5a9de03bc63d79701b33.svg; path = ../../../../apps/dev/webextension/anchor.07603c1a0d4f5a9de03bc63d79701b33.svg; sourceTree = "<group>"; };
+		C6409E462643C73400BD996B /* options.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = options.js; path = ../../../../apps/dev/webextension/options.js; sourceTree = "<group>"; };
+		C6409E472643C73400BD996B /* dashboard.js.map */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; name = dashboard.js.map; path = ../../../../apps/dev/webextension/dashboard.js.map; sourceTree = "<group>"; };
+		C6409E482643C73400BD996B /* connect.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = connect.html; path = ../../../../apps/dev/webextension/connect.html; sourceTree = "<group>"; };
+		C6409E492643C73400BD996B /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = assets; path = ../../../../apps/dev/webextension/assets; sourceTree = "<group>"; };
+		C6409E4A2643C73400BD996B /* tx.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = tx.js; path = ../../../../apps/dev/webextension/tx.js; sourceTree = "<group>"; };
+		C6409E4B2643C73400BD996B /* options.js.map */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; name = options.js.map; path = ../../../../apps/dev/webextension/options.js.map; sourceTree = "<group>"; };
+		C6409E4C2643C73400BD996B /* wallet-cards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "wallet-cards"; path = "../../../../apps/dev/webextension/wallet-cards"; sourceTree = "<group>"; };
+		C6409E4D2643C73400BD996B /* popup.js.map */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; name = popup.js.map; path = ../../../../apps/dev/webextension/popup.js.map; sourceTree = "<group>"; };
+		C6409E4E2643C73400BD996B /* terra.a4001110e1561b2b74b0bb82b2d1d793.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = terra.a4001110e1561b2b74b0bb82b2d1d793.svg; path = ../../../../apps/dev/webextension/terra.a4001110e1561b2b74b0bb82b2d1d793.svg; sourceTree = "<group>"; };
+		C6409E4F2643C73400BD996B /* manifest.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = manifest.json; path = ../../../../apps/dev/webextension/manifest.json; sourceTree = "<group>"; };
+		C6409E502643C73400BD996B /* javascript,__webpack_public_path__ = __webpack_base_uri__ = htmlWebpackPluginPublicPath;.1feff74faaf0efc6a044355c92cd15d9.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; name = "javascript,__webpack_public_path__ = __webpack_base_uri__ = htmlWebpackPluginPublicPath;.1feff74faaf0efc6a044355c92cd15d9.bin"; path = "../../../../apps/dev/webextension/javascript,__webpack_public_path__ = __webpack_base_uri__ = htmlWebpackPluginPublicPath;.1feff74faaf0efc6a044355c92cd15d9.bin"; sourceTree = "<group>"; };
+		C6409E512643C73400BD996B /* background.js.map */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; name = background.js.map; path = ../../../../apps/dev/webextension/background.js.map; sourceTree = "<group>"; };
+		C6409E522643C73400BD996B /* Logo.378b6e808c79ab8303dcf59b2c7b4f88.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Logo.378b6e808c79ab8303dcf59b2c7b4f88.svg; path = ../../../../apps/dev/webextension/Logo.378b6e808c79ab8303dcf59b2c7b4f88.svg; sourceTree = "<group>"; };
 		C697B89526131E0B0063FC79 /* terra-connect.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "terra-connect.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C697B89826131E0B0063FC79 /* terra_connect.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = terra_connect.entitlements; sourceTree = "<group>"; };
 		C697B89926131E0B0063FC79 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -232,32 +239,36 @@
 		C697B8C726131E0D0063FC79 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				C681D3AB261C53BE0041FACA /* anchor.07603c1a0d4f5a9de03bc63d79701b33.svg */,
-				C681D3B9261C53BE0041FACA /* assets */,
-				C681D3AD261C53BE0041FACA /* background.js */,
-				C681D3B2261C53BE0041FACA /* background.js.map */,
-				C681D3B5261C53BE0041FACA /* content.js */,
-				C681D3BD261C53BE0041FACA /* content.js.map */,
-				C681D3A9261C53BE0041FACA /* dashboard.html */,
-				C681D3B3261C53BE0041FACA /* dashboard.js */,
-				C681D3AC261C53BE0041FACA /* dashboard.js.map */,
-				C681D3BF261C53BE0041FACA /* icons */,
-				C681D3B8261C53BE0041FACA /* Logo.2bf95ab2fe0f078ce06486b8f700f339.svg */,
-				C681D3AF261C53BE0041FACA /* Logo.378b6e808c79ab8303dcf59b2c7b4f88.svg */,
-				C681D3C2261C53BE0041FACA /* manifest.json */,
-				C681D3B0261C53BE0041FACA /* options.html */,
-				C681D3B7261C53BE0041FACA /* options.js */,
-				C681D3AE261C53BE0041FACA /* options.js.map */,
-				C681D3C0261C53BE0041FACA /* popup.html */,
-				C681D3B1261C53BE0041FACA /* popup.js */,
-				C681D3BB261C53BE0041FACA /* popup.js.map */,
-				C681D3BC261C53BE0041FACA /* terra.2e55ad542d4d0a0ac65cf5387745ab99.svg */,
-				C681D3BA261C53BE0041FACA /* terra.35419c1154ed69ff458a7654f1a98079.svg */,
-				C681D3C1261C53BE0041FACA /* terra.a4001110e1561b2b74b0bb82b2d1d793.svg */,
-				C681D3B4261C53BE0041FACA /* tx.html */,
-				C681D3BE261C53BE0041FACA /* tx.js */,
-				C681D3B6261C53BE0041FACA /* tx.js.map */,
-				C681D3AA261C53BE0041FACA /* wallet-cards */,
+				C6409E452643C73300BD996B /* anchor.07603c1a0d4f5a9de03bc63d79701b33.svg */,
+				C6409E492643C73400BD996B /* assets */,
+				C6409E3D2643C73300BD996B /* background.js */,
+				C6409E512643C73400BD996B /* background.js.map */,
+				C6409E482643C73400BD996B /* connect.html */,
+				C6409E3A2643C73300BD996B /* connect.js */,
+				C6409E422643C73300BD996B /* connect.js.map */,
+				C6409E402643C73300BD996B /* content.js */,
+				C6409E412643C73300BD996B /* content.js.map */,
+				C6409E3F2643C73300BD996B /* dashboard.html */,
+				C6409E3C2643C73300BD996B /* dashboard.js */,
+				C6409E472643C73400BD996B /* dashboard.js.map */,
+				C6409E3E2643C73300BD996B /* icons */,
+				C6409E502643C73400BD996B /* javascript,__webpack_public_path__ = __webpack_base_uri__ = htmlWebpackPluginPublicPath;.1feff74faaf0efc6a044355c92cd15d9.bin */,
+				C6409E362643C73300BD996B /* Logo.2bf95ab2fe0f078ce06486b8f700f339.svg */,
+				C6409E522643C73400BD996B /* Logo.378b6e808c79ab8303dcf59b2c7b4f88.svg */,
+				C6409E4F2643C73400BD996B /* manifest.json */,
+				C6409E432643C73300BD996B /* options.html */,
+				C6409E462643C73400BD996B /* options.js */,
+				C6409E4B2643C73400BD996B /* options.js.map */,
+				C6409E3B2643C73300BD996B /* popup.html */,
+				C6409E392643C73300BD996B /* popup.js */,
+				C6409E4D2643C73400BD996B /* popup.js.map */,
+				C6409E352643C73300BD996B /* terra.2e55ad542d4d0a0ac65cf5387745ab99.svg */,
+				C6409E372643C73300BD996B /* terra.35419c1154ed69ff458a7654f1a98079.svg */,
+				C6409E4E2643C73400BD996B /* terra.a4001110e1561b2b74b0bb82b2d1d793.svg */,
+				C6409E442643C73300BD996B /* tx.html */,
+				C6409E4A2643C73400BD996B /* tx.js */,
+				C6409E382643C73300BD996B /* tx.js.map */,
+				C6409E4C2643C73400BD996B /* wallet-cards */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -411,26 +422,29 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C681D3CF261C53BE0041FACA /* assets in Resources */,
-				C681D3C9261C53BE0041FACA /* popup.js in Resources */,
-				C681D3D5261C53BE0041FACA /* terra.a4001110e1561b2b74b0bb82b2d1d793.svg in Resources */,
-				C681D3C7261C53BE0041FACA /* Logo.378b6e808c79ab8303dcf59b2c7b4f88.svg in Resources */,
-				C681D3D1261C53BE0041FACA /* terra.2e55ad542d4d0a0ac65cf5387745ab99.svg in Resources */,
-				C681D3C6261C53BE0041FACA /* background.js in Resources */,
-				C681D3CD261C53BE0041FACA /* options.js in Resources */,
-				C681D3C5261C53BE0041FACA /* anchor.07603c1a0d4f5a9de03bc63d79701b33.svg in Resources */,
-				C681D3CC261C53BE0041FACA /* content.js in Resources */,
-				C681D3C3261C53BE0041FACA /* dashboard.html in Resources */,
-				C681D3C4261C53BE0041FACA /* wallet-cards in Resources */,
-				C681D3D0261C53BE0041FACA /* terra.35419c1154ed69ff458a7654f1a98079.svg in Resources */,
-				C681D3D6261C53BE0041FACA /* manifest.json in Resources */,
-				C681D3CB261C53BE0041FACA /* tx.html in Resources */,
-				C681D3D2261C53BE0041FACA /* tx.js in Resources */,
-				C681D3D4261C53BE0041FACA /* popup.html in Resources */,
-				C681D3C8261C53BE0041FACA /* options.html in Resources */,
-				C681D3CA261C53BE0041FACA /* dashboard.js in Resources */,
-				C681D3CE261C53BE0041FACA /* Logo.2bf95ab2fe0f078ce06486b8f700f339.svg in Resources */,
-				C681D3D3261C53BE0041FACA /* icons in Resources */,
+				C6409E642643C73400BD996B /* tx.js in Resources */,
+				C6409E672643C73400BD996B /* manifest.json in Resources */,
+				C6409E682643C73400BD996B /* javascript,__webpack_public_path__ = __webpack_base_uri__ = htmlWebpackPluginPublicPath;.1feff74faaf0efc6a044355c92cd15d9.bin in Resources */,
+				C6409E602643C73400BD996B /* anchor.07603c1a0d4f5a9de03bc63d79701b33.svg in Resources */,
+				C6409E5A2643C73400BD996B /* background.js in Resources */,
+				C6409E632643C73400BD996B /* assets in Resources */,
+				C6409E5D2643C73400BD996B /* content.js in Resources */,
+				C6409E532643C73400BD996B /* terra.2e55ad542d4d0a0ac65cf5387745ab99.svg in Resources */,
+				C6409E612643C73400BD996B /* options.js in Resources */,
+				C6409E592643C73400BD996B /* dashboard.js in Resources */,
+				C6409E5B2643C73400BD996B /* icons in Resources */,
+				C6409E582643C73400BD996B /* popup.html in Resources */,
+				C6409E542643C73400BD996B /* Logo.2bf95ab2fe0f078ce06486b8f700f339.svg in Resources */,
+				C6409E692643C73400BD996B /* Logo.378b6e808c79ab8303dcf59b2c7b4f88.svg in Resources */,
+				C6409E622643C73400BD996B /* connect.html in Resources */,
+				C6409E652643C73400BD996B /* wallet-cards in Resources */,
+				C6409E552643C73400BD996B /* terra.35419c1154ed69ff458a7654f1a98079.svg in Resources */,
+				C6409E5C2643C73400BD996B /* dashboard.html in Resources */,
+				C6409E662643C73400BD996B /* terra.a4001110e1561b2b74b0bb82b2d1d793.svg in Resources */,
+				C6409E562643C73400BD996B /* popup.js in Resources */,
+				C6409E572643C73400BD996B /* connect.js in Resources */,
+				C6409E5F2643C73400BD996B /* tx.html in Resources */,
+				C6409E5E2643C73400BD996B /* options.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
