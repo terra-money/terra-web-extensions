@@ -7,15 +7,13 @@ import {
 } from '@anchor-protocol/notation';
 import { aUST, UST } from '@anchor-protocol/types';
 import { useApolloClient } from '@apollo/client';
+import { streamPipe, StreamStatus, useStream } from '@terra-dev/stream-pipe';
 import {
-  Operator,
-  streamPipe,
-  StreamStatus,
-  useStream,
-} from '@terra-dev/stream-pipe';
-import {
-  WebExtensionTxResult,
+  WebExtensionCreateTxFailed,
+  WebExtensionTxFailed,
   WebExtensionTxStatus,
+  WebExtensionTxUnspecifiedError,
+  WebExtensionUserDenied,
 } from '@terra-dev/web-extension';
 import {
   useWalletSelect,
@@ -28,9 +26,10 @@ import {
   MsgExecuteContract,
   StdFee,
 } from '@terra-money/terra.js';
+import big from 'big.js';
 import { useConstants } from 'common/contexts/constants';
 import { useContractAddress } from 'common/contexts/contract';
-import { pollTxInfo, TxInfos } from 'common/queries/txInfos';
+import { pollTxInfo } from 'common/queries/txInfos';
 import { useUserBalances } from 'common/queries/userBalances';
 import React, { useCallback, useMemo } from 'react';
 
@@ -64,28 +63,25 @@ export function TxExample() {
     () =>
       streamPipe(
         // execute transaction
-        // -> Observable(TxProgress | TxSucceed | TxFail | TxDenied)
+        // -> Observable(TxProgress | TxSucceed)
         post,
         // poll txInfo if txResult is succeed
-        // -> Observable(TxProgress | TxSucceed | TxFail | TxDenied | TxInfos)
-        ((txResult: WebExtensionTxResult) =>
+        // -> Observable(TxProgress | TxSucceed | TxInfos)
+        (txResult) =>
           txResult.status === WebExtensionTxStatus.SUCCEED
             ? pollTxInfo(client, txResult.payload.txhash)
-            : txResult) as Operator<
-          WebExtensionTxResult,
-          TxInfos | WebExtensionTxResult
-        >,
+            : txResult,
         // side effect (refetch user balances) if result is txInfos(=Array)
-        // -> Observable(TxProgress | TxSucceed | TxFail | TxDenied | TxInfos)
-        ((result) => {
+        // -> Observable(TxProgress | TxSucceed | TxInfos)
+        (result, firstParam) => {
+          // + and you can get the operation's first parameter (is parameter of the post) by operator's second parameter
+          console.log('First parameter was:', firstParam);
+
           if (Array.isArray(result)) {
             refetchUserBalances();
           }
           return result;
-        }) as Operator<
-          TxInfos | WebExtensionTxResult,
-          TxInfos | WebExtensionTxResult
-        >,
+        },
       ),
     [client, post, refetchUserBalances],
   );
@@ -174,6 +170,47 @@ export function TxExample() {
     selectedWallet,
   ]);
 
+  const makeError = useCallback(() => {
+    if (!states?.network || !selectedWallet) return;
+
+    const tx: CreateTxOptions = {
+      fee: new StdFee(
+        big(uUSD ?? 0)
+          .plus(10000000)
+          .toNumber(),
+        new Coins({
+          uusd: new Int(1000000).toString(),
+        }),
+      ),
+      gasAdjustment,
+      msgs: [
+        new MsgExecuteContract(
+          selectedWallet.terraAddress,
+          address.moneyMarket.market,
+          {
+            deposit_stable: {},
+          },
+          new Coins({
+            uusd: new Int(10 * 1000000).toString(),
+          }),
+        ),
+      ],
+    };
+
+    execTx({
+      terraAddress: selectedWallet.terraAddress,
+      network: states?.network,
+      tx,
+    });
+  }, [
+    states?.network,
+    selectedWallet,
+    uUSD,
+    gasAdjustment,
+    address.moneyMarket.market,
+    execTx,
+  ]);
+
   // ---------------------------------------------
   // presentation
   // ---------------------------------------------
@@ -217,7 +254,22 @@ export function TxExample() {
         <div>
           <h4>Tx Fail</h4>
           <button onClick={txResult.reset}>Exit Error</button>
-          <pre>{String(txResult.error)}</pre>
+          <p>
+            {txResult.error instanceof WebExtensionUserDenied
+              ? 'error is WebExtensionUserDenied'
+              : txResult.error instanceof WebExtensionCreateTxFailed
+              ? 'error is WebExtensionCreateTxFailed'
+              : txResult.error instanceof WebExtensionTxFailed
+              ? 'error is WebExtensionTxFailed'
+              : txResult.error instanceof WebExtensionTxUnspecifiedError
+              ? 'error is WebExtensionTxUnspecifiedError'
+              : 'Unknown error'}
+          </p>
+          <pre>
+            {txResult.error instanceof Error
+              ? txResult.error.toString()
+              : String(txResult.error)}
+          </pre>
         </div>
       )}
 
@@ -225,6 +277,7 @@ export function TxExample() {
         <div>
           <button onClick={deposit}>Deposit 10 UST</button>
           <button onClick={withdraw}>Withdraw 10 aUST</button>
+          <button onClick={makeError}>Make Error</button>
         </div>
       )}
     </div>

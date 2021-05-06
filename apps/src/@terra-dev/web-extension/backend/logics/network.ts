@@ -1,6 +1,6 @@
-import { readNetworkStorage } from '@terra-dev/web-extension/backend/network-storage';
-import { WebExtensionNetworkInfo } from '@terra-dev/web-extension/models';
 import { useEffect, useMemo, useState } from 'react';
+import { WebExtensionNetworkInfo } from '../../models';
+import { readNetworkStorage } from '../network-storage';
 
 export enum NetworkNameInvalid {
   SAME_NAME_EXISTS = 'SAME_NAME_EXISTS',

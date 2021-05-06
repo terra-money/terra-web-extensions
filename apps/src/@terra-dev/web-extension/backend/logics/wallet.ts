@@ -1,7 +1,7 @@
 import { EncryptedWallet } from '@terra-dev/wallet';
-import { readWalletStorage } from '@terra-dev/web-extension/backend/index';
 import { validateMnemonic } from '@terra-money/key-utils';
 import { useEffect, useMemo, useState } from 'react';
+import { readWalletStorage } from '../wallet-storage';
 
 export enum WalletNameInvalid {
   SAME_NAME_EXISTS = 'SAME_NAME_EXISTS',

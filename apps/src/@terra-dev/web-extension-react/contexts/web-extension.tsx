@@ -8,7 +8,8 @@ import {
   WebExtensionStatusNoAvailable,
   WebExtensionStatusReady,
   WebExtensionStatusType,
-  WebExtensionTxResult,
+  WebExtensionTxProgress,
+  WebExtensionTxSucceed,
 } from '@terra-dev/web-extension';
 import React, {
   Consumer,
@@ -34,7 +35,9 @@ export interface WebExtensionState {
   states: WebExtensionStates | null;
   refetchStates: () => void;
   requestApproval: (() => void) | null;
-  post: (params: PostParams) => Observable<WebExtensionTxResult>;
+  post: (
+    params: PostParams,
+  ) => Observable<WebExtensionTxSucceed | WebExtensionTxProgress>;
 }
 
 // @ts-ignore

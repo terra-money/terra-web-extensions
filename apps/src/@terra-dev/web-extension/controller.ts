@@ -1,5 +1,6 @@
 import { getParser } from 'bowser';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { createTxErrorFromJson, WebExtensionUserDenied } from './errors';
 import {
   ExecuteExtensionTx,
   FromContentScriptToWebMessage,
@@ -14,8 +15,9 @@ import {
   WebExtensionStates,
   WebExtensionStatus,
   WebExtensionStatusType,
-  WebExtensionTxResult,
+  WebExtensionTxProgress,
   WebExtensionTxStatus,
+  WebExtensionTxSucceed,
 } from './models';
 
 export function canRequestApproval(status: WebExtensionStatus): boolean {
@@ -162,75 +164,98 @@ export class WebExtensionController {
    *
    * @example
    * client.post({ terraAddress, network, tx: CreateTxOptions })
-   *       .subscribe((result: TxResult) => {
-   *          switch (result.status) {
-   *            case TxStatus.PROGRESS:
-   *              console.log('in progress', result.payload)
-   *              break;
-   *            case TxStatus.SUCCEED:
-   *              console.log('succeed', result.payload)
-   *              break;
-   *            case TxStatus.FAIL:
-   *              console.log('fail', result.error)
-   *              break;
-   *            case TxStatus.DENIED:
-   *              console.log('user denied');
-   *              break;
+   *       .subscribe({
+   *          next: (result: WebExtensionTxProgress | WebExtensionTxSucceed) => {
+   *            switch (result.status) {
+   *              case WebExtensionTxStatus.PROGRESS:
+   *                console.log('in progress', result.payload)
+   *                break;
+   *              case WebExtensionTxStatus.SUCCEED:
+   *                console.log('succeed', result.payload)
+   *                break;
+   *            }
+   *          },
+   *          error: (error) => {
+   *            if (error instanceof WebExtensionUserDenied) {
+   *              console.log('user denied')
+   *            } else if (error instanceof WebExtensionCreateTxFailed) {
+   *              console.log('create tx failed', error.message)
+   *            } else if (error instanceof WebExtensionTxFailed) {
+   *              console.log('tx failed', error.txhash, error.message, error.raw_message)
+   *            } else {
+   *              console.log('unspecified error', 'message' in error ? error.message : String(error))
+   *            }
    *          }
    *       })
    *
    * @description The stream will be
-   * TxProgress -> [...TxProgress] -> TxSucceed | TxFail | TxDenied
+   * TxProgress -> [...TxProgress] -> TxSucceed
    *
-   * - User Denied : TxProgress -> [...TxProgress] -> TxDenied
-   * - Tx is Failed : TxProgress -> [...TxProgress] -> TxFail
    * - Tx is Succeed : TxProgress -> [...TxProgress] -> TxSucceed
    */
   post = ({ terraAddress, network, tx }: PostParams) => {
-    return new Observable<WebExtensionTxResult>((subscriber) => {
-      subscriber.next({
-        status: WebExtensionTxStatus.PROGRESS,
-      });
+    return new Observable<WebExtensionTxProgress | WebExtensionTxSucceed>(
+      (subscriber) => {
+        subscriber.next({
+          status: WebExtensionTxStatus.PROGRESS,
+        });
 
-      const id = Date.now();
+        const id = Date.now();
 
-      const msg: ExecuteExtensionTx = {
-        type: FromWebToContentScriptMessage.EXECUTE_TX,
-        id,
-        terraAddress,
-        network,
-        payload: serializeTx(tx),
-      };
+        const msg: ExecuteExtensionTx = {
+          type: FromWebToContentScriptMessage.EXECUTE_TX,
+          id,
+          terraAddress,
+          network,
+          payload: serializeTx(tx),
+        };
 
-      this.hostWindow.postMessage(msg, '*');
+        this.hostWindow.postMessage(msg, '*');
 
-      const callback = (event: MessageEvent) => {
-        if (
-          !isWebExtensionMessage(event.data) ||
-          event.data.type !== FromContentScriptToWebMessage.TX_RESPONSE ||
-          event.data.id !== id
-        ) {
-          return;
-        }
+        const callback = (event: MessageEvent) => {
+          if (
+            !isWebExtensionMessage(event.data) ||
+            event.data.type !== FromContentScriptToWebMessage.TX_RESPONSE ||
+            event.data.id !== id
+          ) {
+            return;
+          }
 
-        subscriber.next(event.data.payload);
+          if (event.data.payload.status === WebExtensionTxStatus.PROGRESS) {
+            subscriber.next(event.data.payload);
+          } else if (
+            event.data.payload.status === WebExtensionTxStatus.DENIED ||
+            event.data.payload.status === WebExtensionTxStatus.FAIL ||
+            event.data.payload.status === WebExtensionTxStatus.SUCCEED
+          ) {
+            switch (event.data.payload.status) {
+              case WebExtensionTxStatus.DENIED:
+                subscriber.error(new WebExtensionUserDenied());
+                break;
+              case WebExtensionTxStatus.FAIL:
+                subscriber.error(
+                  event.data.payload.error instanceof Error
+                    ? event.data.payload.error
+                    : createTxErrorFromJson(event.data.payload.error),
+                );
+                break;
+              case WebExtensionTxStatus.SUCCEED:
+                subscriber.next(event.data.payload);
+                subscriber.complete();
+                break;
+            }
 
-        if (
-          event.data.payload.status === WebExtensionTxStatus.SUCCEED ||
-          event.data.payload.status === WebExtensionTxStatus.FAIL ||
-          event.data.payload.status === WebExtensionTxStatus.DENIED
-        ) {
-          subscriber.complete();
+            this.hostWindow.removeEventListener('message', callback);
+          }
+        };
+
+        this.hostWindow.addEventListener('message', callback);
+
+        return () => {
           this.hostWindow.removeEventListener('message', callback);
-        }
-      };
-
-      this.hostWindow.addEventListener('message', callback);
-
-      return () => {
-        this.hostWindow.removeEventListener('message', callback);
-      };
-    });
+        };
+      },
+    );
   };
 
   /**

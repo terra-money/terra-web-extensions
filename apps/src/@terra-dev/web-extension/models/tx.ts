@@ -8,13 +8,18 @@ import {
   StdFee,
 } from '@terra-money/terra.js';
 import { Observable } from 'rxjs';
+import {
+  WebExtensionCreateTxFailed,
+  WebExtensionTxFailed,
+  WebExtensionTxUnspecifiedError,
+} from '../errors';
 import { WebExtensionNetworkInfo } from './network';
 
 export enum WebExtensionTxStatus {
-  PROGRESS = 'progress',
-  SUCCEED = 'succeed',
-  FAIL = 'fail',
-  DENIED = 'denied',
+  PROGRESS = 'PROGRESS',
+  SUCCEED = 'SUCCEED',
+  FAIL = 'FAIL',
+  DENIED = 'DENIED',
 }
 
 export interface WebExtensionTxProgress {
@@ -33,7 +38,10 @@ export interface WebExtensionTxSucceed {
 
 export interface WebExtensionTxFail {
   status: WebExtensionTxStatus.FAIL;
-  error: unknown;
+  error:
+    | WebExtensionCreateTxFailed
+    | WebExtensionTxFailed
+    | WebExtensionTxUnspecifiedError;
 }
 
 export interface WebExtensionTxDenied {
@@ -102,7 +110,13 @@ export function executeTx(
         if (isTxError(data)) {
           subscriber.next({
             status: WebExtensionTxStatus.FAIL,
-            error: new Error(data.raw_log),
+            error: !!data.txhash
+              ? new WebExtensionTxFailed(
+                  data.txhash,
+                  data.raw_log,
+                  data.raw_log,
+                )
+              : new WebExtensionCreateTxFailed(data.raw_log),
           });
           subscriber.complete();
         } else {
@@ -120,7 +134,9 @@ export function executeTx(
       .catch((error) => {
         subscriber.next({
           status: WebExtensionTxStatus.FAIL,
-          error,
+          error: new WebExtensionTxUnspecifiedError(
+            'message' in error ? error.message : String(error),
+          ),
         });
         subscriber.complete();
       });

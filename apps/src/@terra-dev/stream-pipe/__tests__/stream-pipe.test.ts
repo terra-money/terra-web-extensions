@@ -19,16 +19,35 @@ describe('stream-pipe', () => {
 
     const recorder = new StreamRecorder();
 
-    fn(10).subscribe(
-      recorder.record,
-      () => {},
-      () => {
+    fn(10).subscribe({
+      next: recorder.record,
+      complete: () => {
         expect(JSON.stringify(recorder.records)).toBe(
           JSON.stringify(['10', 10, '10']),
         );
         done();
       },
+    });
+  });
+
+  test('get first parameter', (done) => {
+    const fn = streamPipe(
+      (n: number) => of(n.toString()),
+      (s: string, p1: number) => Promise.resolve(parseInt(s) + p1),
+      (n: number, p1: number) => (n + p1).toString(),
     );
+
+    const recorder = new StreamRecorder();
+
+    fn(10).subscribe({
+      next: recorder.record,
+      complete: () => {
+        expect(JSON.stringify(recorder.records)).toBe(
+          JSON.stringify(['10', 20, '30']),
+        );
+        done();
+      },
+    });
   });
 
   test('async test', (done) => {
@@ -65,16 +84,15 @@ describe('stream-pipe', () => {
 
     const recorder = new StreamRecorder();
 
-    fn(10).subscribe(
-      recorder.record,
-      () => {},
-      () => {
+    fn(10).subscribe({
+      next: recorder.record,
+      complete: () => {
         expect(JSON.stringify(recorder.records)).toBe(
           JSON.stringify([0, '10', 20, '30', 40, '50', '50?']),
         );
         done();
       },
-    );
+    });
   });
 
   test('error test', (done) => {
@@ -111,19 +129,19 @@ describe('stream-pipe', () => {
 
     const recorder = new StreamRecorder();
 
-    fn(10).subscribe(
-      recorder.record,
-      (error) => {
+    fn(10).subscribe({
+      next: recorder.record,
+      error: (error) => {
         expect(JSON.stringify(recorder.records)).toBe(
           JSON.stringify([0, '10', 20, '30', 40, '50']),
         );
         expect(error.message).toBe('error!');
         done();
       },
-      () => {
+      complete: () => {
         throw new Error('never come here!');
       },
-    );
+    });
   });
 
   test('error test with throw', (done) => {
@@ -158,18 +176,18 @@ describe('stream-pipe', () => {
 
     const recorder = new StreamRecorder();
 
-    fn(10).subscribe(
-      recorder.record,
-      (error) => {
+    fn(10).subscribe({
+      next: recorder.record,
+      error: (error) => {
         expect(JSON.stringify(recorder.records)).toBe(
           JSON.stringify([0, '10', 20, '30', 40, '50']),
         );
         expect(error.message).toBe('error!');
         done();
       },
-      () => {
+      complete: () => {
         throw new Error('never come here!');
       },
-    );
+    });
   });
 });
