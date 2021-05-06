@@ -68,7 +68,7 @@ function startTxWithIframeModal(
     window.document.querySelector('body')?.appendChild(modalContainer);
 
     // ---------------------------------------------
-    // connect port (content_script -> background)
+    // connect port (background -> content_script)
     // ---------------------------------------------
     const onMessage = (
       msg:

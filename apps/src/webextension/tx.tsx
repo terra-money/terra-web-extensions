@@ -4,6 +4,7 @@ import {
   Schedule,
   WifiTethering,
 } from '@material-ui/icons';
+import { FormSection } from '@terra-dev/station-ui/components/FormSection';
 import { LinedList } from '@terra-dev/station-ui/components/LinedList';
 import { decryptWallet, EncryptedWallet, Wallet } from '@terra-dev/wallet';
 import { WalletCard } from '@terra-dev/wallet-card';
@@ -15,7 +16,11 @@ import {
   WebExtensionTxFail,
   WebExtensionTxStatus,
 } from '@terra-dev/web-extension';
-import { findWallet } from '@terra-dev/web-extension/backend';
+import {
+  approveHostnames,
+  findWallet,
+  readWalletStorage,
+} from '@terra-dev/web-extension/backend';
 import { GlobalStyle } from 'common/components/GlobalStyle';
 import React, {
   ChangeEvent,
@@ -93,20 +98,12 @@ function AppBase({ className }: AppProps) {
     EncryptedWallet | undefined
   >(undefined);
 
-  // ---------------------------------------------
-  // effects
-  // ---------------------------------------------
-  // initialize
-  useEffect(() => {
-    if (!txInfo) return;
-
-    findWallet(txInfo.terraAddress).then((nextEncryptedWallet) =>
-      setEncryptedWallet(nextEncryptedWallet),
-    );
-  }, [txInfo]);
+  const [needApproveHostname, setNeedApproveHostname] = useState<boolean>(
+    false,
+  );
 
   // ---------------------------------------------
-  // callback
+  // callbacks
   // ---------------------------------------------
   const proceed = useCallback(
     async (param: {
@@ -125,9 +122,12 @@ function AppBase({ className }: AppProps) {
         name: txPortPrefix + param.id,
       });
 
-      executeTx(wallet, param.network, param.serializedTx).subscribe(
-        (result) => {
-          if (result.status === WebExtensionTxStatus.FAIL) {
+      executeTx(wallet, param.network, param.serializedTx).subscribe({
+        next: (result) => {
+          if (
+            result.status === WebExtensionTxStatus.FAIL &&
+            'toJSON' in result.error
+          ) {
             port.postMessage({
               ...result,
               error: result.error.toJSON(),
@@ -136,16 +136,16 @@ function AppBase({ className }: AppProps) {
             port.postMessage(result);
           }
         },
-        (error) => {
+        error: (error) => {
           port.postMessage({
             status: WebExtensionTxStatus.FAIL,
             error,
           } as WebExtensionTxFail);
         },
-        () => {
+        complete: () => {
           port.disconnect();
         },
-      );
+      });
     },
     [],
   );
@@ -162,11 +162,64 @@ function AppBase({ className }: AppProps) {
     port.disconnect();
   }, []);
 
+  const approveHostname = useCallback(async () => {
+    await approveHostnames(txInfo.hostname);
+
+    setNeedApproveHostname(false);
+  }, [txInfo.hostname]);
+
+  // ---------------------------------------------
+  // effects
+  // ---------------------------------------------
+  // initialize
+  useEffect(() => {
+    if (!txInfo) return;
+
+    findWallet(txInfo.terraAddress).then((nextEncryptedWallet) =>
+      setEncryptedWallet(nextEncryptedWallet),
+    );
+
+    readWalletStorage().then(({ approvedHostnames }) => {
+      if (
+        !approvedHostnames.some(
+          (itemHostname) => itemHostname === txInfo.hostname,
+        )
+      ) {
+        setNeedApproveHostname(true);
+      }
+    });
+  }, [txInfo]);
+
   // ---------------------------------------------
   // presentation
   // ---------------------------------------------
   if (!encryptedWallet) {
-    return <div className={className}></div>;
+    return (
+      <div className={className}>
+        Undefined the Wallet "{txInfo.terraAddress}"
+      </div>
+    );
+  }
+
+  if (needApproveHostname) {
+    return (
+      <FormSection className={className}>
+        <header>
+          <h1>Approve this site?</h1>
+        </header>
+
+        <p>{txInfo.hostname}</p>
+
+        <footer>
+          <Button variant="contained" color="secondary" onClick={deny}>
+            Deny
+          </Button>
+          <Button variant="contained" color="primary" onClick={approveHostname}>
+            Approve
+          </Button>
+        </footer>
+      </FormSection>
+    );
   }
 
   return (

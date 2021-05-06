@@ -35,6 +35,9 @@ export interface AppProps {
 }
 
 function AppBase({ className }: AppProps) {
+  // ---------------------------------------------
+  // read hash urls
+  // ---------------------------------------------
   const connectInfo = useMemo(() => {
     const queries = window.location.search;
 
@@ -53,8 +56,14 @@ function AppBase({ className }: AppProps) {
     };
   }, []);
 
+  // ---------------------------------------------
+  // states
+  // ---------------------------------------------
   const [walletCreatePages, setWalletCreatePages] = useState<number>(-1);
 
+  // ---------------------------------------------
+  // callbacks
+  // ---------------------------------------------
   const approve = useCallback(async () => {
     await approveHostnames(connectInfo.hostname);
 
@@ -87,6 +96,9 @@ function AppBase({ className }: AppProps) {
     }
   }, [approve]);
 
+  // ---------------------------------------------
+  // presentation
+  // ---------------------------------------------
   if (walletCreatePages === 0) {
     return (
       <FormSection>
