@@ -1,5 +1,7 @@
+import { MICRO } from '@anchor-protocol/notation';
 import { Button, createMuiTheme, TextField } from '@material-ui/core';
 import {
+  Money,
   MyLocationOutlined,
   Schedule,
   WifiTethering,
@@ -21,6 +23,7 @@ import {
   findWallet,
   readWalletStorage,
 } from '@terra-dev/web-extension/backend';
+import { StdFee } from '@terra-money/terra.js';
 import { GlobalStyle } from 'common/components/GlobalStyle';
 import React, {
   ChangeEvent,
@@ -84,10 +87,8 @@ function AppBase({ className }: AppProps) {
   }, []);
 
   const tx = useMemo(() => {
-    return txInfo?.serializedTx
-      ? deserializeTx(txInfo?.serializedTx)
-      : undefined;
-  }, [txInfo?.serializedTx]);
+    return deserializeTx(txInfo.serializedTx);
+  }, [txInfo.serializedTx]);
 
   // ---------------------------------------------
   // states
@@ -101,6 +102,8 @@ function AppBase({ className }: AppProps) {
   const [needApproveHostname, setNeedApproveHostname] = useState<boolean>(
     false,
   );
+
+  const [fee] = useState<StdFee | undefined>(() => tx.fee);
 
   // ---------------------------------------------
   // callbacks
@@ -193,6 +196,10 @@ function AppBase({ className }: AppProps) {
   // ---------------------------------------------
   // presentation
   // ---------------------------------------------
+  if (!txInfo) {
+    return null;
+  }
+
   if (!encryptedWallet) {
     return (
       <div className={className}>
@@ -266,6 +273,25 @@ function AppBase({ className }: AppProps) {
             <span>TIMESTAMP</span>
           </div>
           <span>{txInfo.timestamp.toLocaleString()}</span>
+        </li>
+        <li>
+          <div>
+            <i>
+              <Money />
+            </i>
+            <span>FEE</span>
+          </div>
+          <span>
+            {fee &&
+              fee.amount
+                .toArray()
+                .map(
+                  (coin) =>
+                    coin.amount.div(MICRO).toString() +
+                    coin.denom.substr(1).toUpperCase(),
+                )
+                .join(', ')}
+          </span>
         </li>
       </LinedList>
 
