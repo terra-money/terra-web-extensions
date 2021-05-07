@@ -95,9 +95,11 @@ function AppBase({ className }: AppProps) {
   // ---------------------------------------------
   const [password, setPassword] = useState<string>('');
 
+  // null - in progress checking
+  // undefined - there is no wallet
   const [encryptedWallet, setEncryptedWallet] = useState<
-    EncryptedWallet | undefined
-  >(undefined);
+    EncryptedWallet | undefined | null
+  >(null);
 
   const [needApproveHostname, setNeedApproveHostname] = useState<boolean>(
     false,
@@ -196,14 +198,30 @@ function AppBase({ className }: AppProps) {
   // ---------------------------------------------
   // presentation
   // ---------------------------------------------
-  if (!txInfo) {
+  if (encryptedWallet === null) {
     return null;
   }
 
-  if (!encryptedWallet) {
+  if (!txInfo) {
     return (
       <div className={className}>
-        Undefined the Wallet "{txInfo.terraAddress}"
+        <p>Can't find Tx</p>
+
+        <Button variant="contained" color="secondary" onClick={deny}>
+          Deny
+        </Button>
+      </div>
+    );
+  }
+
+  if (encryptedWallet === undefined) {
+    return (
+      <div className={className}>
+        <p>Undefined the Wallet "{txInfo.terraAddress}"</p>
+
+        <Button variant="contained" color="secondary" onClick={deny}>
+          Deny
+        </Button>
       </div>
     );
   }
