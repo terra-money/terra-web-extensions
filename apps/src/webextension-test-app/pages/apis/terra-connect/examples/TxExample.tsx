@@ -7,7 +7,8 @@ import {
 } from '@anchor-protocol/notation';
 import { aUST, UST } from '@anchor-protocol/types';
 import { useApolloClient } from '@apollo/client';
-import { streamPipe, StreamStatus, useStream } from '@terra-dev/stream-pipe';
+import { pipe } from '@rx-stream/pipe';
+import { StreamStatus, useStream } from '@rx-stream/react';
 import {
   WebExtensionCreateTxFailed,
   WebExtensionTxFailed,
@@ -61,7 +62,7 @@ export function TxExample() {
   // create composited stream
   const txStream = useMemo(
     () =>
-      streamPipe(
+      pipe(
         // execute transaction
         // -> Observable(TxProgress | TxSucceed)
         post,
@@ -73,10 +74,7 @@ export function TxExample() {
             : txResult,
         // side effect (refetch user balances) if result is txInfos(=Array)
         // -> Observable(TxProgress | TxSucceed | TxInfos)
-        (result, firstParam) => {
-          // + and you can get the operation's first parameter (is parameter of the post) by operator's second parameter
-          console.log('First parameter was:', firstParam);
-
+        (result) => {
           if (Array.isArray(result)) {
             refetchUserBalances();
           }
@@ -87,7 +85,7 @@ export function TxExample() {
   );
 
   // bind to react
-  const [execTx, txResult] = useStream(txStream);
+  const [fetchTx, txResult] = useStream(txStream);
 
   // ---------------------------------------------
   // Anchor transactions
@@ -117,7 +115,7 @@ export function TxExample() {
       ],
     };
 
-    execTx({
+    fetchTx({
       terraAddress: selectedWallet.terraAddress,
       network: states?.network,
       tx,
@@ -125,7 +123,7 @@ export function TxExample() {
   }, [
     address.moneyMarket.market,
     states?.network,
-    execTx,
+    fetchTx,
     gasAdjustment,
     gasFee,
     selectedWallet,
@@ -155,7 +153,7 @@ export function TxExample() {
       ],
     };
 
-    execTx({
+    fetchTx({
       terraAddress: selectedWallet.terraAddress,
       network: states?.network,
       tx,
@@ -164,7 +162,7 @@ export function TxExample() {
     address.cw20.aUST,
     address.moneyMarket.market,
     states?.network,
-    execTx,
+    fetchTx,
     gasAdjustment,
     gasFee,
     selectedWallet,
@@ -197,7 +195,7 @@ export function TxExample() {
       ],
     };
 
-    execTx({
+    fetchTx({
       terraAddress: selectedWallet.terraAddress,
       network: states?.network,
       tx,
@@ -208,7 +206,7 @@ export function TxExample() {
     uUSD,
     gasAdjustment,
     address.moneyMarket.market,
-    execTx,
+    fetchTx,
   ]);
 
   // ---------------------------------------------
@@ -239,21 +237,26 @@ export function TxExample() {
       <h5>Anchor Depost / Withdraw</h5>
 
       {txResult.status === StreamStatus.IN_PROGRESS && (
-        <div>Tx In Progress...</div>
+        <div>
+          <h4>Tx In Progress...</h4>
+          {txResult.value && (
+            <pre>{JSON.stringify(txResult.value, null, 2)}</pre>
+          )}
+        </div>
       )}
 
       {txResult.status === StreamStatus.DONE && (
         <div>
           <h4>Tx Succeed</h4>
-          <button onClick={txResult.reset}>Exit Result</button>
-          <pre>{JSON.stringify(txResult.result, null, 2)}</pre>
+          <button onClick={txResult.clear}>Exit Result</button>
+          <pre>{JSON.stringify(txResult.value, null, 2)}</pre>
         </div>
       )}
 
       {txResult.status === StreamStatus.ERROR && (
         <div>
           <h4>Tx Fail</h4>
-          <button onClick={txResult.reset}>Exit Error</button>
+          <button onClick={txResult.clear}>Exit Error</button>
           <p>
             {txResult.error instanceof WebExtensionUserDenied
               ? 'error is WebExtensionUserDenied'

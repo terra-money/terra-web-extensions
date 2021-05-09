@@ -1,5 +1,5 @@
-import { createTimeline } from '@terra-dev/create-timeline';
-import { streamPipe } from '@terra-dev/stream-pipe';
+import { createTimeline } from '@rx-stream/animation';
+import { pipe } from '@rx-stream/pipe';
 import { easeQuadOut } from 'd3-ease';
 import React, { useEffect, useRef } from 'react';
 import { map } from 'rxjs/operators';
@@ -57,7 +57,7 @@ function WaveEffectBase({
     window.addEventListener('resize', resize);
     resize();
 
-    const subscription = streamPipe(
+    const subscription = pipe(
       () =>
         createTimeline(enterDelay, enterDuration, false).pipe(
           map((t) => ({ phase: 'enter', t })),
