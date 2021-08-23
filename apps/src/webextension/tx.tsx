@@ -7,8 +7,8 @@ import {
 } from '@material-ui/icons';
 import { FormSection } from '@packages/station-ui/components/FormSection';
 import { LinedList } from '@packages/station-ui/components/LinedList';
-import { decryptWallet, EncryptedWallet, Wallet } from '@terra-dev/wallet';
 import { WalletCard } from '@packages/wallet-card';
+import { decryptWallet, EncryptedWallet, Wallet } from '@terra-dev/wallet';
 import {
   deserializeTx,
   executeTx,
@@ -17,11 +17,6 @@ import {
   WebExtensionTxFail,
   WebExtensionTxStatus,
 } from '@terra-dev/web-extension';
-import {
-  approveHostnames,
-  findWallet,
-  readWalletStorage,
-} from '@terra-dev/web-extension/backend';
 import { StdFee } from '@terra-money/terra.js';
 import { GlobalStyle } from 'common/components/GlobalStyle';
 import React, {
@@ -35,6 +30,11 @@ import { render } from 'react-dom';
 import { IntlProvider } from 'react-intl';
 import styled, { DefaultTheme } from 'styled-components';
 import { browser } from 'webextension-polyfill-ts';
+import {
+  approveHostnames,
+  findWallet,
+  readWalletStorage,
+} from './backend/wallet-storage';
 import { ErrorBoundary } from './components/common/ErrorBoundary';
 import { TxDetail } from './components/tx/TxDetail';
 import { LocalesProvider, useIntlProps } from './contexts/locales';

@@ -1,10 +1,10 @@
 import { TextField } from '@material-ui/core';
 import { FormLayout } from '@packages/station-ui/components/FormLayout';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import {
   useValidateNetworkLcdURL,
   useValidateNetworkName,
-} from '@terra-dev/web-extension/backend';
-import React, { ChangeEvent, useEffect, useState } from 'react';
+} from 'webextension/backend/logics/network';
 import { defaultNetworks } from '../../env';
 
 export interface CreateNewNetworkResult {

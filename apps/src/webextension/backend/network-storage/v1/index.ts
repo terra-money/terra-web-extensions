@@ -1,7 +1,7 @@
 import { safariWebExtensionStorageChangeListener } from '@packages/safari-webextension-storage-change-listener';
+import { WebExtensionNetworkInfo } from '@terra-dev/web-extension';
 import { Observable, Subscription } from 'rxjs';
 import { browser, Storage } from 'webextension-polyfill-ts';
-import { WebExtensionNetworkInfo } from '../../../models';
 
 const storageKey = 'terra_network_storage_v1';
 

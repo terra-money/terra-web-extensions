@@ -1,9 +1,9 @@
+import React, { useCallback, useEffect, useState } from 'react';
+import styled from 'styled-components';
 import {
   disapproveHostname,
   observeWalletStorage,
-} from '@terra-dev/web-extension/backend';
-import React, { useCallback, useEffect, useState } from 'react';
-import styled from 'styled-components';
+} from 'webextension/backend/wallet-storage';
 
 export interface ApprovedHostnamesProps {
   className?: string;

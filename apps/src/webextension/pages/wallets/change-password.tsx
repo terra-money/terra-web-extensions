@@ -7,13 +7,10 @@ import {
   encryptWallet,
   Wallet,
 } from '@terra-dev/wallet';
-import {
-  findWallet,
-  updateWallet,
-  useValidateWalletPassword,
-} from '@terra-dev/web-extension/backend';
 import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
+import { useValidateWalletPassword } from 'webextension/backend/logics/wallet';
+import { findWallet, updateWallet } from 'webextension/backend/wallet-storage';
 
 export function WalletChangePassword({
   match,

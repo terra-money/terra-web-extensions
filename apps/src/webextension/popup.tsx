@@ -1,7 +1,6 @@
 import { createMuiTheme } from '@material-ui/core';
 import { yScroller } from '@packages/station-ui/styles/yScroller';
 import { WebExtensionNetworkInfo } from '@terra-dev/web-extension';
-import { observeNetworkStorage } from '@terra-dev/web-extension/backend';
 import { GlobalStyle } from 'common/components/GlobalStyle';
 import { Constants, ConstantsProvider } from 'common/contexts/constants';
 import { ContractProvider } from 'common/contexts/contract';
@@ -20,6 +19,7 @@ import {
   useLocation,
 } from 'react-router-dom';
 import styled, { DefaultTheme, keyframes } from 'styled-components';
+import { observeNetworkStorage } from './backend/network-storage';
 import { ErrorBoundary } from './components/common/ErrorBoundary';
 import { PopupHeader } from './components/popup/PopupHeader';
 import { LocalesProvider, useIntlProps } from './contexts/locales';

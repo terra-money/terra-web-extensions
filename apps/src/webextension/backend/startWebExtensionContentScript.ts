@@ -1,22 +1,22 @@
 import { WalletInfo } from '@terra-dev/wallet';
-//@ts-ignore
-import LocalMessageDuplexStream from 'post-message-stream';
-import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import {
-  FromContentScriptToWebMessage,
-  FromWebToContentScriptMessage,
-  isWebExtensionMessage,
-  WebExtensionStatesUpdated,
-  WebExtensionTxResponse,
-} from '../internal/webapp-contentScripts-messages';
 import {
   SerializedCreateTxOptions,
   WebExtensionNetworkInfo,
   WebExtensionStates,
   WebExtensionTxResult,
   WebExtensionTxStatus,
-} from '../models';
+} from '@terra-dev/web-extension';
+import {
+  FromContentScriptToWebMessage,
+  FromWebToContentScriptMessage,
+  isWebExtensionMessage,
+  WebExtensionStatesUpdated,
+  WebExtensionTxResponse,
+} from '@terra-dev/web-extension/internal/webapp-contentScripts-messages';
+//@ts-ignore
+import LocalMessageDuplexStream from 'post-message-stream';
+import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { observeNetworkStorage } from './network-storage';
 import { observeWalletStorage } from './wallet-storage';
 

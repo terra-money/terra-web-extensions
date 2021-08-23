@@ -7,9 +7,9 @@ import {
   restoreMnemonicKey,
   Wallet,
 } from '@terra-dev/wallet';
-import { addWallet } from '@terra-dev/web-extension/backend';
 import React, { useCallback, useState } from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
+import { addWallet } from 'webextension/backend/wallet-storage';
 import {
   RecoverMnemonicForm,
   RecoverMnemonicResult,

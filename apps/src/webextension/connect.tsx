@@ -7,16 +7,16 @@ import {
   restoreMnemonicKey,
   Wallet,
 } from '@terra-dev/wallet';
-import {
-  addWallet,
-  approveHostnames,
-  readWalletStorage,
-} from '@terra-dev/web-extension/backend';
 import React, { useCallback, useMemo, useState } from 'react';
 import { render } from 'react-dom';
 import { IntlProvider } from 'react-intl';
 import styled, { DefaultTheme } from 'styled-components';
 import { browser } from 'webextension-polyfill-ts';
+import {
+  addWallet,
+  approveHostnames,
+  readWalletStorage,
+} from './backend/wallet-storage';
 import { ErrorBoundary } from './components/common/ErrorBoundary';
 import {
   CreateNewWalletForm,

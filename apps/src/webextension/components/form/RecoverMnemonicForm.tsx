@@ -1,12 +1,12 @@
 import { TextField } from '@material-ui/core';
 import { FormLayout } from '@packages/station-ui/components/FormLayout';
 import { WalletCardDesignSelector } from '@packages/wallet-card/components/WalletCardDesignSelector';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import {
   useValidateMnemonicKey,
   useValidateWalletName,
   useValidateWalletPassword,
-} from '@terra-dev/web-extension/backend';
-import React, { ChangeEvent, useEffect, useState } from 'react';
+} from 'webextension/backend/logics/wallet';
 import { cardDesigns } from '../../env';
 
 export interface RecoverMnemonicResult {

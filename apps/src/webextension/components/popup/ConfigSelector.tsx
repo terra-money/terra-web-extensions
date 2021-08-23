@@ -12,15 +12,15 @@ import {
 } from '@material-ui/icons';
 import { LinedList } from '@packages/station-ui/components/LinedList';
 import { WebExtensionNetworkInfo } from '@terra-dev/web-extension';
-import {
-  observeNetworkStorage,
-  removeNetwork,
-  selectNetwork,
-} from '@terra-dev/web-extension/backend';
 import React, { ComponentType, MouseEvent, useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
+import {
+  observeNetworkStorage,
+  removeNetwork,
+  selectNetwork,
+} from 'webextension/backend/network-storage';
 import { useLocales } from 'webextension/contexts/locales';
 import { defaultNetworks } from 'webextension/env';
 

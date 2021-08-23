@@ -6,17 +6,17 @@ import {
 } from '@material-ui/icons';
 import { LinedList } from '@packages/station-ui/components/LinedList';
 import { MiniButton } from '@packages/station-ui/components/MiniButton';
-import { EncryptedWallet } from '@terra-dev/wallet';
 import { WalletCard, WalletCardSelector } from '@packages/wallet-card';
-import {
-  focusWallet,
-  observeWalletStorage,
-  removeWallet,
-} from '@terra-dev/web-extension/backend';
+import { EncryptedWallet } from '@terra-dev/wallet';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
+import {
+  focusWallet,
+  observeWalletStorage,
+  removeWallet,
+} from 'webextension/backend/wallet-storage';
 
 function DashboardBase({ className }: { className?: string }) {
   const history = useHistory();

@@ -8,14 +8,14 @@ import {
   WebExtensionTxStatus,
   WebExtensionTxSucceed,
 } from '@terra-dev/web-extension';
-import {
-  ContentScriptOptions,
-  startWebExtensionContentScript,
-} from '@terra-dev/web-extension/backend';
 import { createElement } from 'react';
 import { render } from 'react-dom';
 import { Observable } from 'rxjs';
 import { browser } from 'webextension-polyfill-ts';
+import {
+  ContentScriptOptions,
+  startWebExtensionContentScript,
+} from './backend/startWebExtensionContentScript';
 import { IFrameModal } from './components/modal/IFrameModal';
 import { contentScriptPortPrefix, defaultNetworks } from './env';
 

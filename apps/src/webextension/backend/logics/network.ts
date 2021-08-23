@@ -1,5 +1,5 @@
+import { WebExtensionNetworkInfo } from '@terra-dev/web-extension';
 import { useEffect, useMemo, useState } from 'react';
-import { WebExtensionNetworkInfo } from '../../models';
 import { readNetworkStorage } from '../network-storage';
 
 export enum NetworkNameInvalid {
