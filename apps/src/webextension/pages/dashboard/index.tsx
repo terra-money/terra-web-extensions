@@ -1,12 +1,4 @@
 import {
-  AnimateNumber,
-  demicrofy,
-  formatANC,
-  formatAUST,
-  formatLuna,
-  formatUST,
-} from '@anchor-protocol/notation';
-import {
   AddCircleOutline,
   DeleteForever,
   SettingsBackupRestore,
@@ -21,8 +13,6 @@ import {
   observeWalletStorage,
   removeWallet,
 } from '@terra-dev/web-extension/backend';
-import big from 'big.js';
-import { useUserBalances } from 'common/queries/userBalances';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link, useHistory } from 'react-router-dom';
@@ -76,9 +66,9 @@ function DashboardBase({ className }: { className?: string }) {
     };
   }, []);
 
-  const {
-    data: { uUSD, uaUST, uLuna, ubLuna, uANC },
-  } = useUserBalances({ selectedWallet: encryptedWallets[selectedIndex] });
+  //const {
+  //  data: { uUSD, uaUST, uLuna, ubLuna, uANC },
+  //} = useUserBalances({ selectedWallet: encryptedWallets[selectedIndex] });
 
   return (
     <section className={className}>
@@ -127,96 +117,96 @@ function DashboardBase({ className }: { className?: string }) {
         iconMarginRight="0.6em"
         firstLetterUpperCase={false}
       >
-        {uLuna && big(uLuna).gt(0) && (
-          <li>
-            <div>
-              <i>
-                <img
-                  src="https://assets.terra.money/icon/60/Luna.png"
-                  alt="Luna"
-                />
-              </i>
-              <span>Luna</span>
-            </div>
-            <div>
-              <AnimateNumber format={formatLuna}>
-                {demicrofy(uLuna)}
-              </AnimateNumber>
-            </div>
-          </li>
-        )}
-        {uUSD && big(uUSD).gt(0) && (
-          <li>
-            <div>
-              <i>
-                <img
-                  src="https://assets.terra.money/icon/60/UST.png"
-                  alt="UST"
-                />
-              </i>
-              <span>UST</span>
-            </div>
-            <div>
-              <AnimateNumber format={formatUST}>
-                {demicrofy(uUSD)}
-              </AnimateNumber>
-            </div>
-          </li>
-        )}
-        {uANC && big(uANC).gt(0) && (
-          <li>
-            <div>
-              <i>
-                <img
-                  src="https://whitelist.anchorprotocol.com/logo/ANC.png"
-                  alt="ANC"
-                />
-              </i>
-              <span>ANC</span>
-            </div>
-            <div>
-              <AnimateNumber format={formatANC}>
-                {demicrofy(uANC)}
-              </AnimateNumber>
-            </div>
-          </li>
-        )}
-        {ubLuna && big(ubLuna).gt(0) && (
-          <li>
-            <div>
-              <i>
-                <img
-                  src="https://whitelist.anchorprotocol.com/logo/bLUNA.png"
-                  alt="bLUNA"
-                />
-              </i>
-              <span>bLUNA</span>
-            </div>
-            <div>
-              <AnimateNumber format={formatLuna}>
-                {demicrofy(ubLuna)}
-              </AnimateNumber>
-            </div>
-          </li>
-        )}
-        {uaUST && big(uaUST).gt(0) && (
-          <li>
-            <div>
-              <i>
-                <img
-                  src="https://whitelist.anchorprotocol.com/logo/aUST.png"
-                  alt="aUST"
-                />
-              </i>
-              <span>aUST</span>
-            </div>
-            <div>
-              <AnimateNumber format={formatAUST}>
-                {demicrofy(uaUST)}
-              </AnimateNumber>
-            </div>
-          </li>
-        )}
+        {/*{uLuna && big(uLuna).gt(0) && (*/}
+        {/*  <li>*/}
+        {/*    <div>*/}
+        {/*      <i>*/}
+        {/*        <img*/}
+        {/*          src="https://assets.terra.money/icon/60/Luna.png"*/}
+        {/*          alt="Luna"*/}
+        {/*        />*/}
+        {/*      </i>*/}
+        {/*      <span>Luna</span>*/}
+        {/*    </div>*/}
+        {/*    <div>*/}
+        {/*      <AnimateNumber format={formatLuna}>*/}
+        {/*        {demicrofy(uLuna)}*/}
+        {/*      </AnimateNumber>*/}
+        {/*    </div>*/}
+        {/*  </li>*/}
+        {/*)}*/}
+        {/*{uUSD && big(uUSD).gt(0) && (*/}
+        {/*  <li>*/}
+        {/*    <div>*/}
+        {/*      <i>*/}
+        {/*        <img*/}
+        {/*          src="https://assets.terra.money/icon/60/UST.png"*/}
+        {/*          alt="UST"*/}
+        {/*        />*/}
+        {/*      </i>*/}
+        {/*      <span>UST</span>*/}
+        {/*    </div>*/}
+        {/*    <div>*/}
+        {/*      <AnimateNumber format={formatUST}>*/}
+        {/*        {demicrofy(uUSD)}*/}
+        {/*      </AnimateNumber>*/}
+        {/*    </div>*/}
+        {/*  </li>*/}
+        {/*)}*/}
+        {/*{uANC && big(uANC).gt(0) && (*/}
+        {/*  <li>*/}
+        {/*    <div>*/}
+        {/*      <i>*/}
+        {/*        <img*/}
+        {/*          src="https://whitelist.anchorprotocol.com/logo/ANC.png"*/}
+        {/*          alt="ANC"*/}
+        {/*        />*/}
+        {/*      </i>*/}
+        {/*      <span>ANC</span>*/}
+        {/*    </div>*/}
+        {/*    <div>*/}
+        {/*      <AnimateNumber format={formatANC}>*/}
+        {/*        {demicrofy(uANC)}*/}
+        {/*      </AnimateNumber>*/}
+        {/*    </div>*/}
+        {/*  </li>*/}
+        {/*)}*/}
+        {/*{ubLuna && big(ubLuna).gt(0) && (*/}
+        {/*  <li>*/}
+        {/*    <div>*/}
+        {/*      <i>*/}
+        {/*        <img*/}
+        {/*          src="https://whitelist.anchorprotocol.com/logo/bLUNA.png"*/}
+        {/*          alt="bLUNA"*/}
+        {/*        />*/}
+        {/*      </i>*/}
+        {/*      <span>bLUNA</span>*/}
+        {/*    </div>*/}
+        {/*    <div>*/}
+        {/*      <AnimateNumber format={formatLuna}>*/}
+        {/*        {demicrofy(ubLuna)}*/}
+        {/*      </AnimateNumber>*/}
+        {/*    </div>*/}
+        {/*  </li>*/}
+        {/*)}*/}
+        {/*{uaUST && big(uaUST).gt(0) && (*/}
+        {/*  <li>*/}
+        {/*    <div>*/}
+        {/*      <i>*/}
+        {/*        <img*/}
+        {/*          src="https://whitelist.anchorprotocol.com/logo/aUST.png"*/}
+        {/*          alt="aUST"*/}
+        {/*        />*/}
+        {/*      </i>*/}
+        {/*      <span>aUST</span>*/}
+        {/*    </div>*/}
+        {/*    <div>*/}
+        {/*      <AnimateNumber format={formatAUST}>*/}
+        {/*        {demicrofy(uaUST)}*/}
+        {/*      </AnimateNumber>*/}
+        {/*    </div>*/}
+        {/*  </li>*/}
+        {/*)}*/}
       </LinedList>
 
       <LinedList className="wallets-actions" iconMarginRight="0.6em">

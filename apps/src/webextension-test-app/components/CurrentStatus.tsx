@@ -3,7 +3,7 @@ import {
   WebExtensionStatusType,
 } from '@terra-dev/web-extension';
 import { useWebExtension } from '@terra-dev/web-extension-react';
-import { getParser } from 'bowser';
+import bowser from 'bowser';
 import React from 'react';
 
 export function CurrentStatus() {
@@ -28,7 +28,7 @@ function InstallMessage({ status }: { status: WebExtensionStatus }) {
     return null;
   }
 
-  const browser = getParser(navigator.userAgent);
+  const browser = bowser.getParser(navigator.userAgent);
 
   if (browser.getBrowserName(true) === 'safari') {
     return (

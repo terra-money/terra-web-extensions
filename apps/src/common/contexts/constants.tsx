@@ -1,4 +1,3 @@
-import type { Rate, uUST } from '@anchor-protocol/types';
 import React, {
   Consumer,
   Context,
@@ -12,9 +11,9 @@ export interface ConstantsProviderProps extends Constants {
 }
 
 export interface Constants {
-  gasFee: uUST<number>;
-  fixedGas: uUST<number>;
-  gasAdjustment: Rate<number>;
+  gasFee: number;
+  fixedGas: number;
+  gasAdjustment: number;
   blocksPerYear: number;
 }
 

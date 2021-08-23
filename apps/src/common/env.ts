@@ -1,6 +1,4 @@
-import type { AddressMap } from '@anchor-protocol/anchor.js';
-
-export const columbusContractAddresses: AddressMap = {
+export const columbusContractAddresses = {
   bLunaHub: 'terra1mtwph2juhj0rvjz7dy92gvl6xvukaxu8rfv8ts',
   bLunaToken: 'terra1kc87mu460fwkqte29rquh4hc20m54fxwtsx7gp',
   bLunaReward: 'terra17yap3mhph35pcwvhza38c2lkj7gzywzy05h7l0',
@@ -28,7 +26,7 @@ export const columbusContractAddresses: AddressMap = {
   investor_vesting: '',
 };
 
-export const tequilaContractAddresses: AddressMap = {
+export const tequilaContractAddresses = {
   bLunaHub: 'terra1fflas6wv4snv8lsda9knvq2w0cyt493r8puh2e',
   bLunaToken: 'terra1u0t35drzyy0mujj8rkdyzhe264uls4ug3wdp3x',
   bLunaReward: 'terra1ac24j6pdxh53czqyrkr6ygphdeftg7u3958tl2',

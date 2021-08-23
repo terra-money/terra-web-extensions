@@ -1,19 +1,16 @@
 import { CodeBlock } from '@handbook/code-block'
 
 import { StatusExample } from './examples/StatusExample'
-import StatusSource from '!!raw-loader!./examples/StatusExample'
+import StatusSource from './examples/StatusExample?raw'
 
 import { NetworkExample } from './examples/NetworkExample'
-import NetworkExampleSource from '!!raw-loader!./examples/NetworkExample'
+import NetworkExampleSource from './examples/NetworkExample?raw'
 
 import { WalletsExample } from './examples/WalletsExample'
-import WalletsExampleSource from '!!raw-loader!./examples/WalletsExample'
+import WalletsExampleSource from './examples/WalletsExample?raw'
 
 import { WalletSelectExample } from './examples/WalletSelectExample'
-import WalletSelectExampleSource from '!!raw-loader!./examples/WalletSelectExample'
-
-import { TxExample } from './examples/TxExample'
-import TxExampleSource from '!!raw-loader!./examples/TxExample'
+import WalletSelectExampleSource from './examples/WalletSelectExample?raw'
 
 # Status 받아오기
 
@@ -46,11 +43,3 @@ import TxExampleSource from '!!raw-loader!./examples/TxExample'
 ### Source
 
 <CodeBlock language="tsx">{WalletSelectExampleSource}</CodeBlock>
-
-# Transaction 보내기
-
-<TxExample />
-
-### Source
-
-<CodeBlock language="tsx">{TxExampleSource}</CodeBlock>

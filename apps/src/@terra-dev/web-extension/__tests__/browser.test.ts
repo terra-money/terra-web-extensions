@@ -1,4 +1,4 @@
-import { getParser } from 'bowser';
+import bowser from 'bowser';
 
 const chrome =
   'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_2_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.0 Safari/537.36';
@@ -17,7 +17,7 @@ const mobileSafari =
 describe('browser-detect', () => {
   test('should match browsers', () => {
     [chrome, edge, firefox, safari].forEach((userAgent) => {
-      const browser = getParser(userAgent);
+      const browser = bowser.getParser(userAgent);
       expect(
         browser.satisfies({
           desktop: {
@@ -31,7 +31,7 @@ describe('browser-detect', () => {
     });
 
     [mobileChrome, mobileSafari].forEach((userAgent) => {
-      const browser = getParser(userAgent);
+      const browser = bowser.getParser(userAgent);
       expect(
         browser.satisfies({
           desktop: {

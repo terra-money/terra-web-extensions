@@ -4,7 +4,6 @@ import { useWebExtension } from '@terra-dev/web-extension-react';
 import React, { ReactNode } from 'react';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
-import { UserBalances } from './UserBalances';
 import { WalletSelector } from './WalletSelector';
 
 export interface AppLayoutProps {
@@ -19,10 +18,6 @@ function AppLayoutBase({ className, children }: AppLayoutProps) {
     <div className={className}>
       <nav>
         <WalletSelector />
-
-        <LinedList iconMarginRight="1em" firstLetterUpperCase={false}>
-          <UserBalances />
-        </LinedList>
 
         <LinedList
           iconMarginRight="1em"

@@ -1,14 +1,3 @@
-import {
-  AddressProvider,
-  AddressProviderFromJson,
-} from '@anchor-protocol/anchor.js';
-import { Rate, uUST } from '@anchor-protocol/types';
-import {
-  ApolloClient,
-  ApolloProvider,
-  HttpLink,
-  InMemoryCache,
-} from '@apollo/client';
 import { createMuiTheme } from '@material-ui/core';
 import { yScroller } from '@terra-dev/station-ui/styles/yScroller';
 import { WebExtensionNetworkInfo } from '@terra-dev/web-extension';
@@ -68,40 +57,20 @@ function NetworkProviders({ children }: { children: ReactNode }) {
     return isMainnet ? columbusContractAddresses : tequilaContractAddresses;
   }, [isMainnet]);
 
-  const addressProvider = useMemo<AddressProvider>(() => {
-    return new AddressProviderFromJson(addressMap);
-  }, [addressMap]);
-
-  const apolloClient = useMemo<ApolloClient<any>>(() => {
-    const httpLink = new HttpLink({
-      uri: ({ operationName }) =>
-        `${
-          selectedNetwork.chainID.startsWith('tequila')
-            ? 'https://tequila-mantle.anchorprotocol.com'
-            : 'https://mantle.anchorprotocol.com'
-        }?${operationName}`,
-    });
-
-    return new ApolloClient({
-      cache: new InMemoryCache(),
-      link: httpLink,
-    });
-  }, [selectedNetwork.chainID]);
-
   const constants = useMemo<Constants>(
     () =>
       isMainnet
         ? {
-            gasFee: 1000000 as uUST<number>,
-            fixedGas: 500000 as uUST<number>,
+            gasFee: 1000000,
+            fixedGas: 500000,
             blocksPerYear: 4906443,
-            gasAdjustment: 1.6 as Rate<number>,
+            gasAdjustment: 1.6,
           }
         : {
-            gasFee: 6000000 as uUST<number>,
-            fixedGas: 3500000 as uUST<number>,
+            gasFee: 6000000,
+            fixedGas: 3500000,
             blocksPerYear: 4906443,
-            gasAdjustment: 1.4 as Rate<number>,
+            gasAdjustment: 1.4,
           },
     [isMainnet],
   );
@@ -123,12 +92,7 @@ function NetworkProviders({ children }: { children: ReactNode }) {
   // ---------------------------------------------
   return (
     <ConstantsProvider {...constants}>
-      <ContractProvider
-        addressProvider={addressProvider}
-        addressMap={addressMap}
-      >
-        <ApolloProvider client={apolloClient}>{children}</ApolloProvider>
-      </ContractProvider>
+      <ContractProvider address={addressMap}>{children}</ContractProvider>
     </ConstantsProvider>
   );
 }

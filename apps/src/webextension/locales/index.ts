@@ -1,5 +1,5 @@
-import _en from './en.yaml';
-import _ko from './ko.yaml';
+import _en from './en.json';
+import _ko from './ko.json';
 
 export type LanguageCode = 'en-US' | 'ko-KR';
 export const languageCodes: LanguageCode[] = ['en-US', 'ko-KR'];

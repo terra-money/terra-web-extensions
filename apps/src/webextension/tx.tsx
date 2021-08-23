@@ -1,4 +1,3 @@
-import { MICRO } from '@anchor-protocol/notation';
 import { Button, createMuiTheme, TextField } from '@material-ui/core';
 import {
   Money,
@@ -305,7 +304,7 @@ function AppBase({ className }: AppProps) {
                 .toArray()
                 .map(
                   (coin) =>
-                    coin.amount.div(MICRO).toString() +
+                    coin.amount.div(1000000).toString() +
                     coin.denom.substr(1).toUpperCase(),
                 )
                 .join(', ')}

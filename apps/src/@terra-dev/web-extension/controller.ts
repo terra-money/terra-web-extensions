@@ -1,4 +1,4 @@
-import { getParser } from 'bowser';
+import bowser from 'bowser';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { createTxErrorFromJson, WebExtensionUserDenied } from './errors';
 import {
@@ -45,7 +45,7 @@ export class WebExtensionController {
       return;
     }
 
-    const browser = getParser(navigator.userAgent);
+    const browser = bowser.getParser(navigator.userAgent);
 
     const isSupportBrowser = browser.satisfies({
       desktop: {

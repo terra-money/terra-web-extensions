@@ -3,16 +3,16 @@
   "version": "1.0.0",
   "scripts": {
     "webextension:dev": "multiplerun webextension-dev",
-    "webextension:dev-legacy": "multiplerun webextension-dev-legacy",
     "webextension:watch": "cross-env TS_NODE_PROJECT=tsconfig.script.json INSPECT_CHROME=9222 node -r ts-node/register -r tsconfig-paths/register scripts/webextension.watch.ts",
     "webextension:build": "cross-env TS_NODE_PROJECT=tsconfig.script.json INSPECT_CHROME=9222 node -r ts-node/register -r tsconfig-paths/register scripts/webextension.build.ts",
     "webextension-reloader:watch": "cross-env TS_NODE_PROJECT=tsconfig.script.json INSPECT_CHROME=9222 node -r ts-node/register -r tsconfig-paths/register scripts/webextension-reloader.watch.ts",
-    "webextension-test-app:start": "cross-env TS_NODE_PROJECT=tsconfig.script.json INSPECT_CHROME=9222 node -r ts-node/register -r tsconfig-paths/register scripts/webextension-test-app.start.ts",
-    "webextension-test-app:build": "cross-env TS_NODE_PROJECT=tsconfig.script.json INSPECT_CHROME=9222 node -r ts-node/register -r tsconfig-paths/register scripts/webextension-test-app.build.ts",
-    "webextension-legacy-anchor:start": "cross-env TS_NODE_PROJECT=tsconfig.script.json INSPECT_CHROME=9222 node -r ts-node/register -r tsconfig-paths/register scripts/webextension-legacy-anchor.start.ts",
+    "webextension-test-app:start": "vite --config webextension-test-app.vite.ts",
+    "webextension-test-app:build": "tsc --noEmit && vite build --config webextension-test-app.vite.ts",
+    "webextension:browser": "cross-env TS_NODE_PROJECT=tsconfig.script.json INSPECT_CHROME=9222 node -r ts-node/register -r tsconfig-paths/register scripts/webextension.browser.ts",
     "storybook:start": "start-storybook",
     "storybook:build": "build-storybook --output-dir out/storybook",
     "build": "yarn run webextension:build",
+    "start": "yarn run webextension:dev",
     "test": "jest --colors",
     "pack": "rocket-punch build --strict",
     "publish": "rocket-punch publish",
@@ -22,12 +22,17 @@
   "sourceType": "module",
   "multiplerun": {
     "webextension-dev": [
-      "yarn run webextension:watch",
-      "yarn run webextension-test-app:start"
-    ],
-    "webextension-dev-legacy": [
-      "yarn run webextension:watch",
-      "yarn run webextension-legacy-anchor:start"
+      [
+        "yarn run tsc --watch --noEmit",
+        "yarn run webextension-test-app:start"
+      ],
+      [
+        "yarn run webextension:watch",
+        {
+          "command": "yarn run webextension:browser",
+          "wait": 5000
+        }
+      ]
     ]
   },
   "lint-staged": {
@@ -36,9 +41,6 @@
     ]
   },
   "dependencies": {
-    "@anchor-protocol/anchor.js": "^1.0.1",
-    "@anchor-protocol/notation": "^0.10.0",
-    "@anchor-protocol/types": "^0.10.0",
     "@apollo/client": "^3.3.16",
     "@handbook/code-block": "^1.1.0",
     "@material-ui/core": "^4.11.3",
@@ -48,7 +50,7 @@
     "@rx-stream/react": "^0.4.0",
     "@terra-dev/use-map": "^0.10.0",
     "@terra-money/key-utils": "^1.0.2",
-    "@terra-money/terra.js": "^1.7.0",
+    "@terra-money/terra.js": "^1.8.0 || ^2.0.0",
     "big.js": "^6.1.1",
     "bowser": "^2.11.0",
     "crypto-browserify": "^3.12.0",
@@ -72,7 +74,11 @@
     "webextension-polyfill-ts": "^0.25.0"
   },
   "devDependencies": {
-    "@rocket-scripts/web": "^3.1.1",
+    "@mdx-js/mdx": "^1.6.22",
+    "@mdx-js/react": "^1.6.22",
+    "@rocket-scripts/react-preset": "^4.0.0-alpha.3",
+    "@rocket-scripts/read-package-alias": "^4.0.0-alpha.3",
+    "@rocket-scripts/webpack-fns": "^4.0.0-alpha.3",
     "@sentry/browser": "^6.3.5",
     "@sentry/tracing": "^6.3.5",
     "@storybook/addon-essentials": "^6.2.9",
@@ -84,6 +90,7 @@
     "@types/d3-ease": "^2.0.0",
     "@types/d3-interpolate": "^2.0.0",
     "@types/d3-timer": "^2.0.0",
+    "@types/fs-extra": "^9.0.12",
     "@types/jest": "^26.0.23",
     "@types/node": "^15.0.1",
     "@types/react": "^17.0.4",
@@ -92,7 +99,9 @@
     "@types/rimraf": "^3.0.0",
     "@types/styled-components": "^5.1.9",
     "@types/webpack-env": "^1.16.0",
+    "@vitejs/plugin-react-refresh": "^1.3.6",
     "cross-env": "^7.0.3",
+    "fs-extra": "^10.0.0",
     "jest": "^26.6.3",
     "lint-staged": "^10.5.4",
     "multiplerun": "^2.0.1",
@@ -100,11 +109,18 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "rimraf": "^3.0.2",
-    "rocket-punch": "^2.5.0",
+    "rocket-punch": "^3.0.1",
     "stream-browserify": "^3.0.0",
     "ts-node": "^9.1.1",
     "tsconfig-paths": "^3.9.0",
     "typescript": "^4.2.4",
-    "web-vitals": "^1.1.1"
+    "vite": "^2.5.0",
+    "vite-compatible-readable-stream": "^3.6.0",
+    "vite-plugin-mdx": "^3.5.6",
+    "vite-plugin-svgr": "^0.4.0",
+    "vite-tsconfig-paths": "^3.3.13",
+    "web-vitals": "^1.1.1",
+    "webpack": "^5.51.1",
+    "webpack-merge": "^5.8.0"
   }
 }

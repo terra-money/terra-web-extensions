@@ -1,4 +1,3 @@
-import { truncate } from '@anchor-protocol/notation';
 import { WalletCardContainerProps } from './WalletCardContainer';
 import React from 'react';
 
@@ -25,7 +24,7 @@ export function WalletCardTexts({
   ) : (
     <>
       <text x={60} y={220} fontSize={40} opacity={0.7}>
-        {truncate(terraAddress)}
+        {terraAddress.substr(0, 10)}
       </text>
       <text x={60} y={300} fontSize={60}>
         {name}

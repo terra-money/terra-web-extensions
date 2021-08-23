@@ -1,4 +1,4 @@
-const jestPreset = require('@rocket-scripts/web/jest-preset');
+const jestPreset = require('@rocket-scripts/react-preset/jestPreset');
 
 module.exports = {
   ...jestPreset,

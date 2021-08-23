@@ -1,33 +1,48 @@
-import { build } from '@rocket-scripts/web';
+import { BUILD_CONFIG } from '@rocket-scripts/webpack-fns';
 import { execSync } from 'child_process';
+import fs from 'fs-extra';
 import path from 'path';
 import rimraf from 'rimraf';
-import { webpackPolyfills } from './webpackPolyfills';
+import webpack from 'webpack';
+import { createConfig } from './webextension.config';
+import { cwd } from './webpackConfigs';
+
+process.env.NODE_ENV = 'production';
+
+const out = path.resolve(cwd, 'out/webextension');
+
+const compiler = webpack(createConfig(out, BUILD_CONFIG));
+
+const zip = path.resolve(
+  __dirname,
+  '../public/webextension-test-app/webextension.zip',
+);
 
 (async () => {
-  const zip = path.resolve(
-    __dirname,
-    '../public/webextension-test-app/webextension.zip',
-  );
-
-  rimraf.sync(path.resolve(__dirname, '../out/webextension'));
+  // clean
+  rimraf.sync(out);
   rimraf.sync(zip);
 
-  await build({
-    app: 'webextension',
-    staticFileDirectories: [
-      path.resolve(__dirname, '../public/common'),
-      path.resolve(__dirname, '../public/webextension'),
-    ],
-    isolatedScripts: {
-      content: 'content.ts',
-      background: 'background.ts',
-    },
-    webpackConfig: webpackPolyfills,
-  });
+  // copy static files
+  await fs.copy(path.resolve(cwd, 'public/common'), out);
+  await fs.copy(path.resolve(cwd, 'public/webextension'), out);
 
-  const result = execSync(`zip -r ${zip} ./webextension/`, {
-    cwd: path.resolve(__dirname, '../out/'),
+  // start webpack
+  compiler.run((err, stats) => {
+    if (err) {
+      throw err;
+    } else if (stats) {
+      console.log(
+        stats.toString({
+          colors: true,
+        }),
+      );
+
+      const result = execSync(`zip -r ${zip} ./webextension/`, {
+        cwd: path.resolve(__dirname, '../out/'),
+      });
+
+      console.log(result.toString());
+    }
   });
-  console.log(result.toString());
 })();
