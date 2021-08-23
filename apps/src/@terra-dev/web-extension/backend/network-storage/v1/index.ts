@@ -1,4 +1,4 @@
-import { safariWebExtensionStorageChangeListener } from '@terra-dev/safari-webextension-storage-change-listener';
+import { safariWebExtensionStorageChangeListener } from '@packages/safari-webextension-storage-change-listener';
 import { Observable, Subscription } from 'rxjs';
 import { browser, Storage } from 'webextension-polyfill-ts';
 import { WebExtensionNetworkInfo } from '../../../models';

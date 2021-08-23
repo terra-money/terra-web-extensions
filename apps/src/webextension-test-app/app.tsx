@@ -3,7 +3,7 @@ import {
   useWebExtension,
   WalletSelectProvider,
   WebExtensionProvider,
-} from '@terra-dev/web-extension-react';
+} from '@packages/web-extension-react';
 import { GlobalStyle } from 'common/components/GlobalStyle';
 import { Constants, ConstantsProvider } from 'common/contexts/constants';
 import { ContractProvider } from 'common/contexts/contract';

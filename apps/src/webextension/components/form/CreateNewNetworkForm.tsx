@@ -1,5 +1,5 @@
 import { TextField } from '@material-ui/core';
-import { FormLayout } from '@terra-dev/station-ui/components/FormLayout';
+import { FormLayout } from '@packages/station-ui/components/FormLayout';
 import {
   useValidateNetworkLcdURL,
   useValidateNetworkName,

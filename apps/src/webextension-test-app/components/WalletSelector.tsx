@@ -1,5 +1,5 @@
-import { WalletCard, WalletCardSelector } from '@terra-dev/wallet-card';
-import { useWalletSelect } from '@terra-dev/web-extension-react';
+import { WalletCard, WalletCardSelector } from '@packages/wallet-card';
+import { useWalletSelect } from '@packages/web-extension-react';
 import React, { useCallback, useMemo } from 'react';
 import styled from 'styled-components';
 

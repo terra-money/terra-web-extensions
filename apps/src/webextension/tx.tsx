@@ -5,10 +5,10 @@ import {
   Schedule,
   WifiTethering,
 } from '@material-ui/icons';
-import { FormSection } from '@terra-dev/station-ui/components/FormSection';
-import { LinedList } from '@terra-dev/station-ui/components/LinedList';
+import { FormSection } from '@packages/station-ui/components/FormSection';
+import { LinedList } from '@packages/station-ui/components/LinedList';
 import { decryptWallet, EncryptedWallet, Wallet } from '@terra-dev/wallet';
-import { WalletCard } from '@terra-dev/wallet-card';
+import { WalletCard } from '@packages/wallet-card';
 import {
   deserializeTx,
   executeTx,

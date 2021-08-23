@@ -1,4 +1,4 @@
-import { useWebExtension } from '@terra-dev/web-extension-react';
+import { useWebExtension } from '@packages/web-extension-react';
 import React from 'react';
 
 export function StatusExample() {

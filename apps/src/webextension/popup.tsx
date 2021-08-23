@@ -1,5 +1,5 @@
 import { createMuiTheme } from '@material-ui/core';
-import { yScroller } from '@terra-dev/station-ui/styles/yScroller';
+import { yScroller } from '@packages/station-ui/styles/yScroller';
 import { WebExtensionNetworkInfo } from '@terra-dev/web-extension';
 import { observeNetworkStorage } from '@terra-dev/web-extension/backend';
 import { GlobalStyle } from 'common/components/GlobalStyle';

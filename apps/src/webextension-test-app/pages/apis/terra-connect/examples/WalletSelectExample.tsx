@@ -1,4 +1,4 @@
-import { useWalletSelect } from '@terra-dev/web-extension-react';
+import { useWalletSelect } from '@packages/web-extension-react';
 import React from 'react';
 
 export function WalletSelectExample() {

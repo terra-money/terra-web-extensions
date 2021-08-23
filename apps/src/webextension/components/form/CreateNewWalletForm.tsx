@@ -1,7 +1,7 @@
 import { TextField } from '@material-ui/core';
-import { FormLayout } from '@terra-dev/station-ui/components/FormLayout';
+import { FormLayout } from '@packages/station-ui/components/FormLayout';
 import { createMnemonicKey } from '@terra-dev/wallet';
-import { WalletCardDesignSelector } from '@terra-dev/wallet-card/components/WalletCardDesignSelector';
+import { WalletCardDesignSelector } from '@packages/wallet-card/components/WalletCardDesignSelector';
 import {
   useValidateWalletName,
   useValidateWalletPassword,

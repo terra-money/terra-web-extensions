@@ -1,6 +1,6 @@
 import { Dashboard, Functions, WifiTethering } from '@material-ui/icons';
-import { LinedList } from '@terra-dev/station-ui/components/LinedList';
-import { useWebExtension } from '@terra-dev/web-extension-react';
+import { LinedList } from '@packages/station-ui/components/LinedList';
+import { useWebExtension } from '@packages/web-extension-react';
 import React, { ReactNode } from 'react';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';

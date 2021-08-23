@@ -10,7 +10,7 @@ import {
   Language,
   WifiTethering,
 } from '@material-ui/icons';
-import { LinedList } from '@terra-dev/station-ui/components/LinedList';
+import { LinedList } from '@packages/station-ui/components/LinedList';
 import { WebExtensionNetworkInfo } from '@terra-dev/web-extension';
 import {
   observeNetworkStorage,

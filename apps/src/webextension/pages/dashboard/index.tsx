@@ -4,10 +4,10 @@ import {
   SettingsBackupRestore,
   VpnKey,
 } from '@material-ui/icons';
-import { LinedList } from '@terra-dev/station-ui/components/LinedList';
-import { MiniButton } from '@terra-dev/station-ui/components/MiniButton';
+import { LinedList } from '@packages/station-ui/components/LinedList';
+import { MiniButton } from '@packages/station-ui/components/MiniButton';
 import { EncryptedWallet } from '@terra-dev/wallet';
-import { WalletCard, WalletCardSelector } from '@terra-dev/wallet-card';
+import { WalletCard, WalletCardSelector } from '@packages/wallet-card';
 import {
   focusWallet,
   observeWalletStorage,
