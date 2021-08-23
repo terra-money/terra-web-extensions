@@ -1,6 +1,6 @@
-import { WalletInfo } from '@terra-dev/wallet';
 import {
   SerializedCreateTxOptions,
+  WalletInfo,
   WebExtensionNetworkInfo,
   WebExtensionStates,
   WebExtensionTxResult,

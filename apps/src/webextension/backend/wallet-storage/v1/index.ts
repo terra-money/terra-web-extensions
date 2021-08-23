@@ -1,5 +1,5 @@
 import { safariWebExtensionStorageChangeListener } from '@packages/safari-webextension-storage-change-listener';
-import { EncryptedWallet } from '@terra-dev/wallet';
+import { EncryptedWallet } from 'webextension/backend/models/wallet';
 import { Observable, Subscription } from 'rxjs';
 import { browser, Storage } from 'webextension-polyfill-ts';
 

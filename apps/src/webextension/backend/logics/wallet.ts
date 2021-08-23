@@ -1,4 +1,4 @@
-import { EncryptedWallet } from '@terra-dev/wallet';
+import { EncryptedWallet } from 'webextension/backend/models/wallet';
 import { validateMnemonic } from '@terra-money/key-utils';
 import { useEffect, useMemo, useState } from 'react';
 import { readWalletStorage } from '../wallet-storage';

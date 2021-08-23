@@ -6,7 +6,7 @@ import {
   encryptWallet,
   restoreMnemonicKey,
   Wallet,
-} from '@terra-dev/wallet';
+} from 'webextension/backend/models/wallet';
 import React, { useCallback, useMemo, useState } from 'react';
 import { render } from 'react-dom';
 import { IntlProvider } from 'react-intl';

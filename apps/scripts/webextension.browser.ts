@@ -1,3 +1,4 @@
+import fs from 'fs';
 import path from 'path';
 import puppeteer from 'puppeteer';
 
@@ -10,6 +11,12 @@ import puppeteer from 'puppeteer';
     '../dev/webextension-reloader/',
   );
 
+  const extensionReloaderExists = fs.existsSync(extensionReloaderPath);
+
+  const extensionPaths = `${extensionPath}${
+    extensionReloaderExists ? ',' + extensionReloaderPath : ''
+  }`;
+
   const browser = await puppeteer.launch({
     userDataDir: path.join(__dirname, '../puppeteer-user-data'),
     headless: false,
@@ -18,8 +25,8 @@ import puppeteer from 'puppeteer';
     args: [
       '--start-fullscreen',
       `--remote-debugging-port=${remoteDebuggingPort}`,
-      `--load-extension=${extensionPath},${extensionReloaderPath}`,
-      `--disable-extensions-except=${extensionPath},${extensionReloaderPath}`,
+      `--load-extension=${extensionPaths}`,
+      `--disable-extensions-except=${extensionPaths}`,
     ],
     ignoreDefaultArgs: ['--disable-extensions'],
     devtools: true,

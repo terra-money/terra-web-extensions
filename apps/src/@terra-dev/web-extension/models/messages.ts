@@ -1,4 +1,4 @@
-import { WalletInfo } from '@terra-dev/wallet';
+import { WalletInfo } from '../models/wallet';
 
 export enum MessageType {
   NEW_WALLET = 'new_wallet',

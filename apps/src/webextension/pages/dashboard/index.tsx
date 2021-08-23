@@ -7,7 +7,7 @@ import {
 import { LinedList } from '@packages/station-ui/components/LinedList';
 import { MiniButton } from '@packages/station-ui/components/MiniButton';
 import { WalletCard, WalletCardSelector } from '@packages/wallet-card';
-import { EncryptedWallet } from '@terra-dev/wallet';
+import { EncryptedWallet } from 'webextension/backend/models/wallet';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link, useHistory } from 'react-router-dom';

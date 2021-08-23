@@ -8,10 +8,8 @@ import {
 import { FormSection } from '@packages/station-ui/components/FormSection';
 import { LinedList } from '@packages/station-ui/components/LinedList';
 import { WalletCard } from '@packages/wallet-card';
-import { decryptWallet, EncryptedWallet, Wallet } from '@terra-dev/wallet';
 import {
   deserializeTx,
-  executeTx,
   SerializedCreateTxOptions,
   WebExtensionNetworkInfo,
   WebExtensionTxFail,
@@ -30,6 +28,12 @@ import { render } from 'react-dom';
 import { IntlProvider } from 'react-intl';
 import styled, { DefaultTheme } from 'styled-components';
 import { browser } from 'webextension-polyfill-ts';
+import { executeTx } from 'webextension/backend/models/tx';
+import {
+  decryptWallet,
+  EncryptedWallet,
+  Wallet,
+} from 'webextension/backend/models/wallet';
 import {
   approveHostnames,
   findWallet,

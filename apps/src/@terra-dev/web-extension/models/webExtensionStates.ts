@@ -1,4 +1,4 @@
-import { WalletInfo } from '@terra-dev/wallet';
+import { WalletInfo } from '../models/wallet';
 import { WebExtensionNetworkInfo } from './network';
 
 export interface WebExtensionStates {

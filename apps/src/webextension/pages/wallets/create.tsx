@@ -4,7 +4,7 @@ import {
   createWallet,
   EncryptedWallet,
   encryptWallet,
-} from '@terra-dev/wallet';
+} from 'webextension/backend/models/wallet';
 import React, { useCallback, useState } from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { addWallet } from 'webextension/backend/wallet-storage';

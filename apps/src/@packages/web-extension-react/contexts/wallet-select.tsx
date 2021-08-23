@@ -1,4 +1,4 @@
-import { WalletInfo } from '@terra-dev/wallet';
+import { WalletInfo } from '@terra-dev/web-extension';
 import React, {
   Consumer,
   Context,
