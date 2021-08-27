@@ -30,7 +30,7 @@
         "yarn run webextension:watch",
         {
           "command": "yarn run webextension:browser",
-          "wait": 5000
+          "wait": 30000
         }
       ]
     ]

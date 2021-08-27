@@ -1,7 +1,7 @@
 import { TextField } from '@material-ui/core';
-import { FormLayout } from '@packages/station-ui/components/FormLayout';
+import { FormLayout } from '@libs/station-ui/components/FormLayout';
 import { createMnemonicKey } from 'webextension/backend/models/wallet';
-import { WalletCardDesignSelector } from '@packages/wallet-card/components/WalletCardDesignSelector';
+import { WalletCardDesignSelector } from '@libs/wallet-card/components/WalletCardDesignSelector';
 import { MnemonicKey } from '@terra-money/terra.js';
 import React, { ChangeEvent, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';

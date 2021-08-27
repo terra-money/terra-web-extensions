@@ -1,4 +1,4 @@
-import { safariWebExtensionStorageChangeListener } from '@packages/safari-webextension-storage-change-listener';
+import { safariWebExtensionStorageChangeListener } from '@libs/safari-webextension-storage-change-listener';
 import { EncryptedWallet } from 'webextension/backend/models/wallet';
 import { Observable, Subscription } from 'rxjs';
 import { browser, Storage } from 'webextension-polyfill-ts';

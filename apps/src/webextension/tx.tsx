@@ -5,9 +5,9 @@ import {
   Schedule,
   WifiTethering,
 } from '@material-ui/icons';
-import { FormSection } from '@packages/station-ui/components/FormSection';
-import { LinedList } from '@packages/station-ui/components/LinedList';
-import { WalletCard } from '@packages/wallet-card';
+import { FormSection } from '@libs/station-ui/components/FormSection';
+import { LinedList } from '@libs/station-ui/components/LinedList';
+import { WalletCard } from '@libs/wallet-card';
 import {
   deserializeTx,
   SerializedCreateTxOptions,

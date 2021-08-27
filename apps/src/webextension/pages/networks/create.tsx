@@ -1,5 +1,5 @@
 import { Button } from '@material-ui/core';
-import { FormSection } from '@packages/station-ui/components/FormSection';
+import { FormSection } from '@libs/station-ui/components/FormSection';
 import { WebExtensionNetworkInfo } from '@terra-dev/web-extension';
 import React, { useCallback, useState } from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';

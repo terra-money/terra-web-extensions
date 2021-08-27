@@ -1,5 +1,5 @@
 import { Button, createMuiTheme } from '@material-ui/core';
-import { FormSection } from '@packages/station-ui/components/FormSection';
+import { FormSection } from '@libs/station-ui/components/FormSection';
 import {
   createWallet,
   EncryptedWallet,

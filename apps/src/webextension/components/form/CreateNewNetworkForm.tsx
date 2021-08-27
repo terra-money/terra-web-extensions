@@ -1,5 +1,5 @@
 import { TextField } from '@material-ui/core';
-import { FormLayout } from '@packages/station-ui/components/FormLayout';
+import { FormLayout } from '@libs/station-ui/components/FormLayout';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import {
   useValidateNetworkLcdURL,

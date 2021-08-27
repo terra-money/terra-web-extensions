@@ -1,4 +1,4 @@
-import { useWebExtension } from '@packages/web-extension-react';
+import { useWebExtension } from '@libs/web-extension-react';
 import React from 'react';
 
 export function CurrentNetwork() {

@@ -1,6 +1,6 @@
 import { Button, TextField } from '@material-ui/core';
-import { FormLayout } from '@packages/station-ui/components/FormLayout';
-import { FormSection } from '@packages/station-ui/components/FormSection';
+import { FormLayout } from '@libs/station-ui/components/FormLayout';
+import { FormSection } from '@libs/station-ui/components/FormSection';
 import {
   decryptWallet,
   EncryptedWallet,

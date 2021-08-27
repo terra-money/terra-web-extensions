@@ -1,6 +1,6 @@
 import { TextField } from '@material-ui/core';
-import { FormLayout } from '@packages/station-ui/components/FormLayout';
-import { WalletCardDesignSelector } from '@packages/wallet-card/components/WalletCardDesignSelector';
+import { FormLayout } from '@libs/station-ui/components/FormLayout';
+import { WalletCardDesignSelector } from '@libs/wallet-card/components/WalletCardDesignSelector';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import {
   useValidateMnemonicKey,

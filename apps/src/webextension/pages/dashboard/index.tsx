@@ -4,9 +4,9 @@ import {
   SettingsBackupRestore,
   VpnKey,
 } from '@material-ui/icons';
-import { LinedList } from '@packages/station-ui/components/LinedList';
-import { MiniButton } from '@packages/station-ui/components/MiniButton';
-import { WalletCard, WalletCardSelector } from '@packages/wallet-card';
+import { LinedList } from '@libs/station-ui/components/LinedList';
+import { MiniButton } from '@libs/station-ui/components/MiniButton';
+import { WalletCard, WalletCardSelector } from '@libs/wallet-card';
 import { EncryptedWallet } from 'webextension/backend/models/wallet';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { FormattedMessage } from 'react-intl';

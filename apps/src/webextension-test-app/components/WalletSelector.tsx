@@ -1,5 +1,5 @@
-import { WalletCard, WalletCardSelector } from '@packages/wallet-card';
-import { useWalletSelect } from '@packages/web-extension-react';
+import { WalletCard, WalletCardSelector } from '@libs/wallet-card';
+import { useWalletSelect } from '@libs/web-extension-react';
 import React, { useCallback, useMemo } from 'react';
 import styled from 'styled-components';
 

@@ -3,7 +3,7 @@ import {
   useWebExtension,
   WalletSelectProvider,
   WebExtensionProvider,
-} from '@packages/web-extension-react';
+} from '@libs/web-extension-react';
 import { GlobalStyle } from 'common/components/GlobalStyle';
 import { Constants, ConstantsProvider } from 'common/contexts/constants';
 import { ContractProvider } from 'common/contexts/contract';
