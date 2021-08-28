@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import styled from 'styled-components';
 import {
   disapproveHostname,
-  observeWalletStorage,
-} from 'webextension/backend/wallet-storage';
+  observeHostnamesStorage,
+} from '@terra-dev/web-extension-backend';
+import React, { useCallback, useEffect, useState } from 'react';
+import styled from 'styled-components';
 
 export interface ApprovedHostnamesProps {
   className?: string;
@@ -15,9 +15,9 @@ function ApprovedHostnamesBase({ className }: ApprovedHostnamesProps) {
   );
 
   useEffect(() => {
-    const subscription = observeWalletStorage().subscribe(
-      (nextWalletStorageData) => {
-        setApprovedHostnames(nextWalletStorageData.approvedHostnames);
+    const subscription = observeHostnamesStorage().subscribe(
+      (nextHostnamesStorageData) => {
+        setApprovedHostnames(nextHostnamesStorageData.approvedHostnames);
       },
     );
 

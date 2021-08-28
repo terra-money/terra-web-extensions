@@ -8,6 +8,7 @@ import {
   WebExtensionTxStatus,
   WebExtensionTxSucceed,
 } from '@terra-dev/web-extension';
+import { toURLSearchParams, TxRequest } from '@terra-dev/web-extension-backend';
 import { createElement } from 'react';
 import { render } from 'react-dom';
 import { Observable } from 'rxjs';
@@ -47,14 +48,16 @@ function startTxWithIframeModal(
     // ---------------------------------------------
     const txHtml = browser.runtime.getURL('tx.html');
 
-    const txBase64 = btoa(JSON.stringify(tx));
-    const networkBase64 = btoa(JSON.stringify(network));
-
-    const hostname = window.location.hostname;
-    const timestamp = Date.now();
-
+    const txRequest: TxRequest = {
+      id,
+      terraAddress,
+      network,
+      tx,
+      hostname: window.location.hostname,
+      date: new Date(),
+    };
     const modal = createElement(IFrameModal, {
-      src: `${txHtml}?id=${id}&terraAddress=${terraAddress}&network=${networkBase64}&tx=${txBase64}&hostname=${hostname}&timestamp=${timestamp}`,
+      src: `${txHtml}?${toURLSearchParams(txRequest)}`,
       title: 'Tx',
       onClose: () => {
         subscriber.next({

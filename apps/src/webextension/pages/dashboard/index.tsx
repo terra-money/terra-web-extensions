@@ -1,29 +1,30 @@
+import { LinedList } from '@libs/station-ui/components/LinedList';
+import { MiniButton } from '@libs/station-ui/components/MiniButton';
+import { WalletCard, WalletCardSelector } from '@libs/wallet-card';
 import {
   AddCircleOutline,
   DeleteForever,
   SettingsBackupRestore,
   VpnKey,
 } from '@material-ui/icons';
-import { LinedList } from '@libs/station-ui/components/LinedList';
-import { MiniButton } from '@libs/station-ui/components/MiniButton';
-import { WalletCard, WalletCardSelector } from '@libs/wallet-card';
-import { EncryptedWallet } from 'webextension/backend/models/wallet';
+import {
+  EncryptedWallet,
+  focusWallet,
+  LedgerWallet,
+  observeWalletsStorage,
+  removeWallet,
+} from '@terra-dev/web-extension-backend';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
-import {
-  focusWallet,
-  observeWalletStorage,
-  removeWallet,
-} from 'webextension/backend/wallet-storage';
 
 function DashboardBase({ className }: { className?: string }) {
   const history = useHistory();
 
-  const [encryptedWallets, setEncryptedWallets] = useState<EncryptedWallet[]>(
-    [],
-  );
+  const [encryptedWallets, setEncryptedWallets] = useState<
+    (EncryptedWallet | LedgerWallet)[]
+  >([]);
 
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
 
@@ -50,7 +51,7 @@ function DashboardBase({ className }: { className?: string }) {
   );
 
   useEffect(() => {
-    const subscription = observeWalletStorage().subscribe(
+    const subscription = observeWalletsStorage().subscribe(
       ({ wallets, focusedWalletAddress }) => {
         const nextSelectedIndex = wallets.findIndex(
           (itemWallet) => itemWallet.terraAddress === focusedWalletAddress,

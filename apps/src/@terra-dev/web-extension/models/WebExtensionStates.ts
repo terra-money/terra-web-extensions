@@ -1,5 +1,5 @@
-import { WalletInfo } from '../models/wallet';
-import { WebExtensionNetworkInfo } from './network';
+import { WalletInfo } from './WalletInfo';
+import { WebExtensionNetworkInfo } from './WebExtensionNetworkInfo';
 
 export interface WebExtensionStates {
   focusedWalletAddress: string | undefined;

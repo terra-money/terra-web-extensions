@@ -1,9 +1,9 @@
-import { Button } from '@material-ui/core';
 import { FormSection } from '@libs/station-ui/components/FormSection';
+import { Button } from '@material-ui/core';
 import { WebExtensionNetworkInfo } from '@terra-dev/web-extension';
+import { addNetwork } from '@terra-dev/web-extension-backend';
 import React, { useCallback, useState } from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { addNetwork } from 'webextension/backend/network-storage';
 import {
   CreateNewNetworkForm,
   CreateNewNetworkResult,

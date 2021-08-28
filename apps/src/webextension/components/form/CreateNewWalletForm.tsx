@@ -1,15 +1,15 @@
-import { TextField } from '@material-ui/core';
 import { FormLayout } from '@libs/station-ui/components/FormLayout';
-import { createMnemonicKey } from 'webextension/backend/models/wallet';
 import { WalletCardDesignSelector } from '@libs/wallet-card/components/WalletCardDesignSelector';
+import { TextField } from '@material-ui/core';
+import {
+  createMnemonicKey,
+  useValidateWalletName,
+  useValidateWalletPassword,
+} from '@terra-dev/web-extension-backend';
 import { MnemonicKey } from '@terra-money/terra.js';
 import React, { ChangeEvent, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { cardDesigns } from '../../env';
-import {
-  useValidateWalletName,
-  useValidateWalletPassword,
-} from 'webextension/backend/logics/wallet';
 
 export interface CreateNewWalletResult {
   name: string;

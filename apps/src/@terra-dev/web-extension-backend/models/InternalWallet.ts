@@ -47,5 +47,9 @@ export function decryptWallet(
   encrypedWallet: EncryptedWalletString,
   password: string,
 ): Wallet {
-  return JSON.parse(decrypt(encrypedWallet, password));
+  try {
+    return JSON.parse(decrypt(encrypedWallet, password));
+  } catch {
+    throw new Error('Password is wrong');
+  }
 }

@@ -1,17 +1,20 @@
-import { EncryptedWallet } from 'webextension/backend/models/wallet';
 import { validateMnemonic } from '@terra-money/key-utils';
 import { useEffect, useMemo, useState } from 'react';
-import { readWalletStorage } from '../wallet-storage';
+import { EncryptedWallet } from '../models/InternalWallet';
+import { LedgerWallet } from '../models/LedgerWallet';
+import { readWalletsStorage } from '../storages/wallets';
 
 export enum WalletNameInvalid {
   SAME_NAME_EXISTS = 'SAME_NAME_EXISTS',
 }
 
 export function useValidateWalletName(name: string): WalletNameInvalid | null {
-  const [currentWallets, setCurrentWallets] = useState<EncryptedWallet[]>([]);
+  const [currentWallets, setCurrentWallets] = useState<
+    (EncryptedWallet | LedgerWallet)[]
+  >([]);
 
   useEffect(() => {
-    readWalletStorage().then(({ wallets }) => setCurrentWallets(wallets));
+    readWalletsStorage().then(({ wallets }) => setCurrentWallets(wallets));
   }, []);
 
   return useMemo<WalletNameInvalid | null>(() => {

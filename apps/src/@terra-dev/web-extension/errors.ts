@@ -77,18 +77,40 @@ export class WebExtensionTxUnspecifiedError extends Error {
   };
 }
 
+export class WebExtensionLedgerError extends Error {
+  constructor(public readonly code: number, message: string) {
+    super(message);
+    this.name = 'WebExtensionLedgerError';
+  }
+
+  toString = () => {
+    return `[${this.name} code="${this.code}" message="${this.message}"]`;
+  };
+
+  toJSON = () => {
+    return {
+      name: this.name,
+      code: this.code,
+      message: this.message,
+    };
+  };
+}
+
 export function createTxErrorFromJson(
   json: any,
 ):
   | WebExtensionUserDenied
   | WebExtensionCreateTxFailed
   | WebExtensionTxFailed
+  | WebExtensionLedgerError
   | WebExtensionTxUnspecifiedError {
   switch (json.name) {
     case 'WebExtensionUserDenied':
       return new WebExtensionUserDenied();
     case 'WebExtensionCreateTxFailed':
       return new WebExtensionCreateTxFailed(json.message);
+    case 'WebExtensionLedgerError':
+      return new WebExtensionLedgerError(json.code, json.message);
     case 'WebExtensionTxFailed':
       return new WebExtensionTxFailed(
         json.txhash,

@@ -12,9 +12,9 @@ import {
 } from '@terra-dev/web-extension';
 import { isTxError, LCDClient, RawKey } from '@terra-money/terra.js';
 import { Observable } from 'rxjs';
-import { Wallet } from './wallet';
+import { Wallet } from '../models/InternalWallet';
 
-export function executeTx(
+export function executeTxWithInternalWallet(
   wallet: Wallet,
   network: WebExtensionNetworkInfo,
   tx: SerializedCreateTxOptions,

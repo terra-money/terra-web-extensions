@@ -1,16 +1,17 @@
-import { Button, TextField } from '@material-ui/core';
 import { FormLayout } from '@libs/station-ui/components/FormLayout';
 import { FormSection } from '@libs/station-ui/components/FormSection';
+import { Button, TextField } from '@material-ui/core';
 import {
   decryptWallet,
   EncryptedWallet,
   encryptWallet,
+  findWallet,
+  updateWallet,
+  useValidateWalletPassword,
   Wallet,
-} from 'webextension/backend/models/wallet';
+} from '@terra-dev/web-extension-backend';
 import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { useValidateWalletPassword } from 'webextension/backend/logics/wallet';
-import { findWallet, updateWallet } from 'webextension/backend/wallet-storage';
 
 export function WalletChangePassword({
   match,
@@ -35,7 +36,7 @@ export function WalletChangePassword({
     } else {
       const { terraAddress } = match.params;
       findWallet(terraAddress).then((wallet) => {
-        if (wallet) {
+        if (wallet && 'encryptedWallet' in wallet) {
           setEncryptedWallet(wallet);
         } else {
           setUndefinedWallet(true);

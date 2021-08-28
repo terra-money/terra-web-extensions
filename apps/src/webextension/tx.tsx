@@ -1,46 +1,22 @@
-import { Button, createMuiTheme, TextField } from '@material-ui/core';
-import {
-  Money,
-  MyLocationOutlined,
-  Schedule,
-  WifiTethering,
-} from '@material-ui/icons';
 import { FormSection } from '@libs/station-ui/components/FormSection';
-import { LinedList } from '@libs/station-ui/components/LinedList';
-import { WalletCard } from '@libs/wallet-card';
+import { Button, createMuiTheme } from '@material-ui/core';
+import { WebExtensionTxStatus } from '@terra-dev/web-extension';
 import {
-  deserializeTx,
-  SerializedCreateTxOptions,
-  WebExtensionNetworkInfo,
-  WebExtensionTxFail,
-  WebExtensionTxStatus,
-} from '@terra-dev/web-extension';
-import { StdFee } from '@terra-money/terra.js';
-import { GlobalStyle } from 'common/components/GlobalStyle';
-import React, {
-  ChangeEvent,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+  approveHostnames,
+  EncryptedWallet,
+  findWallet,
+  fromURLSearchParams,
+  LedgerWallet,
+  readHostnamesStorage,
+} from '@terra-dev/web-extension-backend';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { render } from 'react-dom';
 import { IntlProvider } from 'react-intl';
 import styled, { DefaultTheme } from 'styled-components';
 import { browser } from 'webextension-polyfill-ts';
-import { executeTx } from 'webextension/backend/models/tx';
-import {
-  decryptWallet,
-  EncryptedWallet,
-  Wallet,
-} from 'webextension/backend/models/wallet';
-import {
-  approveHostnames,
-  findWallet,
-  readWalletStorage,
-} from './backend/wallet-storage';
 import { ErrorBoundary } from './components/common/ErrorBoundary';
-import { TxDetail } from './components/tx/TxDetail';
+import { InternalWalletTxForm } from './components/tx/InternalWalletTxForm';
+import { LedgerWalletTxForm } from './components/tx/LedgerWalletTxForm';
 import { LocalesProvider, useIntlProps } from './contexts/locales';
 import { ThemeProvider } from './contexts/theme';
 import { txPortPrefix } from './env';
@@ -53,111 +29,26 @@ function AppBase({ className }: AppProps) {
   // ---------------------------------------------
   // read hash urls
   // ---------------------------------------------
-  const txInfo = useMemo(() => {
-    const queries = window.location.search;
-
-    const params = new URLSearchParams(queries);
-
-    const id = params.get('id');
-    const terraAddress = params.get('terraAddress');
-    const txBase64 = params.get('tx');
-    const networkBase64 = params.get('network');
-    const hostname = params.get('hostname');
-    const timestamp = params.get('timestamp');
-
-    if (
-      !id ||
-      !terraAddress ||
-      !txBase64 ||
-      !networkBase64 ||
-      !hostname ||
-      !timestamp
-    ) {
-      throw new Error(`Can't find Transaction!`);
-    }
-
-    const serializedTx: SerializedCreateTxOptions = JSON.parse(atob(txBase64));
-    const network: WebExtensionNetworkInfo = JSON.parse(atob(networkBase64));
-
-    return {
-      id,
-      terraAddress,
-      network,
-      serializedTx,
-      hostname,
-      timestamp: new Date(parseInt(timestamp)),
-    };
+  const txRequest = useMemo(() => {
+    return fromURLSearchParams(window.location.search);
   }, []);
-
-  const tx = useMemo(() => {
-    return deserializeTx(txInfo.serializedTx);
-  }, [txInfo.serializedTx]);
 
   // ---------------------------------------------
   // states
   // ---------------------------------------------
-  const [password, setPassword] = useState<string>('');
-
   // null - in progress checking
   // undefined - there is no wallet
-  const [encryptedWallet, setEncryptedWallet] = useState<
-    EncryptedWallet | undefined | null
+  const [wallet, setWallet] = useState<
+    EncryptedWallet | LedgerWallet | undefined | null
   >(null);
 
   const [needApproveHostname, setNeedApproveHostname] = useState<boolean>(
     false,
   );
 
-  const [fee] = useState<StdFee | undefined>(() => tx.fee);
-
   // ---------------------------------------------
   // callbacks
   // ---------------------------------------------
-  const proceed = useCallback(
-    async (param: {
-      id: string;
-      password: string;
-      encryptedWallet: EncryptedWallet;
-      network: WebExtensionNetworkInfo;
-      serializedTx: SerializedCreateTxOptions;
-    }) => {
-      const wallet: Wallet = decryptWallet(
-        param.encryptedWallet.encryptedWallet,
-        param.password,
-      );
-
-      const port = browser.runtime.connect(undefined, {
-        name: txPortPrefix + param.id,
-      });
-
-      executeTx(wallet, param.network, param.serializedTx).subscribe({
-        next: (result) => {
-          if (
-            result.status === WebExtensionTxStatus.FAIL &&
-            'toJSON' in result.error
-          ) {
-            port.postMessage({
-              ...result,
-              error: result.error.toJSON(),
-            });
-          } else {
-            port.postMessage(result);
-          }
-        },
-        error: (error) => {
-          port.postMessage({
-            status: WebExtensionTxStatus.FAIL,
-            error,
-          } as WebExtensionTxFail);
-        },
-        complete: () => {
-          port.disconnect();
-        },
-      });
-    },
-    [],
-  );
-
   const deny = useCallback((param: { id: string }) => {
     const port = browser.runtime.connect(undefined, {
       name: txPortPrefix + param.id,
@@ -171,41 +62,45 @@ function AppBase({ className }: AppProps) {
   }, []);
 
   const approveHostname = useCallback(async () => {
-    await approveHostnames(txInfo.hostname);
+    if (!txRequest) {
+      return null;
+    }
+
+    await approveHostnames(txRequest.hostname);
 
     setNeedApproveHostname(false);
-  }, [txInfo.hostname]);
+  }, [txRequest]);
 
   // ---------------------------------------------
   // effects
   // ---------------------------------------------
   // initialize
   useEffect(() => {
-    if (!txInfo) return;
+    if (!txRequest) return;
 
-    findWallet(txInfo.terraAddress).then((nextEncryptedWallet) =>
-      setEncryptedWallet(nextEncryptedWallet),
+    findWallet(txRequest.terraAddress).then((nextWallet) =>
+      setWallet(nextWallet),
     );
 
-    readWalletStorage().then(({ approvedHostnames }) => {
+    readHostnamesStorage().then(({ approvedHostnames }) => {
       if (
         !approvedHostnames.some(
-          (itemHostname) => itemHostname === txInfo.hostname,
+          (itemHostname) => itemHostname === txRequest.hostname,
         )
       ) {
         setNeedApproveHostname(true);
       }
     });
-  }, [txInfo]);
+  }, [txRequest]);
 
   // ---------------------------------------------
   // presentation
   // ---------------------------------------------
-  if (encryptedWallet === null) {
+  if (wallet === null) {
     return null;
   }
 
-  if (!txInfo) {
+  if (!txRequest) {
     return (
       <div className={className}>
         <p>Can't find Tx</p>
@@ -217,10 +112,10 @@ function AppBase({ className }: AppProps) {
     );
   }
 
-  if (encryptedWallet === undefined) {
+  if (!wallet) {
     return (
       <div className={className}>
-        <p>Undefined the Wallet "{txInfo.terraAddress}"</p>
+        <p>Undefined the Wallet "{txRequest.terraAddress}"</p>
 
         <Button variant="contained" color="secondary" onClick={deny}>
           Deny
@@ -236,7 +131,7 @@ function AppBase({ className }: AppProps) {
           <h1>Approve this site?</h1>
         </header>
 
-        <p>{txInfo.hostname}</p>
+        <p>{txRequest.hostname}</p>
 
         <footer>
           <Button variant="contained" color="secondary" onClick={deny}>
@@ -250,117 +145,29 @@ function AppBase({ className }: AppProps) {
     );
   }
 
-  return (
-    <section className={className}>
-      <header>
-        <WalletCard
-          className="wallet-card"
-          name={encryptedWallet.name}
-          terraAddress={encryptedWallet.terraAddress}
-          design={encryptedWallet.design}
-        />
-      </header>
+  if ('usbDevice' in wallet) {
+    return (
+      <LedgerWalletTxForm
+        className={className}
+        txRequest={txRequest}
+        wallet={wallet}
+        onDeny={deny}
+      />
+    );
+  }
 
-      <LinedList
-        className="wallets-actions"
-        iconMarginRight="0.6em"
-        firstLetterUpperCase={false}
-      >
-        <li>
-          <div>
-            <i>
-              <WifiTethering />
-            </i>
-            <span>NETWORK</span>
-          </div>
-          <span>
-            {txInfo.network.name} ({txInfo.network.chainID})
-          </span>
-        </li>
-        <li>
-          <div>
-            <i>
-              <MyLocationOutlined />
-            </i>
-            <span>ORIGIN</span>
-          </div>
-          <span>{txInfo.hostname}</span>
-        </li>
-        <li>
-          <div>
-            <i>
-              <Schedule />
-            </i>
-            <span>TIMESTAMP</span>
-          </div>
-          <span>{txInfo.timestamp.toLocaleString()}</span>
-        </li>
-        <li>
-          <div>
-            <i>
-              <Money />
-            </i>
-            <span>FEE</span>
-          </div>
-          <span>
-            {fee &&
-              fee.amount
-                .toArray()
-                .map(
-                  (coin) =>
-                    coin.amount.div(1000000).toString() +
-                    coin.denom.substr(1).toUpperCase(),
-                )
-                .join(', ')}
-          </span>
-        </li>
-      </LinedList>
+  if ('encryptedWallet' in wallet) {
+    return (
+      <InternalWalletTxForm
+        className={className}
+        txRequest={txRequest}
+        wallet={wallet}
+        onDeny={deny}
+      />
+    );
+  }
 
-      <TxDetail tx={tx} className="tx" />
-
-      <section className="form">
-        <TextField
-          variant="outlined"
-          type="password"
-          size="small"
-          fullWidth
-          label="WALLET PASSWORD"
-          InputLabelProps={{ shrink: true }}
-          value={password}
-          onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
-            setPassword(target.value)
-          }
-        />
-      </section>
-
-      <footer>
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={() => deny({ ...txInfo })}
-        >
-          Deny
-        </Button>
-
-        <Button
-          variant="contained"
-          color="primary"
-          disabled={password.length === 0}
-          onClick={() =>
-            proceed({
-              ...txInfo,
-              password,
-              encryptedWallet,
-            })
-          }
-        >
-          Submit
-        </Button>
-      </footer>
-
-      <GlobalStyle backgroundColor="#ffffff" />
-    </section>
-  );
+  return <div>Unknown case!</div>;
 }
 
 const App = styled(AppBase)`
@@ -369,37 +176,6 @@ const App = styled(AppBase)`
   padding: 20px;
 
   font-size: 13px;
-
-  header {
-    display: flex;
-    justify-content: center;
-
-    .wallet-card {
-      width: 276px;
-    }
-
-    margin-bottom: 30px;
-  }
-
-  .tx {
-    margin: 30px 0;
-  }
-
-  .form {
-    margin: 30px 0;
-  }
-
-  footer {
-    display: flex;
-
-    > * {
-      flex: 1;
-
-      &:not(:first-child) {
-        margin-left: 10px;
-      }
-    }
-  }
 `;
 
 const theme: DefaultTheme = createMuiTheme();

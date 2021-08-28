@@ -1,24 +1,25 @@
 import {
+  FromContentScriptToWebMessage,
+  FromWebToContentScriptMessage,
+  isWebExtensionMessage,
   SerializedCreateTxOptions,
   WalletInfo,
   WebExtensionNetworkInfo,
   WebExtensionStates,
+  WebExtensionStatesUpdated,
+  WebExtensionTxResponse,
   WebExtensionTxResult,
   WebExtensionTxStatus,
 } from '@terra-dev/web-extension';
 import {
-  FromContentScriptToWebMessage,
-  FromWebToContentScriptMessage,
-  isWebExtensionMessage,
-  WebExtensionStatesUpdated,
-  WebExtensionTxResponse,
-} from '@terra-dev/web-extension/internal/webapp-contentScripts-messages';
+  observeHostnamesStorage,
+  observeNetworkStorage,
+  observeWalletsStorage,
+} from '@terra-dev/web-extension-backend';
 //@ts-ignore
 import LocalMessageDuplexStream from 'post-message-stream';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { observeNetworkStorage } from './network-storage';
-import { observeWalletStorage } from './wallet-storage';
 
 export interface ContentScriptOptions {
   defaultNetworks: WebExtensionNetworkInfo[];
@@ -77,14 +78,21 @@ export function startWebExtensionContentScript({
     isApproved: boolean;
   };
 
-  const walletsObservable: Observable<WalletsStates> = observeWalletStorage().pipe(
-    map(({ wallets, focusedWalletAddress, approvedHostnames }) => {
+  const walletsObservable: Observable<WalletsStates> = combineLatest([
+    observeHostnamesStorage(),
+    observeWalletsStorage(),
+  ]).pipe(
+    map(([{ approvedHostnames }, { wallets, focusedWalletAddress }]) => {
       const hostname: string = window.location.hostname;
 
       return approvedHostnames.includes(hostname)
         ? {
             // remove sensitive information (e.g. encryptedWallet)
-            wallets: wallets.map(({ encryptedWallet, ...wallet }) => wallet),
+            wallets: wallets.map(({ name, terraAddress, design }) => ({
+              name,
+              terraAddress,
+              design,
+            })),
             focusedWalletAddress,
             isApproved: true,
           }

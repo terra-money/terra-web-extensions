@@ -1,22 +1,20 @@
-import { Button, createMuiTheme } from '@material-ui/core';
 import { FormSection } from '@libs/station-ui/components/FormSection';
+import { Button, createMuiTheme } from '@material-ui/core';
 import {
+  addWallet,
+  approveHostnames,
   createWallet,
   EncryptedWallet,
   encryptWallet,
+  readWalletsStorage,
   restoreMnemonicKey,
   Wallet,
-} from 'webextension/backend/models/wallet';
+} from '@terra-dev/web-extension-backend';
 import React, { useCallback, useMemo, useState } from 'react';
 import { render } from 'react-dom';
 import { IntlProvider } from 'react-intl';
 import styled, { DefaultTheme } from 'styled-components';
 import { browser } from 'webextension-polyfill-ts';
-import {
-  addWallet,
-  approveHostnames,
-  readWalletStorage,
-} from './backend/wallet-storage';
 import { ErrorBoundary } from './components/common/ErrorBoundary';
 import {
   CreateNewWalletForm,
@@ -87,7 +85,7 @@ function AppBase({ className }: AppProps) {
   }, [connectInfo.id]);
 
   const approveConnect = useCallback(async () => {
-    const { wallets } = await readWalletStorage();
+    const { wallets } = await readWalletsStorage();
 
     if (wallets.length > 0) {
       await approve();

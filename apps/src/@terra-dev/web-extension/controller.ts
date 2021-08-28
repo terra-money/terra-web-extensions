@@ -6,11 +6,9 @@ import {
   FromContentScriptToWebMessage,
   FromWebToContentScriptMessage,
   isWebExtensionMessage,
+  PostParams,
   RefetchExtensionStates,
   RequestApproval,
-} from './internal/webapp-contentScripts-messages';
-import {
-  PostParams,
   serializeTx,
   WebExtensionStates,
   WebExtensionStatus,
