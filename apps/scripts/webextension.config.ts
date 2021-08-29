@@ -60,6 +60,11 @@ export function createConfig(
             script: path.resolve(app, 'tx.tsx'),
             html: path.resolve(app, 'tx.html'),
           },
+          {
+            name: 'connect-ledger',
+            script: path.resolve(app, 'connect-ledger.tsx'),
+            html: path.resolve(app, 'connect-ledger.html'),
+          },
         ],
       }),
     ),

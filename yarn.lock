@@ -2118,6 +2118,92 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@ledgerhq/devices@npm:^5.51.1":
+  version: 5.51.1
+  resolution: "@ledgerhq/devices@npm:5.51.1"
+  dependencies:
+    "@ledgerhq/errors": ^5.50.0
+    "@ledgerhq/logs": ^5.50.0
+    rxjs: 6
+    semver: ^7.3.5
+  checksum: 384520c271ef4c961f96cb1085d33c1ecf763a3da8ffd917546076974208c38678797f157c2984c6f6e464d1df3a8b4417ace35e0b33197e8bee061eef27fad0
+  languageName: node
+  linkType: hard
+
+"@ledgerhq/devices@npm:^6.3.0":
+  version: 6.3.0
+  resolution: "@ledgerhq/devices@npm:6.3.0"
+  dependencies:
+    "@ledgerhq/errors": ^6.2.0
+    "@ledgerhq/logs": ^6.2.0
+    rxjs: 6
+    semver: ^7.3.5
+  checksum: 5b0ee3c18e30ede2aafbc42b8837835d9eac1c5cd195eb6632560be04b1d376e25d41ec1d3ffa1cb5492ade602efdcad7b1318ff7d8a14dd083e8e7e3fe9719d
+  languageName: node
+  linkType: hard
+
+"@ledgerhq/errors@npm:^5.50.0":
+  version: 5.50.0
+  resolution: "@ledgerhq/errors@npm:5.50.0"
+  checksum: f9289e8efdec2d194851eb4c6fe1e4f5f7df4d25ab6514e1aa3670c2edbcea6bc9c6b91a27ee75be526eba8140b339d327056316f0153b8d88ad735ca43461c7
+  languageName: node
+  linkType: hard
+
+"@ledgerhq/errors@npm:^6.2.0":
+  version: 6.2.0
+  resolution: "@ledgerhq/errors@npm:6.2.0"
+  checksum: ae424e7d0d1996d73791be81819702eef3e8a10684af96b61b467cc72531652ed9c1dcacd3e16d07247e57171c668531b82a30b369af4e124090e7bf46925478
+  languageName: node
+  linkType: hard
+
+"@ledgerhq/hw-transport-webusb@npm:^6.3.0":
+  version: 6.3.0
+  resolution: "@ledgerhq/hw-transport-webusb@npm:6.3.0"
+  dependencies:
+    "@ledgerhq/devices": ^6.3.0
+    "@ledgerhq/errors": ^6.2.0
+    "@ledgerhq/hw-transport": ^6.3.0
+    "@ledgerhq/logs": ^6.2.0
+  checksum: 1c998a0136e610b523dc80f660dc376ebefb6707f3cbfda2cfd9e49d0e05dbdbe919c8b76ab4f401dd95f1a462e9df60d90a1931d2ca200e3e75e69a1c27d11c
+  languageName: node
+  linkType: hard
+
+"@ledgerhq/hw-transport@npm:^5":
+  version: 5.51.1
+  resolution: "@ledgerhq/hw-transport@npm:5.51.1"
+  dependencies:
+    "@ledgerhq/devices": ^5.51.1
+    "@ledgerhq/errors": ^5.50.0
+    events: ^3.3.0
+  checksum: 1372387e825b3b61a83ec0863452762904e48eecfa18910d8492abf6f7e733a78e634a70df3562174ba6698cc06c92b1ca5d8e49571070285ce411390a4b7b9b
+  languageName: node
+  linkType: hard
+
+"@ledgerhq/hw-transport@npm:^6.3.0":
+  version: 6.3.0
+  resolution: "@ledgerhq/hw-transport@npm:6.3.0"
+  dependencies:
+    "@ledgerhq/devices": ^6.3.0
+    "@ledgerhq/errors": ^6.2.0
+    events: ^3.3.0
+  checksum: 77dfeb5d978645ba8f8cd569f38d417d3da41850a42677d6e794ced12f70d1ee9f916e5a8295b4d7e9ecb2bed81c3a3d392d84265c42cf93957bc47f5e4082c1
+  languageName: node
+  linkType: hard
+
+"@ledgerhq/logs@npm:^5.50.0":
+  version: 5.50.0
+  resolution: "@ledgerhq/logs@npm:5.50.0"
+  checksum: 33417203d42e510f70dfb5702bc3e6a84a1ffbab70995e917a3713f99bae5487e0675b2e4a7028a4dcd858f3c5d7116baea5e8b2ff8eb1857cd80b67b68ddc85
+  languageName: node
+  linkType: hard
+
+"@ledgerhq/logs@npm:^6.2.0":
+  version: 6.2.0
+  resolution: "@ledgerhq/logs@npm:6.2.0"
+  checksum: ba045451fb2bd9ad34e033d3c49425d68d1e8f18429adc11b1ecb86eed91e6df7657b1aec66e623aef1bbb88977304f862424c1c73babe77d2af5b223d4a0577
+  languageName: node
+  linkType: hard
+
 "@material-ui/core@npm:4.11.3":
   version: 4.11.3
   resolution: "@material-ui/core@npm:4.11.3"
@@ -3865,6 +3951,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@terra-money/ledger-terra-js@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "@terra-money/ledger-terra-js@npm:1.1.0"
+  dependencies:
+    "@ledgerhq/hw-transport": ^5
+    bech32: ^1.1.3
+    ripemd160: ^2.0.2
+  checksum: 9b8ab8696211a4955e7c1ccb81d50dcfdeb29df9ffc7defd7dcb73a6db52d55909fd55b6c9467113c13ba4df6780f696656d246b7b544f40453748e33282fe36
+  languageName: node
+  linkType: hard
+
 "@terra-money/terra.js@npm:^1.8.0 || ^2.0.0":
   version: 2.0.2
   resolution: "@terra-money/terra.js@npm:2.0.2"
@@ -5454,6 +5551,8 @@ __metadata:
   dependencies:
     "@apollo/client": ^3.3.16
     "@handbook/code-block": ^1.1.0
+    "@ledgerhq/hw-transport": ^6.3.0
+    "@ledgerhq/hw-transport-webusb": ^6.3.0
     "@material-ui/core": ^4.11.3
     "@material-ui/icons": ^4.11.2
     "@mdx-js/mdx": ^1.6.22
@@ -5471,6 +5570,7 @@ __metadata:
     "@storybook/react": ^6.2.9
     "@terra-dev/use-map": ^0.10.0
     "@terra-money/key-utils": ^1.0.2
+    "@terra-money/ledger-terra-js": ^1.1.0
     "@terra-money/terra.js": ^1.8.0 || ^2.0.0
     "@types/big.js": ^6.0.2
     "@types/chrome": ^0.0.136
@@ -5516,6 +5616,7 @@ __metadata:
     rimraf: ^3.0.2
     rocket-punch: ^3.0.1
     rxjs: ^7.0.0
+    secp256k1: ^4.0.2
     stream-browserify: ^3.0.0
     styled-components: ^5.2.3
     ts-node: ^9.1.1
@@ -6179,6 +6280,13 @@ __metadata:
   dependencies:
     tweetnacl: ^0.14.3
   checksum: 3f57eb99bbc02352f68ff31e446997f4d21cc9a5e5286449dc1fe0116ec5dac5a4aa538967d45714fa9320312d2be8d16126f2d357da1dd40a3d546b96e097ed
+  languageName: node
+  linkType: hard
+
+"bech32@npm:^1.1.3":
+  version: 1.1.4
+  resolution: "bech32@npm:1.1.4"
+  checksum: 2a3391395cc0f1a1bef76afc5fbb10bfaf26a21094c4eee109080185b3fc1fb0e8eca7d9145dbe92b6bac300b0b5eed16b1570a4ca665b40e1def5bacea50c4b
   languageName: node
   linkType: hard
 
@@ -9040,7 +9148,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"events@npm:^3.0.0, events@npm:^3.2.0":
+"events@npm:^3.0.0, events@npm:^3.2.0, events@npm:^3.3.0":
   version: 3.3.0
   resolution: "events@npm:3.3.0"
   checksum: 56fa12567013e85b98782a1d971442ea29df057129d8a94432711fd68303357594ea37bfbe234860e28581a7768f943a8bea88c16b48aa01b96acf804bc01d52
@@ -16570,7 +16678,7 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"ripemd160@npm:^2.0.0, ripemd160@npm:^2.0.1":
+"ripemd160@npm:^2.0.0, ripemd160@npm:^2.0.1, ripemd160@npm:^2.0.2":
   version: 2.0.2
   resolution: "ripemd160@npm:2.0.2"
   dependencies:
@@ -16665,7 +16773,7 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"rxjs@npm:^6.6.3":
+"rxjs@npm:6, rxjs@npm:^6.6.3":
   version: 6.6.7
   resolution: "rxjs@npm:6.6.7"
   dependencies:

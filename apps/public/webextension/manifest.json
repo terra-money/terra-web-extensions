@@ -7,10 +7,6 @@
   "version": "0.2.0",
   
   "permissions": [
-    "tabs",
-    "management",
-    "topSites",
-    "bookmarks",
     "storage"
   ],
   

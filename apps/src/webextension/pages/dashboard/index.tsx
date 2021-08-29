@@ -5,11 +5,13 @@ import {
   AddCircleOutline,
   DeleteForever,
   SettingsBackupRestore,
+  Usb,
   VpnKey,
 } from '@material-ui/icons';
 import {
   EncryptedWallet,
   focusWallet,
+  isLedgerSupportBrowser,
   LedgerWallet,
   observeWalletsStorage,
   removeWallet,
@@ -27,6 +29,10 @@ function DashboardBase({ className }: { className?: string }) {
   >([]);
 
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
+
+  const isLedgerSupport = useMemo(() => {
+    return isLedgerSupportBrowser();
+  }, []);
 
   const walletCards = useMemo(() => {
     return encryptedWallets.map(({ name, terraAddress, design }) => (
@@ -211,6 +217,18 @@ function DashboardBase({ className }: { className?: string }) {
       </LinedList>
 
       <LinedList className="wallets-actions" iconMarginRight="0.6em">
+        {isLedgerSupport && (
+          <li>
+            <a href="/connect-ledger.html" target="_blank" rel="noreferrer">
+              <i>
+                <Usb />
+              </i>
+              <span>
+                <FormattedMessage id="wallet.new" />
+              </span>
+            </a>
+          </li>
+        )}
         <li>
           <Link to="/wallet/create">
             <i>

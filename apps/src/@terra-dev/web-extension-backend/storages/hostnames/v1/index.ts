@@ -1,6 +1,6 @@
-import { safariWebExtensionStorageChangeListener } from '@libs/safari-webextension-storage-change-listener';
 import { Observable, Subscription } from 'rxjs';
 import { browser, Storage } from 'webextension-polyfill-ts';
+import { safariWebExtensionStorageChangeListener } from '../../../utils/safariWebExtensionStorageChangeListener';
 
 const storageKey = 'terra_hostnames_storage_v1';
 
