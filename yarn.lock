@@ -4308,6 +4308,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/mdx-js__react@npm:^1.5.4":
+  version: 1.5.4
+  resolution: "@types/mdx-js__react@npm:1.5.4"
+  dependencies:
+    "@types/react": "*"
+  checksum: ff154007a80d669a14e8f202991c9e25998f0216649bcb9cfc2ec4fa4859259b6e6b3797ea07ed023b49bc3a15dfd31e26f9fef40bde1e62e1e6c93408be0a79
+  languageName: node
+  linkType: hard
+
 "@types/micromatch@npm:^4.0.1":
   version: 4.0.1
   resolution: "@types/micromatch@npm:4.0.1"
@@ -4516,6 +4525,15 @@ __metadata:
   version: 0.16.1
   resolution: "@types/scheduler@npm:0.16.1"
   checksum: 0124c2e4dee5e9b8c8524fcd6b1b8ea0b807b132e593925db04cdcc92ca2779a0d27c79414e60454b4458361a4d8319fa2b59d20585054f21617d1e9acf46a6f
+  languageName: node
+  linkType: hard
+
+"@types/secp256k1@npm:^4.0.3":
+  version: 4.0.3
+  resolution: "@types/secp256k1@npm:4.0.3"
+  dependencies:
+    "@types/node": "*"
+  checksum: d689734a6dfaf31ac5bf5276617df33bb1ff2356272b7cfcdf629f712540b3f7c9bea35e548ac3c69c4b7e10b05c0ea5ba72f5e99f65be6adc4d336d3fca1088
   languageName: node
   linkType: hard
 
@@ -5580,11 +5598,13 @@ __metadata:
     "@types/d3-timer": ^2.0.0
     "@types/fs-extra": ^9.0.12
     "@types/jest": ^26.0.23
+    "@types/mdx-js__react": ^1.5.4
     "@types/node": ^15.0.1
     "@types/react": ^17.0.4
     "@types/react-dom": ^17.0.3
     "@types/react-router-dom": ^5.1.7
     "@types/rimraf": ^3.0.0
+    "@types/secp256k1": ^4.0.3
     "@types/styled-components": ^5.1.9
     "@types/w3c-web-usb": ^1.0.5
     "@types/webpack-env": ^1.16.0

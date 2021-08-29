@@ -10,6 +10,7 @@ export interface TxRequest {
   tx: SerializedCreateTxOptions;
   hostname: string;
   date: Date;
+  closeWindowAfterTx: boolean;
 }
 
 export function toURLSearchParams({
@@ -19,6 +20,7 @@ export function toURLSearchParams({
   tx,
   hostname,
   date,
+  closeWindowAfterTx,
 }: TxRequest): string {
   const params = new URLSearchParams();
 
@@ -28,6 +30,9 @@ export function toURLSearchParams({
   params.set('tx', btoa(JSON.stringify(tx)));
   params.set('hostname', hostname);
   params.set('date', date.getTime().toString());
+  if (closeWindowAfterTx) {
+    params.set('close-window-after-tx', 'yes');
+  }
 
   return params.toString();
 }
@@ -56,6 +61,8 @@ export function fromURLSearchParams(search: string): TxRequest | undefined {
 
   const tx: SerializedCreateTxOptions = JSON.parse(atob(txBase64));
   const network: WebExtensionNetworkInfo = JSON.parse(atob(networkBase64));
+  const closeWindowAfterTx: boolean =
+    params.get('close-window-after-tx') === 'yes';
 
   return {
     id,
@@ -64,5 +71,6 @@ export function fromURLSearchParams(search: string): TxRequest | undefined {
     tx,
     hostname,
     date: new Date(parseInt(date)),
+    closeWindowAfterTx,
   };
 }

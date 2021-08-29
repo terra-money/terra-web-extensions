@@ -152,6 +152,7 @@ function AppBase({ className }: AppProps) {
         txRequest={txRequest}
         wallet={wallet}
         onDeny={deny}
+        onComplete={() => window.close()}
       />
     );
   }

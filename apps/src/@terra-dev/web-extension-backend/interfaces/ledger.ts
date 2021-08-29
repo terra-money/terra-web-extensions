@@ -4,17 +4,24 @@ import { WebExtensionLedgerError } from '@terra-dev/web-extension';
 import TerraLedgerApp, {
   PublicKeyResponse,
 } from '@terra-money/ledger-terra-js';
+import {
+  Key,
+  PublicKey,
+  StdSignature,
+  StdSignMsg,
+} from '@terra-money/terra.js';
 import { Observable } from 'rxjs';
+import { signatureImport } from 'secp256k1';
 import { LedgerWallet, pickUSBDeviceInfo } from '../models';
 
-const TERRA_APP_PATH: [number, number, number, number, number] = [
+export const TERRA_APP_PATH: [number, number, number, number, number] = [
   44,
   330,
   0,
   0,
   0,
 ];
-const TERRA_APP_HRP: string = 'terra';
+export const TERRA_APP_HRP: string = 'terra';
 
 export function isLedgerSupportBrowser(): boolean {
   return (
@@ -108,4 +115,59 @@ export async function connectLedger(): Promise<LedgerWallet | undefined> {
       publicKey.error_message,
     );
   }
+}
+
+export async function createLedgerKey(): Promise<LedgerKey> {
+  const transport = await createTransport();
+  const app = new TerraLedgerApp(transport);
+
+  await app.initialize();
+
+  const publicKey = await app.getAddressAndPubKey(
+    TERRA_APP_PATH,
+    TERRA_APP_HRP,
+  );
+
+  const publicKeyBuffer = Buffer.from(publicKey.compressed_pk as any);
+
+  const key = new LedgerKey(publicKeyBuffer, app);
+
+  return key;
+}
+
+export class LedgerKey extends Key {
+  constructor(publicKey: Buffer | undefined, private app: TerraLedgerApp) {
+    super(publicKey);
+  }
+
+  sign(payload: Buffer): Promise<Buffer> {
+    throw new Error('');
+  }
+
+  createSignature = async (tx: StdSignMsg): Promise<StdSignature> => {
+    const publicKeyBuffer = this.publicKey;
+
+    if (!publicKeyBuffer) {
+      throw new Error(`Can't get publicKey`);
+    }
+
+    const serializedTx = tx.toJSON();
+
+    const signature = await this.app.sign(TERRA_APP_PATH, serializedTx);
+    const signatureBuffer = Buffer.from(
+      signatureImport(Buffer.from(signature.signature.data)),
+    );
+
+    if (!signatureBuffer) {
+      throw new Error(`Can't get signature`);
+    }
+
+    return new StdSignature(
+      signatureBuffer.toString('base64'),
+      PublicKey.fromData({
+        type: 'tendermint/PubKeySecp256k1',
+        value: publicKeyBuffer.toString('base64'),
+      }),
+    );
+  };
 }

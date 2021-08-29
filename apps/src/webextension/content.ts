@@ -8,7 +8,11 @@ import {
   WebExtensionTxStatus,
   WebExtensionTxSucceed,
 } from '@terra-dev/web-extension';
-import { toURLSearchParams, TxRequest } from '@terra-dev/web-extension-backend';
+import {
+  findWallet,
+  toURLSearchParams,
+  TxRequest,
+} from '@terra-dev/web-extension-backend';
 import { createElement } from 'react';
 import { render } from 'react-dom';
 import { Observable } from 'rxjs';
@@ -27,75 +31,96 @@ function startTxWithIframeModal(
   tx: SerializedCreateTxOptions,
 ): Observable<WebExtensionTxResult> {
   return new Observable<WebExtensionTxResult>((subscriber) => {
-    // ---------------------------------------------
-    // assets
-    // ---------------------------------------------
-    const modalContainer = window.document.createElement('div');
-
-    const port = browser.runtime.connect(undefined, {
-      name: contentScriptPortPrefix + id,
-    });
-
-    // do not call before latest subscriber.next()
-    const endTx = () => {
-      window.document.querySelector('body')?.removeChild(modalContainer);
-      port.disconnect();
-      subscriber.unsubscribe();
-    };
-
-    // ---------------------------------------------
-    // create and append modal
-    // ---------------------------------------------
-    const txHtml = browser.runtime.getURL('tx.html');
-
-    const txRequest: TxRequest = {
-      id,
-      terraAddress,
-      network,
-      tx,
-      hostname: window.location.hostname,
-      date: new Date(),
-    };
-    const modal = createElement(IFrameModal, {
-      src: `${txHtml}?${toURLSearchParams(txRequest)}`,
-      title: 'Tx',
-      onClose: () => {
-        subscriber.next({
-          status: WebExtensionTxStatus.DENIED,
-        });
-        endTx();
-      },
-    });
-
-    render(modal, modalContainer);
-    window.document.querySelector('body')?.appendChild(modalContainer);
-
-    // ---------------------------------------------
-    // connect port (background -> content_script)
-    // ---------------------------------------------
-    const onMessage = (
-      msg:
-        | WebExtensionTxProgress
-        | WebExtensionTxSucceed
-        | WebExtensionTxFail
-        | WebExtensionTxDenied,
-    ) => {
-      if (!msg.status) {
+    findWallet(terraAddress).then((wallet) => {
+      if (!wallet) {
+        subscriber.error(new Error(`Can't find wallet ${terraAddress}`));
         return;
       }
 
-      subscriber.next(msg);
+      const isPopup = 'usbDevice' in wallet;
 
-      switch (msg.status) {
-        case WebExtensionTxStatus.SUCCEED:
-        case WebExtensionTxStatus.FAIL:
-        case WebExtensionTxStatus.DENIED:
-          endTx();
-          break;
+      // ---------------------------------------------
+      // assets
+      // ---------------------------------------------
+      const modalContainer = !isPopup
+        ? window.document.createElement('div')
+        : null;
+
+      const port = browser.runtime.connect(undefined, {
+        name: contentScriptPortPrefix + id,
+      });
+
+      // do not call before latest subscriber.next()
+      const endTx = () => {
+        if (modalContainer) {
+          window.document.querySelector('body')?.removeChild(modalContainer);
+        }
+        port.disconnect();
+        subscriber.unsubscribe();
+      };
+
+      // ---------------------------------------------
+      // create and append modal
+      // ---------------------------------------------
+      const txHtml = browser.runtime.getURL('tx.html');
+
+      const txRequest: TxRequest = {
+        id,
+        terraAddress,
+        network,
+        tx,
+        hostname: window.location.hostname,
+        date: new Date(),
+        closeWindowAfterTx: isPopup,
+      };
+
+      const src = `${txHtml}?${toURLSearchParams(txRequest)}`;
+
+      if (modalContainer) {
+        const modal = createElement(IFrameModal, {
+          src: `${txHtml}?${toURLSearchParams(txRequest)}`,
+          title: 'Tx',
+          onClose: () => {
+            subscriber.next({
+              status: WebExtensionTxStatus.DENIED,
+            });
+            endTx();
+          },
+        });
+
+        render(modal, modalContainer);
+        window.document.querySelector('body')?.appendChild(modalContainer);
+      } else {
+        window.open(src, 'terra-station-tx');
       }
-    };
 
-    port.onMessage.addListener(onMessage);
+      // ---------------------------------------------
+      // connect port (background -> content_script)
+      // ---------------------------------------------
+      const onMessage = (
+        msg:
+          | WebExtensionTxProgress
+          | WebExtensionTxSucceed
+          | WebExtensionTxFail
+          | WebExtensionTxDenied,
+      ) => {
+        if (!msg.status) {
+          return;
+        }
+
+        subscriber.next(msg);
+
+        switch (msg.status) {
+          case WebExtensionTxStatus.SUCCEED:
+          case WebExtensionTxStatus.FAIL:
+          case WebExtensionTxStatus.DENIED:
+            endTx();
+            break;
+        }
+      };
+
+      port.onMessage.addListener(onMessage);
+    });
   });
 }
 
