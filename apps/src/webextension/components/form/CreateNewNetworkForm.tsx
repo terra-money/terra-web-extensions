@@ -1,11 +1,11 @@
 import { FormLayout } from '@libs/station-ui/components/FormLayout';
 import { TextField } from '@material-ui/core';
 import {
-  useValidateNetworkLcdURL,
-  useValidateNetworkName,
+  validateNetworkLcdURL,
+  validateNetworkName,
 } from '@terra-dev/web-extension-backend';
-import React, { ChangeEvent, useEffect, useState } from 'react';
-import { defaultNetworks } from '../../env';
+import React, { ChangeEvent, useEffect, useMemo, useState } from 'react';
+import { useNetworks } from '../../queries/useNetworks';
 
 export interface CreateNewNetworkResult {
   name: string;
@@ -18,18 +18,34 @@ export interface CreateNewNetworkFormProps {
 }
 
 export function CreateNewNetworkForm({ onChange }: CreateNewNetworkFormProps) {
+  // ---------------------------------------------
+  // queries
+  // ---------------------------------------------
+  const { networks } = useNetworks();
+
+  // ---------------------------------------------
+  // states
+  // ---------------------------------------------
   const [name, setName] = useState<string>('');
 
-  const [chainID, setChainID] = useState<string>(
-    () => defaultNetworks[0].chainID,
-  );
+  const [chainID, setChainID] = useState<string>(() => networks[0].chainID);
 
-  const [lcd, setLcd] = useState<string>(() => defaultNetworks[0].lcd);
+  const [lcd, setLcd] = useState<string>(() => networks[0].lcd);
 
-  const invalidName = useValidateNetworkName(name, defaultNetworks);
+  // ---------------------------------------------
+  // logics
+  // ---------------------------------------------
+  const invalidName = useMemo(() => {
+    return validateNetworkName(name, networks);
+  }, [name, networks]);
 
-  const invalidLcd = useValidateNetworkLcdURL(lcd);
+  const invalidLcd = useMemo(() => {
+    return validateNetworkLcdURL(lcd);
+  }, [lcd]);
 
+  // ---------------------------------------------
+  // effects
+  // ---------------------------------------------
   useEffect(() => {
     if (!!invalidName || !!invalidLcd) {
       onChange(null);
@@ -44,6 +60,9 @@ export function CreateNewNetworkForm({ onChange }: CreateNewNetworkFormProps) {
     }
   }, [chainID, invalidLcd, invalidName, lcd, name, onChange]);
 
+  // ---------------------------------------------
+  // presentation
+  // ---------------------------------------------
   return (
     <>
       <FormLayout>

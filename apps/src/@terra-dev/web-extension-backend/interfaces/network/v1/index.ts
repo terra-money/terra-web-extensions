@@ -1,16 +1,17 @@
 import { WebExtensionNetworkInfo } from '@terra-dev/web-extension';
 import { Observable, Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { browser, Storage } from 'webextension-polyfill-ts';
 import { safariWebExtensionStorageChangeListener } from '../../../utils/safariWebExtensionStorageChangeListener';
 
 const storageKey = 'terra_network_storage_v1';
 
-export interface NetworkStorage {
+export interface NetworkStorageData {
   networks: WebExtensionNetworkInfo[];
   selectedNetwork: WebExtensionNetworkInfo | undefined;
 }
 
-export async function readNetworkStorage(): Promise<NetworkStorage> {
+export async function readNetworkStorage(): Promise<NetworkStorageData> {
   const values = await browser.storage.local.get(storageKey);
   return (
     values[storageKey] ?? {
@@ -21,10 +22,10 @@ export async function readNetworkStorage(): Promise<NetworkStorage> {
 }
 
 export async function writeNetworkStorage(
-  storage: NetworkStorage,
+  data: NetworkStorageData,
 ): Promise<void> {
   await browser.storage.local.set({
-    [storageKey]: storage,
+    [storageKey]: data,
   });
 }
 
@@ -85,8 +86,8 @@ export async function updateNetwork(
   });
 }
 
-export function observeNetworkStorage(): Observable<NetworkStorage> {
-  return new Observable<NetworkStorage>((subscriber) => {
+export function observeNetworkStorage(): Observable<NetworkStorageData> {
+  return new Observable<NetworkStorageData>((subscriber) => {
     function callback(
       changes: Record<string, Storage.StorageChange>,
       areaName: string,
@@ -104,7 +105,7 @@ export function observeNetworkStorage(): Observable<NetworkStorage> {
 
     browser.storage.onChanged.addListener(callback);
 
-    const safariChangeSubscription: Subscription = safariWebExtensionStorageChangeListener<NetworkStorage>(
+    const safariChangeSubscription: Subscription = safariWebExtensionStorageChangeListener<NetworkStorageData>(
       storageKey,
     ).subscribe((nextValue) => {
       subscriber.next(
@@ -134,4 +135,19 @@ export async function selectNetwork(
     selectedNetwork: network,
     ...storage,
   });
+}
+
+export type NetworksData = NetworkStorageData;
+
+export function observeNetworks(
+  defaultNetworks: WebExtensionNetworkInfo[],
+): Observable<NetworksData> {
+  return observeNetworkStorage().pipe(
+    map(({ networks, selectedNetwork }) => {
+      return {
+        networks: [...defaultNetworks, ...networks],
+        selectedNetwork,
+      };
+    }),
+  );
 }

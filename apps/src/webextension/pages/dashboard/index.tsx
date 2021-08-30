@@ -10,69 +10,36 @@ import {
   Web,
 } from '@material-ui/icons';
 import {
-  EncryptedWallet,
   focusWallet,
   isLedgerSupportBrowser,
-  LedgerWallet,
-  observeWalletsStorage,
   removeWallet,
 } from '@terra-dev/web-extension-backend';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
+import { useWallets } from '../../queries/useWallets';
 
 function DashboardBase({ className }: { className?: string }) {
   const history = useHistory();
 
-  const [encryptedWallets, setEncryptedWallets] = useState<
-    (EncryptedWallet | LedgerWallet)[]
-  >([]);
+  const { wallets, focusedWallet, focusedWalletIndex } = useWallets();
 
-  const [selectedIndex, setSelectedIndex] = useState<number>(0);
+  console.log('index.tsx..DashboardBase()', focusedWallet, focusedWalletIndex);
 
   const isLedgerSupport = useMemo(() => {
     return isLedgerSupportBrowser();
   }, []);
 
-  const walletCards = useMemo(() => {
-    return encryptedWallets.map(({ name, terraAddress, design }) => (
-      <WalletCard
-        key={name}
-        name={name}
-        terraAddress={terraAddress}
-        design={design}
-      />
-    ));
-  }, [encryptedWallets]);
-
   const updateSelectedIndex = useCallback(
     async (nextSelectedIndex) => {
-      const nextWallet = encryptedWallets[nextSelectedIndex];
+      const nextWallet = wallets[nextSelectedIndex];
       if (nextWallet) {
         await focusWallet(nextWallet.terraAddress);
-        setSelectedIndex(nextSelectedIndex);
       }
     },
-    [encryptedWallets],
+    [wallets],
   );
-
-  useEffect(() => {
-    const subscription = observeWalletsStorage().subscribe(
-      ({ wallets, focusedWalletAddress }) => {
-        const nextSelectedIndex = wallets.findIndex(
-          (itemWallet) => itemWallet.terraAddress === focusedWalletAddress,
-        );
-
-        setEncryptedWallets(wallets);
-        setSelectedIndex(nextSelectedIndex > -1 ? nextSelectedIndex : 0);
-      },
-    );
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, []);
 
   //const {
   //  data: { uUSD, uaUST, uLuna, ubLuna, uANC },
@@ -80,43 +47,49 @@ function DashboardBase({ className }: { className?: string }) {
 
   return (
     <section className={className}>
-      <header>
-        <WalletCardSelector
-          className="wallet-cards"
-          cardWidth={276}
-          selectedIndex={selectedIndex}
-          onSelect={updateSelectedIndex}
-          onCreate={() => history.push('/wallet/create')}
-        >
-          {walletCards}
-        </WalletCardSelector>
+      {wallets.length > 0 ? (
+        <header>
+          <WalletCardSelector
+            className="wallet-cards"
+            cardWidth={276}
+            selectedIndex={focusedWalletIndex}
+            onSelect={updateSelectedIndex}
+            onCreate={() => history.push('/wallet/create')}
+          >
+            {wallets.map(({ name, terraAddress, design }) => (
+              <WalletCard
+                key={name}
+                name={name}
+                terraAddress={terraAddress}
+                design={design}
+              />
+            ))}
+          </WalletCardSelector>
 
-        {encryptedWallets.length > 0 && !!encryptedWallets[selectedIndex] && (
-          <div className="wallet-actions">
-            {'encryptedWallet' in encryptedWallets[selectedIndex] && (
+          {wallets.length > 0 && !!focusedWallet && (
+            <div className="wallet-actions">
+              {'encryptedWallet' in focusedWallet && (
+                <MiniButton
+                  startIcon={<VpnKey />}
+                  component={Link}
+                  to={`/wallets/${focusedWallet.terraAddress}/password`}
+                >
+                  <FormattedMessage id="wallet.change-password" />
+                </MiniButton>
+              )}
+
               <MiniButton
-                startIcon={<VpnKey />}
-                component={Link}
-                to={`/wallets/${encryptedWallets[selectedIndex].terraAddress}/password`}
+                startIcon={<DeleteForever />}
+                onClick={() => {
+                  removeWallet(focusedWallet);
+                }}
               >
-                <FormattedMessage id="wallet.change-password" />
+                <FormattedMessage id="wallet.delete" />
               </MiniButton>
-            )}
-
-            <MiniButton
-              startIcon={<DeleteForever />}
-              onClick={() => {
-                console.log('index.tsx..()', selectedIndex);
-                removeWallet(encryptedWallets[selectedIndex]);
-              }}
-            >
-              <FormattedMessage id="wallet.delete" />
-            </MiniButton>
-          </div>
-        )}
-      </header>
-
-      {encryptedWallets.length === 0 && (
+            </div>
+          )}
+        </header>
+      ) : (
         <section className="empty-wallets">
           <FormattedMessage id="wallet.empty" />
         </section>

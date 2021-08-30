@@ -1,47 +1,31 @@
 import { WebExtensionNetworkInfo } from '@terra-dev/web-extension';
-import { useEffect, useMemo, useState } from 'react';
-import { readNetworkStorage } from '../interfaces/network';
 
 export enum NetworkNameInvalid {
   SAME_NAME_EXISTS = 'SAME_NAME_EXISTS',
 }
 
-export function useValidateNetworkName(
+export function validateNetworkName(
   name: string,
-  defaultNetworks: WebExtensionNetworkInfo[],
+  networks: WebExtensionNetworkInfo[],
 ): NetworkNameInvalid | null {
-  const [currentNetworks, setCurrentNetworks] = useState<
-    WebExtensionNetworkInfo[]
-  >(defaultNetworks);
+  if (name.length === 0) {
+    return null;
+  }
 
-  useEffect(() => {
-    readNetworkStorage().then(({ networks }) =>
-      setCurrentNetworks([...defaultNetworks, ...networks]),
-    );
-  }, [defaultNetworks]);
-
-  return useMemo<NetworkNameInvalid | null>(() => {
-    if (name.length === 0) {
-      return null;
-    }
-
-    return currentNetworks.length > 0 &&
-      currentNetworks.some((itemNetwork) => itemNetwork.name === name)
-      ? NetworkNameInvalid.SAME_NAME_EXISTS
-      : null;
-  }, [currentNetworks, name]);
+  return networks.length > 0 &&
+    networks.some((itemNetwork) => itemNetwork.name === name)
+    ? NetworkNameInvalid.SAME_NAME_EXISTS
+    : null;
 }
 
 export enum NetworkLcdURLInvalid {
   INVALID_URL = 'INVALID_URL',
 }
 
-export function useValidateNetworkLcdURL(
+export function validateNetworkLcdURL(
   lcd: string,
 ): NetworkLcdURLInvalid | null {
-  return useMemo(() => {
-    return lcd.startsWith('https://') || lcd.startsWith('http://')
-      ? null
-      : NetworkLcdURLInvalid.INVALID_URL;
-  }, [lcd]);
+  return lcd.startsWith('https://') || lcd.startsWith('http://')
+    ? null
+    : NetworkLcdURLInvalid.INVALID_URL;
 }

@@ -7,16 +7,25 @@ import {
   encryptWallet,
   findWallet,
   updateWallet,
-  useValidateWalletPassword,
+  validateWalletPassword,
   Wallet,
 } from '@terra-dev/web-extension-backend';
-import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
+import React, {
+  ChangeEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
 
 export function WalletChangePassword({
   match,
   history,
 }: RouteComponentProps<{ terraAddress: string }>) {
+  // ---------------------------------------------
+  // states
+  // ---------------------------------------------
   const [
     encryptedWallet,
     setEncryptedWallet,
@@ -28,8 +37,16 @@ export function WalletChangePassword({
 
   const [newPassword, setNewPassword] = useState<string>('');
 
-  const invalidPassword = useValidateWalletPassword(newPassword);
+  // ---------------------------------------------
+  // logics
+  // ---------------------------------------------
+  const invalidPassword = useMemo(() => {
+    return validateWalletPassword(newPassword);
+  }, [newPassword]);
 
+  // ---------------------------------------------
+  // effects
+  // ---------------------------------------------
   useEffect(() => {
     if (!match) {
       setEncryptedWallet(null);
@@ -45,6 +62,9 @@ export function WalletChangePassword({
     }
   }, [match]);
 
+  // ---------------------------------------------
+  // callbacks
+  // ---------------------------------------------
   const changePassword = useCallback(async () => {
     if (!encryptedWallet) {
       return;
@@ -65,6 +85,9 @@ export function WalletChangePassword({
     history.push('/');
   }, [currentPassword, history, newPassword, encryptedWallet]);
 
+  // ---------------------------------------------
+  // presentation
+  // ---------------------------------------------
   if (!encryptedWallet) {
     return null;
   }

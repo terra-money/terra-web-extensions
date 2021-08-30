@@ -2,12 +2,13 @@ import { FormLayout } from '@libs/station-ui/components/FormLayout';
 import { WalletCardDesignSelector } from '@libs/wallet-card/components/WalletCardDesignSelector';
 import { TextField } from '@material-ui/core';
 import {
-  useValidateMnemonicKey,
-  useValidateWalletName,
-  useValidateWalletPassword,
+  validateMnemonicKey,
+  validateWalletName,
+  validateWalletPassword,
 } from '@terra-dev/web-extension-backend';
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useMemo, useState } from 'react';
 import { cardDesigns } from '../../env';
+import { useWallets } from '../../queries/useWallets';
 
 export interface RecoverMnemonicResult {
   name: string;
@@ -21,6 +22,14 @@ export interface RecoverMnemonicFormProps {
 }
 
 export function RecoverMnemonicForm({ onChange }: RecoverMnemonicFormProps) {
+  // ---------------------------------------------
+  // queries
+  // ---------------------------------------------
+  const { wallets } = useWallets();
+
+  // ---------------------------------------------
+  // states
+  // ---------------------------------------------
   const [name, setName] = useState<string>('');
 
   const [design, setDesign] = useState<string>(
@@ -31,12 +40,24 @@ export function RecoverMnemonicForm({ onChange }: RecoverMnemonicFormProps) {
 
   const [mnemonic, setMnemonic] = useState<string>('');
 
-  const invalidName = useValidateWalletName(name);
+  // ---------------------------------------------
+  // logics
+  // ---------------------------------------------
+  const invalidName = useMemo(() => {
+    return validateWalletName(name, wallets);
+  }, [name, wallets]);
 
-  const invalidPassword = useValidateWalletPassword(password);
+  const invalidPassword = useMemo(() => {
+    return validateWalletPassword(password);
+  }, [password]);
 
-  const invalidMnemonic = useValidateMnemonicKey(mnemonic);
+  const invalidMnemonic = useMemo(() => {
+    return validateMnemonicKey(mnemonic);
+  }, [mnemonic]);
 
+  // ---------------------------------------------
+  // effects
+  // ---------------------------------------------
   useEffect(() => {
     if (!!invalidName || !!invalidPassword || !!invalidMnemonic) {
       onChange(null);
@@ -61,6 +82,9 @@ export function RecoverMnemonicForm({ onChange }: RecoverMnemonicFormProps) {
     password,
   ]);
 
+  // ---------------------------------------------
+  // presentation
+  // ---------------------------------------------
   return (
     <>
       <WalletCardDesignSelector

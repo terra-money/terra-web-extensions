@@ -1,4 +1,5 @@
 import { Observable, Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { browser, Storage } from 'webextension-polyfill-ts';
 import { EncryptedWallet } from '../../../models/InternalWallet';
 import { LedgerWallet } from '../../../models/LedgerWallet';
@@ -12,7 +13,7 @@ export interface WalletsStorageData {
   /**
    * extension focused wallet
    */
-  focusedWalletAddress?: string;
+  focusedWalletAddress?: string | undefined;
 }
 
 // ---------------------------------------------
@@ -150,4 +151,37 @@ export function observeWalletsStorage(): Observable<WalletsStorageData> {
       safariChangeSubscription.unsubscribe();
     };
   });
+}
+
+export type WalletsData = WalletsStorageData & {
+  focusedWallet: EncryptedWallet | LedgerWallet | undefined;
+  focusedWalletIndex: number;
+};
+
+export function observeWallets(
+  fallbackFocusing: boolean,
+): Observable<WalletsData> {
+  return observeWalletsStorage().pipe(
+    map(({ wallets, focusedWalletAddress }) => {
+      const focusedIndex = focusedWalletAddress
+        ? wallets.findIndex(
+            ({ terraAddress }) => terraAddress === focusedWalletAddress,
+          )
+        : -1;
+
+      const fallbackIndex =
+        focusedIndex > -1
+          ? focusedIndex
+          : fallbackFocusing && wallets.length > 0
+          ? 0
+          : -1;
+
+      return {
+        wallets,
+        focusedWalletAddress: wallets[fallbackIndex]?.terraAddress,
+        focusedWallet: wallets[fallbackIndex],
+        focusedWalletIndex: fallbackIndex,
+      };
+    }),
+  );
 }
