@@ -52,9 +52,7 @@ export async function removeNetwork(
   const { networks, selectedNetwork } = await readNetworkStorage();
   const nextNetworks = networks.filter(({ name }) => network.name !== name);
   const nextSelectedNetwork =
-    network.name === selectedNetwork?.name && nextNetworks.length > 0
-      ? nextNetworks[0]
-      : selectedNetwork;
+    network.name === selectedNetwork?.name ? undefined : selectedNetwork;
 
   await writeNetworkStorage({
     networks: nextNetworks,

@@ -113,11 +113,12 @@ export function ConfigSelectorBase({ className }: { className?: string }) {
                   {defaultNetworks.indexOf(itemNetwork) === -1 && (
                     <button
                       onClick={() => {
+                        console.log('ConfigSelector.tsx..() ????!!!!');
                         removeNetwork(itemNetwork);
                         setAnchorElement(null);
                       }}
                     >
-                      <DeleteForever />
+                      <DeleteForever /> ??
                     </button>
                   )}
                 </li>
