@@ -2,7 +2,7 @@ import { validateMnemonic } from '@terra-money/key-utils';
 import { useEffect, useMemo, useState } from 'react';
 import { EncryptedWallet } from '../models/InternalWallet';
 import { LedgerWallet } from '../models/LedgerWallet';
-import { readWalletsStorage } from '../storages/wallets';
+import { readWalletsStorage } from '../interfaces/wallets';
 
 export enum WalletNameInvalid {
   SAME_NAME_EXISTS = 'SAME_NAME_EXISTS',
