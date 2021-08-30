@@ -7,6 +7,7 @@ import {
   SettingsBackupRestore,
   Usb,
   VpnKey,
+  Web,
 } from '@material-ui/icons';
 import {
   EncryptedWallet,
@@ -92,13 +93,15 @@ function DashboardBase({ className }: { className?: string }) {
 
         {encryptedWallets.length > 0 && !!encryptedWallets[selectedIndex] && (
           <div className="wallet-actions">
-            <MiniButton
-              startIcon={<VpnKey />}
-              component={Link}
-              to={`/wallets/${encryptedWallets[selectedIndex].terraAddress}/password`}
-            >
-              <FormattedMessage id="wallet.change-password" />
-            </MiniButton>
+            {'encryptedWallet' in encryptedWallets[selectedIndex] && (
+              <MiniButton
+                startIcon={<VpnKey />}
+                component={Link}
+                to={`/wallets/${encryptedWallets[selectedIndex].terraAddress}/password`}
+              >
+                <FormattedMessage id="wallet.change-password" />
+              </MiniButton>
+            )}
 
             <MiniButton
               startIcon={<DeleteForever />}
@@ -224,7 +227,7 @@ function DashboardBase({ className }: { className?: string }) {
                 <Usb />
               </i>
               <span>
-                <FormattedMessage id="wallet.new" />
+                <FormattedMessage id="wallet.new.ledger" />
               </span>
             </a>
           </li>
@@ -252,7 +255,7 @@ function DashboardBase({ className }: { className?: string }) {
         <li>
           <Link to="/hostnames">
             <i>
-              <SettingsBackupRestore />
+              <Web />
             </i>
             <span>Manage Sites</span>
           </Link>
