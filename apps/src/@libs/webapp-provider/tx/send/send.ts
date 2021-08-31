@@ -5,7 +5,7 @@ import {
   useRefetchQueries,
   useTerraWebapp,
 } from '@libs/webapp-provider';
-import { useConnectedWallet } from '@terra-money/wallet-provider';
+import { useConnectedWallet } from '@terra-dev/use-wallet';
 import { useCallback } from 'react';
 
 export interface SendTxParams {

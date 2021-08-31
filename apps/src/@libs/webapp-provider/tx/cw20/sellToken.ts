@@ -11,7 +11,7 @@ import {
   useRefetchQueries,
   useTerraWebapp,
 } from '@libs/webapp-provider';
-import { useConnectedWallet } from '@terra-money/wallet-provider';
+import { useConnectedWallet } from '@terra-dev/use-wallet';
 import big from 'big.js';
 import { useCallback } from 'react';
 import { useTerraswapPoolQuery } from '../../queries/terraswap/pool';

@@ -8,7 +8,7 @@ import {
   TokenBalances,
 } from '@libs/webapp-fns';
 import { useBank, useTerraWebapp } from '@libs/webapp-provider';
-import { useConnectedWallet } from '@terra-money/wallet-provider';
+import { useConnectedWallet } from '@terra-dev/use-wallet';
 
 export interface CW20BuyTokenFormParams {
   ustTokenPairAddr: HumanAddr;

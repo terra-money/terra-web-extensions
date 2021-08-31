@@ -8,7 +8,7 @@ import {
   TokenBalances,
 } from '@libs/webapp-fns';
 import { useBank, useTerraWebapp } from '@libs/webapp-provider';
-import { useConnectedWallet } from '@terra-money/wallet-provider';
+import { useConnectedWallet } from '@terra-dev/use-wallet';
 import { useCW20BalanceQuery } from '../../queries/cw20/balance';
 
 export interface CW20SellTokenFormParams {

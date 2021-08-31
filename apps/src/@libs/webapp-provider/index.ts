@@ -15,6 +15,7 @@ export * from './queries/cw20/tokenInfo';
 export * from './queries/gasPrice';
 export * from './queries/send/balance';
 export * from './queries/terra/balances';
+export * from './queries/terra/balancesWithTokenInfo';
 export * from './queries/terraswap/pair';
 export * from './queries/terraswap/pool';
 export * from './tx/cw20/buyToken';

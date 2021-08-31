@@ -9,7 +9,7 @@ import {
   TokenBalances,
 } from '@libs/webapp-fns';
 import { useBank, useTerraWebapp } from '@libs/webapp-provider';
-import { useConnectedWallet } from '@terra-money/wallet-provider';
+import { useConnectedWallet } from '@terra-dev/use-wallet';
 import { useSendBalanceQuery } from '../../queries/send/balance';
 
 export interface SendFormParams {

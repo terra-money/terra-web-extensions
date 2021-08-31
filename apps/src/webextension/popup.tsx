@@ -1,17 +1,11 @@
 import { yScroller } from '@libs/station-ui/styles/yScroller';
+import { TerraWebappProvider } from '@libs/webapp-provider';
 import { createMuiTheme } from '@material-ui/core';
-import { WebExtensionNetworkInfo } from '@terra-dev/web-extension';
-import { observeNetworkStorage } from '@terra-dev/web-extension-backend';
 import { GlobalStyle } from 'common/components/GlobalStyle';
-import { Constants, ConstantsProvider } from 'common/contexts/constants';
-import { ContractProvider } from 'common/contexts/contract';
-import {
-  columbusContractAddresses,
-  tequilaContractAddresses,
-} from 'common/env';
-import React, { ReactNode, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { render } from 'react-dom';
 import { IntlProvider } from 'react-intl';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import {
   HashRouter,
   Redirect,
@@ -24,7 +18,8 @@ import { ErrorBoundary } from './components/common/ErrorBoundary';
 import { PopupHeader } from './components/popup/PopupHeader';
 import { LocalesProvider, useIntlProps } from './contexts/locales';
 import { ThemeProvider } from './contexts/theme';
-import { contentHeight, defaultNetworks, headerHeight, width } from './env';
+import { WebExtensionInternalWalletProvider } from './contexts/wallet-provider';
+import { contentHeight, headerHeight, width } from './env';
 import { Dashboard } from './pages/dashboard';
 import { ApprovedHostnames } from './pages/hostnames/approved-hostnames';
 import { NetworkCreate } from './pages/networks/create';
@@ -40,62 +35,7 @@ const theme: DefaultTheme = createMuiTheme({
   },
 });
 
-function NetworkProviders({ children }: { children: ReactNode }) {
-  // ---------------------------------------------
-  // graphql settings
-  // ---------------------------------------------
-  const [
-    selectedNetwork,
-    setSelectedNetwork,
-  ] = useState<WebExtensionNetworkInfo>(() => defaultNetworks[0]);
-
-  const isMainnet = useMemo(() => {
-    return /^columbus/.test(selectedNetwork.chainID);
-  }, [selectedNetwork.chainID]);
-
-  const addressMap = useMemo(() => {
-    return isMainnet ? columbusContractAddresses : tequilaContractAddresses;
-  }, [isMainnet]);
-
-  const constants = useMemo<Constants>(
-    () =>
-      isMainnet
-        ? {
-            gasFee: 1000000,
-            fixedGas: 500000,
-            blocksPerYear: 4906443,
-            gasAdjustment: 1.6,
-          }
-        : {
-            gasFee: 6000000,
-            fixedGas: 3500000,
-            blocksPerYear: 4906443,
-            gasAdjustment: 1.4,
-          },
-    [isMainnet],
-  );
-
-  useEffect(() => {
-    const subscription = observeNetworkStorage().subscribe(
-      ({ selectedNetwork: nextSelectedNetwork }) => {
-        setSelectedNetwork(nextSelectedNetwork ?? defaultNetworks[0]);
-      },
-    );
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, []);
-
-  // ---------------------------------------------
-  // presentation
-  // ---------------------------------------------
-  return (
-    <ConstantsProvider {...constants}>
-      <ContractProvider address={addressMap}>{children}</ContractProvider>
-    </ConstantsProvider>
-  );
-}
+const queryClient = new QueryClient();
 
 function MainBase({ className }: { className?: string }) {
   const { locale, messages } = useIntlProps();
@@ -120,30 +60,34 @@ function MainBase({ className }: { className?: string }) {
   }, []);
 
   return (
-    <NetworkProviders>
-      <IntlProvider locale={locale} messages={messages}>
-        <ThemeProvider theme={theme}>
-          <div className={className}>
-            <PopupHeader />
-            <section ref={containerRef}>
-              <Switch>
-                <Route exact path="/" component={Dashboard} />
-                <Route path="/wallet/create" component={WalletCreate} />
-                <Route path="/wallet/recover" component={WalletRecover} />
-                <Route
-                  path="/wallets/:terraAddress/password"
-                  component={WalletChangePassword}
-                />
-                <Route path="/hostnames" component={ApprovedHostnames} />
-                <Route path="/network/create" component={NetworkCreate} />
-                <Redirect to="/" />
-              </Switch>
-            </section>
-            <GlobalStyle />
-          </div>
-        </ThemeProvider>
-      </IntlProvider>
-    </NetworkProviders>
+    <QueryClientProvider client={queryClient}>
+      <WebExtensionInternalWalletProvider>
+        <TerraWebappProvider>
+          <IntlProvider locale={locale} messages={messages}>
+            <ThemeProvider theme={theme}>
+              <div className={className}>
+                <PopupHeader />
+                <section ref={containerRef}>
+                  <Switch>
+                    <Route exact path="/" component={Dashboard} />
+                    <Route path="/wallet/create" component={WalletCreate} />
+                    <Route path="/wallet/recover" component={WalletRecover} />
+                    <Route
+                      path="/wallets/:terraAddress/password"
+                      component={WalletChangePassword}
+                    />
+                    <Route path="/hostnames" component={ApprovedHostnames} />
+                    <Route path="/network/create" component={NetworkCreate} />
+                    <Redirect to="/" />
+                  </Switch>
+                </section>
+                <GlobalStyle />
+              </div>
+            </ThemeProvider>
+          </IntlProvider>
+        </TerraWebappProvider>
+      </WebExtensionInternalWalletProvider>
+    </QueryClientProvider>
   );
 }
 

@@ -10,7 +10,7 @@ import {
   TerraContants,
   TerraContantsInput,
 } from '@libs/webapp-fns';
-import { useWallet } from '@terra-money/wallet-provider';
+import { useWallet } from '@terra-dev/use-wallet';
 import big from 'big.js';
 import React, {
   Consumer,

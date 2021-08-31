@@ -1,7 +1,7 @@
 import { CW20Addr, NativeDenom, Token, u } from '@libs/types';
 import { TokenBalances } from '@libs/webapp-fns';
 import { useBank } from '@libs/webapp-provider';
-import { useConnectedWallet } from '@terra-money/wallet-provider';
+import { useConnectedWallet } from '@terra-dev/use-wallet';
 import { useMemo } from 'react';
 import { useCW20BalanceQuery } from '../cw20/balance';
 

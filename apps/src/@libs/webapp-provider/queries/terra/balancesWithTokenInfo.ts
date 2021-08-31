@@ -3,18 +3,18 @@ import { terraswap } from '@libs/types';
 import { useBrowserInactive } from '@libs/use-browser-inactive';
 import {
   TERRA_QUERY_KEY,
-  TerraBalances,
-  terraBalancesQuery,
+  TerraBalancesWithTokenInfo,
+  terraBalancesWithTokenInfoQuery,
 } from '@libs/webapp-fns';
 import { useTerraWebapp } from '@libs/webapp-provider';
 import { useConnectedWallet } from '@terra-dev/use-wallet';
 import { useQuery, UseQueryResult } from 'react-query';
 
-const queryFn = createQueryFn(terraBalancesQuery);
+const queryFn = createQueryFn(terraBalancesWithTokenInfoQuery);
 
-export function useTerraBalancesQuery(
+export function useTerraBalancesWithTokenInfoQuery(
   assets: terraswap.AssetInfo[],
-): UseQueryResult<TerraBalances | undefined> {
+): UseQueryResult<TerraBalancesWithTokenInfo | undefined> {
   const { mantleFetch, mantleEndpoint, queryErrorReporter } = useTerraWebapp();
 
   const connectedWallet = useConnectedWallet();
