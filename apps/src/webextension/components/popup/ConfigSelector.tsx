@@ -1,3 +1,4 @@
+import { LinedList } from '@libs/station-ui/components/LinedList';
 import {
   Button,
   ButtonProps,
@@ -10,17 +11,16 @@ import {
   Language,
   WifiTethering,
 } from '@material-ui/icons';
-import { LinedList } from '@packages/station-ui/components/LinedList';
 import { WebExtensionNetworkInfo } from '@terra-dev/web-extension';
-import React, { ComponentType, MouseEvent, useEffect, useState } from 'react';
-import { FormattedMessage } from 'react-intl';
-import { useHistory } from 'react-router-dom';
-import styled, { keyframes } from 'styled-components';
 import {
   observeNetworkStorage,
   removeNetwork,
   selectNetwork,
-} from 'webextension/backend/network-storage';
+} from '@terra-dev/web-extension-backend';
+import React, { ComponentType, MouseEvent, useEffect, useState } from 'react';
+import { FormattedMessage } from 'react-intl';
+import { useHistory } from 'react-router-dom';
+import styled, { keyframes } from 'styled-components';
 import { useLocales } from 'webextension/contexts/locales';
 import { defaultNetworks } from 'webextension/env';
 
@@ -113,11 +113,12 @@ export function ConfigSelectorBase({ className }: { className?: string }) {
                   {defaultNetworks.indexOf(itemNetwork) === -1 && (
                     <button
                       onClick={() => {
+                        console.log('ConfigSelector.tsx..() ????!!!!');
                         removeNetwork(itemNetwork);
                         setAnchorElement(null);
                       }}
                     >
-                      <DeleteForever />
+                      <DeleteForever /> ??
                     </button>
                   )}
                 </li>

@@ -1,15 +1,16 @@
+import { FormLayout } from '@libs/station-ui/components/FormLayout';
+import { WalletCardDesignSelector } from '@libs/wallet-card/components/WalletCardDesignSelector';
 import { TextField } from '@material-ui/core';
-import { FormLayout } from '@packages/station-ui/components/FormLayout';
-import { createMnemonicKey } from 'webextension/backend/models/wallet';
-import { WalletCardDesignSelector } from '@packages/wallet-card/components/WalletCardDesignSelector';
+import {
+  createMnemonicKey,
+  validateWalletName,
+  validateWalletPassword,
+} from '@terra-dev/web-extension-backend';
 import { MnemonicKey } from '@terra-money/terra.js';
 import React, { ChangeEvent, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { cardDesigns } from '../../env';
-import {
-  useValidateWalletName,
-  useValidateWalletPassword,
-} from 'webextension/backend/logics/wallet';
+import { useWallets } from '../../queries/useWallets';
 
 export interface CreateNewWalletResult {
   name: string;
@@ -23,6 +24,14 @@ export interface CreateNewWalletFormProps {
 }
 
 export function CreateNewWalletForm({ onChange }: CreateNewWalletFormProps) {
+  // ---------------------------------------------
+  // queries
+  // ---------------------------------------------
+  const { wallets } = useWallets();
+
+  // ---------------------------------------------
+  // states
+  // ---------------------------------------------
   const [name, setName] = useState<string>('');
 
   const [design, setDesign] = useState<string>(
@@ -35,10 +44,20 @@ export function CreateNewWalletForm({ onChange }: CreateNewWalletFormProps) {
     return createMnemonicKey();
   }, []);
 
-  const invalidName = useValidateWalletName(name);
+  // ---------------------------------------------
+  // logics
+  // ---------------------------------------------
+  const invalidName = useMemo(() => {
+    return validateWalletName(name, wallets);
+  }, [name, wallets]);
 
-  const invalidPassword = useValidateWalletPassword(password);
+  const invalidPassword = useMemo(() => {
+    return validateWalletPassword(password);
+  }, [password]);
 
+  // ---------------------------------------------
+  // effects
+  // ---------------------------------------------
   useEffect(() => {
     if (!!invalidName || !!invalidPassword) {
       onChange(null);
@@ -54,6 +73,9 @@ export function CreateNewWalletForm({ onChange }: CreateNewWalletFormProps) {
     }
   }, [design, invalidName, invalidPassword, mk, name, onChange, password]);
 
+  // ---------------------------------------------
+  // presentation
+  // ---------------------------------------------
   return (
     <>
       <WalletCardDesignSelector

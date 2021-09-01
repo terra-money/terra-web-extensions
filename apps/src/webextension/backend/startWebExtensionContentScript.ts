@@ -1,24 +1,28 @@
 import {
+  FromContentScriptToWebMessage,
+  FromWebToContentScriptMessage,
+  isWebExtensionMessage,
   SerializedCreateTxOptions,
   WalletInfo,
+  WebExtensionAddCW20TokenResponse,
+  WebExtensionHasCW20TokensResponse,
   WebExtensionNetworkInfo,
   WebExtensionStates,
+  WebExtensionStatesUpdated,
+  WebExtensionTxResponse,
   WebExtensionTxResult,
   WebExtensionTxStatus,
 } from '@terra-dev/web-extension';
 import {
-  FromContentScriptToWebMessage,
-  FromWebToContentScriptMessage,
-  isWebExtensionMessage,
-  WebExtensionStatesUpdated,
-  WebExtensionTxResponse,
-} from '@terra-dev/web-extension/internal/webapp-contentScripts-messages';
+  hasCW20Tokens,
+  observeHostnamesStorage,
+  observeNetworkStorage,
+  observeWalletsStorage,
+} from '@terra-dev/web-extension-backend';
 //@ts-ignore
 import LocalMessageDuplexStream from 'post-message-stream';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { observeNetworkStorage } from './network-storage';
-import { observeWalletStorage } from './wallet-storage';
 
 export interface ContentScriptOptions {
   defaultNetworks: WebExtensionNetworkInfo[];
@@ -29,11 +33,17 @@ export interface ContentScriptOptions {
     tx: SerializedCreateTxOptions,
   ) => Observable<WebExtensionTxResult>;
   startConnect: (id: string, hostname: string) => Promise<boolean>;
+  startAddCW20Token: (
+    id: string,
+    chainID: string,
+    ...tokenAddrs: string[]
+  ) => Promise<{ [tokenAddr: string]: boolean }>;
 }
 
 export function startWebExtensionContentScript({
   startTx,
   startConnect,
+  startAddCW20Token,
   defaultNetworks,
 }: ContentScriptOptions) {
   // ---------------------------------------------
@@ -77,14 +87,21 @@ export function startWebExtensionContentScript({
     isApproved: boolean;
   };
 
-  const walletsObservable: Observable<WalletsStates> = observeWalletStorage().pipe(
-    map(({ wallets, focusedWalletAddress, approvedHostnames }) => {
+  const walletsObservable: Observable<WalletsStates> = combineLatest([
+    observeHostnamesStorage(),
+    observeWalletsStorage(),
+  ]).pipe(
+    map(([{ approvedHostnames }, { wallets, focusedWalletAddress }]) => {
       const hostname: string = window.location.hostname;
 
       return approvedHostnames.includes(hostname)
         ? {
             // remove sensitive information (e.g. encryptedWallet)
-            wallets: wallets.map(({ encryptedWallet, ...wallet }) => wallet),
+            wallets: wallets.map(({ name, terraAddress, design }) => ({
+              name,
+              terraAddress,
+              design,
+            })),
             focusedWalletAddress,
             isApproved: true,
           }
@@ -360,13 +377,42 @@ export function startWebExtensionContentScript({
             ).subscribe((txResult) => {
               const msg: WebExtensionTxResponse = {
                 type: FromContentScriptToWebMessage.TX_RESPONSE,
-                id: event.data.id,
+                id: +event.data.id,
                 payload: txResult,
               };
 
               window.postMessage(msg, '*');
             });
             break;
+          case FromWebToContentScriptMessage.ADD_CW20_TOKENS:
+            startAddCW20Token(
+              Date.now().toString(),
+              event.data.chainID,
+              ...event.data.tokenAddrs,
+            ).then((result) => {
+              const msg: WebExtensionAddCW20TokenResponse = {
+                type: FromContentScriptToWebMessage.ADD_CW20_TOKENS_RESPONSE,
+                id: +event.data.id,
+                chainID: event.data.chainID,
+                payload: result,
+              };
+
+              window.postMessage(msg, '*');
+            });
+            break;
+          case FromWebToContentScriptMessage.HAS_CW20_TOKENS:
+            hasCW20Tokens(event.data.chainID, event.data.tokenAddrs).then(
+              (result) => {
+                const msg: WebExtensionHasCW20TokensResponse = {
+                  type: FromContentScriptToWebMessage.HAS_CW20_TOKENS_RESPONSE,
+                  id: +event.data.id,
+                  chainID: event.data.chainID,
+                  payload: result,
+                };
+
+                window.postMessage(msg, '*');
+              },
+            );
         }
       },
       false,

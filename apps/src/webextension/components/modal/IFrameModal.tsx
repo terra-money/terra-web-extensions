@@ -58,6 +58,8 @@ const iframeEnter = keyframes`
 `;
 
 export const IFrameModal = styled(IFrameModalBase)`
+  all: initial;
+
   position: fixed;
   z-index: 100000;
 

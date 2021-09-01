@@ -1,16 +1,17 @@
+import { AccAddress } from '@terra-money/terra.js';
 import bowser from 'bowser';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { createTxErrorFromJson, WebExtensionUserDenied } from './errors';
 import {
+  AddCW20Tokens,
   ExecuteExtensionTx,
   FromContentScriptToWebMessage,
   FromWebToContentScriptMessage,
+  HasCW20Tokens,
   isWebExtensionMessage,
+  PostParams,
   RefetchExtensionStates,
   RequestApproval,
-} from './internal/webapp-contentScripts-messages';
-import {
-  PostParams,
   serializeTx,
   WebExtensionStates,
   WebExtensionStatus,
@@ -256,6 +257,93 @@ export class WebExtensionController {
         };
       },
     );
+  };
+
+  /**
+   * Add CW20 Token to extension dashboard
+   */
+  addCW20Tokens = (chainID: string, ...tokenAddrs: string[]) => {
+    if (!tokenAddrs.every((tokenAddr) => AccAddress.validate(tokenAddr))) {
+      console.error(
+        `There is invalid CW20 token address "${tokenAddrs.join(', ')}"`,
+      );
+    }
+
+    const id = Date.now();
+
+    const msg: AddCW20Tokens = {
+      type: FromWebToContentScriptMessage.ADD_CW20_TOKENS,
+      id,
+      chainID,
+      tokenAddrs,
+    };
+
+    this.hostWindow.postMessage(msg, '*');
+
+    return new Promise<{ [tokenAddr: string]: boolean }>((resolve) => {
+      const callback = (event: MessageEvent) => {
+        if (
+          !isWebExtensionMessage(event.data) ||
+          event.data.type !==
+            FromContentScriptToWebMessage.ADD_CW20_TOKENS_RESPONSE ||
+          event.data.id !== id
+        ) {
+          return;
+        }
+
+        resolve(event.data.payload);
+
+        this.hostWindow.removeEventListener('message', callback);
+      };
+
+      this.hostWindow.addEventListener('message', callback);
+
+      return () => {
+        this.hostWindow.removeEventListener('message', callback);
+      };
+    });
+  };
+
+  hasCW20Tokens = (chainID: string, ...tokenAddrs: string[]) => {
+    if (!tokenAddrs.every((tokenAddr) => AccAddress.validate(tokenAddr))) {
+      console.error(
+        `There is invalid CW20 token address "${tokenAddrs.join(', ')}"`,
+      );
+    }
+
+    const id = Date.now();
+
+    const msg: HasCW20Tokens = {
+      type: FromWebToContentScriptMessage.HAS_CW20_TOKENS,
+      id,
+      chainID,
+      tokenAddrs,
+    };
+
+    this.hostWindow.postMessage(msg, '*');
+
+    return new Promise<{ [tokenAddr: string]: boolean }>((resolve) => {
+      const callback = (event: MessageEvent) => {
+        if (
+          !isWebExtensionMessage(event.data) ||
+          event.data.type !==
+            FromContentScriptToWebMessage.HAS_CW20_TOKENS_RESPONSE ||
+          event.data.id !== id
+        ) {
+          return;
+        }
+
+        resolve(event.data.payload);
+
+        this.hostWindow.removeEventListener('message', callback);
+      };
+
+      this.hostWindow.addEventListener('message', callback);
+
+      return () => {
+        this.hostWindow.removeEventListener('message', callback);
+      };
+    });
   };
 
   /**

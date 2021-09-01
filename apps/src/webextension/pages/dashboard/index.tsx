@@ -1,112 +1,94 @@
+import { formatUTokenWithPostfixUnits } from '@libs/formatter';
+import { LinedList } from '@libs/station-ui/components/LinedList';
+import { MiniButton } from '@libs/station-ui/components/MiniButton';
+import { AnimateNumber } from '@libs/ui';
+import { WalletCard, WalletCardSelector } from '@libs/wallet-card';
 import {
   AddCircleOutline,
   DeleteForever,
   SettingsBackupRestore,
+  Usb,
   VpnKey,
+  Web,
 } from '@material-ui/icons';
-import { LinedList } from '@packages/station-ui/components/LinedList';
-import { MiniButton } from '@packages/station-ui/components/MiniButton';
-import { WalletCard, WalletCardSelector } from '@packages/wallet-card';
-import { EncryptedWallet } from 'webextension/backend/models/wallet';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import {
+  focusWallet,
+  isLedgerSupportBrowser,
+  removeWallet,
+} from '@terra-dev/web-extension-backend';
+import React, { useCallback, useMemo } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
-import {
-  focusWallet,
-  observeWalletStorage,
-  removeWallet,
-} from 'webextension/backend/wallet-storage';
+import { useTokenList } from 'webextension/queries/useTokenList';
+import { useWallets } from '../../queries/useWallets';
 
 function DashboardBase({ className }: { className?: string }) {
   const history = useHistory();
 
-  const [encryptedWallets, setEncryptedWallets] = useState<EncryptedWallet[]>(
-    [],
-  );
+  const { wallets, focusedWallet, focusedWalletIndex } = useWallets();
 
-  const [selectedIndex, setSelectedIndex] = useState<number>(0);
-
-  const walletCards = useMemo(() => {
-    return encryptedWallets.map(({ name, terraAddress, design }) => (
-      <WalletCard
-        key={name}
-        name={name}
-        terraAddress={terraAddress}
-        design={design}
-      />
-    ));
-  }, [encryptedWallets]);
+  const isLedgerSupport = useMemo(() => {
+    return isLedgerSupportBrowser();
+  }, []);
 
   const updateSelectedIndex = useCallback(
     async (nextSelectedIndex) => {
-      const nextWallet = encryptedWallets[nextSelectedIndex];
+      const nextWallet = wallets[nextSelectedIndex];
       if (nextWallet) {
         await focusWallet(nextWallet.terraAddress);
-        setSelectedIndex(nextSelectedIndex);
       }
     },
-    [encryptedWallets],
+    [wallets],
   );
 
-  useEffect(() => {
-    const subscription = observeWalletStorage().subscribe(
-      ({ wallets, focusedWalletAddress }) => {
-        const nextSelectedIndex = wallets.findIndex(
-          (itemWallet) => itemWallet.terraAddress === focusedWalletAddress,
-        );
-
-        setEncryptedWallets(wallets);
-        setSelectedIndex(nextSelectedIndex > -1 ? nextSelectedIndex : 0);
-      },
-    );
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, []);
-
-  //const {
-  //  data: { uUSD, uaUST, uLuna, ubLuna, uANC },
-  //} = useUserBalances({ selectedWallet: encryptedWallets[selectedIndex] });
+  const tokens = useTokenList();
 
   return (
     <section className={className}>
-      <header>
-        <WalletCardSelector
-          className="wallet-cards"
-          cardWidth={276}
-          selectedIndex={selectedIndex}
-          onSelect={updateSelectedIndex}
-          onCreate={() => history.push('/wallet/create')}
-        >
-          {walletCards}
-        </WalletCardSelector>
+      {wallets.length > 0 ? (
+        <header>
+          <WalletCardSelector
+            className="wallet-cards"
+            cardWidth={276}
+            selectedIndex={focusedWalletIndex}
+            onSelect={updateSelectedIndex}
+            onCreate={() => history.push('/wallet/create')}
+          >
+            {wallets.map(({ name, terraAddress, design }) => (
+              <WalletCard
+                key={name}
+                name={name}
+                terraAddress={terraAddress}
+                design={design}
+              />
+            ))}
+          </WalletCardSelector>
 
-        {encryptedWallets.length > 0 && !!encryptedWallets[selectedIndex] && (
-          <div className="wallet-actions">
-            <MiniButton
-              startIcon={<VpnKey />}
-              component={Link}
-              to={`/wallets/${encryptedWallets[selectedIndex].terraAddress}/password`}
-            >
-              <FormattedMessage id="wallet.change-password" />
-            </MiniButton>
+          {wallets.length > 0 && !!focusedWallet && (
+            <div className="wallet-actions">
+              {'encryptedWallet' in focusedWallet && (
+                <MiniButton
+                  startIcon={<VpnKey />}
+                  component={Link}
+                  to={`/wallets/${focusedWallet.terraAddress}/password`}
+                >
+                  <FormattedMessage id="wallet.change-password" />
+                </MiniButton>
+              )}
 
-            <MiniButton
-              startIcon={<DeleteForever />}
-              onClick={() => {
-                console.log('index.tsx..()', selectedIndex);
-                removeWallet(encryptedWallets[selectedIndex]);
-              }}
-            >
-              <FormattedMessage id="wallet.delete" />
-            </MiniButton>
-          </div>
-        )}
-      </header>
-
-      {encryptedWallets.length === 0 && (
+              <MiniButton
+                startIcon={<DeleteForever />}
+                onClick={() => {
+                  removeWallet(focusedWallet);
+                }}
+              >
+                <FormattedMessage id="wallet.delete" />
+              </MiniButton>
+            </div>
+          )}
+        </header>
+      ) : (
         <section className="empty-wallets">
           <FormattedMessage id="wallet.empty" />
         </section>
@@ -117,99 +99,36 @@ function DashboardBase({ className }: { className?: string }) {
         iconMarginRight="0.6em"
         firstLetterUpperCase={false}
       >
-        {/*{uLuna && big(uLuna).gt(0) && (*/}
-        {/*  <li>*/}
-        {/*    <div>*/}
-        {/*      <i>*/}
-        {/*        <img*/}
-        {/*          src="https://assets.terra.money/icon/60/Luna.png"*/}
-        {/*          alt="Luna"*/}
-        {/*        />*/}
-        {/*      </i>*/}
-        {/*      <span>Luna</span>*/}
-        {/*    </div>*/}
-        {/*    <div>*/}
-        {/*      <AnimateNumber format={formatLuna}>*/}
-        {/*        {demicrofy(uLuna)}*/}
-        {/*      </AnimateNumber>*/}
-        {/*    </div>*/}
-        {/*  </li>*/}
-        {/*)}*/}
-        {/*{uUSD && big(uUSD).gt(0) && (*/}
-        {/*  <li>*/}
-        {/*    <div>*/}
-        {/*      <i>*/}
-        {/*        <img*/}
-        {/*          src="https://assets.terra.money/icon/60/UST.png"*/}
-        {/*          alt="UST"*/}
-        {/*        />*/}
-        {/*      </i>*/}
-        {/*      <span>UST</span>*/}
-        {/*    </div>*/}
-        {/*    <div>*/}
-        {/*      <AnimateNumber format={formatUST}>*/}
-        {/*        {demicrofy(uUSD)}*/}
-        {/*      </AnimateNumber>*/}
-        {/*    </div>*/}
-        {/*  </li>*/}
-        {/*)}*/}
-        {/*{uANC && big(uANC).gt(0) && (*/}
-        {/*  <li>*/}
-        {/*    <div>*/}
-        {/*      <i>*/}
-        {/*        <img*/}
-        {/*          src="https://whitelist.anchorprotocol.com/logo/ANC.png"*/}
-        {/*          alt="ANC"*/}
-        {/*        />*/}
-        {/*      </i>*/}
-        {/*      <span>ANC</span>*/}
-        {/*    </div>*/}
-        {/*    <div>*/}
-        {/*      <AnimateNumber format={formatANC}>*/}
-        {/*        {demicrofy(uANC)}*/}
-        {/*      </AnimateNumber>*/}
-        {/*    </div>*/}
-        {/*  </li>*/}
-        {/*)}*/}
-        {/*{ubLuna && big(ubLuna).gt(0) && (*/}
-        {/*  <li>*/}
-        {/*    <div>*/}
-        {/*      <i>*/}
-        {/*        <img*/}
-        {/*          src="https://whitelist.anchorprotocol.com/logo/bLUNA.png"*/}
-        {/*          alt="bLUNA"*/}
-        {/*        />*/}
-        {/*      </i>*/}
-        {/*      <span>bLUNA</span>*/}
-        {/*    </div>*/}
-        {/*    <div>*/}
-        {/*      <AnimateNumber format={formatLuna}>*/}
-        {/*        {demicrofy(ubLuna)}*/}
-        {/*      </AnimateNumber>*/}
-        {/*    </div>*/}
-        {/*  </li>*/}
-        {/*)}*/}
-        {/*{uaUST && big(uaUST).gt(0) && (*/}
-        {/*  <li>*/}
-        {/*    <div>*/}
-        {/*      <i>*/}
-        {/*        <img*/}
-        {/*          src="https://whitelist.anchorprotocol.com/logo/aUST.png"*/}
-        {/*          alt="aUST"*/}
-        {/*        />*/}
-        {/*      </i>*/}
-        {/*      <span>aUST</span>*/}
-        {/*    </div>*/}
-        {/*    <div>*/}
-        {/*      <AnimateNumber format={formatAUST}>*/}
-        {/*        {demicrofy(uaUST)}*/}
-        {/*      </AnimateNumber>*/}
-        {/*    </div>*/}
-        {/*  </li>*/}
-        {/*)}*/}
+        {tokens?.map(({ balance, info, icon, deleteToken }, i) => (
+          <li key={'token' + i}>
+            <div>
+              <i onClick={deleteToken}>
+                <img src={icon} alt={info?.name} />
+              </i>
+              <span>{info?.symbol}</span>
+            </div>
+            <div>
+              <AnimateNumber format={formatUTokenWithPostfixUnits}>
+                {balance}
+              </AnimateNumber>
+            </div>
+          </li>
+        ))}
       </LinedList>
 
       <LinedList className="wallets-actions" iconMarginRight="0.6em">
+        {isLedgerSupport && (
+          <li>
+            <a href="/connect-ledger.html" target="_blank" rel="noreferrer">
+              <i>
+                <Usb />
+              </i>
+              <span>
+                <FormattedMessage id="wallet.new.ledger" />
+              </span>
+            </a>
+          </li>
+        )}
         <li>
           <Link to="/wallet/create">
             <i>
@@ -231,9 +150,17 @@ function DashboardBase({ className }: { className?: string }) {
           </Link>
         </li>
         <li>
+          <Link to="/cw20/add">
+            <i>
+              <Web />
+            </i>
+            <span>Add CW20 Token</span>
+          </Link>
+        </li>
+        <li>
           <Link to="/hostnames">
             <i>
-              <SettingsBackupRestore />
+              <Web />
             </i>
             <span>Manage Sites</span>
           </Link>

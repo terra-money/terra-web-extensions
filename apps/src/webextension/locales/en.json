@@ -3,6 +3,7 @@
   "wallet.delete": "Delete wallet",
   "wallet.recover": "Recover existing wallet",
   "wallet.new": "New wallet",
+  "wallet.new.ledger": "Acceess with ledger",
   "wallet.empty": "Please add a new wallet",
   "locale.en-US": "English",
   "locale.ko-KR": "Korean"

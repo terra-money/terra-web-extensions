@@ -1,21 +1,31 @@
+import { FormLayout } from '@libs/station-ui/components/FormLayout';
+import { FormSection } from '@libs/station-ui/components/FormSection';
 import { Button, TextField } from '@material-ui/core';
-import { FormLayout } from '@packages/station-ui/components/FormLayout';
-import { FormSection } from '@packages/station-ui/components/FormSection';
 import {
   decryptWallet,
   EncryptedWallet,
   encryptWallet,
+  findWallet,
+  updateWallet,
+  validateWalletPassword,
   Wallet,
-} from 'webextension/backend/models/wallet';
-import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
+} from '@terra-dev/web-extension-backend';
+import React, {
+  ChangeEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { useValidateWalletPassword } from 'webextension/backend/logics/wallet';
-import { findWallet, updateWallet } from 'webextension/backend/wallet-storage';
 
 export function WalletChangePassword({
   match,
   history,
 }: RouteComponentProps<{ terraAddress: string }>) {
+  // ---------------------------------------------
+  // states
+  // ---------------------------------------------
   const [
     encryptedWallet,
     setEncryptedWallet,
@@ -27,15 +37,23 @@ export function WalletChangePassword({
 
   const [newPassword, setNewPassword] = useState<string>('');
 
-  const invalidPassword = useValidateWalletPassword(newPassword);
+  // ---------------------------------------------
+  // logics
+  // ---------------------------------------------
+  const invalidPassword = useMemo(() => {
+    return validateWalletPassword(newPassword);
+  }, [newPassword]);
 
+  // ---------------------------------------------
+  // effects
+  // ---------------------------------------------
   useEffect(() => {
     if (!match) {
       setEncryptedWallet(null);
     } else {
       const { terraAddress } = match.params;
       findWallet(terraAddress).then((wallet) => {
-        if (wallet) {
+        if (wallet && 'encryptedWallet' in wallet) {
           setEncryptedWallet(wallet);
         } else {
           setUndefinedWallet(true);
@@ -44,6 +62,9 @@ export function WalletChangePassword({
     }
   }, [match]);
 
+  // ---------------------------------------------
+  // callbacks
+  // ---------------------------------------------
   const changePassword = useCallback(async () => {
     if (!encryptedWallet) {
       return;
@@ -64,6 +85,9 @@ export function WalletChangePassword({
     history.push('/');
   }, [currentPassword, history, newPassword, encryptedWallet]);
 
+  // ---------------------------------------------
+  // presentation
+  // ---------------------------------------------
   if (!encryptedWallet) {
     return null;
   }

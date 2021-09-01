@@ -3,5 +3,6 @@
   "wallet.delete": "지갑 삭제",
   "wallet.recover": "기존 지갑 복원하기",
   "wallet.new": "새 지갑",
+  "wallet.new.ledger": "렛저 연결",
   "wallet.empty": "지갑이 없습니다. 새 지갑을 만들어주세요."
 }

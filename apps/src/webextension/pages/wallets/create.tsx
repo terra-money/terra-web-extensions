@@ -1,13 +1,13 @@
+import { FormSection } from '@libs/station-ui/components/FormSection';
 import { Button } from '@material-ui/core';
-import { FormSection } from '@packages/station-ui/components/FormSection';
 import {
+  addWallet,
   createWallet,
   EncryptedWallet,
   encryptWallet,
-} from 'webextension/backend/models/wallet';
+} from '@terra-dev/web-extension-backend';
 import React, { useCallback, useState } from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { addWallet } from 'webextension/backend/wallet-storage';
 import {
   CreateNewWalletForm,
   CreateNewWalletResult,

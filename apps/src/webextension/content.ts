@@ -8,6 +8,11 @@ import {
   WebExtensionTxStatus,
   WebExtensionTxSucceed,
 } from '@terra-dev/web-extension';
+import {
+  findWallet,
+  toURLSearchParams,
+  TxRequest,
+} from '@terra-dev/web-extension-backend';
 import { createElement } from 'react';
 import { render } from 'react-dom';
 import { Observable } from 'rxjs';
@@ -26,73 +31,96 @@ function startTxWithIframeModal(
   tx: SerializedCreateTxOptions,
 ): Observable<WebExtensionTxResult> {
   return new Observable<WebExtensionTxResult>((subscriber) => {
-    // ---------------------------------------------
-    // assets
-    // ---------------------------------------------
-    const modalContainer = window.document.createElement('div');
-
-    const port = browser.runtime.connect(undefined, {
-      name: contentScriptPortPrefix + id,
-    });
-
-    // do not call before latest subscriber.next()
-    const endTx = () => {
-      window.document.querySelector('body')?.removeChild(modalContainer);
-      port.disconnect();
-      subscriber.unsubscribe();
-    };
-
-    // ---------------------------------------------
-    // create and append modal
-    // ---------------------------------------------
-    const txHtml = browser.runtime.getURL('tx.html');
-
-    const txBase64 = btoa(JSON.stringify(tx));
-    const networkBase64 = btoa(JSON.stringify(network));
-
-    const hostname = window.location.hostname;
-    const timestamp = Date.now();
-
-    const modal = createElement(IFrameModal, {
-      src: `${txHtml}?id=${id}&terraAddress=${terraAddress}&network=${networkBase64}&tx=${txBase64}&hostname=${hostname}&timestamp=${timestamp}`,
-      title: 'Tx',
-      onClose: () => {
-        subscriber.next({
-          status: WebExtensionTxStatus.DENIED,
-        });
-        endTx();
-      },
-    });
-
-    render(modal, modalContainer);
-    window.document.querySelector('body')?.appendChild(modalContainer);
-
-    // ---------------------------------------------
-    // connect port (background -> content_script)
-    // ---------------------------------------------
-    const onMessage = (
-      msg:
-        | WebExtensionTxProgress
-        | WebExtensionTxSucceed
-        | WebExtensionTxFail
-        | WebExtensionTxDenied,
-    ) => {
-      if (!msg.status) {
+    findWallet(terraAddress).then((wallet) => {
+      if (!wallet) {
+        subscriber.error(new Error(`Can't find wallet ${terraAddress}`));
         return;
       }
 
-      subscriber.next(msg);
+      const isPopup = 'usbDevice' in wallet;
 
-      switch (msg.status) {
-        case WebExtensionTxStatus.SUCCEED:
-        case WebExtensionTxStatus.FAIL:
-        case WebExtensionTxStatus.DENIED:
-          endTx();
-          break;
+      // ---------------------------------------------
+      // assets
+      // ---------------------------------------------
+      const modalContainer = !isPopup
+        ? window.document.createElement('div')
+        : null;
+
+      const port = browser.runtime.connect(undefined, {
+        name: contentScriptPortPrefix + id,
+      });
+
+      // do not call before latest subscriber.next()
+      const endTx = () => {
+        if (modalContainer) {
+          window.document.querySelector('body')?.removeChild(modalContainer);
+        }
+        port.disconnect();
+        subscriber.unsubscribe();
+      };
+
+      // ---------------------------------------------
+      // create and append modal
+      // ---------------------------------------------
+      const txHtml = browser.runtime.getURL('tx.html');
+
+      const txRequest: TxRequest = {
+        id,
+        terraAddress,
+        network,
+        tx,
+        hostname: window.location.hostname,
+        date: new Date(),
+        closeWindowAfterTx: isPopup,
+      };
+
+      const src = `${txHtml}?${toURLSearchParams(txRequest)}`;
+
+      if (modalContainer) {
+        const modal = createElement(IFrameModal, {
+          src: `${txHtml}?${toURLSearchParams(txRequest)}`,
+          title: 'Tx',
+          onClose: () => {
+            subscriber.next({
+              status: WebExtensionTxStatus.DENIED,
+            });
+            endTx();
+          },
+        });
+
+        render(modal, modalContainer);
+        window.document.querySelector('body')?.appendChild(modalContainer);
+      } else {
+        window.open(src, 'terra-station-tx');
       }
-    };
 
-    port.onMessage.addListener(onMessage);
+      // ---------------------------------------------
+      // connect port (background -> content_script)
+      // ---------------------------------------------
+      const onMessage = (
+        msg:
+          | WebExtensionTxProgress
+          | WebExtensionTxSucceed
+          | WebExtensionTxFail
+          | WebExtensionTxDenied,
+      ) => {
+        if (!msg.status) {
+          return;
+        }
+
+        subscriber.next(msg);
+
+        switch (msg.status) {
+          case WebExtensionTxStatus.SUCCEED:
+          case WebExtensionTxStatus.FAIL:
+          case WebExtensionTxStatus.DENIED:
+            endTx();
+            break;
+        }
+      };
+
+      port.onMessage.addListener(onMessage);
+    });
   });
 }
 
@@ -112,10 +140,10 @@ function startConnectWithIframeModal(
       port.disconnect();
     };
 
-    const connectHtml = browser.runtime.getURL('connect.html');
+    const html = browser.runtime.getURL('connect.html');
 
     const modal = createElement(IFrameModal, {
-      src: `${connectHtml}?id=${id}&hostname=${hostname}`,
+      src: `${html}?id=${id}&hostname=${hostname}`,
       title: 'Connect',
       onClose: () => {
         resolve(false);
@@ -135,9 +163,52 @@ function startConnectWithIframeModal(
   });
 }
 
+function startAddCW20TokenWithIframeModal(
+  id: string,
+  chainID: string,
+  ...tokenAddrs: string[]
+): Promise<{ [tokenAddr: string]: boolean }> {
+  return new Promise<{ [tokenAddr: string]: boolean }>((resolve) => {
+    const modalContainer = window.document.createElement('div');
+
+    const port = browser.runtime.connect(undefined, {
+      name: contentScriptPortPrefix + id,
+    });
+
+    const endConnect = () => {
+      window.document.querySelector('body')?.removeChild(modalContainer);
+      port.disconnect();
+    };
+
+    const html = browser.runtime.getURL('add-cw20-token.html');
+
+    const modal = createElement(IFrameModal, {
+      src: `${html}?id=${id}&chain-id=${chainID}&token-addrs=${tokenAddrs.join(
+        ',',
+      )}`,
+      title: 'Add CW20 Tokens',
+      onClose: () => {
+        window.document.querySelector('body')?.removeChild(modalContainer);
+        endConnect();
+      },
+    });
+
+    render(modal, modalContainer);
+    window.document.querySelector('body')?.appendChild(modalContainer);
+
+    const onMessage = (msg: { [tokenAddr: string]: boolean }) => {
+      resolve(msg);
+      endConnect();
+    };
+
+    port.onMessage.addListener(onMessage);
+  });
+}
+
 const contentScriptOptions: ContentScriptOptions = {
   startTx: startTxWithIframeModal,
   startConnect: startConnectWithIframeModal,
+  startAddCW20Token: startAddCW20TokenWithIframeModal,
   defaultNetworks,
 };
 
