@@ -10,6 +10,7 @@ export * from './forms/send/send';
 export * from './hooks/useGasPrice';
 export * from './hooks/useRefetchQueries';
 export * from './queries/cw20/balance';
+export * from './queries/cw20/icons';
 export * from './queries/cw20/poolInfo';
 export * from './queries/cw20/tokenInfo';
 export * from './queries/gasPrice';

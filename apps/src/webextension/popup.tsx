@@ -14,6 +14,7 @@ import {
   useLocation,
 } from 'react-router-dom';
 import styled, { DefaultTheme, keyframes } from 'styled-components';
+import { CW20Add } from 'webextension/pages/cw20/add';
 import { ErrorBoundary } from './components/common/ErrorBoundary';
 import { PopupHeader } from './components/popup/PopupHeader';
 import { LocalesProvider, useIntlProps } from './contexts/locales';
@@ -78,6 +79,7 @@ function MainBase({ className }: { className?: string }) {
                     />
                     <Route path="/hostnames" component={ApprovedHostnames} />
                     <Route path="/network/create" component={NetworkCreate} />
+                    <Route path="/cw20/add" component={CW20Add} />
                     <Redirect to="/" />
                   </Switch>
                 </section>

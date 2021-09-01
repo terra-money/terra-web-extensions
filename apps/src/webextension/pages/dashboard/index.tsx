@@ -20,7 +20,7 @@ import React, { useCallback, useMemo } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
-import { useTokenBalances } from '../../queries/useTokenBalances';
+import { useTokenList } from 'webextension/queries/useTokenList';
 import { useWallets } from '../../queries/useWallets';
 
 function DashboardBase({ className }: { className?: string }) {
@@ -42,7 +42,7 @@ function DashboardBase({ className }: { className?: string }) {
     [wallets],
   );
 
-  const tokens = useTokenBalances();
+  const tokens = useTokenList();
 
   return (
     <section className={className}>
@@ -99,10 +99,10 @@ function DashboardBase({ className }: { className?: string }) {
         iconMarginRight="0.6em"
         firstLetterUpperCase={false}
       >
-        {tokens?.map(({ balance, info, icon }) => (
-          <li>
+        {tokens?.map(({ balance, info, icon, deleteToken }, i) => (
+          <li key={'token' + i}>
             <div>
-              <i>
+              <i onClick={deleteToken}>
                 <img src={icon} alt={info?.name} />
               </i>
               <span>{info?.symbol}</span>
@@ -147,6 +147,14 @@ function DashboardBase({ className }: { className?: string }) {
             <span>
               <FormattedMessage id="wallet.recover" />
             </span>
+          </Link>
+        </li>
+        <li>
+          <Link to="/cw20/add">
+            <i>
+              <Web />
+            </i>
+            <span>Add CW20 Token</span>
           </Link>
         </li>
         <li>

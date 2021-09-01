@@ -65,6 +65,11 @@ export function createConfig(
             script: path.resolve(app, 'connect-ledger.tsx'),
             html: path.resolve(app, 'connect-ledger.html'),
           },
+          {
+            name: 'add-cw20-token',
+            script: path.resolve(app, 'add-cw20-token.tsx'),
+            html: path.resolve(app, 'add-cw20-token.html'),
+          },
         ],
       }),
     ),

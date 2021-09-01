@@ -1,3 +1,4 @@
+import { AccAddress } from '@terra-money/terra.js';
 import {
   SerializedCreateTxOptions,
   WebExtensionNetworkInfo,
@@ -12,6 +13,8 @@ export enum FromWebToContentScriptMessage {
   REFETCH_STATES = 'refetch_states',
   EXECUTE_TX = 'execute_tx',
   REQUEST_APPROVAL = 'request_approval',
+  ADD_CW20_TOKENS = 'add_cw20_tokens',
+  HAS_CW20_TOKENS = 'has_cw20_tokens',
 }
 
 export interface RefetchExtensionStates {
@@ -38,12 +41,38 @@ export interface RequestApproval {
   type: FromWebToContentScriptMessage.REQUEST_APPROVAL;
 }
 
+export interface AddCW20Tokens {
+  type: FromWebToContentScriptMessage.ADD_CW20_TOKENS;
+
+  /** primary id */
+  id: number;
+
+  chainID: string;
+
+  /** CW20 Token Addr */
+  tokenAddrs: string[];
+}
+
+export interface HasCW20Tokens {
+  type: FromWebToContentScriptMessage.HAS_CW20_TOKENS;
+
+  /** primary id */
+  id: number;
+
+  chainID: string;
+
+  /** CW20 Token Addr */
+  tokenAddrs: string[];
+}
+
 // ---------------------------------------------
 // content script -> web
 // ---------------------------------------------
 export enum FromContentScriptToWebMessage {
   STATES_UPDATED = 'states_updated',
   TX_RESPONSE = 'tx_response',
+  ADD_CW20_TOKENS_RESPONSE = 'add_cw20_tokens_response',
+  HAS_CW20_TOKENS_RESPONSE = 'has_cw20_tokens_response',
 }
 
 export interface WebExtensionStatesUpdated {
@@ -61,14 +90,42 @@ export interface WebExtensionTxResponse {
   payload: WebExtensionTxResult;
 }
 
+export interface WebExtensionAddCW20TokenResponse {
+  type: FromContentScriptToWebMessage.ADD_CW20_TOKENS_RESPONSE;
+
+  /** primary id */
+  id: number;
+
+  chainID: string;
+
+  /** result */
+  payload: { [tokenAddr: string]: boolean };
+}
+
+export interface WebExtensionHasCW20TokensResponse {
+  type: FromContentScriptToWebMessage.HAS_CW20_TOKENS_RESPONSE;
+
+  /** primary id */
+  id: number;
+
+  chainID: string;
+
+  /** result */
+  payload: { [tokenAddr: string]: boolean };
+}
+
 export type WebExtensionMessage =
   // web -> content script
   | RefetchExtensionStates
   | ExecuteExtensionTx
   | RequestApproval
+  | AddCW20Tokens
+  | HasCW20Tokens
   // content script -> web
   | WebExtensionStatesUpdated
-  | WebExtensionTxResponse;
+  | WebExtensionTxResponse
+  | WebExtensionAddCW20TokenResponse
+  | WebExtensionHasCW20TokensResponse;
 
 export function isWebExtensionMessage(
   value: unknown,
@@ -87,10 +144,24 @@ export function isWebExtensionMessage(
       return typeof msg.id === 'number' && !!msg.payload;
     case FromWebToContentScriptMessage.REQUEST_APPROVAL:
       return true;
+    case FromWebToContentScriptMessage.ADD_CW20_TOKENS:
+      return (
+        Array.isArray(msg.tokenAddrs) &&
+        msg.tokenAddrs.every((tokenAddr) => AccAddress.validate(tokenAddr))
+      );
+    case FromWebToContentScriptMessage.HAS_CW20_TOKENS:
+      return (
+        Array.isArray(msg.tokenAddrs) &&
+        msg.tokenAddrs.every((tokenAddr) => AccAddress.validate(tokenAddr))
+      );
     // content script -> web
     case FromContentScriptToWebMessage.STATES_UPDATED:
       return !!msg.payload;
     case FromContentScriptToWebMessage.TX_RESPONSE:
+      return typeof msg.id === 'number' && !!msg.payload;
+    case FromContentScriptToWebMessage.ADD_CW20_TOKENS_RESPONSE:
+      return typeof msg.id === 'number' && !!msg.payload;
+    case FromContentScriptToWebMessage.HAS_CW20_TOKENS_RESPONSE:
       return typeof msg.id === 'number' && !!msg.payload;
     default:
       return false;

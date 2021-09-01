@@ -16,7 +16,6 @@ import React, {
   Context,
   createContext,
   ReactNode,
-  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -38,6 +37,14 @@ export interface WebExtensionState {
   post: (
     params: PostParams,
   ) => Observable<WebExtensionTxSucceed | WebExtensionTxProgress>;
+  addCW20Tokens: (
+    chainID: string,
+    ...tokenAddrs: string[]
+  ) => Promise<{ [tokenAddr: string]: boolean }>;
+  hasCW20Tokens: (
+    chainID: string,
+    ...tokenAddrs: string[]
+  ) => Promise<{ [tokenAddr: string]: boolean }>;
 }
 
 // @ts-ignore
@@ -55,10 +62,6 @@ export function WebExtensionProvider({
     type: WebExtensionStatusType.INITIALIZING,
   }));
   const [states, setStates] = useState<WebExtensionStates | null>(null);
-
-  const refetchStates = useCallback(() => {
-    controller.refetchStates();
-  }, [controller]);
 
   const requestApproval = useMemo(() => {
     return canRequestApproval(status) ? controller.requestApproval : null;
@@ -86,11 +89,13 @@ export function WebExtensionProvider({
       controller,
       status,
       states,
-      refetchStates,
+      refetchStates: controller.refetchStates,
       requestApproval,
       post: controller.post,
+      addCW20Tokens: controller.addCW20Tokens,
+      hasCW20Tokens: controller.hasCW20Tokens,
     }),
-    [controller, status, states, refetchStates, requestApproval],
+    [controller, status, states, requestApproval],
   );
 
   return (

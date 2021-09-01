@@ -12,6 +12,7 @@ export * from './logics/computeMaxUstBalanceForUstTransfer';
 export * from './models/gasPrice';
 export * from './models/tx';
 export * from './queries/cw20/balance';
+export * from './queries/cw20/icons';
 export * from './queries/cw20/nativeTokenInfo';
 export * from './queries/cw20/poolInfo';
 export * from './queries/cw20/tokenInfo';

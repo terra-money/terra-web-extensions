@@ -45,7 +45,7 @@ function AppBase({ className }: AppProps) {
     const hostname = params.get('hostname');
 
     if (!id || !hostname) {
-      throw new Error(`Can't find Connect!`);
+      throw new Error(`Can't find params!`);
     }
 
     return {

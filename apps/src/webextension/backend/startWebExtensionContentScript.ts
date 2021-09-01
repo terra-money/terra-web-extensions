@@ -4,6 +4,8 @@ import {
   isWebExtensionMessage,
   SerializedCreateTxOptions,
   WalletInfo,
+  WebExtensionAddCW20TokenResponse,
+  WebExtensionHasCW20TokensResponse,
   WebExtensionNetworkInfo,
   WebExtensionStates,
   WebExtensionStatesUpdated,
@@ -12,6 +14,7 @@ import {
   WebExtensionTxStatus,
 } from '@terra-dev/web-extension';
 import {
+  hasCW20Tokens,
   observeHostnamesStorage,
   observeNetworkStorage,
   observeWalletsStorage,
@@ -30,11 +33,17 @@ export interface ContentScriptOptions {
     tx: SerializedCreateTxOptions,
   ) => Observable<WebExtensionTxResult>;
   startConnect: (id: string, hostname: string) => Promise<boolean>;
+  startAddCW20Token: (
+    id: string,
+    chainID: string,
+    ...tokenAddrs: string[]
+  ) => Promise<{ [tokenAddr: string]: boolean }>;
 }
 
 export function startWebExtensionContentScript({
   startTx,
   startConnect,
+  startAddCW20Token,
   defaultNetworks,
 }: ContentScriptOptions) {
   // ---------------------------------------------
@@ -368,13 +377,42 @@ export function startWebExtensionContentScript({
             ).subscribe((txResult) => {
               const msg: WebExtensionTxResponse = {
                 type: FromContentScriptToWebMessage.TX_RESPONSE,
-                id: event.data.id,
+                id: +event.data.id,
                 payload: txResult,
               };
 
               window.postMessage(msg, '*');
             });
             break;
+          case FromWebToContentScriptMessage.ADD_CW20_TOKENS:
+            startAddCW20Token(
+              Date.now().toString(),
+              event.data.chainID,
+              ...event.data.tokenAddrs,
+            ).then((result) => {
+              const msg: WebExtensionAddCW20TokenResponse = {
+                type: FromContentScriptToWebMessage.ADD_CW20_TOKENS_RESPONSE,
+                id: +event.data.id,
+                chainID: event.data.chainID,
+                payload: result,
+              };
+
+              window.postMessage(msg, '*');
+            });
+            break;
+          case FromWebToContentScriptMessage.HAS_CW20_TOKENS:
+            hasCW20Tokens(event.data.chainID, event.data.tokenAddrs).then(
+              (result) => {
+                const msg: WebExtensionHasCW20TokensResponse = {
+                  type: FromContentScriptToWebMessage.HAS_CW20_TOKENS_RESPONSE,
+                  id: +event.data.id,
+                  chainID: event.data.chainID,
+                  payload: result,
+                };
+
+                window.postMessage(msg, '*');
+              },
+            );
         }
       },
       false,

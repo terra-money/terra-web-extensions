@@ -140,10 +140,10 @@ function startConnectWithIframeModal(
       port.disconnect();
     };
 
-    const connectHtml = browser.runtime.getURL('connect.html');
+    const html = browser.runtime.getURL('connect.html');
 
     const modal = createElement(IFrameModal, {
-      src: `${connectHtml}?id=${id}&hostname=${hostname}`,
+      src: `${html}?id=${id}&hostname=${hostname}`,
       title: 'Connect',
       onClose: () => {
         resolve(false);
@@ -163,9 +163,52 @@ function startConnectWithIframeModal(
   });
 }
 
+function startAddCW20TokenWithIframeModal(
+  id: string,
+  chainID: string,
+  ...tokenAddrs: string[]
+): Promise<{ [tokenAddr: string]: boolean }> {
+  return new Promise<{ [tokenAddr: string]: boolean }>((resolve) => {
+    const modalContainer = window.document.createElement('div');
+
+    const port = browser.runtime.connect(undefined, {
+      name: contentScriptPortPrefix + id,
+    });
+
+    const endConnect = () => {
+      window.document.querySelector('body')?.removeChild(modalContainer);
+      port.disconnect();
+    };
+
+    const html = browser.runtime.getURL('add-cw20-token.html');
+
+    const modal = createElement(IFrameModal, {
+      src: `${html}?id=${id}&chain-id=${chainID}&token-addrs=${tokenAddrs.join(
+        ',',
+      )}`,
+      title: 'Add CW20 Tokens',
+      onClose: () => {
+        window.document.querySelector('body')?.removeChild(modalContainer);
+        endConnect();
+      },
+    });
+
+    render(modal, modalContainer);
+    window.document.querySelector('body')?.appendChild(modalContainer);
+
+    const onMessage = (msg: { [tokenAddr: string]: boolean }) => {
+      resolve(msg);
+      endConnect();
+    };
+
+    port.onMessage.addListener(onMessage);
+  });
+}
+
 const contentScriptOptions: ContentScriptOptions = {
   startTx: startTxWithIframeModal,
   startConnect: startConnectWithIframeModal,
+  startAddCW20Token: startAddCW20TokenWithIframeModal,
   defaultNetworks,
 };
 
