@@ -39,3 +39,7 @@ createIndex(path.resolve(__dirname, '../src/@libs/webapp-provider'), [
   './env',
   './types',
 ]);
+createIndex(path.resolve(__dirname, '../src/@libs/station-ui'), [
+  './env',
+  './types',
+]);

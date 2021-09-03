@@ -90,7 +90,7 @@ export async function removeWallet(
 
 export async function updateWallet(
   terraAddress: string,
-  wallet: EncryptedWallet,
+  wallet: EncryptedWallet | LedgerWallet,
 ): Promise<void> {
   const { wallets, ...data } = await readWalletsStorage();
   const updateIndex = wallets.findIndex(

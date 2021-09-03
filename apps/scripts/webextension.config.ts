@@ -20,7 +20,7 @@ export function createConfig(
         outDir: out,
         env,
         entry: [
-          { name: 'background', script: path.resolve(app, 'background.ts') },
+          { name: 'background', script: path.resolve(app, 'entries/background/index.ts') },
         ],
       }),
     ),
@@ -33,7 +33,7 @@ export function createConfig(
         entry: [
           {
             name: 'content',
-            script: path.resolve(app, 'content.ts'),
+            script: path.resolve(app, 'entries/content/index.ts'),
           },
         ],
       }),
@@ -46,29 +46,34 @@ export function createConfig(
         env,
         entry: [
           {
+            name: 'index',
+            script: path.resolve(app, 'entries/index/index.tsx'),
+            html: path.resolve(app, 'entries/index/index.html'),
+          },
+          {
             name: 'connect',
-            script: path.resolve(app, 'connect.tsx'),
-            html: path.resolve(app, 'connect.html'),
+            script: path.resolve(app, 'entries/connect/index.tsx'),
+            html: path.resolve(app, 'entries/connect/index.html'),
           },
           {
             name: 'popup',
-            script: path.resolve(app, 'popup.tsx'),
-            html: path.resolve(app, 'popup.html'),
+            script: path.resolve(app, 'entries/popup/index.tsx'),
+            html: path.resolve(app, 'entries/popup/index.html'),
           },
           {
             name: 'tx',
-            script: path.resolve(app, 'tx.tsx'),
-            html: path.resolve(app, 'tx.html'),
+            script: path.resolve(app, 'entries/tx/index.tsx'),
+            html: path.resolve(app, 'entries/tx/index.html'),
           },
           {
             name: 'connect-ledger',
-            script: path.resolve(app, 'connect-ledger.tsx'),
-            html: path.resolve(app, 'connect-ledger.html'),
+            script: path.resolve(app, 'entries/connect-ledger/index.tsx'),
+            html: path.resolve(app, 'entries/connect-ledger/index.html'),
           },
           {
             name: 'add-cw20-token',
-            script: path.resolve(app, 'add-cw20-token.tsx'),
-            html: path.resolve(app, 'add-cw20-token.html'),
+            script: path.resolve(app, 'entries/add-cw20-token/index.tsx'),
+            html: path.resolve(app, 'entries/add-cw20-token/index.html'),
           },
         ],
       }),

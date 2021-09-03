@@ -1479,16 +1479,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.0.0, @babel/runtime@npm:^7.1.2, @babel/runtime@npm:^7.10.2, @babel/runtime@npm:^7.11.2, @babel/runtime@npm:^7.12.1, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.13.10, @babel/runtime@npm:^7.3.1, @babel/runtime@npm:^7.4.4, @babel/runtime@npm:^7.5.0, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.7.2, @babel/runtime@npm:^7.7.6, @babel/runtime@npm:^7.8.3, @babel/runtime@npm:^7.8.4, @babel/runtime@npm:^7.8.7":
-  version: 7.13.10
-  resolution: "@babel/runtime@npm:7.13.10"
-  dependencies:
-    regenerator-runtime: ^0.13.4
-  checksum: 22014226b96a8c8e8d4e8bcdb011f317d1b32881aef424a669dc6ceaee14993d3609172967853cbf9c25c724c25145d45885b6c9df56ba241c12820776607f1f
-  languageName: node
-  linkType: hard
-
-"@babel/runtime@npm:^7.6.2":
+"@babel/runtime@npm:^7.0.0, @babel/runtime@npm:^7.1.2, @babel/runtime@npm:^7.10.2, @babel/runtime@npm:^7.11.2, @babel/runtime@npm:^7.12.1, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.13.10, @babel/runtime@npm:^7.3.1, @babel/runtime@npm:^7.4.4, @babel/runtime@npm:^7.5.0, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.6.2, @babel/runtime@npm:^7.7.2, @babel/runtime@npm:^7.7.6, @babel/runtime@npm:^7.8.3, @babel/runtime@npm:^7.8.4, @babel/runtime@npm:^7.8.7":
   version: 7.15.3
   resolution: "@babel/runtime@npm:7.15.3"
   dependencies:
@@ -2511,9 +2502,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rocket-scripts/react-preset@npm:^4.0.0-alpha.3":
-  version: 4.0.0-alpha.3
-  resolution: "@rocket-scripts/react-preset@npm:4.0.0-alpha.3"
+"@rocket-scripts/react-preset@npm:^4.0.0-alpha.4":
+  version: 4.0.0-alpha.4
+  resolution: "@rocket-scripts/react-preset@npm:4.0.0-alpha.4"
   dependencies:
     "@mdx-js/loader": ^1.6.22
     "@ssen/jest-transform": ^3.0.0
@@ -2541,28 +2532,28 @@ __metadata:
     webpack: ^5.51.1
     worker-loader: ^3.0.8
     yaml-loader: ^0.6.0
-  checksum: 76dafd3f12d3f1cb583cebe8d2743ccdc0e5a6fce7a361b0399c2ed3d7233787a33483f25df048d72a3bbd8e0013ca4c0b5a64f8508b799412a02717fc5e8351
+  checksum: b494eb81a061a99592b6e3a3e892aa566321dfbb582c46c800927ceb6811db911808fe49cf69f4af8dfb491072b6dbe8693bf7c99bbeefb960c72efb6cb8d2dc
   languageName: node
   linkType: hard
 
-"@rocket-scripts/read-package-alias@npm:^4.0.0-alpha.3":
-  version: 4.0.0-alpha.3
-  resolution: "@rocket-scripts/read-package-alias@npm:4.0.0-alpha.3"
+"@rocket-scripts/read-package-alias@npm:^4.0.0-alpha.4":
+  version: 4.0.0-alpha.4
+  resolution: "@rocket-scripts/read-package-alias@npm:4.0.0-alpha.4"
   dependencies:
     fs-extra: ^10.0.0
-  checksum: 619711fd0b88739d58d47f20e614edf95718efcf164395cab471fbb610d7fa59dc010e186be42a3e19d060238e3fd713951dd5ff07a05124b9eb0df5b9a4c58f
+  checksum: 765841198ed89ddd7717204b362cfb8397b1e8cf7b3151bc14342ee9b06a1373e1c88e503e6cfe96ad9c6429665dc834cf9a07f2113f36221e883d2c9cc5a08f
   languageName: node
   linkType: hard
 
-"@rocket-scripts/webpack-fns@npm:^4.0.0-alpha.3":
-  version: 4.0.0-alpha.3
-  resolution: "@rocket-scripts/webpack-fns@npm:4.0.0-alpha.3"
+"@rocket-scripts/webpack-fns@npm:^4.0.0-alpha.4":
+  version: 4.0.0-alpha.4
+  resolution: "@rocket-scripts/webpack-fns@npm:4.0.0-alpha.4"
   dependencies:
     esbuild-loader: ^2.15.1
     html-webpack-plugin: "github:iamssen/html-webpack-plugin#5.3.1-fixed"
     react-dev-utils: ^11.0.4
     webpack: ^5.51.1
-  checksum: f23577a7976d3f910005725e225c5ecfc3ecc103ab2a259c5c24f7674b9b0e6b71117a0c58faf0aa9698c6adb58e992049e64cf3d9745f479b634d710fbeacbb
+  checksum: 7db8f4ee5c66fe7bcf853b67801a0d0f0b7fd226378e79adfab283591fc349bac2911315c2a42a0154f095d0874f328f7835ef4329fac9dcd2c8abc6ae8d6765
   languageName: node
   linkType: hard
 
@@ -4455,6 +4446,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/qrcode.react@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "@types/qrcode.react@npm:1.0.2"
+  dependencies:
+    "@types/react": "*"
+  checksum: 539a944bd362d49b6261897c34e1ea57185e7bf054ef20731f8d298918114d4fabf43df84f2faf25df465fdaa72039bc96d06b5a855d933c94299d1c49cae184
+  languageName: node
+  linkType: hard
+
 "@types/qs@npm:^6.9.5":
   version: 6.9.6
   resolution: "@types/qs@npm:6.9.6"
@@ -5603,9 +5603,9 @@ __metadata:
     "@material-ui/icons": ^4.11.2
     "@mdx-js/mdx": ^1.6.22
     "@mdx-js/react": ^1.6.22
-    "@rocket-scripts/react-preset": ^4.0.0-alpha.3
-    "@rocket-scripts/read-package-alias": ^4.0.0-alpha.3
-    "@rocket-scripts/webpack-fns": ^4.0.0-alpha.3
+    "@rocket-scripts/react-preset": ^4.0.0-alpha.4
+    "@rocket-scripts/read-package-alias": ^4.0.0-alpha.4
+    "@rocket-scripts/webpack-fns": ^4.0.0-alpha.4
     "@rx-stream/animation": ^0.7.1
     "@rx-stream/pipe": ^0.7.1
     "@rx-stream/react": ^0.7.1
@@ -5629,6 +5629,7 @@ __metadata:
     "@types/mdx-js__react": ^1.5.4
     "@types/node": ^15.0.1
     "@types/numeral": ^2.0.1
+    "@types/qrcode.react": ^1.0.2
     "@types/react": ^17.0.4
     "@types/react-dom": ^17.0.3
     "@types/react-router-dom": ^5.1.7
@@ -5657,6 +5658,7 @@ __metadata:
     post-message-stream: ^3.0.0
     process: ^0.11.10
     puppeteer: ^8.0.0
+    qrcode.react: ^1.0.1
     react: ^17.0.2
     react-dom: ^17.0.2
     react-intl: ^5.17.4
@@ -5664,6 +5666,7 @@ __metadata:
     react-router-dom: ^5.2.0
     react-spinners-kit: ^1.9.1
     react-spring: ^8.0.27
+    react-use-clipboard: ^1.0.7
     rimraf: ^3.0.2
     rocket-punch: ^3.0.1
     rxjs: ^7.0.0
@@ -15663,6 +15666,26 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"qr.js@npm:0.0.0":
+  version: 0.0.0
+  resolution: "qr.js@npm:0.0.0"
+  checksum: 83e1d6140ec8781d0def39a70d7ef9e7a7ff455697d8e078b86aeeb773dd33fd5235d4f94710b871fc3cfdefb806165503b8241cd4cd9b18a4b9b4160f48db43
+  languageName: node
+  linkType: hard
+
+"qrcode.react@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "qrcode.react@npm:1.0.1"
+  dependencies:
+    loose-envify: ^1.4.0
+    prop-types: ^15.6.0
+    qr.js: 0.0.0
+  peerDependencies:
+    react: ^15.5.3 || ^16.0.0 || ^17.0.0
+  checksum: add74eb8a1a6967054bdcc090c0e858338be5e89c5cf6659827037e9bf297c0fafff5e47371288fa7ec863ee9620ed291b1564e3cd978d22e8be5d502a759d68
+  languageName: node
+  linkType: hard
+
 "qs@npm:6.7.0":
   version: 6.7.0
   resolution: "qs@npm:6.7.0"
@@ -16195,6 +16218,18 @@ fsevents@^1.2.7:
     react: ">=16.6.0"
     react-dom: ">=16.6.0"
   checksum: e14446123f820e804335c64be5270333c29e8cfaa43dfc33387e132c5d521cf4a0a7c2408058a147b254ae82a6569f373394d83e977ef340d6937bc2f4ff7d6c
+  languageName: node
+  linkType: hard
+
+"react-use-clipboard@npm:^1.0.7":
+  version: 1.0.7
+  resolution: "react-use-clipboard@npm:1.0.7"
+  dependencies:
+    copy-to-clipboard: ^3.3.1
+  peerDependencies:
+    react: ^16.8.0 || ^17
+    react-dom: ^16.8.0 || ^17
+  checksum: ea03a2fe797db16b67cfaeb195cff9abc6bcc929f00e82feff036d87fedf1ff9d1ce313050e20c1a77592d90fd65bebf6ba3b74229bf0c691b7194c42e0dc777
   languageName: node
   linkType: hard
 

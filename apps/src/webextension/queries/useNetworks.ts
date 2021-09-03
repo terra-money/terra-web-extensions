@@ -3,16 +3,16 @@ import {
   observeNetworks,
 } from '@terra-dev/web-extension-backend';
 import { useEffect, useState } from 'react';
-import { defaultNetworks } from '../env';
+import { DEFAULT_NETWORKS } from '../env';
 
 export function useNetworks(): NetworksData {
   const [networks, setNetworks] = useState<NetworksData>(() => ({
-    networks: defaultNetworks,
-    selectedNetwork: defaultNetworks[0],
+    networks: DEFAULT_NETWORKS,
+    selectedNetwork: undefined,
   }));
 
   useEffect(() => {
-    const subscription = observeNetworks(defaultNetworks).subscribe({
+    const subscription = observeNetworks(DEFAULT_NETWORKS).subscribe({
       next: setNetworks,
     });
 

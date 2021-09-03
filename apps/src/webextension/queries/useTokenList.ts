@@ -4,10 +4,8 @@ import {
   useCW20IconsQuery,
   useTerraBalancesWithTokenInfoQuery,
 } from '@libs/webapp-provider';
-import { removeCW20Tokens } from '@terra-dev/web-extension-backend';
 import big from 'big.js';
-import { useCallback, useMemo } from 'react';
-import { useNetworks } from 'webextension/queries/useNetworks';
+import { useMemo } from 'react';
 import { useCW20Tokens } from './useCW20Tokens';
 
 const FALLBACK_ICON = 'https://assets.terra.money/icon/60/UST.png';
@@ -16,7 +14,7 @@ export function useTokenList():
   | Array<
       TerraBalancesWithTokenInfo['tokens'][number] & {
         icon: string;
-        deleteToken: (() => void) | undefined;
+        isCW20Token: boolean;
       }
     >
   | undefined {
@@ -54,17 +52,17 @@ export function useTokenList():
     allTokens,
   );
 
-  const { selectedNetwork } = useNetworks();
+  //const { selectedNetwork } = useNetworks();
 
-  const deleteToken = useCallback(
-    (tokenAddr: string) => {
-      console.log('useTokenList.ts..()', selectedNetwork, tokenAddr);
-      if (selectedNetwork) {
-        removeCW20Tokens(selectedNetwork.chainID, [tokenAddr]);
-      }
-    },
-    [selectedNetwork],
-  );
+  //const deleteToken = useCallback(
+  //  (tokenAddr: string) => {
+  //    console.log('useTokenList.ts..()', selectedNetwork, tokenAddr);
+  //    if (selectedNetwork) {
+  //      removeCW20Tokens(selectedNetwork.chainID, [tokenAddr]);
+  //    }
+  //  },
+  //  [selectedNetwork],
+  //);
 
   return useMemo(() => {
     if (!tokens) {
@@ -75,7 +73,6 @@ export function useTokenList():
       .filter(({ balance, asset }) => 'token' in asset || big(balance).gt(0))
       .map(({ balance, asset, info }) => {
         let icon: string = FALLBACK_ICON;
-        let deleteTokenCallback: (() => void) | undefined = undefined;
 
         if ('native_token' in asset && info) {
           icon =
@@ -89,17 +86,13 @@ export function useTokenList():
           icon = cw20IconMap.get(asset.token.contract_addr)!.icon;
         }
 
-        if ('token' in asset) {
-          deleteTokenCallback = () => deleteToken(asset.token.contract_addr);
-        }
-
         return {
           balance,
           asset,
           info,
           icon,
-          deleteToken: deleteTokenCallback,
+          isCW20Token: 'token' in asset,
         };
       });
-  }, [cw20IconMap, deleteToken, tokens]);
+  }, [cw20IconMap, tokens]);
 }

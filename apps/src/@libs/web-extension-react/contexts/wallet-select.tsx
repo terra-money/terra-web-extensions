@@ -1,4 +1,4 @@
-import { WalletInfo } from '@terra-dev/web-extension';
+import { WebExtensionWalletInfo } from '@terra-dev/web-extension';
 import React, {
   Consumer,
   Context,
@@ -18,9 +18,9 @@ export interface WalletSelectProviderProps {
 }
 
 export interface WalletSelect {
-  wallets: WalletInfo[];
-  selectedWallet: WalletInfo | null;
-  selectWallet: (nextWallet: WalletInfo) => void;
+  wallets: WebExtensionWalletInfo[];
+  selectedWallet: WebExtensionWalletInfo | null;
+  selectWallet: (nextWallet: WebExtensionWalletInfo) => void;
 }
 
 // @ts-ignore
@@ -31,11 +31,14 @@ const CURRENT_WALLET_ADDRESS = '__current_wallet_address__';
 export function WalletSelectProvider({ children }: WalletSelectProviderProps) {
   const { states } = useWebExtension();
 
-  const [selectedWallet, setSelectedWallet] = useState<WalletInfo | null>(null);
+  const [
+    selectedWallet,
+    setSelectedWallet,
+  ] = useState<WebExtensionWalletInfo | null>(null);
 
   const selectedWalletRef = useStateRef(selectedWallet);
 
-  const selectWallet = useCallback((wallet: WalletInfo) => {
+  const selectWallet = useCallback((wallet: WebExtensionWalletInfo) => {
     setSelectedWallet(wallet);
     localStorage.setItem(CURRENT_WALLET_ADDRESS, wallet.terraAddress);
   }, []);

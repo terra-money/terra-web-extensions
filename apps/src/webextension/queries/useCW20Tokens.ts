@@ -1,12 +1,12 @@
+import { useWallet } from '@terra-dev/use-wallet';
 import {
   CW20StorageData,
   observeCW20Storage,
 } from '@terra-dev/web-extension-backend';
 import { useEffect, useMemo, useState } from 'react';
-import { useNetworks } from './useNetworks';
 
 export function useCW20Tokens() {
-  const { selectedNetwork } = useNetworks();
+  const { network } = useWallet();
 
   const [cw20Tokens, setCW20Tokens] = useState<CW20StorageData>(() => ({
     cw20Tokens: {},
@@ -19,10 +19,6 @@ export function useCW20Tokens() {
   }, []);
 
   return useMemo(() => {
-    if (!selectedNetwork) {
-      return [];
-    }
-
-    return cw20Tokens.cw20Tokens[selectedNetwork.chainID] ?? [];
-  }, [cw20Tokens.cw20Tokens, selectedNetwork]);
+    return cw20Tokens.cw20Tokens[network.chainID] ?? [];
+  }, [cw20Tokens.cw20Tokens, network.chainID]);
 }

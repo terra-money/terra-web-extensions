@@ -137,7 +137,10 @@ export async function selectNetwork(
   });
 }
 
-export type NetworksData = NetworkStorageData;
+export type NetworksData = {
+  networks: WebExtensionNetworkInfo[];
+  selectedNetwork: WebExtensionNetworkInfo | undefined;
+};
 
 export function observeNetworks(
   defaultNetworks: WebExtensionNetworkInfo[],
@@ -146,7 +149,7 @@ export function observeNetworks(
     map(({ networks, selectedNetwork }) => {
       return {
         networks: [...defaultNetworks, ...networks],
-        selectedNetwork,
+        selectedNetwork: selectedNetwork ?? defaultNetworks[0],
       };
     }),
   );

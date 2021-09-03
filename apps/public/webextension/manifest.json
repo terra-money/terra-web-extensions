@@ -22,6 +22,8 @@
     ]
   },
   
+  "options_page": "index.html",
+  
   "content_scripts": [{
     "js": ["content.js"],
     "matches": ["<all_urls>"],
@@ -41,7 +43,8 @@
   "web_accessible_resources": [
     "tx.html",
     "connect.html",
-    "add-cw20-token.html"
+    "add-cw20-token.html",
+    "*.js.map"
   ],
   
   "content_security_policy": "script-src 'self' 'unsafe-eval' 'sha256-/13BBW2yQVtpCsBV7JiO23y7pwEFFUobOzefJ27Nltg='; object-src 'self'"

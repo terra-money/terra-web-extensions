@@ -3,6 +3,7 @@ import { WalletCardDesignSelector } from '@libs/wallet-card/components/WalletCar
 import { TextField } from '@material-ui/core';
 import {
   createMnemonicKey,
+  validatePasswordConfirm,
   validateWalletName,
   validateWalletPassword,
 } from '@terra-dev/web-extension-backend';
@@ -12,6 +13,7 @@ import styled from 'styled-components';
 import { cardDesigns } from '../../env';
 import { useWallets } from '../../queries/useWallets';
 
+/** @deprecated */
 export interface CreateNewWalletResult {
   name: string;
   design: string;
@@ -19,10 +21,12 @@ export interface CreateNewWalletResult {
   mk: MnemonicKey;
 }
 
+/** @deprecated */
 export interface CreateNewWalletFormProps {
   onChange: (_: CreateNewWalletResult | null) => void;
 }
 
+/** @deprecated */
 export function CreateNewWalletForm({ onChange }: CreateNewWalletFormProps) {
   // ---------------------------------------------
   // queries
@@ -40,6 +44,8 @@ export function CreateNewWalletForm({ onChange }: CreateNewWalletFormProps) {
 
   const [password, setPassword] = useState<string>('');
 
+  const [passwordConfirm, setPasswordConfirm] = useState<string>('');
+
   const mk = useMemo(() => {
     return createMnemonicKey();
   }, []);
@@ -54,6 +60,10 @@ export function CreateNewWalletForm({ onChange }: CreateNewWalletFormProps) {
   const invalidPassword = useMemo(() => {
     return validateWalletPassword(password);
   }, [password]);
+
+  const invalidPasswordConfirm = useMemo(() => {
+    return validatePasswordConfirm(password, passwordConfirm);
+  }, [password, passwordConfirm]);
 
   // ---------------------------------------------
   // effects
@@ -85,7 +95,7 @@ export function CreateNewWalletForm({ onChange }: CreateNewWalletFormProps) {
         terraAddress="XXXXXXXXXXXXXXXXXXXXXXX"
         designs={cardDesigns}
         onChange={setDesign}
-        cardWidth={276}
+        cardWidth={210}
       />
 
       <FormLayout>
@@ -112,6 +122,19 @@ export function CreateNewWalletForm({ onChange }: CreateNewWalletFormProps) {
           helperText={invalidPassword}
           onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
             setPassword(target.value)
+          }
+        />
+
+        <TextField
+          type="password"
+          size="small"
+          label="WALLET PASSWORD CONFIRM"
+          InputLabelProps={{ shrink: true }}
+          value={passwordConfirm}
+          error={!!invalidPasswordConfirm}
+          helperText={invalidPasswordConfirm}
+          onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
+            setPasswordConfirm(target.value)
           }
         />
       </FormLayout>

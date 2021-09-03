@@ -1,5 +1,5 @@
-import { cardHeight, cardWidth } from '../env';
 import React, { isValidElement, ReactNode, useMemo } from 'react';
+import { cardHeight, cardWidth } from '../env';
 import {
   WalletCardContainer,
   WalletCardContainerProps,
@@ -18,6 +18,7 @@ export function WalletCard({
   terraAddress,
   variant = 'medium',
   ref,
+  onAddressClick,
   ...containerProps
 }: WalletCardProps) {
   const designElement = useMemo(() => {
@@ -53,6 +54,7 @@ export function WalletCard({
         name={name}
         terraAddress={terraAddress}
         variant={variant}
+        onAddressClick={onAddressClick}
       />
     </WalletCardContainer>
   );

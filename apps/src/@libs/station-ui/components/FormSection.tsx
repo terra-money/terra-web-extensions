@@ -4,11 +4,13 @@ export const FormSection = styled.section`
   font-size: 12px;
 
   header {
-    h1 {
-      font-size: 1.4em;
-      font-weight: normal;
+    margin-top: -10px;
 
+    h1 {
+      font-size: 1.2em;
       text-align: center;
+
+      margin-bottom: 1em;
     }
 
     margin-bottom: 1em;
