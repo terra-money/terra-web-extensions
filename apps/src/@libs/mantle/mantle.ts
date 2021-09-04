@@ -21,7 +21,7 @@ export interface MantleParams<WasmQuery, QueryVariables extends {} = {}> {
 export async function mantle<
   WasmQuery,
   QueryVariables extends {} = {},
-  QueryResult extends {} = {}
+  QueryResult extends {} = {},
 >({
   query,
   variables,

@@ -106,9 +106,11 @@ export const sendForm = <T extends Token>({
       ];
     }
 
-    const txFee = (isUst
-      ? min(microfy(amount!).mul(tax.taxRate), tax.maxTaxUUSD).plus(fixedGas)
-      : fixedGas) as u<UST<BigSource>>;
+    const txFee = (
+      isUst
+        ? min(microfy(amount!).mul(tax.taxRate), tax.maxTaxUUSD).plus(fixedGas)
+        : fixedGas
+    ) as u<UST<BigSource>>;
 
     const invalidTxFee =
       connected && big(txFee).gt(ustBalance)

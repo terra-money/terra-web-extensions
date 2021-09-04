@@ -8,12 +8,14 @@ export enum WalletNameInvalid {
   TOO_LONG = 'TOO_LONG',
 }
 
-export const ignoreInvalid = (...ignoringInvalids: string[]) => (
-  invalid: string | null,
-): string | null => {
-  if (!invalid) return null;
-  return ignoringInvalids.some((ignore) => invalid === ignore) ? null : invalid;
-};
+export const ignoreInvalid =
+  (...ignoringInvalids: string[]) =>
+  (invalid: string | null): string | null => {
+    if (!invalid) return null;
+    return ignoringInvalids.some((ignore) => invalid === ignore)
+      ? null
+      : invalid;
+  };
 
 export function validateWalletName(
   name: string,

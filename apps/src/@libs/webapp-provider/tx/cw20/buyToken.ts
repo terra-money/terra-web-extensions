@@ -30,20 +30,15 @@ export function useCW20BuyTokenTx(
 ) {
   const connectedWallet = useConnectedWallet();
 
-  const {
-    mantleFetch,
-    mantleEndpoint,
-    txErrorReporter,
-    constants,
-  } = useTerraWebapp();
+  const { mantleFetch, mantleEndpoint, txErrorReporter, constants } =
+    useTerraWebapp();
 
   const refetchQueries = useRefetchQueries();
 
   const { tax } = useBank<TokenBalances, Tax>();
 
-  const { data: { terraswapPool } = {} } = useTerraswapPoolQuery<Token>(
-    tokenUstPairAddr,
-  );
+  const { data: { terraswapPool } = {} } =
+    useTerraswapPoolQuery<Token>(tokenUstPairAddr);
 
   const stream = useCallback(
     ({ buyAmount, txFee, maxSpread, onTxSucceed }: CW20BuyTokenTxParams) => {

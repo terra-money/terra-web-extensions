@@ -14,12 +14,8 @@ const queryFn = createQueryFn(terraswapPairQuery);
 export function useTerraswapPairQuery(
   assetInfos: [terraswap.AssetInfo, terraswap.AssetInfo],
 ): UseQueryResult<TerraswapPair | undefined> {
-  const {
-    mantleFetch,
-    mantleEndpoint,
-    queryErrorReporter,
-    contractAddress,
-  } = useTerraWebapp();
+  const { mantleFetch, mantleEndpoint, queryErrorReporter, contractAddress } =
+    useTerraWebapp();
 
   const { browserInactive } = useBrowserInactive();
 

@@ -105,16 +105,17 @@ export function observeNetworkStorage(): Observable<NetworkStorageData> {
 
     browser.storage.onChanged.addListener(callback);
 
-    const safariChangeSubscription: Subscription = safariWebExtensionStorageChangeListener<NetworkStorageData>(
-      storageKey,
-    ).subscribe((nextValue) => {
-      subscriber.next(
-        nextValue ?? {
-          networks: [],
-          selectedNetwork: undefined,
-        },
-      );
-    });
+    const safariChangeSubscription: Subscription =
+      safariWebExtensionStorageChangeListener<NetworkStorageData>(
+        storageKey,
+      ).subscribe((nextValue) => {
+        subscriber.next(
+          nextValue ?? {
+            networks: [],
+            selectedNetwork: undefined,
+          },
+        );
+      });
 
     readNetworkStorage().then((storage) => {
       subscriber.next(storage);

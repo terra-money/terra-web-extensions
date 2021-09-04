@@ -133,14 +133,15 @@ export function observeWalletsStorage(): Observable<WalletsStorageData> {
 
     browser.storage.onChanged.addListener(callback);
 
-    const safariChangeSubscription: Subscription = safariWebExtensionStorageChangeListener<WalletsStorageData>(
-      storageKey,
-    ).subscribe((nextValue) => {
-      subscriber.next(
-        nextValue ??
-          ({ wallets: [], approvedHostnames: [] } as WalletsStorageData),
-      );
-    });
+    const safariChangeSubscription: Subscription =
+      safariWebExtensionStorageChangeListener<WalletsStorageData>(
+        storageKey,
+      ).subscribe((nextValue) => {
+        subscriber.next(
+          nextValue ??
+            ({ wallets: [], approvedHostnames: [] } as WalletsStorageData),
+        );
+      });
 
     readWalletsStorage().then((data) => {
       subscriber.next(data);

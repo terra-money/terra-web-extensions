@@ -42,9 +42,8 @@ function AppBase({ className }: AppProps) {
     EncryptedWallet | LedgerWallet | undefined | null
   >(null);
 
-  const [needApproveHostname, setNeedApproveHostname] = useState<boolean>(
-    false,
-  );
+  const [needApproveHostname, setNeedApproveHostname] =
+    useState<boolean>(false);
 
   // ---------------------------------------------
   // callbacks

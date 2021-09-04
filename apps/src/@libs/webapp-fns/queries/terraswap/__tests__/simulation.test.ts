@@ -14,7 +14,8 @@ describe('queries/simulation', () => {
       variables: {},
       wasmQuery: {
         anc: {
-          contractAddress: 'terra18qpjm4zkvqnpjpw0zn0tdr8gdzvt8au35v45xf' as HumanAddr,
+          contractAddress:
+            'terra18qpjm4zkvqnpjpw0zn0tdr8gdzvt8au35v45xf' as HumanAddr,
           query: {
             pair: {
               asset_infos: [
@@ -25,7 +26,8 @@ describe('queries/simulation', () => {
                 },
                 {
                   token: {
-                    contract_addr: 'terra1747mad58h0w4y589y3sk84r5efqdev9q4r02pc' as CW20Addr,
+                    contract_addr:
+                      'terra1747mad58h0w4y589y3sk84r5efqdev9q4r02pc' as CW20Addr,
                   },
                 },
               ],

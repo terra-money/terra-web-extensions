@@ -117,7 +117,7 @@ export namespace terraswap {
 
     export interface ReverseSimulationResponse<
       T extends Token,
-      RT extends Token = T
+      RT extends Token = T,
     > {
       commission_amount: u<T>;
       offer_amount: u<RT>;

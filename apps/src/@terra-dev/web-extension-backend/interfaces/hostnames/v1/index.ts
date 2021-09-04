@@ -76,13 +76,14 @@ export function observeHostnamesStorage(): Observable<HostnamesStorageData> {
 
     browser.storage.onChanged.addListener(callback);
 
-    const safariChangeSubscription: Subscription = safariWebExtensionStorageChangeListener<HostnamesStorageData>(
-      storageKey,
-    ).subscribe((nextValue) => {
-      subscriber.next(
-        nextValue ?? ({ approvedHostnames: [] } as HostnamesStorageData),
-      );
-    });
+    const safariChangeSubscription: Subscription =
+      safariWebExtensionStorageChangeListener<HostnamesStorageData>(
+        storageKey,
+      ).subscribe((nextValue) => {
+        subscriber.next(
+          nextValue ?? ({ approvedHostnames: [] } as HostnamesStorageData),
+        );
+      });
 
     readHostnamesStorage().then((data) => {
       subscriber.next(data);

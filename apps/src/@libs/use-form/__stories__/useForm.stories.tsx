@@ -6,35 +6,37 @@ export default {
   title: 'packages/use-form',
 } as Meta;
 
-const basicForm = (dependency: { c: string }) => (input: {
-  a: string;
-  b: string;
-}): [
-  { a: string; b: string; ab: string },
-  Promise<{ abc: string }> | undefined,
-] => {
-  if (
-    input.a.trim().length === 0 ||
-    input.b.trim().length === 0 ||
-    dependency.c.trim().length === 0
-  ) {
-    return [{ ...input, ab: '0' }, undefined];
-  }
+const basicForm =
+  (dependency: { c: string }) =>
+  (input: {
+    a: string;
+    b: string;
+  }): [
+    { a: string; b: string; ab: string },
+    Promise<{ abc: string }> | undefined,
+  ] => {
+    if (
+      input.a.trim().length === 0 ||
+      input.b.trim().length === 0 ||
+      dependency.c.trim().length === 0
+    ) {
+      return [{ ...input, ab: '0' }, undefined];
+    }
 
-  const ab = (parseInt(input.a) + parseInt(input.b)).toString();
-  const asyncStates = new Promise<{ abc: string }>((resolve) => {
-    setTimeout(() => {
-      const abc = (
-        parseInt(input.a) +
-        parseInt(input.b) +
-        parseInt(dependency.c)
-      ).toString();
-      resolve({ abc });
-    }, Math.random() * 3000);
-  });
+    const ab = (parseInt(input.a) + parseInt(input.b)).toString();
+    const asyncStates = new Promise<{ abc: string }>((resolve) => {
+      setTimeout(() => {
+        const abc = (
+          parseInt(input.a) +
+          parseInt(input.b) +
+          parseInt(dependency.c)
+        ).toString();
+        resolve({ abc });
+      }, Math.random() * 3000);
+    });
 
-  return [{ ...input, ab }, asyncStates];
-};
+    return [{ ...input, ab }, asyncStates];
+  };
 
 export const Basic = () => {
   const [updateInput, states] = useForm(basicForm, { c: '10' }, () => ({

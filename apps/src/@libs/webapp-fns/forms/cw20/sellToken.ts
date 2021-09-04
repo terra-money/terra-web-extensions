@@ -227,9 +227,11 @@ export const cw20SellTokenForm = <T extends Token>({
               tax.maxTaxUUSD,
             ) as u<UST<Big>>;
 
-            const beliefPrice = (big(return_amount).gt(0)
-              ? big(1).div(microfy(ustAmount!).div(return_amount).toFixed())
-              : '0') as T;
+            const beliefPrice = (
+              big(return_amount).gt(0)
+                ? big(1).div(microfy(ustAmount!).div(return_amount).toFixed())
+                : '0'
+            ) as T;
 
             const expectedAmount = big(return_amount)
               .minus(_tax)

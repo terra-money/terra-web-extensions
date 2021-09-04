@@ -47,11 +47,17 @@ export function CreateWalletValidate({
     return { words, q1, q2, word1, word2, samples };
   }, [createWallet.mk.mnemonic]);
 
+  // ---------------------------------------------
+  // states
+  // ---------------------------------------------
   const [word1, setWord1] = useState<string>('');
   const [word2, setWord2] = useState<string>('');
 
   const [failed, setFailed] = useState<number>(0);
 
+  // ---------------------------------------------
+  // callbacks
+  // ---------------------------------------------
   const validate = useCallback(() => {
     if (word1 === confirm.word1 && word2 === confirm.word2) {
       onValidate(createWallet);
@@ -64,6 +70,9 @@ export function CreateWalletValidate({
     }
   }, [confirm.word1, confirm.word2, createWallet, onValidate, word1, word2]);
 
+  // ---------------------------------------------
+  // presentation
+  // ---------------------------------------------
   if (failed > 5) {
     return (
       <FormSection>

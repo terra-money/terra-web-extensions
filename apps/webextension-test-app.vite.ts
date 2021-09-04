@@ -31,7 +31,7 @@ export default defineConfig({
     },
     fs: {
       strict: false,
-    }
+    },
   },
   plugins: [reactRefresh(), tsconfigPaths(), svgr(), mdx()],
   build: {

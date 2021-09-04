@@ -48,9 +48,8 @@ export function useTokenList():
     ];
   }, [cw20Tokens]);
 
-  const { data: { tokens } = {} } = useTerraBalancesWithTokenInfoQuery(
-    allTokens,
-  );
+  const { data: { tokens } = {} } =
+    useTerraBalancesWithTokenInfoQuery(allTokens);
 
   //const { selectedNetwork } = useNetworks();
 

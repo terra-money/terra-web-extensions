@@ -148,9 +148,11 @@ export const cw20BuyTokenForm = <T extends Token>({
               tax.maxTaxUUSD,
             ) as u<UST<Big>>;
 
-            const beliefPrice = (big(return_amount).gt(0)
-              ? microfy(ustAmount!).div(return_amount).toFixed()
-              : '0') as UST;
+            const beliefPrice = (
+              big(return_amount).gt(0)
+                ? microfy(ustAmount!).div(return_amount).toFixed()
+                : '0'
+            ) as UST;
 
             const rate = big(1).minus(maxSpread).toFixed() as Rate;
 

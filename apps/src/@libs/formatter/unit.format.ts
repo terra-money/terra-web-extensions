@@ -9,41 +9,43 @@ export interface FormatOptions {
 
 export const MAX_EXECUTE_MSG_DECIMALS = 18;
 
-export const formatDemimal = ({
-  decimalPoints,
-  delimiter,
-}: {
-  decimalPoints: number;
-  delimiter: boolean;
-}) => (n: BigSource, fallbackValue: string = ''): string => {
-  const num = big(
-    big(n)
-      .mul(10 ** decimalPoints)
-      .toFixed()
-      .split('.')[0],
-  )
-    .div(10 ** decimalPoints)
-    .toFixed();
+export const formatDemimal =
+  ({
+    decimalPoints,
+    delimiter,
+  }: {
+    decimalPoints: number;
+    delimiter: boolean;
+  }) =>
+  (n: BigSource, fallbackValue: string = ''): string => {
+    const num = big(
+      big(n)
+        .mul(10 ** decimalPoints)
+        .toFixed()
+        .split('.')[0],
+    )
+      .div(10 ** decimalPoints)
+      .toFixed();
 
-  if (num === 'NaN') return fallbackValue;
+    if (num === 'NaN') return fallbackValue;
 
-  const [i, d] = num.split('.');
+    const [i, d] = num.split('.');
 
-  const ii = delimiter ? numeral(i).format('0,0') : i;
-  const dd = d ? '.' + d : '';
+    const ii = delimiter ? numeral(i).format('0,0') : i;
+    const dd = d ? '.' + d : '';
 
-  return (ii === '0' && num[0] === '-' ? '-' : '') + ii + dd;
-};
+    return (ii === '0' && num[0] === '-' ? '-' : '') + ii + dd;
+  };
 
-export const formatInteger = ({ delimiter }: { delimiter: boolean }) => (
-  n: BigSource,
-): string => {
-  const num = big(n).toFixed();
+export const formatInteger =
+  ({ delimiter }: { delimiter: boolean }) =>
+  (n: BigSource): string => {
+    const num = big(n).toFixed();
 
-  const [i] = num.split('.');
+    const [i] = num.split('.');
 
-  return delimiter ? numeral(i).format('0,0') : i;
-};
+    return delimiter ? numeral(i).format('0,0') : i;
+  };
 
 export function formatFluidDecimalPoints(
   n: BigSource,

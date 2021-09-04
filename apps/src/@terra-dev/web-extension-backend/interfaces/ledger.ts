@@ -15,11 +15,7 @@ import { signatureImport } from 'secp256k1';
 import { LedgerWallet, pickUSBDeviceInfo } from '../models';
 
 export const TERRA_APP_PATH: [number, number, number, number, number] = [
-  44,
-  330,
-  0,
-  0,
-  0,
+  44, 330, 0, 0, 0,
 ];
 export const TERRA_APP_HRP: string = 'terra';
 

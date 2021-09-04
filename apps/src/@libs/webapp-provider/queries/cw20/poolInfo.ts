@@ -14,12 +14,8 @@ const queryFn = createQueryFn(cw20PoolInfoQuery);
 export function useCW20PoolInfoQuery<T extends Token>(
   tokenAddr: CW20Addr,
 ): UseQueryResult<CW20PoolInfo<T> | undefined> {
-  const {
-    mantleFetch,
-    mantleEndpoint,
-    queryErrorReporter,
-    contractAddress,
-  } = useTerraWebapp();
+  const { mantleFetch, mantleEndpoint, queryErrorReporter, contractAddress } =
+    useTerraWebapp();
 
   const { browserInactive } = useBrowserInactive();
 

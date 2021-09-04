@@ -21,12 +21,8 @@ export interface SendTxParams {
 export function useSendTx() {
   const connectedWallet = useConnectedWallet();
 
-  const {
-    mantleFetch,
-    mantleEndpoint,
-    txErrorReporter,
-    constants,
-  } = useTerraWebapp();
+  const { mantleFetch, mantleEndpoint, txErrorReporter, constants } =
+    useTerraWebapp();
 
   const refetchQueries = useRefetchQueries();
 

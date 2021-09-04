@@ -36,7 +36,7 @@ export type FormFunction<
   Input extends {},
   Dependency extends {},
   States extends {},
-  AsyncStates extends {}
+  AsyncStates extends {},
 > = (
   dependency: Dependency,
   prevDependency: Dependency | undefined,
@@ -49,7 +49,7 @@ export function useForm<
   Input extends {},
   Dependency extends {},
   States extends {},
-  AsyncStates extends {}
+  AsyncStates extends {},
 >(
   form: FormFunction<Input, Dependency, States, AsyncStates>,
   dependency: Dependency,

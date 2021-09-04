@@ -28,18 +28,17 @@ export function useRestrictedInput(
     throw new Error('availableCharacters must be string or function');
   }, [availableCharacters]);
 
-  const onKeyPress: (
-    event: KeyboardEvent<HTMLInputElement>,
-  ) => void = useCallback(
-    (event: KeyboardEvent<HTMLInputElement>) => {
-      if (!test(event.key)) {
-        // prevent key press
-        event.preventDefault();
-        event.stopPropagation();
-      }
-    },
-    [test],
-  );
+  const onKeyPress: (event: KeyboardEvent<HTMLInputElement>) => void =
+    useCallback(
+      (event: KeyboardEvent<HTMLInputElement>) => {
+        if (!test(event.key)) {
+          // prevent key press
+          event.preventDefault();
+          event.stopPropagation();
+        }
+      },
+      [test],
+    );
 
   return {
     onKeyPress,
@@ -85,11 +84,8 @@ export function useRestrictedNumberInput({
         return;
       }
 
-      const {
-        value,
-        selectionStart,
-        selectionEnd,
-      } = event.target as HTMLInputElement;
+      const { value, selectionStart, selectionEnd } =
+        event.target as HTMLInputElement;
 
       if (
         typeof selectionStart !== 'number' ||
@@ -124,11 +120,8 @@ export function useRestrictedNumberInput({
         event.stopPropagation();
       }
 
-      const {
-        value,
-        selectionStart,
-        selectionEnd,
-      } = event.target as HTMLInputElement;
+      const { value, selectionStart, selectionEnd } =
+        event.target as HTMLInputElement;
 
       if (
         typeof selectionStart !== 'number' ||

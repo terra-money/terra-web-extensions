@@ -3,7 +3,7 @@ module.exports = {
     '@ssen',
     //'react-app',
     //'react-app/jest',
-    'prettier',
+    //'prettier',
   ],
   rules: {
     //  'react-hooks/exhaustive-deps': [

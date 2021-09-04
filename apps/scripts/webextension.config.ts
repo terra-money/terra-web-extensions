@@ -20,7 +20,10 @@ export function createConfig(
         outDir: out,
         env,
         entry: [
-          { name: 'background', script: path.resolve(app, 'entries/background/index.ts') },
+          {
+            name: 'background',
+            script: path.resolve(app, 'entries/background/index.ts'),
+          },
         ],
       }),
     ),

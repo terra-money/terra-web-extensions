@@ -74,7 +74,7 @@ export interface TokenBalancesProviderProps {
 
 export interface Bank<
   TokenBalancesType = Record<string, string>,
-  TaxDataType = TaxData
+  TaxDataType = TaxData,
 > {
   tokenBalances: TokenBalancesType;
   refetchTokenBalances: () => Promise<TokenBalancesType>;
@@ -153,9 +153,8 @@ export function BankProvider({
     browserInactiveRef.current = browserInactive;
   }, [browserInactive]);
 
-  const [tokenBalances, setTokenBalances] = useState<Record<string, string>>(
-    emptyTokenBalances,
-  );
+  const [tokenBalances, setTokenBalances] =
+    useState<Record<string, string>>(emptyTokenBalances);
 
   const [tax, setTax] = useState<TaxData>(emptyTax);
 
@@ -303,9 +302,9 @@ export function BankProvider({
 
 export function useBank<
   TokenBalancesType = Record<string, string>,
-  TaxDataType = TaxData
+  TaxDataType = TaxData,
 >(): Bank<TokenBalancesType, TaxDataType> {
-  return (useContext(BankContext) as unknown) as Bank<
+  return useContext(BankContext) as unknown as Bank<
     TokenBalancesType,
     TaxDataType
   >;
@@ -318,9 +317,9 @@ export function useCW20TokenBalance<T = string>(address: CW20Addr): u<T> {
     const key = Object.keys(cw20TokenContracts).find(
       (k) => cw20TokenContracts[k].contractAddress === address,
     );
-    return ((key && tokenBalances[key]
+    return (key && tokenBalances[key]
       ? tokenBalances[key]
-      : '0') as unknown) as u<T>;
+      : '0') as unknown as u<T>;
   }, [address, cw20TokenContracts, tokenBalances]);
 }
 

@@ -23,18 +23,17 @@ export interface WalletSelect {
   selectWallet: (nextWallet: WebExtensionWalletInfo) => void;
 }
 
-// @ts-ignore
-const WalletSelectContext: Context<WalletSelect> = createContext<WalletSelect>();
+const WalletSelectContext: Context<WalletSelect> =
+  // @ts-ignore
+  createContext<WalletSelect>();
 
 const CURRENT_WALLET_ADDRESS = '__current_wallet_address__';
 
 export function WalletSelectProvider({ children }: WalletSelectProviderProps) {
   const { states } = useWebExtension();
 
-  const [
-    selectedWallet,
-    setSelectedWallet,
-  ] = useState<WebExtensionWalletInfo | null>(null);
+  const [selectedWallet, setSelectedWallet] =
+    useState<WebExtensionWalletInfo | null>(null);
 
   const selectedWalletRef = useStateRef(selectedWallet);
 

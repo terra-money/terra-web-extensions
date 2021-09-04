@@ -48,7 +48,8 @@ export interface WebExtensionState {
 }
 
 // @ts-ignore
-const WebExtensionContext: Context<WebExtensionState> = createContext<WebExtensionState>();
+const WebExtensionContext: Context<WebExtensionState> =
+  createContext<WebExtensionState>();
 
 export function WebExtensionProvider({
   children,

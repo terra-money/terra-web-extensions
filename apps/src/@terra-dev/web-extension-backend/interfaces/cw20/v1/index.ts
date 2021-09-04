@@ -94,15 +94,16 @@ export function observeCW20Storage(): Observable<CW20StorageData> {
 
     browser.storage.onChanged.addListener(callback);
 
-    const safariChangeSubscription: Subscription = safariWebExtensionStorageChangeListener<CW20StorageData>(
-      storageKey,
-    ).subscribe((nextValue) => {
-      subscriber.next(
-        nextValue ?? {
-          cw20Tokens: {},
-        },
-      );
-    });
+    const safariChangeSubscription: Subscription =
+      safariWebExtensionStorageChangeListener<CW20StorageData>(
+        storageKey,
+      ).subscribe((nextValue) => {
+        subscriber.next(
+          nextValue ?? {
+            cw20Tokens: {},
+          },
+        );
+      });
 
     readCW20Storage().then((storage) => {
       subscriber.next(storage);
