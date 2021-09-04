@@ -22,7 +22,7 @@ export function createConfig(
         entry: [
           {
             name: 'background',
-            script: path.resolve(app, 'entries/background/index.ts'),
+            script: path.resolve(app, 'pages/background/index.ts'),
           },
         ],
       }),
@@ -36,7 +36,7 @@ export function createConfig(
         entry: [
           {
             name: 'content',
-            script: path.resolve(app, 'entries/content/index.ts'),
+            script: path.resolve(app, 'pages/content/index.ts'),
           },
         ],
       }),
@@ -50,33 +50,33 @@ export function createConfig(
         entry: [
           {
             name: 'index',
-            script: path.resolve(app, 'entries/index/index.tsx'),
-            html: path.resolve(app, 'entries/index/index.html'),
+            script: path.resolve(app, 'pages/index/index.tsx'),
+            html: path.resolve(app, 'pages/index/index.html'),
           },
           {
             name: 'connect',
-            script: path.resolve(app, 'entries/connect/index.tsx'),
-            html: path.resolve(app, 'entries/connect/index.html'),
+            script: path.resolve(app, 'pages/connect/index.tsx'),
+            html: path.resolve(app, 'pages/connect/index.html'),
           },
           {
             name: 'popup',
-            script: path.resolve(app, 'entries/popup/index.tsx'),
-            html: path.resolve(app, 'entries/popup/index.html'),
+            script: path.resolve(app, 'pages/popup/index.tsx'),
+            html: path.resolve(app, 'pages/popup/index.html'),
           },
           {
             name: 'tx',
-            script: path.resolve(app, 'entries/tx/index.tsx'),
-            html: path.resolve(app, 'entries/tx/index.html'),
+            script: path.resolve(app, 'pages/tx/index.tsx'),
+            html: path.resolve(app, 'pages/tx/index.html'),
           },
           {
             name: 'connect-ledger',
-            script: path.resolve(app, 'entries/connect-ledger/index.tsx'),
-            html: path.resolve(app, 'entries/connect-ledger/index.html'),
+            script: path.resolve(app, 'pages/connect-ledger/index.tsx'),
+            html: path.resolve(app, 'pages/connect-ledger/index.html'),
           },
           {
             name: 'add-cw20-token',
-            script: path.resolve(app, 'entries/add-cw20-token/index.tsx'),
-            html: path.resolve(app, 'entries/add-cw20-token/index.html'),
+            script: path.resolve(app, 'pages/add-cw20-token/index.tsx'),
+            html: path.resolve(app, 'pages/add-cw20-token/index.html'),
           },
         ],
       }),

@@ -1,22 +1,31 @@
 import { FormSection } from '@libs/station-ui/components/FormSection';
 import { Button, createMuiTheme } from '@material-ui/core';
-import { WebExtensionTxStatus } from '@terra-dev/web-extension';
+import {
+  deserializeTx,
+  WebExtensionTxFail,
+  WebExtensionTxStatus,
+} from '@terra-dev/web-extension';
 import {
   approveHostnames,
   EncryptedWallet,
+  executeTxWithInternalWallet,
+  executeTxWithLedgerWallet,
   findWallet,
   fromURLSearchParams,
+  LedgerKey,
   LedgerWallet,
   readHostnamesStorage,
+  TxRequest,
+  Wallet,
 } from '@terra-dev/web-extension-backend';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { render } from 'react-dom';
 import { IntlProvider } from 'react-intl';
 import styled, { DefaultTheme } from 'styled-components';
 import { browser } from 'webextension-polyfill-ts';
+import { SignTxWithEncryptedWallet } from 'webextension/components/views/SignTxWithEncryptedWallet';
+import { SignTxWithLedgerWallet } from 'webextension/components/views/SignTxWithLedgerWallet';
 import { ErrorBoundary } from '../../components/common/ErrorBoundary';
-import { InternalWalletTxForm } from '../../components/tx/InternalWalletTxForm';
-import { LedgerWalletTxForm } from '../../components/tx/LedgerWalletTxForm';
 import { LocalesProvider, useIntlProps } from '../../contexts/locales';
 import { ThemeProvider } from '../../contexts/theme';
 import { txPortPrefix } from '../../env';
@@ -151,14 +160,13 @@ function AppBase({ className }: AppProps) {
         txRequest={txRequest}
         wallet={wallet}
         onDeny={deny}
-        onComplete={() => window.close()}
       />
     );
   }
 
   if ('encryptedWallet' in wallet) {
     return (
-      <InternalWalletTxForm
+      <EncryptedWalletTxForm
         className={className}
         txRequest={txRequest}
         wallet={wallet}
@@ -168,6 +176,151 @@ function AppBase({ className }: AppProps) {
   }
 
   return <div>Unknown case!</div>;
+}
+
+function LedgerWalletTxForm({
+  className,
+  txRequest,
+  wallet,
+  onDeny,
+}: {
+  className?: string;
+  txRequest: TxRequest;
+  wallet: LedgerWallet;
+  onDeny: (params: { id: string }) => void;
+}) {
+  const tx = useMemo(() => {
+    return deserializeTx(txRequest.tx);
+  }, [txRequest.tx]);
+
+  const deny = useCallback(() => {
+    onDeny(txRequest);
+  }, [onDeny, txRequest]);
+
+  const proceed = useCallback(
+    async (ledgerKey: LedgerKey) => {
+      const port = browser.runtime.connect(undefined, {
+        name: txPortPrefix + txRequest.id,
+      });
+
+      executeTxWithLedgerWallet(
+        wallet,
+        txRequest.network,
+        tx,
+        ledgerKey,
+      ).subscribe({
+        next: (result) => {
+          if (
+            result.status === WebExtensionTxStatus.FAIL &&
+            'toJSON' in result.error
+          ) {
+            port.postMessage({
+              ...result,
+              error: result.error.toJSON(),
+            });
+          } else {
+            port.postMessage(result);
+          }
+        },
+        error: (error) => {
+          port.postMessage({
+            status: WebExtensionTxStatus.FAIL,
+            error,
+          } as WebExtensionTxFail);
+        },
+        complete: () => {
+          port.disconnect();
+          if (txRequest.closeWindowAfterTx) {
+            window.close();
+          }
+        },
+      });
+    },
+    [tx, txRequest.closeWindowAfterTx, txRequest.id, txRequest.network, wallet],
+  );
+
+  return (
+    <SignTxWithLedgerWallet
+      wallet={wallet}
+      network={txRequest.network}
+      tx={tx}
+      hostname={txRequest.hostname}
+      date={txRequest.date}
+      onDeny={deny}
+      onProceed={proceed}
+    />
+  );
+}
+
+function EncryptedWalletTxForm({
+  className,
+  txRequest,
+  wallet,
+  onDeny,
+}: {
+  className?: string;
+  txRequest: TxRequest;
+  wallet: EncryptedWallet;
+  onDeny: (params: { id: string }) => void;
+}) {
+  const tx = useMemo(() => {
+    return deserializeTx(txRequest.tx);
+  }, [txRequest.tx]);
+
+  const deny = useCallback(() => {
+    onDeny(txRequest);
+  }, [onDeny, txRequest]);
+
+  const proceed = useCallback(
+    async (decryptedWallet: Wallet) => {
+      const port = browser.runtime.connect(undefined, {
+        name: txPortPrefix + txRequest.id,
+      });
+
+      executeTxWithInternalWallet(
+        decryptedWallet,
+        txRequest.network,
+        tx,
+      ).subscribe({
+        next: (result) => {
+          if (
+            result.status === WebExtensionTxStatus.FAIL &&
+            'toJSON' in result.error
+          ) {
+            port.postMessage({
+              ...result,
+              error: result.error.toJSON(),
+            });
+          } else {
+            port.postMessage(result);
+          }
+        },
+        error: (error) => {
+          port.postMessage({
+            status: WebExtensionTxStatus.FAIL,
+            error,
+          } as WebExtensionTxFail);
+        },
+        complete: () => {
+          port.disconnect();
+        },
+      });
+    },
+    [tx, txRequest.id, txRequest.network],
+  );
+
+  return (
+    <SignTxWithEncryptedWallet
+      className={className}
+      wallet={wallet}
+      network={txRequest.network}
+      tx={tx}
+      hostname={txRequest.hostname}
+      date={txRequest.date}
+      onDeny={deny}
+      onProceed={proceed}
+    />
+  );
 }
 
 const App = styled(AppBase)`

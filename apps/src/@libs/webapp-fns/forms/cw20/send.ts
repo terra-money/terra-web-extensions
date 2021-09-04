@@ -49,14 +49,17 @@ export type SendForm<T extends Token> = FormFunction<
   SendFormAsyncStates
 >;
 
-export const sendForm = <T extends Token>({
-  balance,
-  ustBalance,
-  tokenInfo,
-  tax,
-  fixedGas,
-  connected,
-}: SendFormDependency<T>) => {
+export const sendForm = <T extends Token>(
+  {
+    balance,
+    ustBalance,
+    tokenInfo,
+    tax,
+    fixedGas,
+    connected,
+  }: SendFormDependency<T>,
+  next: SendFormDependency<T> | undefined,
+) => {
   const isUst =
     'native_token' in tokenInfo.assetInfo &&
     tokenInfo.assetInfo.native_token.denom === 'uusd';

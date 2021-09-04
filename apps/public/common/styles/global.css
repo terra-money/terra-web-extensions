@@ -1,0 +1,49 @@
+:root {
+  --font-family: 'Gotham SSm A', 'Gotham SSm B', BlinkMacSystemFont, 'Segoe UI',
+  'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
+  'Helvetica Neue', sans-serif;
+  
+  --color-paleblue-h: 189;
+  --color-paleblue-s: 72%;
+  --color-paleblue-l: 49%;
+  --color-paleblue: hsl(var(--color-paleblue-h), var(--color-paleblue-s), var(--color-paleblue-l));
+  --color-paleblue-text: #ffffff;
+  
+  --color-red-h: 347;
+  --color-red-s: 84%;
+  --color-red-l: 66%;
+  --color-red: hsl(var(--color-red-h), var(--color-red-s), var(--color-red-l));
+  --color-red-text: #ffffff;
+}
+
+.dark-color-set {
+  --color-gray08: #0C0816;
+  --color-gray11: #1A1525;
+  --color-gray14: #272231;
+  --color-gray18: #332E3C;
+  --color-gray22: #413A4B;
+  --color-gray24: #463F51;
+  --color-gray34: #685F75;
+  --color-white44: #939098;
+  --color-white52: #A19FA6;
+  --color-white64: #B9B7BC;
+  --color-white80: #E9E9EA;
+  --color-white92: #EEEDEE;
+  --color-white100: #ffffff;
+}
+
+.light-color-set {
+  --color-gray08: #ffffff;
+  --color-gray11: #e8e8e8;
+  --color-gray14: #f5f5f5;
+  --color-gray18: #ffffff;
+  --color-gray22: #f0f0f0;
+  --color-gray24: #eeeeee;
+  --color-gray34: #cccccc;
+  --color-white44: #685F75;
+  --color-white52: #463F51;
+  --color-white64: #332E3C;
+  --color-white80: #272231;
+  --color-white92: #0C0816;
+  --color-white100: #000000;
+}

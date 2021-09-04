@@ -36,7 +36,31 @@ export type Luna<T = string> = T & NominalType<'luna'>;
 export type LP<T = string> = T & NominalType<'lp'>;
 
 // Union currencies
-export type NativeToken<T = string> = T & NominalType<'ust' | 'krt' | 'luna'>;
+export type NativeToken<T = string> = T &
+  NominalType<
+    | 'ust'
+    | 'aud'
+    | 'cad'
+    | 'chf'
+    | 'cny'
+    | 'dkk'
+    | 'eur'
+    | 'gbp'
+    | 'hkd'
+    | 'idr'
+    | 'inr'
+    | 'jpy'
+    | 'krw'
+    | 'mnt'
+    | 'nok'
+    | 'php'
+    | 'sdr'
+    | 'sek'
+    | 'sgd'
+    | 'thb'
+    | 'krt'
+    | 'luna'
+  >;
 
 // All currencies
 export type Token<T = string> = T & NominalType<string>;

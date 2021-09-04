@@ -1,6 +1,4 @@
 import {
-  deserializeTx,
-  SerializedCreateTxOptions,
   WebExtensionCreateTxFailed,
   WebExtensionNetworkInfo,
   WebExtensionTxFail,
@@ -10,14 +8,19 @@ import {
   WebExtensionTxSucceed,
   WebExtensionTxUnspecifiedError,
 } from '@terra-dev/web-extension';
-import { isTxError, LCDClient, RawKey } from '@terra-money/terra.js';
+import {
+  CreateTxOptions,
+  isTxError,
+  LCDClient,
+  RawKey,
+} from '@terra-money/terra.js';
 import { Observable } from 'rxjs';
 import { Wallet } from '../models/InternalWallet';
 
 export function executeTxWithInternalWallet(
   wallet: Wallet,
   network: WebExtensionNetworkInfo,
-  tx: SerializedCreateTxOptions,
+  tx: CreateTxOptions,
 ): Observable<
   WebExtensionTxProgress | WebExtensionTxSucceed | WebExtensionTxFail
 > {
@@ -37,7 +40,7 @@ export function executeTxWithInternalWallet(
 
     lcd
       .wallet(key)
-      .createAndSignTx(deserializeTx(tx))
+      .createAndSignTx(tx)
       .then((signed) => lcd.tx.broadcastSync(signed))
       .then((data) => {
         if (isTxError(data)) {

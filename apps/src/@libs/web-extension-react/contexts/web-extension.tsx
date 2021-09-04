@@ -47,8 +47,8 @@ export interface WebExtensionState {
   ) => Promise<{ [tokenAddr: string]: boolean }>;
 }
 
-// @ts-ignore
 const WebExtensionContext: Context<WebExtensionState> =
+  // @ts-ignore
   createContext<WebExtensionState>();
 
 export function WebExtensionProvider({

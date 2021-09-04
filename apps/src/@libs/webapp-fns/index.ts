@@ -22,6 +22,7 @@ export * from './queries/lp/minter';
 export * from './queries/tax';
 export * from './queries/terra/balances';
 export * from './queries/terra/balancesWithTokenInfo';
+export * from './queries/terra/tokenInfo';
 export * from './queries/terraswap/pair';
 export * from './queries/terraswap/pool';
 export * from './queries/terraswap/simulation';
