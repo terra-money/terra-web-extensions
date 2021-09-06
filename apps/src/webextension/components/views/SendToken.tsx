@@ -1,7 +1,7 @@
 import { microfy } from '@libs/formatter';
-import { FormLabel, FormLayout, FormSection } from '@libs/station-ui';
-import { NumberInput } from '@libs/station-ui/components/NumberInput';
-import { TextInput } from '@libs/station-ui/components/TextInput';
+import { FormLabel, FormLayout, FormSection } from '@station/ui';
+import { NumberInput } from '@station/ui';
+import { TextInput } from '@station/ui';
 import { HumanAddr, terraswap, Token, u, UST } from '@libs/types';
 import { SendTokenInfo, TxResultRendering } from '@libs/webapp-fns';
 import {

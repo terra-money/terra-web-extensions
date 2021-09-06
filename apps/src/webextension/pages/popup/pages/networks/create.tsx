@@ -1,4 +1,4 @@
-import { FormSection } from '@libs/station-ui/components/FormSection';
+import { FormSection } from '@station/ui';
 import { Button } from '@material-ui/core';
 import { WebExtensionNetworkInfo } from '@terra-dev/web-extension';
 import { addNetwork } from '@terra-dev/web-extension-backend';

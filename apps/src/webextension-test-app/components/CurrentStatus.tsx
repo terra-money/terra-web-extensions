@@ -2,7 +2,7 @@ import {
   WebExtensionStatus,
   WebExtensionStatusType,
 } from '@terra-dev/web-extension';
-import { useWebExtension } from '@libs/web-extension-react';
+import { useWebExtension } from '@station/web-extension-react';
 import bowser from 'bowser';
 import React from 'react';
 

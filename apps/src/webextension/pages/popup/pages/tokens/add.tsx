@@ -1,5 +1,5 @@
-import { FormLayout } from '@libs/station-ui/components/FormLayout';
-import { FormSection } from '@libs/station-ui/components/FormSection';
+import { FormLayout } from '@station/ui';
+import { FormSection } from '@station/ui';
 import { CW20Addr, Token } from '@libs/types';
 import { CW20TokenInfo, cw20TokenInfoQuery } from '@libs/webapp-fns';
 import { useTerraWebapp } from '@libs/webapp-provider';

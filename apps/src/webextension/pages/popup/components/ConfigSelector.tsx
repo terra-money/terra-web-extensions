@@ -1,4 +1,4 @@
-import { LinedList } from '@libs/station-ui/components/LinedList';
+import { LinedList } from '@station/ui';
 import {
   Button,
   ButtonProps,

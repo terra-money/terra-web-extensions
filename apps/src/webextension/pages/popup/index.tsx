@@ -1,4 +1,4 @@
-import { yScroller } from '@libs/station-ui/styles/yScroller';
+import { yScroller } from '@station/ui';
 import { CW20Contract } from '@libs/webapp-fns';
 import { BankProvider, TerraWebappProvider } from '@libs/webapp-provider';
 import { createMuiTheme } from '@material-ui/core';

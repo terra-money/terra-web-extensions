@@ -1,4 +1,4 @@
-import { FormSection } from '@libs/station-ui/components/FormSection';
+import { FormSection } from '@station/ui';
 import { Button, createMuiTheme } from '@material-ui/core';
 import {
   addWallet,

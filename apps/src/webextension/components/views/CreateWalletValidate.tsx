@@ -1,4 +1,4 @@
-import { FormLayout, FormSection, MiniButton } from '@libs/station-ui';
+import { FormLayout, FormSection, MiniButton } from '@station/ui';
 import { vibrate } from '@libs/ui';
 import { Button, TextField } from '@material-ui/core';
 import React, {

@@ -1,4 +1,4 @@
-import { MiniIconButton } from '@libs/station-ui';
+import { MiniIconButton } from '@station/ui';
 import { TextField } from '@material-ui/core';
 import { Check, FileCopy } from '@material-ui/icons';
 import { MnemonicKey } from '@terra-money/terra.js';

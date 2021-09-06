@@ -1,4 +1,4 @@
-import { useWalletSelect } from '@libs/web-extension-react';
+import { useWalletSelect } from '@station/web-extension-react';
 import React from 'react';
 
 export function CurrentWallet() {

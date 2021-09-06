@@ -1,4 +1,4 @@
-import { FormSection } from '@libs/station-ui/components/FormSection';
+import { FormSection } from '@station/ui';
 import { cw20, CW20Addr, Token } from '@libs/types';
 import { cw20TokenInfoQuery } from '@libs/webapp-fns';
 import { TerraWebappProvider } from '@libs/webapp-provider';

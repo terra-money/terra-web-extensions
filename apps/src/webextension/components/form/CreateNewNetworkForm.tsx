@@ -1,4 +1,4 @@
-import { FormLayout } from '@libs/station-ui/components/FormLayout';
+import { FormLayout } from '@station/ui';
 import { TextField } from '@material-ui/core';
 import {
   validateNetworkLcdURL,

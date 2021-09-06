@@ -1,4 +1,4 @@
-import { FormLayout, FormSection } from '@libs/station-ui';
+import { FormLayout, FormSection } from '@station/ui';
 import { Button } from '@material-ui/core';
 import React from 'react';
 

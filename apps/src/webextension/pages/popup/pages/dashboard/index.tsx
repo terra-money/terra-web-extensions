@@ -1,8 +1,8 @@
 import { formatUTokenWithPostfixUnits } from '@libs/formatter';
 import { QRCodeIcon } from '@libs/icons';
-import { MiniButton } from '@libs/station-ui';
-import { LinedList } from '@libs/station-ui/components/LinedList';
-import { MiniIconButton } from '@libs/station-ui/components/MiniIconButton';
+import { MiniButton } from '@station/ui';
+import { LinedList } from '@station/ui';
+import { MiniIconButton } from '@station/ui';
 import { AnimateNumber } from '@libs/ui';
 import { WalletCard, WalletCardSelector } from '@libs/wallet-card';
 import { Tooltip } from '@material-ui/core';

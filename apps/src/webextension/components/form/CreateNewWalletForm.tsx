@@ -1,4 +1,4 @@
-import { FormLayout } from '@libs/station-ui/components/FormLayout';
+import { FormLayout } from '@station/ui';
 import { WalletCardDesignSelector } from '@libs/wallet-card/components/WalletCardDesignSelector';
 import { TextField } from '@material-ui/core';
 import {

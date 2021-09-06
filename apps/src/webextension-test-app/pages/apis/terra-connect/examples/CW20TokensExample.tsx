@@ -1,4 +1,4 @@
-import { useWebExtension } from '@libs/web-extension-react';
+import { useWebExtension } from '@station/web-extension-react';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 const ancAddr = {

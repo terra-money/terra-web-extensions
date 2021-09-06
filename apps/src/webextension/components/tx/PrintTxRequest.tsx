@@ -1,4 +1,4 @@
-import { LinedList } from '@libs/station-ui';
+import { LinedList } from '@station/ui';
 import {
   Money,
   MyLocationOutlined,

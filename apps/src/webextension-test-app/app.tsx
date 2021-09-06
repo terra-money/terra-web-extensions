@@ -1,7 +1,7 @@
 import {
   WalletSelectProvider,
   WebExtensionProvider,
-} from '@libs/web-extension-react';
+} from '@station/web-extension-react';
 import { WebExtensionController } from '@terra-dev/web-extension';
 import { GlobalStyle } from 'common/components/GlobalStyle';
 import React from 'react';

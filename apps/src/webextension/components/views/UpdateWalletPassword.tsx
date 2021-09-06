@@ -1,4 +1,4 @@
-import { FormLayout, FormSection } from '@libs/station-ui';
+import { FormLayout, FormSection } from '@station/ui';
 import { vibrate } from '@libs/ui';
 import { WalletCard } from '@libs/wallet-card';
 import { Button, TextField } from '@material-ui/core';

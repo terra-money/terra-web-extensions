@@ -1,4 +1,4 @@
-import { FormSection } from '@libs/station-ui';
+import { FormSection } from '@station/ui';
 import { TxResultRendering } from '@libs/webapp-fns';
 import React, { useEffect, useState } from 'react';
 import { Observable } from 'rxjs';
