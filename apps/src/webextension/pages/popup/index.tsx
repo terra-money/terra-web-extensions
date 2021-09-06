@@ -1,7 +1,7 @@
-import { yScroller } from '@station/ui';
 import { CW20Contract } from '@libs/webapp-fns';
 import { BankProvider, TerraWebappProvider } from '@libs/webapp-provider';
 import { createMuiTheme } from '@material-ui/core';
+import { yScroller } from '@station/ui';
 import { GlobalStyle } from 'common/components/GlobalStyle';
 import React, { useEffect, useRef } from 'react';
 import { render } from 'react-dom';
@@ -20,7 +20,6 @@ import { LocalesProvider, useIntlProps } from 'webextension/contexts/locales';
 import { StoreProvider } from 'webextension/contexts/store';
 import { ThemeProvider } from 'webextension/contexts/theme';
 import { LedgerVerify } from 'webextension/pages/popup/pages/ledger/verify';
-import { TokenInfo } from 'webextension/pages/popup/pages/tokens/info';
 import { WalletExport } from 'webextension/pages/popup/pages/wallets/export';
 import { WalletSend } from 'webextension/pages/popup/pages/wallets/send';
 import { WalletUpdate } from 'webextension/pages/popup/pages/wallets/update';
@@ -30,6 +29,7 @@ import { DApps } from './pages/dapps';
 import { Dashboard } from './pages/dashboard';
 import { NetworksCreate } from './pages/networks/create';
 import { TokensAdd } from './pages/tokens/add';
+import { TokensList } from './pages/tokens/list';
 import { WalletChangePassword } from './pages/wallets/change-password';
 import { WalletsCreate } from './pages/wallets/create';
 import { WalletQR } from './pages/wallets/qr';
@@ -128,11 +128,8 @@ function MainBase({ className }: { className?: string }) {
                         path="/networks/create"
                         component={NetworksCreate}
                       />
+                      <Route exact path="/tokens" component={TokensList} />
                       <Route exact path="/tokens/add" component={TokensAdd} />
-                      <Route
-                        path="/token/:tokenAddress"
-                        component={TokenInfo}
-                      />
                       <Redirect to="/" />
                     </Switch>
                   </section>

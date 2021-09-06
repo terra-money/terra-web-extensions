@@ -1,8 +1,5 @@
 import { formatUTokenWithPostfixUnits } from '@libs/formatter';
 import { QRCodeIcon } from '@libs/icons';
-import { MiniButton } from '@station/ui';
-import { LinedList } from '@station/ui';
-import { MiniIconButton } from '@station/ui';
 import { AnimateNumber } from '@libs/ui';
 import { WalletCard, WalletCardSelector } from '@libs/wallet-card';
 import { Tooltip } from '@material-ui/core';
@@ -20,6 +17,7 @@ import {
   VpnKey,
   Web,
 } from '@material-ui/icons';
+import { LinedList, MiniButton, MiniIconButton } from '@station/ui';
 import {
   focusWallet,
   isLedgerSupportBrowser,
@@ -36,7 +34,8 @@ import { useTokenList } from 'webextension/queries/useTokenList';
 function DashboardBase({ className }: { className?: string }) {
   const history = useHistory();
 
-  const { wallets, focusedWallet, focusedWalletIndex } = useStore();
+  const { wallets, focusedWallet, focusedWalletIndex, selectedNetwork } =
+    useStore();
 
   const isLedgerSupport = useMemo(() => {
     return isLedgerSupportBrowser();
@@ -172,11 +171,15 @@ function DashboardBase({ className }: { className?: string }) {
           <li key={'token' + i}>
             <div>
               {'token' in asset ? (
-                <Link to={`/token/${asset.token.contract_addr}`}>
+                <a
+                  href={`https://finder.terra.money/${selectedNetwork?.chainID}/address/${asset.token.contract_addr}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   <i>
                     <img src={icon} alt={info?.name} />
                   </i>
-                </Link>
+                </a>
               ) : (
                 <i>
                   <img src={icon} alt={info?.name} />
@@ -210,13 +213,7 @@ function DashboardBase({ className }: { className?: string }) {
           Add Token
         </MiniButton>
 
-        <MiniButton
-          startIcon={<Settings />}
-          component="a"
-          href="/index.html/#/tokens"
-          target="_blank"
-          rel="noreferrer"
-        >
+        <MiniButton startIcon={<Settings />} component={Link} to={`/tokens`}>
           Manage Tokens
         </MiniButton>
       </div>

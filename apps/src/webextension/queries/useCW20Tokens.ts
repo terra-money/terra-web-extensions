@@ -5,7 +5,7 @@ import {
 } from '@terra-dev/web-extension-backend';
 import { useEffect, useMemo, useState } from 'react';
 
-export function useCW20Tokens() {
+export function useCW20Tokens(): Set<string> {
   const { network } = useWallet();
 
   const [cw20Tokens, setCW20Tokens] = useState<CW20StorageData>(() => ({
@@ -13,12 +13,16 @@ export function useCW20Tokens() {
   }));
 
   useEffect(() => {
-    observeCW20Storage().subscribe({
+    const subscription = observeCW20Storage().subscribe({
       next: setCW20Tokens,
     });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   return useMemo(() => {
-    return cw20Tokens.cw20Tokens[network.chainID] ?? [];
+    return new Set(cw20Tokens.cw20Tokens[network.chainID]) ?? new Set();
   }, [cw20Tokens.cw20Tokens, network.chainID]);
 }

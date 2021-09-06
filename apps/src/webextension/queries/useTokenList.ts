@@ -21,7 +21,7 @@ export function useTokenList():
   const allTokens = useMemo<terraswap.AssetInfo[]>(() => {
     return [
       ...NATIVE_TOKEN_ASSET_INFOS,
-      ...cw20Tokens.map((tokenAddr) => ({
+      ...Array.from(cw20Tokens).map((tokenAddr) => ({
         token: {
           contract_addr: tokenAddr as CW20Addr,
         },
