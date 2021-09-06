@@ -18,7 +18,7 @@ function BroadcastRendererBase({
   return (
     <Layout className={className}>
       <figure>
-        <GuardSpinner frontColor="var(--color-paleblue)" />
+        <GuardSpinner />
       </figure>
 
       <h2>Waiting for receipt...</h2>

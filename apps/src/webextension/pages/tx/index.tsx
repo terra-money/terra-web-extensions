@@ -18,6 +18,7 @@ import {
   TxRequest,
   Wallet,
 } from '@terra-dev/web-extension-backend';
+import { GlobalStyle } from 'common/components/GlobalStyle';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { render } from 'react-dom';
 import { IntlProvider } from 'react-intl';
@@ -324,6 +325,8 @@ function EncryptedWalletTxForm({
 }
 
 const App = styled(AppBase)`
+  background-color: #ffffff;
+
   max-width: 100vw;
 
   padding: 20px;
@@ -339,6 +342,7 @@ function Main() {
   return (
     <IntlProvider locale={locale} messages={messages}>
       <ThemeProvider theme={theme}>
+        <GlobalStyle />
         <App />
       </ThemeProvider>
     </IntlProvider>

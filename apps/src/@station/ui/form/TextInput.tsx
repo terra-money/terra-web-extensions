@@ -10,20 +10,20 @@ import styled from 'styled-components';
 export const TextInput: ComponentType<TextFieldProps> = styled(TextField)`
   border-radius: 4px;
 
-  border: 1px solid var(--color-gray34);
+  border: 1px solid black;
 
   .MuiFormLabel-root {
     opacity: 1;
-    color: var(--color-white92);
+    color: black;
   }
 
   .MuiFormLabel-root.Mui-focused {
     opacity: 1;
-    color: var(--color-white92);
+    color: black;
   }
 
   .MuiFormLabel-root.Mui-error {
-    color: var(--color-white92);
+    color: black;
   }
 
   .MuiInputLabel-formControl {
@@ -43,7 +43,7 @@ export const TextInput: ComponentType<TextFieldProps> = styled(TextField)`
   .MuiInput-root {
     font-size: 12px;
     margin: 4px 8px;
-    color: var(--color-white92);
+    color: black;
   }
 
   .MuiInput-root.MuiInput-fullWidth {
@@ -51,7 +51,7 @@ export const TextInput: ComponentType<TextFieldProps> = styled(TextField)`
   }
 
   .MuiInput-root.Mui-error {
-    color: var(--color-white92);
+    color: black;
   }
 
   .MuiInput-underline:before,

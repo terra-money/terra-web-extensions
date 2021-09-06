@@ -84,7 +84,7 @@ function MainBase({ className }: { className?: string }) {
                 <GlobalStyle />
                 <div className={className}>
                   <Header />
-                  <section ref={containerRef}>
+                  <section ref={containerRef} style={{ position: 'relative' }}>
                     <Switch>
                       <Route exact path="/" component={Dashboard} />
                       <Route

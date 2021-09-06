@@ -1,27 +1,41 @@
-import { microfy } from '@libs/formatter';
-import { FormLabel, FormLayout, Layout } from '@station/ui';
-import { NumberInput } from '@station/ui';
-import { TextInput } from '@station/ui';
-import { HumanAddr, terraswap, Token, u, UST } from '@libs/types';
+import { formatUInput, formatUToken, microfy } from '@libs/formatter';
+import { cw20, HumanAddr, terraswap, Token, u, UST } from '@libs/types';
 import { SendTokenInfo, TxResultRendering } from '@libs/webapp-fns';
 import {
   useSendForm,
   useSendTx,
   useTerraTokenInfo,
 } from '@libs/webapp-provider';
-import { Button } from '@material-ui/core';
+import { Button, InputAdornment } from '@material-ui/core';
+import { Warning } from '@material-ui/icons';
+import {
+  FormLabel,
+  FormLabelAside,
+  FormLayout,
+  Layout,
+  MessageBox,
+  MiniButton,
+  NumberInput,
+  TextInput,
+} from '@station/ui';
 import { useConnectedWallet } from '@terra-dev/use-wallet';
 import big, { BigSource } from 'big.js';
-import React, { ChangeEvent, useCallback, useMemo } from 'react';
+import React, { ChangeEvent, ReactNode, useCallback, useMemo } from 'react';
 import { Observable } from 'rxjs';
 
 export interface SendTokenProps {
   asset: terraswap.AssetInfo;
   onCancel: () => void;
   onProceed: (stream: Observable<TxResultRendering>) => void;
+  children?: (tokenInfo: cw20.TokenInfoResponse<Token>) => ReactNode;
 }
 
-export function SendToken({ asset, onCancel, onProceed }: SendTokenProps) {
+export function SendToken({
+  asset,
+  onCancel,
+  onProceed,
+  children,
+}: SendTokenProps) {
   const { data: tokenInfo } = useTerraTokenInfo(asset);
 
   return asset && tokenInfo ? (
@@ -30,6 +44,7 @@ export function SendToken({ asset, onCancel, onProceed }: SendTokenProps) {
       tokenInfo={tokenInfo}
       onCancel={onCancel}
       onProceed={onProceed}
+      children={children?.(tokenInfo)}
     />
   ) : null;
 }
@@ -39,9 +54,11 @@ function Form({
   onProceed,
   assetInfo,
   tokenInfo,
+  children,
 }: SendTokenInfo & {
   onCancel: () => void;
   onProceed: (stream: Observable<TxResultRendering>) => void;
+  children: ReactNode;
 }) {
   const sendParams = useMemo(
     () => ({
@@ -112,10 +129,21 @@ function Form({
 
   return (
     <Layout>
+      {children}
+
+      <MessageBox style={{ marginBottom: 10 }}>
+        <Warning /> Use{' '}
+        <a href="https://bridge.terra.money/" target="_blank" rel="noreferrer">
+          Terra Bridge
+        </a>{' '}
+        for cross-chain transfers
+      </MessageBox>
+
       <FormLayout>
         <FormLabel label="To address">
           <TextInput
             fullWidth
+            placeholder="terra1..."
             value={states.toAddr}
             onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
               updateInput({ toAddr: target.value })
@@ -125,9 +153,30 @@ function Form({
           />
         </FormLabel>
 
-        <FormLabel label="Amount">
+        <FormLabel
+          label="Amount"
+          aside={
+            <FormLabelAside>
+              <MiniButton
+                onClick={() =>
+                  updateInput({ amount: formatUInput(states.maxAmount) })
+                }
+              >
+                Available: {formatUToken(states.maxAmount)}
+              </MiniButton>
+            </FormLabelAside>
+          }
+        >
           <NumberInput<Token>
             fullWidth
+            placeholder="0"
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  {tokenInfo.symbol}
+                </InputAdornment>
+              ),
+            }}
             value={states.amount}
             onChange={(nextValue) =>
               updateInput({
@@ -180,7 +229,7 @@ function Form({
             )
           }
         >
-          Update
+          Send
         </Button>
       </footer>
     </Layout>

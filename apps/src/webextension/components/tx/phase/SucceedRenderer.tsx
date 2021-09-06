@@ -21,14 +21,18 @@ function SucceedRendererBase({
   return (
     <Layout className={className}>
       <figure>
-        <DoneAllRounded style={{ color: 'var(--color-paleblue)' }} />
+        <DoneAllRounded />
       </figure>
 
       <h2>Complete</h2>
 
       <TxReceipts receipts={receipts} />
 
-      {onClose && <Button onClick={onClose}>OK</Button>}
+      {onClose && (
+        <Button variant="contained" color="primary" onClick={onClose}>
+          OK
+        </Button>
+      )}
     </Layout>
   );
 }

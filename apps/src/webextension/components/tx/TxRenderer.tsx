@@ -9,9 +9,10 @@ import { SucceedRenderer } from './phase/SucceedRenderer';
 
 export interface TxRendererProps {
   result: TxResultRendering;
+  onClose: () => void;
 }
 
-function TxRendererBase({ result }: TxRendererProps) {
+function TxRendererBase({ result, onClose }: TxRendererProps) {
   return (
     <div>
       {result.phase === TxStreamPhase.POST ? (
@@ -19,11 +20,12 @@ function TxRendererBase({ result }: TxRendererProps) {
       ) : result.phase === TxStreamPhase.BROADCAST ? (
         <BroadcastRenderer receipts={result.receipts} />
       ) : result.phase === TxStreamPhase.SUCCEED ? (
-        <SucceedRenderer receipts={result.receipts} />
+        <SucceedRenderer receipts={result.receipts} onClose={onClose} />
       ) : result.phase === TxStreamPhase.FAILED ? (
         <FailedRenderer
           failedReason={result.failedReason!}
           receipts={result.receipts}
+          onClose={onClose}
         />
       ) : null}
     </div>

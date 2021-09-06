@@ -17,7 +17,7 @@ function PostRendererBase({ className, receipts, onClose }: PostRendererProps) {
   return (
     <Layout className={className}>
       <figure>
-        <RotateSpinner color="var(--color-paleblue)" />
+        <RotateSpinner />
       </figure>
 
       <h2>Waiting for Terra Station...</h2>

@@ -1,5 +1,6 @@
 import { CW20Addr, NativeDenom, terraswap } from '@libs/types';
 import { TxResultRendering } from '@libs/webapp-fns';
+import { BankProvider, useBank } from '@libs/webapp-provider';
 import React, { useCallback, useMemo, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { Observable } from 'rxjs';
@@ -50,7 +51,12 @@ export function WalletSend({
 
   return (
     <TxProvider wallet={wallet} network={selectedNetwork}>
-      <Component asset={asset} onBack={cancel} />
+      <BankProvider
+        cw20TokenContracts={{ mainnet: {}, testnet: {} }}
+        maxCapTokenDenoms={{ maxTaxUUSD: 'uusd' }}
+      >
+        <Component asset={asset} onBack={cancel} />
+      </BankProvider>
     </TxProvider>
   );
 }
@@ -62,6 +68,10 @@ function Component({
   asset: terraswap.AssetInfo;
   onBack: () => void;
 }) {
+  const { tax } = useBank();
+
+  console.log('send.tsx..Component()', tax);
+
   const [stream, setStream] = useState<Observable<TxResultRendering> | null>(
     null,
   );
@@ -78,5 +88,13 @@ function Component({
     );
   }
 
-  return <SendToken asset={asset} onCancel={onBack} onProceed={setStream} />;
+  return (
+    <SendToken asset={asset} onCancel={onBack} onProceed={setStream}>
+      {(tokenInfo) => (
+        <header>
+          <h1>Send {tokenInfo.name}</h1>
+        </header>
+      )}
+    </SendToken>
+  );
 }

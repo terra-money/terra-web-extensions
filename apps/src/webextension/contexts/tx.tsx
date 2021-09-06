@@ -26,6 +26,7 @@ import {
 } from '@terra-dev/web-extension-backend';
 import { CreateTxOptions } from '@terra-money/terra.js';
 import React, { ReactNode, useMemo, useState } from 'react';
+import styled from 'styled-components';
 import { SignTxWithEncryptedWallet } from 'webextension/components/views/SignTxWithEncryptedWallet';
 import { SignTxWithLedgerWallet } from 'webextension/components/views/SignTxWithLedgerWallet';
 
@@ -65,16 +66,25 @@ export function TxProvider({ children, wallet, network }: TxProviderProps) {
       },
       post: (tx: CreateTxOptions): Promise<TxResult> => {
         return new Promise<TxResult>((resolve, reject) => {
-          console.log('tx.tsx..() ????');
           setResolver(
-            <PostResolver
-              tx={tx}
-              wallet={wallet}
-              network={network}
-              onReject={reject}
-              onResolve={resolve}
-              onComplete={() => setResolver(null)}
-            />,
+            <Layer>
+              <PostResolver
+                tx={tx}
+                wallet={wallet}
+                network={network}
+                onReject={(error) => {
+                  reject(error);
+                  setResolver(null);
+                }}
+                onResolve={(txResult) => {
+                  resolve(txResult);
+                  setResolver(null);
+                }}
+                onComplete={() => {
+                  setResolver(null);
+                }}
+              />
+            </Layer>,
           );
         });
       },
@@ -87,12 +97,9 @@ export function TxProvider({ children, wallet, network }: TxProviderProps) {
     };
   }, [network, wallet]);
 
-  console.log('tx.tsx..TxProvider()', resolver);
-
   return (
     <WalletContext.Provider value={states}>
       {children}
-      {resolver && <div>What???</div>}
       {resolver}
     </WalletContext.Provider>
   );
@@ -113,8 +120,6 @@ function PostResolver({
   onResolve: (txResult: TxResult) => void;
   onComplete: () => void;
 }) {
-  console.log('tx.tsx..PostResolver() !!!!!');
-
   if ('usbDevice' in wallet) {
     return (
       <SignTxWithLedgerWallet
@@ -127,7 +132,6 @@ function PostResolver({
         onProceed={(ledgerKey) => {
           executeTxWithLedgerWallet(wallet, network, tx, ledgerKey).subscribe({
             next: (result) => {
-              console.log('wallet-provider.tsx..next()', result);
               if (result.status === WebExtensionTxStatus.SUCCEED) {
                 onResolve({
                   ...tx,
@@ -158,7 +162,6 @@ function PostResolver({
                   ),
                 );
               }
-              onReject(error);
             },
             complete: onComplete,
           });
@@ -175,11 +178,10 @@ function PostResolver({
         tx={tx}
         hostname={'foo-network'}
         date={new Date()}
-        onDeny={() => new UserDenied()}
+        onDeny={() => onReject(new UserDenied())}
         onProceed={(w) => {
           executeTxWithInternalWallet(w, network, tx).subscribe({
             next: (result) => {
-              console.log('wallet-provider.tsx..next()', result);
               if (result.status === WebExtensionTxStatus.SUCCEED) {
                 onResolve({
                   ...tx,
@@ -210,7 +212,6 @@ function PostResolver({
                   ),
                 );
               }
-              onReject(error);
             },
             complete: onComplete,
           });
@@ -221,3 +222,14 @@ function PostResolver({
 
   return <div>Unknown case!</div>;
 }
+
+const Layer = styled.div`
+  background-color: #ffffff;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  padding: 20px;
+`;

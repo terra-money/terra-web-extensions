@@ -1,5 +1,5 @@
-import { Layout } from '@station/ui';
 import { TxResultRendering } from '@libs/webapp-fns';
+import { Layout } from '@station/ui';
 import React, { useEffect, useState } from 'react';
 import { Observable } from 'rxjs';
 import { useStateRef } from 'use-state-ref';
@@ -45,5 +45,9 @@ export function RenderTx({ stream, onComplete }: RenderTxProps) {
     }
   }, [onComplete, onCompleteRef, stream]);
 
-  return <Layout>{result && <TxRenderer result={result} />}</Layout>;
+  return (
+    <Layout>
+      {result && <TxRenderer result={result} onClose={onComplete} />}
+    </Layout>
+  );
 }

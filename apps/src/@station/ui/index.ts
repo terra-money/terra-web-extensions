@@ -1,6 +1,7 @@
 // THIS FILE IS AUTO CREATED
 // @see ~/scripts/create-index.ts
 
+export * from './boxes/MessageBox';
 export * from './buttons/MiniButton';
 export * from './buttons/MiniIconButton';
 export * from './display/LinedList';

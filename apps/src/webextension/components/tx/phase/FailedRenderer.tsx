@@ -30,7 +30,7 @@ function FailedRendererBase({
   return (
     <Layout className={className}>
       <figure>
-        <ErrorOutlineRounded style={{ color: 'var(--color-red)' }} />
+        <ErrorOutlineRounded />
       </figure>
 
       {renderTxFailedReason(failedReason)}
@@ -38,7 +38,7 @@ function FailedRendererBase({
       <TxReceipts receipts={receipts} />
 
       {onClose && (
-        <Button color="paleblue" onClick={onClose}>
+        <Button variant="contained" color="primary" onClick={onClose}>
           OK
         </Button>
       )}
