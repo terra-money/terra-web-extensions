@@ -8,7 +8,7 @@ import styled from 'styled-components';
  * @see https://material-ui.com/api/text-field/
  */
 export const TextInput: ComponentType<TextFieldProps> = styled(TextField)`
-  border-radius: 8px;
+  border-radius: 4px;
 
   border: 1px solid var(--color-gray34);
 
@@ -41,7 +41,8 @@ export const TextInput: ComponentType<TextFieldProps> = styled(TextField)`
   }
 
   .MuiInput-root {
-    margin: 10px 20px;
+    font-size: 12px;
+    margin: 4px 8px;
     color: var(--color-white92);
   }
 

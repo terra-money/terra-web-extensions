@@ -1,13 +1,12 @@
 // THIS FILE IS AUTO CREATED
 // @see ~/scripts/create-index.ts
-export * from './env';
-export * from './types';
-export * from './components/FormLabel';
-export * from './components/FormLayout';
-export * from './components/FormSection';
-export * from './components/LinedList';
-export * from './components/MiniButton';
-export * from './components/MiniIconButton';
-export * from './components/NumberInput';
-export * from './components/TextInput';
+
+export * from './buttons/MiniButton';
+export * from './buttons/MiniIconButton';
+export * from './display/LinedList';
+export * from './form/FormLabel';
+export * from './form/NumberInput';
+export * from './form/TextInput';
+export * from './layouts/FormLayout';
+export * from './layouts/Layout';
 export * from './styles/yScroller';

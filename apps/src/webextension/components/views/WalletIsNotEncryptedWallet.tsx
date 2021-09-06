@@ -1,4 +1,4 @@
-import { FormLayout, FormSection } from '@station/ui';
+import { FormLayout, Layout } from '@station/ui';
 import { Button } from '@material-ui/core';
 import React from 'react';
 
@@ -12,7 +12,7 @@ export function WalletIsNotEncryptedWallet({
   onConfirm,
 }: WalletIsNotEncryptedWalletProps) {
   return (
-    <FormSection>
+    <Layout>
       <FormLayout>
         <p>{terraAddress} 은 비밀번호를 변경할 수 없는 Wallet 입니다.</p>
       </FormLayout>
@@ -24,6 +24,6 @@ export function WalletIsNotEncryptedWallet({
           </Button>
         </footer>
       </footer>
-    </FormSection>
+    </Layout>
   );
 }

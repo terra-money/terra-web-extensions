@@ -1,4 +1,4 @@
-import { FormLayout, FormSection } from '@station/ui';
+import { FormLayout, Layout } from '@station/ui';
 import { Button } from '@material-ui/core';
 import React from 'react';
 
@@ -12,7 +12,7 @@ export function NotFoundWallet({
   onConfirm,
 }: NotFoundWalletProps) {
   return (
-    <FormSection>
+    <Layout>
       <FormLayout>
         <p>{terraAddress} 지갑을 찾을 수 없습니다.</p>
       </FormLayout>
@@ -24,6 +24,6 @@ export function NotFoundWallet({
           </Button>
         </footer>
       </footer>
-    </FormSection>
+    </Layout>
   );
 }

@@ -1,6 +1,7 @@
 import { vibrate } from '@libs/ui';
 import { WalletCard } from '@libs/wallet-card';
-import { Button, TextField } from '@material-ui/core';
+import { Button } from '@material-ui/core';
+import { FormLabel, TextInput } from '@station/ui';
 import { WebExtensionNetworkInfo } from '@terra-dev/web-extension';
 import {
   decryptWallet,
@@ -83,21 +84,19 @@ export function SignTxWithEncryptedWallet({
       <PrintCreateTxOptions className="tx" tx={tx} />
 
       <section className="form">
-        <TextField
-          variant="outlined"
-          type="password"
-          size="small"
-          fullWidth
-          label="WALLET PASSWORD"
-          InputLabelProps={{ shrink: true }}
-          value={password}
-          onChange={({ target }: ChangeEvent<HTMLInputElement>) => {
-            setPassword(target.value);
-            setInvalidPassword(null);
-          }}
-          error={!!invalidPassword}
-          helperText={invalidPassword}
-        />
+        <FormLabel label="Wallet password">
+          <TextInput
+            fullWidth
+            type="password"
+            value={password}
+            onChange={({ target }: ChangeEvent<HTMLInputElement>) => {
+              setPassword(target.value);
+              setInvalidPassword(null);
+            }}
+            error={!!invalidPassword}
+            helperText={invalidPassword}
+          />
+        </FormLabel>
       </section>
 
       <footer>

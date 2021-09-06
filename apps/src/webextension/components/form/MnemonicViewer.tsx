@@ -1,9 +1,9 @@
-import { MiniIconButton } from '@station/ui';
-import { TextField } from '@material-ui/core';
-import { Check, FileCopy } from '@material-ui/icons';
+import { Check, CloudDownload, FileCopy } from '@material-ui/icons';
+import { FormLabel, FormLabelAside, MiniButton, TextInput } from '@station/ui';
 import { MnemonicKey } from '@terra-money/terra.js';
 import { fixHMR } from 'fix-hmr';
-import React from 'react';
+import React, { useMemo } from 'react';
+import { CSVLink } from 'react-csv';
 import useCopyClipboard from 'react-use-clipboard';
 import styled from 'styled-components';
 
@@ -17,25 +17,35 @@ function MnemonicViewerBase({ className, mk }: MnemonicViewerProps) {
     successDuration: 1000 * 5,
   });
 
+  const data = useMemo(() => {
+    const rows: string[][] = [['', '', '', '', '']];
+    const words = mk.mnemonic.split(' ');
+    let i: number = 0;
+    const max: number = words.length;
+    while (i < max) {
+      rows.push(words.slice(i, i + 5));
+      i += 5;
+    }
+    return rows;
+  }, [mk.mnemonic]);
+
   return (
-    <div className={className}>
-      <TextField
-        variant="outlined"
-        readOnly
-        multiline
-        fullWidth
-        type="text"
-        size="small"
-        label="Seed phrase"
-        InputLabelProps={{ shrink: true }}
-        value={mk.mnemonic}
-      />
-      <aside>
-        <MiniIconButton onClick={copy}>
-          {isCopied ? <Check /> : <FileCopy />}
-        </MiniIconButton>
-      </aside>
-    </div>
+    <FormLabel
+      className={className}
+      label="Seed phrase"
+      aside={
+        <FormLabelAside>
+          <MiniButton onClick={copy} style={{ marginRight: 5 }}>
+            {isCopied ? <Check /> : <FileCopy />} Copy
+          </MiniButton>
+          <MiniButton component={CSVLink} data={data}>
+            <CloudDownload /> Download
+          </MiniButton>
+        </FormLabelAside>
+      }
+    >
+      <TextInput fullWidth readOnly multiline value={mk.mnemonic} />
+    </FormLabel>
   );
 }
 

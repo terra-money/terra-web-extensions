@@ -14,6 +14,12 @@ import { CreateWalletValidate } from 'webextension/components/views/CreateWallet
 
 export function WalletsCreate({ history }: RouteComponentProps) {
   const [result, setResult] = useState<CreateWalletResult | null>(null);
+  //const [result, setResult] = useState<CreateWalletResult | null>(() => ({
+  //  name: 'hello',
+  //  mk: createMnemonicKey(),
+  //  password: '1234567890',
+  //  design: 'red',
+  //}));
 
   const cancel = useCallback(() => {
     history.push('/');
@@ -54,6 +60,10 @@ export function WalletsCreate({ history }: RouteComponentProps) {
       createWallet={result!}
       onCancel={cancel}
       onValidate={validate}
-    />
+    >
+      <header>
+        <h1>Confirm your seed</h1>
+      </header>
+    </CreateWalletValidate>
   );
 }

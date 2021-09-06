@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const FormSection = styled.section`
+export const Layout = styled.section`
   font-size: 12px;
 
   header {

@@ -1,4 +1,4 @@
-import { FormSection } from '@station/ui';
+import { Layout } from '@station/ui';
 import { Button, createMuiTheme } from '@material-ui/core';
 import {
   addWallet,
@@ -99,7 +99,7 @@ function AppBase({ className }: AppProps) {
   // ---------------------------------------------
   if (walletCreatePages === 0) {
     return (
-      <FormSection>
+      <Layout>
         <header>
           <h1>You don't have any wallets</h1>
         </header>
@@ -125,7 +125,7 @@ function AppBase({ className }: AppProps) {
         >
           Recover Existing Wallet
         </Button>
-      </FormSection>
+      </Layout>
     );
   } else if (walletCreatePages === 1) {
     return <CreateNewWallet onApprove={approve} />;
@@ -134,7 +134,7 @@ function AppBase({ className }: AppProps) {
   }
 
   return (
-    <FormSection className={className}>
+    <Layout className={className}>
       <header>
         <h1>Approve this site?</h1>
       </header>
@@ -149,7 +149,7 @@ function AppBase({ className }: AppProps) {
           Approve
         </Button>
       </footer>
-    </FormSection>
+    </Layout>
   );
 }
 
@@ -178,7 +178,7 @@ function CreateNewWallet({ onApprove }: ApproveWithWalletProps) {
   }, [result, onApprove]);
 
   return (
-    <FormSection>
+    <Layout>
       <header>
         <h1>Approve + Add New Wallet</h1>
       </header>
@@ -199,7 +199,7 @@ function CreateNewWallet({ onApprove }: ApproveWithWalletProps) {
           Create Wallet
         </Button>
       </footer>
-    </FormSection>
+    </Layout>
   );
 }
 
@@ -228,7 +228,7 @@ function RecoverMnemonic({ onApprove }: ApproveWithWalletProps) {
   }, [onApprove, result]);
 
   return (
-    <FormSection>
+    <Layout>
       <header>
         <h1>Approve + Recover Existing Wallet</h1>
 
@@ -249,7 +249,7 @@ function RecoverMnemonic({ onApprove }: ApproveWithWalletProps) {
           </Button>
         </footer>
       </header>
-    </FormSection>
+    </Layout>
   );
 }
 

@@ -1,4 +1,4 @@
-import { FormLayout, FormSection } from '@station/ui';
+import { FormLayout, Layout } from '@station/ui';
 import { Button } from '@material-ui/core';
 import React from 'react';
 
@@ -9,7 +9,7 @@ export interface NoWalletsProps {
 
 export function NoWallets({ onCancel, onConfirm }: NoWalletsProps) {
   return (
-    <FormSection>
+    <Layout>
       <FormLayout>
         <p>지갑이 하나도 없습니다. 지갑을 먼저 생성해주세요.</p>
       </FormLayout>
@@ -25,6 +25,6 @@ export function NoWallets({ onCancel, onConfirm }: NoWalletsProps) {
           </Button>
         </footer>
       </footer>
-    </FormSection>
+    </Layout>
   );
 }

@@ -1,5 +1,5 @@
 import { FormLayout } from '@station/ui';
-import { FormSection } from '@station/ui';
+import { Layout } from '@station/ui';
 import { CW20Addr, Token } from '@libs/types';
 import { CW20TokenInfo, cw20TokenInfoQuery } from '@libs/webapp-fns';
 import { useTerraWebapp } from '@libs/webapp-provider';
@@ -44,7 +44,7 @@ export function TokensAdd({ history }: RouteComponentProps<{}>) {
   }, [history, network.chainID, tokenAddr]);
 
   return (
-    <FormSection>
+    <Layout>
       <header>
         <h1>Add CW20 Token</h1>
       </header>
@@ -88,6 +88,6 @@ export function TokensAdd({ history }: RouteComponentProps<{}>) {
           </Button>
         )}
       </footer>
-    </FormSection>
+    </Layout>
   );
 }

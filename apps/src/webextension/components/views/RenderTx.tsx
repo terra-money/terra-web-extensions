@@ -1,4 +1,4 @@
-import { FormSection } from '@station/ui';
+import { Layout } from '@station/ui';
 import { TxResultRendering } from '@libs/webapp-fns';
 import React, { useEffect, useState } from 'react';
 import { Observable } from 'rxjs';
@@ -45,5 +45,5 @@ export function RenderTx({ stream, onComplete }: RenderTxProps) {
     }
   }, [onComplete, onCompleteRef, stream]);
 
-  return <FormSection>{result && <TxRenderer result={result} />}</FormSection>;
+  return <Layout>{result && <TxRenderer result={result} />}</Layout>;
 }

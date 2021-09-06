@@ -1,4 +1,4 @@
-import { FormLayout, FormSection } from '@station/ui';
+import { FormLayout, Layout } from '@station/ui';
 import { Button } from '@material-ui/core';
 import QRCode from 'qrcode.react';
 import React, { ReactNode } from 'react';
@@ -15,7 +15,7 @@ export function ViewAddressQR({
   children,
 }: ViewAddressQRProps) {
   return (
-    <FormSection>
+    <Layout>
       {children}
 
       <FormLayout>
@@ -29,6 +29,6 @@ export function ViewAddressQR({
           Confirm
         </Button>
       </footer>
-    </FormSection>
+    </Layout>
   );
 }

@@ -1,7 +1,7 @@
-import { FormLayout, FormSection } from '@station/ui';
 import { vibrate } from '@libs/ui';
 import { WalletCard } from '@libs/wallet-card';
-import { Button, TextField } from '@material-ui/core';
+import { Button } from '@material-ui/core';
+import { FormLabel, FormLayout, Layout, TextInput } from '@station/ui';
 import {
   decryptWallet,
   EncryptedWallet,
@@ -97,7 +97,7 @@ export function UpdateWalletPassword({
   // ---------------------------------------------
   if (failed > 5) {
     return (
-      <FormSection>
+      <Layout>
         <FormLayout>
           <p>비밀번호를 5회 이상 틀렸습니다. 비밀번호 변경이 취소됩니다.</p>
         </FormLayout>
@@ -107,12 +107,12 @@ export function UpdateWalletPassword({
             Confirm
           </Button>
         </footer>
-      </FormSection>
+      </Layout>
     );
   }
 
   return (
-    <FormSection ref={containerRef}>
+    <Layout ref={containerRef}>
       {children}
 
       <WalletCard
@@ -123,50 +123,48 @@ export function UpdateWalletPassword({
       />
 
       <FormLayout>
-        <TextField
-          variant="outlined"
-          type="password"
-          size="small"
-          label="Current password"
-          InputLabelProps={{ shrink: true }}
-          value={currentPassword}
-          error={!!invalidCurrentPassword}
-          helperText={invalidCurrentPassword}
-          onChange={({ target }: ChangeEvent<HTMLInputElement>) => {
-            setInvalidCurrentPassword(null);
-            setCurrentPassword(target.value);
-          }}
-        />
+        <FormLabel label="Current password">
+          <TextInput
+            fullWidth
+            type="password"
+            placeholder="Must be at least 10 characters"
+            value={currentPassword}
+            error={!!invalidCurrentPassword}
+            helperText={invalidCurrentPassword}
+            onChange={({ target }: ChangeEvent<HTMLInputElement>) => {
+              setInvalidCurrentPassword(null);
+              setCurrentPassword(target.value);
+            }}
+          />
+        </FormLabel>
 
-        <TextField
-          variant="outlined"
-          type="password"
-          size="small"
-          label="New password"
-          placeholder="Must be at least 10 characters"
-          InputLabelProps={{ shrink: true }}
-          value={nextPassword}
-          error={!!invalidNextPassword}
-          helperText={invalidNextPassword}
-          onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
-            setNextPassword(target.value)
-          }
-        />
+        <FormLabel label="New password">
+          <TextInput
+            fullWidth
+            type="password"
+            placeholder="Must be at least 10 characters"
+            value={nextPassword}
+            error={!!invalidNextPassword}
+            helperText={invalidNextPassword}
+            onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
+              setNextPassword(target.value)
+            }
+          />
+        </FormLabel>
 
-        <TextField
-          variant="outlined"
-          type="password"
-          size="small"
-          label="Confirm new password"
-          placeholder="Confirm your password"
-          InputLabelProps={{ shrink: true }}
-          value={nextPasswordConfirm}
-          error={!!invalidNextPasswordConfirm}
-          helperText={invalidNextPasswordConfirm}
-          onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
-            setNextPasswordConfirm(target.value)
-          }
-        />
+        <FormLabel label="Confirm new password">
+          <TextInput
+            fullWidth
+            type="password"
+            placeholder="Confirm your password"
+            value={nextPasswordConfirm}
+            error={!!invalidNextPasswordConfirm}
+            helperText={invalidNextPasswordConfirm}
+            onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
+              setNextPasswordConfirm(target.value)
+            }
+          />
+        </FormLabel>
       </FormLayout>
 
       <footer>
@@ -190,6 +188,6 @@ export function UpdateWalletPassword({
           Change password
         </Button>
       </footer>
-    </FormSection>
+    </Layout>
   );
 }

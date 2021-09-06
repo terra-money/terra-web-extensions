@@ -1,55 +1,37 @@
-import { FormSection } from '@station/ui';
-import { Button } from '@material-ui/core';
 import { WebExtensionNetworkInfo } from '@terra-dev/web-extension';
 import { addNetwork } from '@terra-dev/web-extension-backend';
-import React, { useCallback, useState } from 'react';
-import { Link, RouteComponentProps } from 'react-router-dom';
+import React, { useCallback } from 'react';
+import { RouteComponentProps } from 'react-router-dom';
 import {
-  CreateNewNetworkForm,
-  CreateNewNetworkResult,
-} from '../../../../components/form/CreateNewNetworkForm';
+  CreateNetwork,
+  CreateNetworkResult,
+} from 'webextension/components/views/CreateNetwork';
 
 export function NetworksCreate({ history }: RouteComponentProps<{}>) {
-  const [result, setResult] = useState<CreateNewNetworkResult | null>(null);
-
-  const create = useCallback(async () => {
-    if (!result) {
-      throw new Error(`Don't call when result is empty!`);
-    }
-
-    const network: WebExtensionNetworkInfo = {
-      name: result.name,
-      chainID: result.chainID,
-      lcd: result.lcd,
-    };
-
-    await addNetwork(network);
-
+  const cancel = useCallback(() => {
     history.push('/');
-  }, [history, result]);
+  }, [history]);
+
+  const create = useCallback(
+    async (result: CreateNetworkResult) => {
+      const network: WebExtensionNetworkInfo = {
+        name: result.name,
+        chainID: result.chainID,
+        lcd: result.lcd,
+      };
+
+      await addNetwork(network);
+
+      history.push('/');
+    },
+    [history],
+  );
 
   return (
-    <FormSection>
+    <CreateNetwork onCancel={cancel} onCreate={create}>
       <header>
-        <h1>Add New Network</h1>
+        <h1>Add a new network</h1>
       </header>
-
-      <CreateNewNetworkForm onChange={setResult} />
-
-      <footer>
-        <Button variant="contained" color="secondary" component={Link} to="/">
-          Cancel
-        </Button>
-
-        <Button
-          variant="contained"
-          color="primary"
-          disabled={!result}
-          onClick={create}
-        >
-          Create Network
-        </Button>
-      </footer>
-    </FormSection>
+    </CreateNetwork>
   );
 }

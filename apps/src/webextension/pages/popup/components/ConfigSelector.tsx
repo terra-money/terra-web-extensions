@@ -125,7 +125,7 @@ export function ConfigSelectorBase({ className }: { className?: string }) {
                   </div>
                   {DEFAULT_NETWORKS.indexOf(itemNetwork) === -1 && (
                     <button onClick={() => onRemoveNetwork(itemNetwork)}>
-                      <DeleteForever /> ??
+                      <DeleteForever />
                     </button>
                   )}
                 </li>

@@ -1,13 +1,7 @@
-import { FormLayout, FormSection } from '@station/ui';
 import { WalletCardDesignSelector } from '@libs/wallet-card/components/WalletCardDesignSelector';
-import {
-  Button,
-  Checkbox,
-  FormControlLabel,
-  TextField,
-  Tooltip,
-} from '@material-ui/core';
+import { Button, Checkbox, FormControlLabel, Tooltip } from '@material-ui/core';
 import { Warning } from '@material-ui/icons';
+import { FormLabel, FormLayout, Layout, TextInput } from '@station/ui';
 import {
   createMnemonicKey,
   validatePasswordConfirm,
@@ -100,7 +94,7 @@ export function CreateWallet({
   // presentation
   // ---------------------------------------------
   return (
-    <FormSection>
+    <Layout>
       {children}
 
       <WalletCardDesignSelector
@@ -114,50 +108,46 @@ export function CreateWallet({
       />
 
       <FormLayout>
-        <TextField
-          variant="outlined"
-          type="text"
-          size="small"
-          label="Wallet name"
-          placeholder="Enter 5-20 alphanumeric characters"
-          InputLabelProps={{ shrink: true }}
-          value={name}
-          error={!!invalidName}
-          helperText={invalidName}
-          onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
-            setName(target.value)
-          }
-        />
+        <FormLabel label="Wallet name">
+          <TextInput
+            fullWidth
+            placeholder="Enter 5-20 alphanumeric characters"
+            value={name}
+            error={!!invalidName}
+            helperText={invalidName}
+            onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
+              setName(target.value)
+            }
+          />
+        </FormLabel>
 
-        <TextField
-          variant="outlined"
-          type="password"
-          size="small"
-          label="Password"
-          placeholder="Must be at least 10 characters"
-          InputLabelProps={{ shrink: true }}
-          value={password}
-          error={!!invalidPassword}
-          helperText={invalidPassword}
-          onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
-            setPassword(target.value)
-          }
-        />
+        <FormLabel label="Password">
+          <TextInput
+            fullWidth
+            type="password"
+            placeholder="Must be at least 10 characters"
+            value={password}
+            error={!!invalidPassword}
+            helperText={invalidPassword}
+            onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
+              setPassword(target.value)
+            }
+          />
+        </FormLabel>
 
-        <TextField
-          variant="outlined"
-          type="password"
-          size="small"
-          label="Confirm password"
-          placeholder="Confirm your password"
-          InputLabelProps={{ shrink: true }}
-          value={passwordConfirm}
-          error={!!invalidPasswordConfirm}
-          helperText={invalidPasswordConfirm}
-          onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
-            setPasswordConfirm(target.value)
-          }
-        />
+        <FormLabel label="Confirm password">
+          <TextInput
+            fullWidth
+            type="password"
+            placeholder="Confirm your password"
+            value={passwordConfirm}
+            error={!!invalidPasswordConfirm}
+            helperText={invalidPasswordConfirm}
+            onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
+              setPasswordConfirm(target.value)
+            }
+          />
+        </FormLabel>
       </FormLayout>
 
       <MnemonicViewer mk={mk} />
@@ -212,7 +202,7 @@ export function CreateWallet({
           Next
         </Button>
       </footer>
-    </FormSection>
+    </Layout>
   );
 }
 

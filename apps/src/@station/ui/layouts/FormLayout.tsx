@@ -5,6 +5,6 @@ export const FormLayout = styled.div`
   flex-direction: column;
 
   > * {
-    margin-bottom: 1.5em;
+    margin-bottom: 1em;
   }
 `;

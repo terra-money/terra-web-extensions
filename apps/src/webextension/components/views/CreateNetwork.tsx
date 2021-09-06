@@ -1,10 +1,8 @@
-import { WalletCardDesignSelector } from '@libs/wallet-card/components/WalletCardDesignSelector';
 import { Button } from '@material-ui/core';
 import { FormLabel, FormLayout, Layout, TextInput } from '@station/ui';
-import { WebExtensionWalletInfo } from '@terra-dev/web-extension';
 import {
-  validateWalletName,
-  WalletNameInvalid,
+  validateNetworkLcdURL,
+  validateNetworkName,
 } from '@terra-dev/web-extension-backend';
 import React, {
   ChangeEvent,
@@ -14,59 +12,59 @@ import React, {
   useState,
 } from 'react';
 import { useStore } from 'webextension/contexts/store';
-import { cardDesigns } from 'webextension/env';
 
-export interface UpdateWalletResult {
+export interface CreateNetworkResult {
   name: string;
-  design: string;
+  chainID: string;
+  lcd: string;
 }
 
-export interface UpdateWalletProps {
-  wallet: WebExtensionWalletInfo;
+export interface CreateNetworkProps {
   onCancel: () => void;
-  onUpdate: (result: UpdateWalletResult) => void;
+  onCreate: (result: CreateNetworkResult) => void;
   children?: ReactNode;
 }
 
-export function UpdateWallet({
-  wallet,
+export function CreateNetwork({
+  onCreate,
   onCancel,
-  onUpdate,
   children,
-}: UpdateWalletProps) {
+}: CreateNetworkProps) {
   // ---------------------------------------------
   // queries
   // ---------------------------------------------
-  const { wallets } = useStore();
+  const { networks } = useStore();
 
   // ---------------------------------------------
   // states
   // ---------------------------------------------
-  const [name, setName] = useState<string>(wallet.name);
+  const [name, setName] = useState<string>('');
 
-  const [design, setDesign] = useState<string>(wallet.design);
+  const [chainID, setChainID] = useState<string>(() => networks[0].chainID);
+
+  const [lcd, setLcd] = useState<string>(() => networks[0].lcd);
 
   // ---------------------------------------------
   // logics
   // ---------------------------------------------
   const invalidName = useMemo(() => {
-    const invalid = validateWalletName(name, wallets);
+    return validateNetworkName(name, networks);
+  }, [name, networks]);
 
-    return invalid === WalletNameInvalid.SAME_NAME_EXISTS &&
-      name === wallet.name
-      ? null
-      : invalid;
-  }, [name, wallet.name, wallets]);
+  const invalidLcd = useMemo(() => {
+    return validateNetworkLcdURL(lcd);
+  }, [lcd]);
 
   // ---------------------------------------------
   // callbacks
   // ---------------------------------------------
-  const update = useCallback(() => {
-    onUpdate({
+  const create = useCallback(() => {
+    onCreate({
       name,
-      design,
+      chainID,
+      lcd,
     });
-  }, [design, name, onUpdate]);
+  }, [chainID, lcd, name, onCreate]);
 
   // ---------------------------------------------
   // presentation
@@ -75,26 +73,37 @@ export function UpdateWallet({
     <Layout>
       {children}
 
-      <WalletCardDesignSelector
-        style={{ margin: '1em auto 3em auto' }}
-        name={name}
-        design={design}
-        terraAddress={wallet.terraAddress}
-        designs={cardDesigns}
-        onChange={setDesign}
-        cardWidth={210}
-      />
-
       <FormLayout>
-        <FormLabel label="Wallet name">
+        <FormLabel label="Network name">
           <TextInput
             fullWidth
-            placeholder="Enter 5-20 alphanumeric characters"
             value={name}
             error={!!invalidName}
             helperText={invalidName}
             onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
               setName(target.value)
+            }
+          />
+        </FormLabel>
+
+        <FormLabel label="Chain ID">
+          <TextInput
+            fullWidth
+            value={chainID}
+            onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
+              setChainID(target.value)
+            }
+          />
+        </FormLabel>
+
+        <FormLabel label="LCD">
+          <TextInput
+            fullWidth
+            value={lcd}
+            error={!!invalidLcd}
+            helperText={invalidLcd}
+            onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
+              setLcd(target.value)
             }
           />
         </FormLabel>
@@ -110,12 +119,14 @@ export function UpdateWallet({
           color="primary"
           disabled={
             name.length === 0 ||
+            chainID.length === 0 ||
+            lcd.length === 0 ||
             !!invalidName ||
-            (name === wallet.name && design === wallet.design)
+            !!invalidLcd
           }
-          onClick={update}
+          onClick={create}
         >
-          Update
+          Next
         </Button>
       </footer>
     </Layout>

@@ -1,4 +1,4 @@
-import { FormSection } from '@station/ui';
+import { Layout } from '@station/ui';
 import { Button, createMuiTheme } from '@material-ui/core';
 import {
   deserializeTx,
@@ -134,7 +134,7 @@ function AppBase({ className }: AppProps) {
 
   if (needApproveHostname) {
     return (
-      <FormSection className={className}>
+      <Layout className={className}>
         <header>
           <h1>Approve this site?</h1>
         </header>
@@ -149,7 +149,7 @@ function AppBase({ className }: AppProps) {
             Approve
           </Button>
         </footer>
-      </FormSection>
+      </Layout>
     );
   }
 

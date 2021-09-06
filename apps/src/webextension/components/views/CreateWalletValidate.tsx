@@ -1,6 +1,12 @@
-import { FormLayout, FormSection, MiniButton } from '@station/ui';
 import { vibrate } from '@libs/ui';
-import { Button, TextField } from '@material-ui/core';
+import { Button } from '@material-ui/core';
+import {
+  FormLabel,
+  FormLayout,
+  Layout,
+  MiniButton,
+  TextInput,
+} from '@station/ui';
 import React, {
   ChangeEvent,
   ReactNode,
@@ -9,6 +15,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import styled from 'styled-components';
 import { CreateWalletResult } from './CreateWallet';
 
 export interface CreateWalletValidateProps {
@@ -32,7 +39,7 @@ export function CreateWalletValidate({
     const words = createWallet.mk.mnemonic.split(' ');
 
     const q1 = Math.floor((Math.random() * words.length) / 2);
-    const q2 = Math.floor(Math.random() * (words.length - q1));
+    const q2 = Math.floor(Math.random() * (words.length - q1)) + q1;
 
     const word1 = words[q1];
     const word2 = words[q2];
@@ -75,7 +82,7 @@ export function CreateWalletValidate({
   // ---------------------------------------------
   if (failed > 5) {
     return (
-      <FormSection>
+      <Layout>
         <FormLayout>
           <p>
             Mnemonic Key 를 확인하지 못하셨습니다. 이 지갑 생성은 취소됩니다.
@@ -87,54 +94,52 @@ export function CreateWalletValidate({
             Confirm
           </Button>
         </footer>
-      </FormSection>
+      </Layout>
     );
   }
 
   return (
-    <FormSection ref={containerRef}>
+    <Layout ref={containerRef}>
       {children}
 
-      <FormLayout>
-        <TextField
-          variant="outlined"
-          type="text"
-          size="small"
-          label={`${confirm.q1} word`}
-          InputLabelProps={{ shrink: true }}
-          value={word1}
-          onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
-            setWord1(target.value)
-          }
-        />
-
-        <TextField
-          variant="outlined"
-          type="text"
-          size="small"
-          label={`${confirm.q2} word`}
-          InputLabelProps={{ shrink: true }}
-          value={word2}
-          onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
-            setWord2(target.value)
-          }
-        />
-      </FormLayout>
-
-      {confirm.samples.map((word) => (
-        <MiniButton
-          key={'sample' + word}
-          onClick={() => {
-            if (word1.length === 0) {
-              setWord1(word);
-            } else {
-              setWord2(word);
+      <Inputs>
+        <FormLabel label={`${confirm.q1} word`}>
+          <TextInput
+            fullWidth
+            value={word1}
+            onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
+              setWord1(target.value)
             }
-          }}
-        >
-          {word}
-        </MiniButton>
-      ))}
+          />
+        </FormLabel>
+
+        <FormLabel label={`${confirm.q2} word`}>
+          <TextInput
+            fullWidth
+            value={word2}
+            onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
+              setWord2(target.value)
+            }
+          />
+        </FormLabel>
+      </Inputs>
+
+      <ButtonGrid>
+        {confirm.samples.map((word) => (
+          <MiniButton
+            key={'sample' + word}
+            onClick={() => {
+              if (word1.length === 0) {
+                setWord1(word);
+              } else {
+                setWord2(word);
+              }
+            }}
+          >
+            {word}
+          </MiniButton>
+        ))}
+      </ButtonGrid>
 
       <footer>
         <Button variant="contained" color="secondary" onClick={onCancel}>
@@ -150,6 +155,23 @@ export function CreateWalletValidate({
           Confirm
         </Button>
       </footer>
-    </FormSection>
+    </Layout>
   );
 }
+
+const Inputs = styled.section`
+  display: flex;
+  gap: 10px;
+
+  > * {
+    flex: 1;
+  }
+`;
+
+const ButtonGrid = styled.section`
+  margin-top: 20px;
+
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 5px;
+`;

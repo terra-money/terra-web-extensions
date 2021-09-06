@@ -1,5 +1,5 @@
 import { microfy } from '@libs/formatter';
-import { FormLabel, FormLayout, FormSection } from '@station/ui';
+import { FormLabel, FormLayout, Layout } from '@station/ui';
 import { NumberInput } from '@station/ui';
 import { TextInput } from '@station/ui';
 import { HumanAddr, terraswap, Token, u, UST } from '@libs/types';
@@ -111,7 +111,7 @@ function Form({
   );
 
   return (
-    <FormSection>
+    <Layout>
       <FormLayout>
         <FormLabel label="To address">
           <TextInput
@@ -183,6 +183,6 @@ function Form({
           Update
         </Button>
       </footer>
-    </FormSection>
+    </Layout>
   );
 }
