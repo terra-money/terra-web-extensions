@@ -3,9 +3,9 @@ import {
   observeNetworks,
 } from '@terra-dev/web-extension-backend';
 import { useEffect, useState } from 'react';
-import { DEFAULT_NETWORKS } from '../env';
+import { DEFAULT_NETWORKS } from 'webextension/env';
 
-export function useNetworks(): NetworksData {
+export function useNetworksStore(): NetworksData {
   const [networks, setNetworks] = useState<NetworksData>(() => ({
     networks: DEFAULT_NETWORKS,
     selectedNetwork: undefined,

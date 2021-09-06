@@ -10,8 +10,8 @@ import {
 import { MnemonicKey } from '@terra-money/terra.js';
 import React, { ChangeEvent, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
+import { useStore } from 'webextension/contexts/store';
 import { cardDesigns } from '../../env';
-import { useWallets } from '../../queries/useWallets';
 
 /** @deprecated */
 export interface CreateNewWalletResult {
@@ -31,7 +31,7 @@ export function CreateNewWalletForm({ onChange }: CreateNewWalletFormProps) {
   // ---------------------------------------------
   // queries
   // ---------------------------------------------
-  const { wallets } = useWallets();
+  const { wallets } = useStore();
 
   // ---------------------------------------------
   // states

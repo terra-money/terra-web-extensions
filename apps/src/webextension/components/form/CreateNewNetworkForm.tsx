@@ -5,7 +5,7 @@ import {
   validateNetworkName,
 } from '@terra-dev/web-extension-backend';
 import React, { ChangeEvent, useEffect, useMemo, useState } from 'react';
-import { useNetworks } from '../../queries/useNetworks';
+import { useStore } from 'webextension/contexts/store';
 
 export interface CreateNewNetworkResult {
   name: string;
@@ -21,7 +21,7 @@ export function CreateNewNetworkForm({ onChange }: CreateNewNetworkFormProps) {
   // ---------------------------------------------
   // queries
   // ---------------------------------------------
-  const { networks } = useNetworks();
+  const { networks } = useStore();
 
   // ---------------------------------------------
   // states

@@ -19,10 +19,10 @@ import { FormattedMessage } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
 import { useLocales } from 'webextension/contexts/locales';
+import { useStore } from 'webextension/contexts/store';
 import { DEFAULT_NETWORKS } from 'webextension/env';
 import { LanguageCode } from 'webextension/locales';
 import { extensionPath } from 'webextension/logics/extensionPath';
-import { useNetworks } from 'webextension/queries/useNetworks';
 
 const INDEX = extensionPath('index.html');
 
@@ -36,7 +36,7 @@ export function ConfigSelectorBase({ className }: { className?: string }) {
   // states
   // ---------------------------------------------
   const { locale, locales, updateLocale } = useLocales();
-  const { networks, selectedNetwork } = useNetworks();
+  const { networks, selectedNetwork } = useStore();
 
   const [anchorElement, setAnchorElement] = useState<HTMLElement | null>(null);
 
@@ -69,7 +69,7 @@ export function ConfigSelectorBase({ className }: { className?: string }) {
   );
 
   const onCreateNetwork = useCallback(() => {
-    history.push('/network/create');
+    history.push('/networks/create');
     setAnchorElement(null);
   }, [history]);
 

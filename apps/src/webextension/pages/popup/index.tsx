@@ -17,8 +17,8 @@ import {
 import styled, { DefaultTheme } from 'styled-components';
 import { ErrorBoundary } from 'webextension/components/common/ErrorBoundary';
 import { LocalesProvider, useIntlProps } from 'webextension/contexts/locales';
+import { StoreProvider } from 'webextension/contexts/store';
 import { ThemeProvider } from 'webextension/contexts/theme';
-import { WebExtensionInternalWalletProvider } from 'webextension/contexts/wallet-provider';
 import { LedgerVerify } from 'webextension/pages/popup/pages/ledger/verify';
 import { TokenInfo } from 'webextension/pages/popup/pages/tokens/info';
 import { WalletExport } from 'webextension/pages/popup/pages/wallets/export';
@@ -73,18 +73,18 @@ function MainBase({ className }: { className?: string }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <IntlProvider locale={locale} messages={messages}>
-        <ThemeProvider theme={theme}>
-          <GlobalStyle />
-          <div className={className}>
-            <Header />
-            <section ref={containerRef}>
-              <WebExtensionInternalWalletProvider>
-                <TerraWebappProvider>
-                  <BankProvider
-                    cw20TokenContracts={CW20_TOKEN_CONTRACTS}
-                    maxCapTokenDenoms={MAX_CAP_TOKEN_DENOMS}
-                  >
+      <StoreProvider>
+        <TerraWebappProvider>
+          <BankProvider
+            cw20TokenContracts={CW20_TOKEN_CONTRACTS}
+            maxCapTokenDenoms={MAX_CAP_TOKEN_DENOMS}
+          >
+            <IntlProvider locale={locale} messages={messages}>
+              <ThemeProvider theme={theme}>
+                <GlobalStyle />
+                <div className={className}>
+                  <Header />
+                  <section ref={containerRef}>
                     <Switch>
                       <Route exact path="/" component={Dashboard} />
                       <Route
@@ -135,13 +135,13 @@ function MainBase({ className }: { className?: string }) {
                       />
                       <Redirect to="/" />
                     </Switch>
-                  </BankProvider>
-                </TerraWebappProvider>
-              </WebExtensionInternalWalletProvider>
-            </section>
-          </div>
-        </ThemeProvider>
-      </IntlProvider>
+                  </section>
+                </div>
+              </ThemeProvider>
+            </IntlProvider>
+          </BankProvider>
+        </TerraWebappProvider>
+      </StoreProvider>
     </QueryClientProvider>
   );
 }

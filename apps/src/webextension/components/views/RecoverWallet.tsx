@@ -16,8 +16,8 @@ import React, {
   useMemo,
   useState,
 } from 'react';
+import { useStore } from 'webextension/contexts/store';
 import { cardDesigns } from 'webextension/env';
-import { useWallets } from 'webextension/queries/useWallets';
 
 export interface RecoverWalletResult {
   name: string;
@@ -40,7 +40,7 @@ export function RecoverWallet({
   // ---------------------------------------------
   // queries
   // ---------------------------------------------
-  const { wallets } = useWallets();
+  const { wallets } = useStore();
 
   // ---------------------------------------------
   // states

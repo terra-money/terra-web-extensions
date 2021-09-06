@@ -30,13 +30,13 @@ import { FormattedMessage } from 'react-intl';
 import { Link, useHistory } from 'react-router-dom';
 import useCopyClipboard from 'react-use-clipboard';
 import styled from 'styled-components';
+import { useStore } from 'webextension/contexts/store';
 import { useTokenList } from 'webextension/queries/useTokenList';
-import { useWallets } from 'webextension/queries/useWallets';
 
 function DashboardBase({ className }: { className?: string }) {
   const history = useHistory();
 
-  const { wallets, focusedWallet, focusedWalletIndex } = useWallets();
+  const { wallets, focusedWallet, focusedWalletIndex } = useStore();
 
   const isLedgerSupport = useMemo(() => {
     return isLedgerSupportBrowser();

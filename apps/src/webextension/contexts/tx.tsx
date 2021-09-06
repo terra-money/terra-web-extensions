@@ -28,38 +28,29 @@ import { CreateTxOptions } from '@terra-money/terra.js';
 import React, { ReactNode, useMemo, useState } from 'react';
 import { SignTxWithEncryptedWallet } from 'webextension/components/views/SignTxWithEncryptedWallet';
 import { SignTxWithLedgerWallet } from 'webextension/components/views/SignTxWithLedgerWallet';
-import { useNetworks } from '../queries/useNetworks';
-import { useWallets } from '../queries/useWallets';
 
-export interface InternalWalletProviderProps {
+export interface TxProviderProps {
   children: ReactNode;
+  wallet: EncryptedWallet | LedgerWallet;
+  network: WebExtensionNetworkInfo;
 }
 
-export function WebExtensionInternalWalletProvider({
-  children,
-}: InternalWalletProviderProps) {
-  const { focusedWallet } = useWallets();
-  const { networks, selectedNetwork } = useNetworks();
-
+export function TxProvider({ children, wallet, network }: TxProviderProps) {
   const [resolver, setResolver] = useState<ReactNode>(null);
 
-  const state = useMemo<Wallet>(() => {
+  const states = useMemo<Wallet>(() => {
     return {
       availableConnectTypes: [ConnectType.WEBEXTENSION],
       availableInstallTypes: [],
-      status: !!focusedWallet
-        ? WalletStatus.WALLET_CONNECTED
-        : WalletStatus.WALLET_NOT_CONNECTED,
-      network: selectedNetwork ?? networks[0],
-      wallets: focusedWallet
-        ? [
-            {
-              connectType: ConnectType.WEBEXTENSION,
-              terraAddress: focusedWallet.terraAddress,
-              design: focusedWallet.design,
-            },
-          ]
-        : [],
+      status: WalletStatus.WALLET_CONNECTED,
+      network,
+      wallets: [
+        {
+          connectType: ConnectType.WEBEXTENSION,
+          terraAddress: wallet.terraAddress,
+          design: wallet.design,
+        },
+      ],
       install: () => {
         throw new Error('not implemented!');
       },
@@ -73,16 +64,13 @@ export function WebExtensionInternalWalletProvider({
         throw new Error('not implemented!');
       },
       post: (tx: CreateTxOptions): Promise<TxResult> => {
-        if (!focusedWallet || !selectedNetwork) {
-          throw new WebExtensionCreateTxFailed('Undefined wallet or network!');
-        }
-
         return new Promise<TxResult>((resolve, reject) => {
+          console.log('tx.tsx..() ????');
           setResolver(
             <PostResolver
               tx={tx}
-              wallet={focusedWallet}
-              network={selectedNetwork}
+              wallet={wallet}
+              network={network}
               onReject={reject}
               onResolve={resolve}
               onComplete={() => setResolver(null)}
@@ -97,11 +85,14 @@ export function WebExtensionInternalWalletProvider({
         throw new Error('not implemented!');
       },
     };
-  }, [focusedWallet, networks, selectedNetwork]);
+  }, [network, wallet]);
+
+  console.log('tx.tsx..TxProvider()', resolver);
 
   return (
-    <WalletContext.Provider value={state}>
+    <WalletContext.Provider value={states}>
       {children}
+      {resolver && <div>What???</div>}
       {resolver}
     </WalletContext.Provider>
   );
@@ -122,6 +113,8 @@ function PostResolver({
   onResolve: (txResult: TxResult) => void;
   onComplete: () => void;
 }) {
+  console.log('tx.tsx..PostResolver() !!!!!');
+
   if ('usbDevice' in wallet) {
     return (
       <SignTxWithLedgerWallet
@@ -186,6 +179,7 @@ function PostResolver({
         onProceed={(w) => {
           executeTxWithInternalWallet(w, network, tx).subscribe({
             next: (result) => {
+              console.log('wallet-provider.tsx..next()', result);
               if (result.status === WebExtensionTxStatus.SUCCEED) {
                 onResolve({
                   ...tx,

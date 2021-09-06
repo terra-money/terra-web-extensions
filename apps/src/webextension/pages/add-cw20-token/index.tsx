@@ -13,9 +13,9 @@ import styled, { DefaultTheme } from 'styled-components';
 import { browser } from 'webextension-polyfill-ts';
 import { ErrorBoundary } from 'webextension/components/common/ErrorBoundary';
 import { LocalesProvider, useIntlProps } from 'webextension/contexts/locales';
+import { StoreProvider } from 'webextension/contexts/store';
 import { ThemeProvider } from 'webextension/contexts/theme';
 import { txPortPrefix } from 'webextension/env';
-import { WebExtensionInternalWalletProvider } from '../../contexts/wallet-provider';
 
 export interface AppProps {
   className?: string;
@@ -156,7 +156,7 @@ function Main() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <WebExtensionInternalWalletProvider>
+      <StoreProvider>
         <TerraWebappProvider>
           <IntlProvider locale={locale} messages={messages}>
             <ThemeProvider theme={theme}>
@@ -164,7 +164,7 @@ function Main() {
             </ThemeProvider>
           </IntlProvider>
         </TerraWebappProvider>
-      </WebExtensionInternalWalletProvider>
+      </StoreProvider>
     </QueryClientProvider>
   );
 }

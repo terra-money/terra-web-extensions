@@ -7,8 +7,8 @@ import {
   validateWalletPassword,
 } from '@terra-dev/web-extension-backend';
 import React, { ChangeEvent, useEffect, useMemo, useState } from 'react';
+import { useStore } from 'webextension/contexts/store';
 import { cardDesigns } from '../../env';
-import { useWallets } from '../../queries/useWallets';
 
 export interface RecoverMnemonicResult {
   name: string;
@@ -25,7 +25,7 @@ export function RecoverMnemonicForm({ onChange }: RecoverMnemonicFormProps) {
   // ---------------------------------------------
   // queries
   // ---------------------------------------------
-  const { wallets } = useWallets();
+  const { wallets } = useStore();
 
   // ---------------------------------------------
   // states

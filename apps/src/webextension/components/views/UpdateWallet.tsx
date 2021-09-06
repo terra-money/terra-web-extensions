@@ -13,8 +13,8 @@ import React, {
   useMemo,
   useState,
 } from 'react';
+import { useStore } from 'webextension/contexts/store';
 import { cardDesigns } from 'webextension/env';
-import { useWallets } from 'webextension/queries/useWallets';
 
 export interface UpdateWalletResult {
   name: string;
@@ -37,7 +37,7 @@ export function UpdateWallet({
   // ---------------------------------------------
   // queries
   // ---------------------------------------------
-  const { wallets } = useWallets();
+  const { wallets } = useStore();
 
   // ---------------------------------------------
   // states

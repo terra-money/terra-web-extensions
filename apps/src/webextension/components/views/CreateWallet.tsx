@@ -24,8 +24,8 @@ import React, {
 } from 'react';
 import styled from 'styled-components';
 import { MnemonicViewer } from 'webextension/components/form/MnemonicViewer';
+import { useStore } from 'webextension/contexts/store';
 import { cardDesigns } from 'webextension/env';
-import { useWallets } from 'webextension/queries/useWallets';
 
 export interface CreateWalletResult {
   name: string;
@@ -48,7 +48,7 @@ export function CreateWallet({
   // ---------------------------------------------
   // queries
   // ---------------------------------------------
-  const { wallets } = useWallets();
+  const { wallets } = useStore();
 
   const mk = useMemo(() => {
     return createMnemonicKey();
