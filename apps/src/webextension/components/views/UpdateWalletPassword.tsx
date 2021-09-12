@@ -18,6 +18,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import { PasswordStrength } from 'webextension/components/form/PasswordStrength';
 
 export interface UpdateWalletPasswordResult {
   encryptedWallet: EncryptedWallet;
@@ -151,6 +152,8 @@ export function UpdateWalletPassword({
             }
           />
         </FormLabel>
+
+        <PasswordStrength password={nextPassword} />
 
         <FormLabel label="Confirm new password">
           <TextInput

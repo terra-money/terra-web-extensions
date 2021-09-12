@@ -1,7 +1,7 @@
-import { WalletCardDesignSelector } from '@station/wallet-card/components/WalletCardDesignSelector';
 import { Button, Checkbox, FormControlLabel, Tooltip } from '@material-ui/core';
 import { Warning } from '@material-ui/icons';
 import { FormLabel, FormLayout, Layout, TextInput } from '@station/ui';
+import { WalletCardDesignSelector } from '@station/wallet-card/components/WalletCardDesignSelector';
 import {
   createMnemonicKey,
   validatePasswordConfirm,
@@ -18,6 +18,7 @@ import React, {
 } from 'react';
 import styled from 'styled-components';
 import { MnemonicViewer } from 'webextension/components/form/MnemonicViewer';
+import { PasswordStrength } from 'webextension/components/form/PasswordStrength';
 import { useStore } from 'webextension/contexts/store';
 import { cardDesigns } from 'webextension/env';
 
@@ -134,6 +135,8 @@ export function CreateWallet({
             }
           />
         </FormLabel>
+
+        <PasswordStrength password={password} />
 
         <FormLabel label="Confirm password">
           <TextInput

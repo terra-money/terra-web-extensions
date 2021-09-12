@@ -49,7 +49,7 @@ export function TokensList({ history }: RouteComponentProps<{}>) {
       onClose={cancel}
     >
       <header>
-        <h1>Added tokens</h1>
+        <h1>Manage tokens</h1>
       </header>
     </ManageCW20Tokens>
   );

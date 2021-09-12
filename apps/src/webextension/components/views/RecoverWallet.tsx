@@ -16,6 +16,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
+import { PasswordStrength } from 'webextension/components/form/PasswordStrength';
 import { useStore } from 'webextension/contexts/store';
 import { cardDesigns } from 'webextension/env';
 
@@ -134,6 +135,8 @@ export function RecoverWallet({
             }
           />
         </FormLabel>
+
+        <PasswordStrength password={password} />
 
         <FormLabel label="Password">
           <TextInput
