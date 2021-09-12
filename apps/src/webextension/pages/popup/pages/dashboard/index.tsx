@@ -1,7 +1,7 @@
 import { formatUTokenWithPostfixUnits } from '@libs/formatter';
 import { QRCodeIcon } from '@libs/icons';
 import { AnimateNumber } from '@libs/ui';
-import { WalletCard, WalletCardSelector } from '@libs/wallet-card';
+import { WalletCard, WalletCardSelector } from '@station/wallet-card';
 import { Tooltip } from '@material-ui/core';
 import {
   AccountBalanceWallet,

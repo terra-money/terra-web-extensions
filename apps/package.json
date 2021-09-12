@@ -99,6 +99,7 @@
     "@storybook/addons": "^6.3.8",
     "@storybook/preset-create-react-app": "^3.2.0",
     "@storybook/react": "^6.3.8",
+    "@testing-library/react-hooks": "^7.0.2",
     "@types/big.js": "^6.1.2",
     "@types/chrome": "^0.0.155",
     "@types/crypto-js": "^4.0.2",

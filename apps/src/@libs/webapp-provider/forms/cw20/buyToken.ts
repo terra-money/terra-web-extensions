@@ -46,7 +46,7 @@ export function useCW20BuyTokenForm<T extends Token>({
     () =>
       ({
         ustAmount: '' as UST,
-        maxSpread: '1' as Rate,
+        maxSpread: '0.01' as Rate,
       } as CW20BuyTokenFormInput<T>),
   );
 }

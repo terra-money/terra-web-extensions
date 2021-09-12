@@ -4219,6 +4219,28 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@testing-library/react-hooks@npm:^7.0.2":
+  version: 7.0.2
+  resolution: "@testing-library/react-hooks@npm:7.0.2"
+  dependencies:
+    "@babel/runtime": ^7.12.5
+    "@types/react": ">=16.9.0"
+    "@types/react-dom": ">=16.9.0"
+    "@types/react-test-renderer": ">=16.9.0"
+    react-error-boundary: ^3.1.0
+  peerDependencies:
+    react: ">=16.9.0"
+    react-dom: ">=16.9.0"
+    react-test-renderer: ">=16.9.0"
+  peerDependenciesMeta:
+    react-dom:
+      optional: true
+    react-test-renderer:
+      optional: true
+  checksum: 27c6169b5c9832bd02dcea232e6a0a3cd8d4504e13ecb49d57eb5ab6bea5e2f1bff65f3102068b7e57eec3cbd671326dc0b277335014b0edfbdedf11a1fe6db5
+  languageName: node
+  linkType: hard
+
 "@tsconfig/node10@npm:^1.0.7":
   version: 1.0.8
   resolution: "@tsconfig/node10@npm:1.0.8"
@@ -4733,7 +4755,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:^17.0.9":
+"@types/react-dom@npm:>=16.9.0, @types/react-dom@npm:^17.0.9":
   version: 17.0.9
   resolution: "@types/react-dom@npm:17.0.9"
   dependencies:
@@ -4772,6 +4794,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/react-test-renderer@npm:>=16.9.0":
+  version: 17.0.1
+  resolution: "@types/react-test-renderer@npm:17.0.1"
+  dependencies:
+    "@types/react": "*"
+  checksum: ecaae8df36cd8cfeb89080d52534856acc3789bad9a6e369ff5119426377c827b4e5b5daa638507f2c1c2fd6c994bf45de288a698143178cd4049c2cd8b77b35
+  languageName: node
+  linkType: hard
+
 "@types/react-transition-group@npm:^4.2.0":
   version: 4.4.1
   resolution: "@types/react-transition-group@npm:4.4.1"
@@ -4789,6 +4820,17 @@ __metadata:
     "@types/scheduler": "*"
     csstype: ^3.0.2
   checksum: d5af52623dd863e5a9f64eb72979f19c21e03012e25ee93adc93f664ed7976e81b654128dc653b225ad5ba2aaae24e0febe37face272bb051d6289e23ed7177d
+  languageName: node
+  linkType: hard
+
+"@types/react@npm:>=16.9.0":
+  version: 17.0.20
+  resolution: "@types/react@npm:17.0.20"
+  dependencies:
+    "@types/prop-types": "*"
+    "@types/scheduler": "*"
+    csstype: ^3.0.2
+  checksum: e342bfaa4fe052fc3a445ea49f746f3fd82cfc9c8028eae139a3e0763ead1871f353bd40da2a472f23d2b52544d2781d40e3159c0703e7e2ff08c13f067a3b9c
   languageName: node
   linkType: hard
 
@@ -5899,6 +5941,7 @@ __metadata:
     "@terra-money/key-utils": ^1.0.2
     "@terra-money/ledger-terra-js": ^1.1.0
     "@terra-money/terra.js": ^1.8.0 || ^2.0.0
+    "@testing-library/react-hooks": ^7.0.2
     "@types/big.js": ^6.1.2
     "@types/chrome": ^0.0.155
     "@types/crypto-js": ^4.0.2
@@ -16383,6 +16426,17 @@ fsevents@^1.2.7:
     react: ^0.14.8 || ^15.0.1 || ^16.0.0 || ^17.0.1
     react-dom: ^0.14.8 || ^15.0.1 || ^16.0.0 || ^17.0.1
   checksum: d1b8273e1d8e49bc22f6df88749b2dc2eae1df03498f0c0607a976593e05ea61f69f01931efcdf32befc13a41fa7c81af8667c0e16de1afaff3aacaa10599192
+  languageName: node
+  linkType: hard
+
+"react-error-boundary@npm:^3.1.0":
+  version: 3.1.3
+  resolution: "react-error-boundary@npm:3.1.3"
+  dependencies:
+    "@babel/runtime": ^7.12.5
+  peerDependencies:
+    react: ">=16.13.1"
+  checksum: 0a05af404aa054c54d7bc65a1814810093bf136c3ad4b3576a51d8509ee8fc302adfb66405da501fc01e839db557dd0d994b487e651897e36293907bb61458cf
   languageName: node
   linkType: hard
 

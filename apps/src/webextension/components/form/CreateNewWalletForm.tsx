@@ -1,5 +1,5 @@
 import { FormLayout } from '@station/ui';
-import { WalletCardDesignSelector } from '@libs/wallet-card/components/WalletCardDesignSelector';
+import { WalletCardDesignSelector } from '@station/wallet-card/components/WalletCardDesignSelector';
 import { TextField } from '@material-ui/core';
 import {
   createMnemonicKey,

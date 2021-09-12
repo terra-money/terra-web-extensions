@@ -1,5 +1,6 @@
 import { MantleFetch } from '@libs/mantle';
-import { Timeout, TxFailed } from '@terra-dev/wallet-types';
+import { PollingTimeout } from '@libs/webapp-fns';
+import { TxFailed } from '@terra-dev/wallet-types';
 import { CreateTxOptions } from '@terra-money/terra.js';
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -106,7 +107,9 @@ export async function pollTxInfo({
   tx,
   txhash,
 }: PollTxInfoParams): Promise<TxInfoData> {
-  const until = Date.now() + 1000 * 20;
+  const until = Date.now() + 1000 * 60 * 60;
+  const untilInterval = Date.now() + 1000 * 60;
+  //const until = Date.now() + 100;
 
   while (true) {
     const txInfo = await txInfoQuery({
@@ -135,10 +138,16 @@ export async function pollTxInfo({
       }
 
       return txInfo;
-    } else if (Date.now() < until) {
+    } else if (Date.now() < untilInterval) {
       await sleep(500);
+    } else if (Date.now() < until) {
+      await sleep(1000 * 10);
     } else {
-      throw new Timeout(`Could not get TxInfo for 20 seconds`);
+      throw new PollingTimeout(
+        `Transaction queued. To verify the status, please check the transaction hash below.`,
+        txhash,
+      );
+      //throw new Timeout(`Could not get TxInfo for 20 seconds`);
     }
   }
 }

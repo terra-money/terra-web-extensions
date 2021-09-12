@@ -1,4 +1,4 @@
-import { WalletCardDesignSelector } from '@libs/wallet-card/components/WalletCardDesignSelector';
+import { WalletCardDesignSelector } from '@station/wallet-card/components/WalletCardDesignSelector';
 import { Button, Checkbox, FormControlLabel, Tooltip } from '@material-ui/core';
 import { Warning } from '@material-ui/icons';
 import { FormLabel, FormLayout, Layout, TextInput } from '@station/ui';

@@ -1,5 +1,5 @@
 import { vibrate } from '@libs/ui';
-import { WalletCard } from '@libs/wallet-card';
+import { WalletCard } from '@station/wallet-card';
 import { Button } from '@material-ui/core';
 import { WebExtensionNetworkInfo } from '@terra-dev/web-extension';
 import {

@@ -51,6 +51,9 @@ export function useCW20SellTokenForm<T extends Token>({
       connected: !!connectedWallet,
     },
     () =>
-      ({ tokenAmount: '' as T, maxSpread: '1' } as CW20SellTokenFormInput<T>),
+      ({
+        tokenAmount: '' as T,
+        maxSpread: '0.01',
+      } as CW20SellTokenFormInput<T>),
   );
 }
