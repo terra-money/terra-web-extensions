@@ -199,6 +199,9 @@ function LedgerWalletTxForm({
 
   const deny = useCallback(() => {
     onDeny(txRequest);
+    if (txRequest.closeWindowAfterTx) {
+      window.close();
+    }
   }, [onDeny, txRequest]);
 
   const proceed = useCallback(
