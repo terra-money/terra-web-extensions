@@ -1,6 +1,7 @@
 import { CW20Addr } from '@libs/types';
 import { CW20Icon, cw20TokenInfoQuery } from '@libs/webapp-fns';
 import { useTerraWebapp } from '@libs/webapp-provider';
+import { Button } from '@material-ui/core';
 import { Layout } from '@station/ui';
 import { useWallet } from '@terra-dev/use-wallet';
 import React, { ReactNode, useEffect, useState } from 'react';
@@ -13,6 +14,7 @@ export interface ManageCW20TokensProps {
   initialTokens: string[];
   onRemove: (tokenAddr: string) => void;
   onAdd: (tokenAddr: string) => void;
+  onAddAll?: () => void;
   onClose: () => void;
   children?: ReactNode;
 }
@@ -23,6 +25,8 @@ export function ManageCW20Tokens({
   onRemove,
   onAdd,
   children,
+  onAddAll,
+  onClose,
 }: ManageCW20TokensProps) {
   const { network } = useWallet();
 
@@ -52,6 +56,18 @@ export function ManageCW20Tokens({
           );
         })}
       </TokenList>
+
+      {onAddAll && (
+        <footer>
+          <Button variant="contained" color="secondary" onClick={onClose}>
+            Cancel
+          </Button>
+
+          <Button variant="contained" color="primary" onClick={onAddAll}>
+            Add all tokens
+          </Button>
+        </footer>
+      )}
     </Layout>
   );
 }

@@ -10,6 +10,7 @@ import {
 } from '@terra-dev/web-extension';
 import {
   findWallet,
+  hasCW20Tokens,
   toURLSearchParams,
   TxRequest,
 } from '@terra-dev/web-extension-backend';
@@ -17,12 +18,12 @@ import { createElement } from 'react';
 import { render } from 'react-dom';
 import { Observable } from 'rxjs';
 import { browser } from 'webextension-polyfill-ts';
+import { IFrameModal } from '../../components/modal/IFrameModal';
+import { contentScriptPortPrefix, DEFAULT_NETWORKS } from '../../env';
 import {
   ContentScriptOptions,
   startWebExtensionContentScript,
 } from './startWebExtensionContentScript';
-import { IFrameModal } from '../../components/modal/IFrameModal';
-import { contentScriptPortPrefix, DEFAULT_NETWORKS } from '../../env';
 
 function startTx(
   id: string,
@@ -176,7 +177,9 @@ function startAddCW20TokenWithIframeModal(
     });
 
     const endConnect = () => {
-      window.document.querySelector('body')?.removeChild(modalContainer);
+      try {
+        window.document.querySelector('body')?.removeChild(modalContainer);
+      } catch {}
       port.disconnect();
     };
 
@@ -188,8 +191,13 @@ function startAddCW20TokenWithIframeModal(
       )}`,
       title: 'Add CW20 Tokens',
       onClose: () => {
-        window.document.querySelector('body')?.removeChild(modalContainer);
-        endConnect();
+        hasCW20Tokens(chainID, tokenAddrs).then((hasTokens) => {
+          resolve(hasTokens);
+          try {
+            window.document.querySelector('body')?.removeChild(modalContainer);
+          } catch {}
+          endConnect();
+        });
       },
     });
 

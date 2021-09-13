@@ -1,9 +1,10 @@
-import { Layout } from '@station/ui';
-import { cw20, CW20Addr, Token } from '@libs/types';
-import { cw20TokenInfoQuery } from '@libs/webapp-fns';
 import { TerraWebappProvider } from '@libs/webapp-provider';
-import { Button, createMuiTheme } from '@material-ui/core';
-import { addCW20Tokens, hasCW20Tokens } from '@terra-dev/web-extension-backend';
+import { createMuiTheme } from '@material-ui/core';
+import {
+  addCW20Tokens,
+  hasCW20Tokens,
+  removeCW20Tokens,
+} from '@terra-dev/web-extension-backend';
 import { fixHMR } from 'fix-hmr';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { render } from 'react-dom';
@@ -12,6 +13,8 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import styled, { DefaultTheme } from 'styled-components';
 import { browser } from 'webextension-polyfill-ts';
 import { ErrorBoundary } from 'webextension/components/common/ErrorBoundary';
+import { AlreadyCW20TokensExists } from 'webextension/components/views/AlreadyCW20TokensExists';
+import { ManageCW20Tokens } from 'webextension/components/views/ManageCW20Tokens';
 import { LocalesProvider, useIntlProps } from 'webextension/contexts/locales';
 import { StoreProvider } from 'webextension/contexts/store';
 import { ThemeProvider } from 'webextension/contexts/theme';
@@ -45,22 +48,40 @@ function AppBase({ className }: AppProps) {
     };
   }, []);
 
-  const [hasTokens, setHasTokens] = useState<{
-    [tokenAddr: string]: boolean;
-  } | null>(null);
+  const [tokensExists, setTokensExists] = useState<boolean>(false);
+
+  const [initialTokens, setInitialTokens] = useState<string[]>(() => []);
 
   useEffect(() => {
     hasCW20Tokens(addTokenInfo.chainID, addTokenInfo.tokenAddrs).then(
       (result) => {
-        setHasTokens(result);
+        setTokensExists(
+          !Object.keys(result).some((tokenAddr) => !result[tokenAddr]),
+        );
       },
     );
+
+    setInitialTokens(addTokenInfo.tokenAddrs);
   }, [addTokenInfo.chainID, addTokenInfo.tokenAddrs]);
 
   // ---------------------------------------------
   // callbacks
   // ---------------------------------------------
-  const approve = useCallback(async () => {
+  const add = useCallback(
+    async (tokenAddr: string) => {
+      await addCW20Tokens(addTokenInfo.chainID, [tokenAddr]);
+    },
+    [addTokenInfo.chainID],
+  );
+
+  const remove = useCallback(
+    async (tokenAddr: string) => {
+      await removeCW20Tokens(addTokenInfo.chainID, [tokenAddr]);
+    },
+    [addTokenInfo.chainID],
+  );
+
+  const addAll = useCallback(async () => {
     await addCW20Tokens(addTokenInfo.chainID, addTokenInfo.tokenAddrs);
 
     const port = browser.runtime.connect(undefined, {
@@ -77,7 +98,7 @@ function AppBase({ className }: AppProps) {
     port.disconnect();
   }, [addTokenInfo.chainID, addTokenInfo.id, addTokenInfo.tokenAddrs]);
 
-  const deny = useCallback(async () => {
+  const close = useCallback(async () => {
     const port = browser.runtime.connect(undefined, {
       name: txPortPrefix + addTokenInfo.id,
     });
@@ -92,53 +113,32 @@ function AppBase({ className }: AppProps) {
     port.disconnect();
   }, [addTokenInfo.chainID, addTokenInfo.id, addTokenInfo.tokenAddrs]);
 
+  // ---------------------------------------------
+  // presentation
+  // ---------------------------------------------
+  if (tokensExists) {
+    return (
+      <AlreadyCW20TokensExists onConfirm={close}>
+        <header>
+          <h1>Add tokens</h1>
+        </header>
+      </AlreadyCW20TokensExists>
+    );
+  }
+
   return (
-    <Layout className={className}>
+    <ManageCW20Tokens
+      initialTokens={initialTokens}
+      onRemove={remove}
+      onAdd={add}
+      onAddAll={addAll}
+      onClose={close}
+    >
       <header>
-        <h1>Approve this site?</h1>
+        <h1>Add tokens</h1>
       </header>
-
-      {hasTokens &&
-        addTokenInfo.tokenAddrs
-          .filter((tokenAddr) => !hasTokens[tokenAddr])
-          .map((tokenAddr) => (
-            <TokenInfo
-              key={tokenAddr}
-              chainID={addTokenInfo.chainID}
-              tokenAddr={tokenAddr}
-            />
-          ))}
-
-      <footer>
-        <Button variant="contained" color="secondary" onClick={deny}>
-          Deny
-        </Button>
-        <Button variant="contained" color="primary" onClick={approve}>
-          Approve
-        </Button>
-      </footer>
-    </Layout>
+    </ManageCW20Tokens>
   );
-}
-
-function TokenInfo({
-  chainID,
-  tokenAddr,
-}: {
-  chainID: string;
-  tokenAddr: string;
-}) {
-  const [info, setInfo] = useState<cw20.TokenInfoResponse<Token> | null>(null);
-
-  useEffect(() => {
-    cw20TokenInfoQuery(
-      tokenAddr as CW20Addr,
-      // TODO mapping mantle endpoint by chainID
-      'https://tequila-mantle.anchorprotocol.com',
-    ).then(({ tokenInfo }) => setInfo(tokenInfo));
-  }, [tokenAddr]);
-
-  return <pre>{JSON.stringify(info, null, 2)}</pre>;
 }
 
 export const StyledApp = styled(AppBase)`
