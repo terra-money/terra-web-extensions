@@ -55,6 +55,15 @@ export function SignTxWithLedgerWallet({
     try {
       const ledgerKey = await createLedgerKey();
       onProceed(ledgerKey);
+
+      setGuide(
+        <LedgerGuide>
+          Ledger 로 승인 요청을 보냈습니다.
+          <ul>
+            <li>Ledger 를 확인하고, Sign 하십시오.</li>
+          </ul>
+        </LedgerGuide>,
+      );
     } catch (e) {
       containerRef.current?.animate(vibrate, { duration: 100 });
 
