@@ -52,7 +52,7 @@ export function SignTxWithEncryptedWallet({
       const w = decryptWallet(wallet.encryptedWallet, password);
       onProceed(w);
     } catch (error) {
-      containerRef.current?.animate(vibrate, { duration: 1000 });
+      containerRef.current?.animate(vibrate, { duration: 100 });
 
       if (error instanceof Error) {
         setInvalidPassword(error.message);

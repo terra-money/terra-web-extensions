@@ -1,15 +1,19 @@
 import { vibrate } from '@libs/ui';
-import { WalletCard } from '@station/wallet-card';
 import { Button } from '@material-ui/core';
-import { WebExtensionNetworkInfo } from '@terra-dev/web-extension';
+import { WalletCard } from '@station/wallet-card';
+import {
+  WebExtensionLedgerError,
+  WebExtensionNetworkInfo,
+} from '@terra-dev/web-extension';
 import {
   createLedgerKey,
-  LedgerKey,
+  LedgerKeyResponse,
   LedgerWallet,
 } from '@terra-dev/web-extension-backend';
 import { CreateTxOptions } from '@terra-money/terra.js';
-import React, { useCallback, useRef, useState } from 'react';
+import React, { ReactNode, useCallback, useRef, useState } from 'react';
 import styled from 'styled-components';
+import { LedgerGuide } from 'webextension/components/tx/LedgerGuide';
 import { PrintCreateTxOptions } from 'webextension/components/tx/PrintCreateTxOptions';
 import { PrintTxRequest } from 'webextension/components/tx/PrintTxRequest';
 
@@ -21,7 +25,7 @@ export interface SignTxWithLedgerWalletProps {
   hostname: string;
   date: Date;
   onDeny: () => void;
-  onProceed: (ledgerKey: LedgerKey) => void;
+  onProceed: (ledgerKey: LedgerKeyResponse) => void;
 }
 
 export function SignTxWithLedgerWallet({
@@ -36,21 +40,38 @@ export function SignTxWithLedgerWallet({
 }: SignTxWithLedgerWalletProps) {
   const containerRef = useRef<HTMLElement>(null);
 
-  const [error, setError] = useState<unknown | null>(null);
+  const [guide, setGuide] = useState<ReactNode>(() => (
+    <LedgerGuide>
+      Ledger 를 사용해서 Tx 를 승인합니다. 아래 사항들을 먼저 체크해주십시오.
+      <ul>
+        <li>Ledger 가 USB 에 연결되었습니까?</li>
+        <li>Ledger 가 잠금해제 되어있습니까?</li>
+        <li>Ledger 에 Terra App 이 열려있습니까?</li>
+      </ul>
+    </LedgerGuide>
+  ));
 
   const proceed = useCallback(async () => {
     try {
       const ledgerKey = await createLedgerKey();
       onProceed(ledgerKey);
     } catch (e) {
-      containerRef.current?.animate(vibrate, { duration: 1000 });
+      containerRef.current?.animate(vibrate, { duration: 100 });
 
-      setError(e);
+      if (e instanceof WebExtensionLedgerError) {
+        setGuide(<LedgerGuide code={e.code}>{e.message}</LedgerGuide>);
+      } else {
+        setGuide(
+          <LedgerGuide>
+            {e instanceof Error ? e.message : String(e)}
+          </LedgerGuide>,
+        );
+      }
     }
   }, [onProceed]);
 
   return (
-    <Section className={className}>
+    <Section ref={containerRef} className={className}>
       <header>
         <WalletCard
           className="wallet-card"
@@ -70,7 +91,7 @@ export function SignTxWithLedgerWallet({
 
       <PrintCreateTxOptions className="tx" tx={tx} />
 
-      {error && <pre>{String(error)}</pre>}
+      {guide}
 
       <footer>
         <Button variant="contained" color="secondary" onClick={onDeny}>

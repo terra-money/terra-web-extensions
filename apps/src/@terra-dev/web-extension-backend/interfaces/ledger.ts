@@ -73,6 +73,13 @@ export async function createTransport(): Promise<Transport> {
   }
 }
 
+type PublicKeyResponseOrError =
+  | PublicKeyResponse
+  | {
+      return_code: number;
+      error_message: string;
+    };
+
 export async function connectLedger(): Promise<LedgerWallet | undefined> {
   const transport = await createTransport();
   const app = new TerraLedgerApp(transport);
@@ -83,12 +90,10 @@ export async function connectLedger(): Promise<LedgerWallet | undefined> {
     throw new Error(`transport is not a TransportWebUSB instance`);
   }
 
-  const publicKey:
-    | PublicKeyResponse
-    | {
-        return_code: number;
-        error_message: string;
-      } = await app.getAddressAndPubKey(TERRA_APP_PATH, TERRA_APP_HRP);
+  const publicKey: PublicKeyResponseOrError = await app.getAddressAndPubKey(
+    TERRA_APP_PATH,
+    TERRA_APP_HRP,
+  );
 
   if ('bech32_address' in publicKey) {
     console.log('ledger.ts..connectLedger()', publicKey);
@@ -105,30 +110,39 @@ export async function connectLedger(): Promise<LedgerWallet | undefined> {
     await transport.close();
 
     return wallet;
-  } else if ('return_code' in publicKey) {
-    throw new WebExtensionLedgerError(
-      publicKey.return_code,
-      publicKey.error_message,
-    );
   }
+
+  throw new WebExtensionLedgerError(
+    publicKey.return_code,
+    publicKey.error_message,
+  );
 }
 
-export async function createLedgerKey(): Promise<LedgerKey> {
+export type LedgerKeyResponse = { key: LedgerKey; close: () => void };
+
+export async function createLedgerKey(): Promise<LedgerKeyResponse> {
   const transport = await createTransport();
   const app = new TerraLedgerApp(transport);
 
   await app.initialize();
 
-  const publicKey = await app.getAddressAndPubKey(
+  const publicKey: PublicKeyResponseOrError = await app.getAddressAndPubKey(
     TERRA_APP_PATH,
     TERRA_APP_HRP,
   );
 
-  const publicKeyBuffer = Buffer.from(publicKey.compressed_pk as any);
+  if ('compressed_pk' in publicKey) {
+    const publicKeyBuffer = Buffer.from(publicKey.compressed_pk as any);
 
-  const key = new LedgerKey(publicKeyBuffer, app);
+    const key = new LedgerKey(publicKeyBuffer, app);
 
-  return key;
+    return { key, close: transport.close };
+  }
+
+  throw new WebExtensionLedgerError(
+    publicKey.return_code,
+    publicKey.error_message,
+  );
 }
 
 export class LedgerKey extends Key {

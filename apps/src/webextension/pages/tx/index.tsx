@@ -12,7 +12,7 @@ import {
   executeTxWithLedgerWallet,
   findWallet,
   fromURLSearchParams,
-  LedgerKey,
+  LedgerKeyResponse,
   LedgerWallet,
   readHostnamesStorage,
   TxRequest,
@@ -202,17 +202,12 @@ function LedgerWalletTxForm({
   }, [onDeny, txRequest]);
 
   const proceed = useCallback(
-    async (ledgerKey: LedgerKey) => {
+    async ({ key, close }: LedgerKeyResponse) => {
       const port = browser.runtime.connect(undefined, {
         name: txPortPrefix + txRequest.id,
       });
 
-      executeTxWithLedgerWallet(
-        wallet,
-        txRequest.network,
-        tx,
-        ledgerKey,
-      ).subscribe({
+      executeTxWithLedgerWallet(wallet, txRequest.network, tx, key).subscribe({
         next: (result) => {
           if (
             result.status === WebExtensionTxStatus.FAIL &&
@@ -224,6 +219,7 @@ function LedgerWalletTxForm({
             });
           } else {
             port.postMessage(result);
+            close();
           }
         },
         error: (error) => {
@@ -231,6 +227,7 @@ function LedgerWalletTxForm({
             status: WebExtensionTxStatus.FAIL,
             error,
           } as WebExtensionTxFail);
+          close();
         },
         complete: () => {
           port.disconnect();

@@ -129,8 +129,8 @@ function PostResolver({
         hostname={'foo-network'}
         date={new Date()}
         onDeny={() => onReject(new UserDenied())}
-        onProceed={(ledgerKey) => {
-          executeTxWithLedgerWallet(wallet, network, tx, ledgerKey).subscribe({
+        onProceed={({ key, close }) => {
+          executeTxWithLedgerWallet(wallet, network, tx, key).subscribe({
             next: (result) => {
               if (result.status === WebExtensionTxStatus.SUCCEED) {
                 onResolve({
@@ -138,6 +138,7 @@ function PostResolver({
                   result: result.payload,
                   success: true,
                 });
+                close();
               }
             },
             error: (error) => {
@@ -162,6 +163,7 @@ function PostResolver({
                   ),
                 );
               }
+              close();
             },
             complete: onComplete,
           });
