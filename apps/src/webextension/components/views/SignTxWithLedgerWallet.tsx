@@ -40,6 +40,8 @@ export function SignTxWithLedgerWallet({
 }: SignTxWithLedgerWalletProps) {
   const containerRef = useRef<HTMLElement>(null);
 
+  const [ledgerSignStarted, setLedgerSignStarted] = useState<boolean>(false);
+
   const [guide, setGuide] = useState<ReactNode>(() => (
     <LedgerGuide>
       Ledger 를 사용해서 Tx 를 승인합니다. 아래 사항들을 먼저 체크해주십시오.
@@ -64,6 +66,7 @@ export function SignTxWithLedgerWallet({
           </ul>
         </LedgerGuide>,
       );
+      setLedgerSignStarted(true);
     } catch (e) {
       containerRef.current?.animate(vibrate, { duration: 100 });
 
@@ -102,20 +105,22 @@ export function SignTxWithLedgerWallet({
 
       {guide}
 
-      <footer>
-        <Button variant="contained" color="secondary" onClick={onDeny}>
-          Deny
-        </Button>
+      {!ledgerSignStarted && (
+        <footer>
+          <Button variant="contained" color="secondary" onClick={onDeny}>
+            Deny
+          </Button>
 
-        <Button
-          variant="contained"
-          color="primary"
-          disabled={false}
-          onClick={proceed}
-        >
-          Submit
-        </Button>
-      </footer>
+          <Button
+            variant="contained"
+            color="primary"
+            disabled={false}
+            onClick={proceed}
+          >
+            Submit
+          </Button>
+        </footer>
+      )}
     </Section>
   );
 }
