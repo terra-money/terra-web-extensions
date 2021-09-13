@@ -96,6 +96,16 @@ export class WebExtensionLedgerError extends Error {
   };
 }
 
+export function isWebExtensionError(error: unknown): boolean {
+  return (
+    error instanceof WebExtensionUserDenied ||
+    error instanceof WebExtensionCreateTxFailed ||
+    error instanceof WebExtensionTxFailed ||
+    error instanceof WebExtensionLedgerError ||
+    error instanceof WebExtensionTxUnspecifiedError
+  );
+}
+
 export function createTxErrorFromJson(
   json: any,
 ):

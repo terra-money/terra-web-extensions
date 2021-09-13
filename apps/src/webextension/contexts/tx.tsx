@@ -13,6 +13,7 @@ import {
 } from '@terra-dev/wallet-types';
 import {
   WebExtensionCreateTxFailed,
+  WebExtensionLedgerError,
   WebExtensionNetworkInfo,
   WebExtensionTxFailed,
   WebExtensionTxStatus,
@@ -139,30 +140,16 @@ function PostResolver({
                   success: true,
                 });
                 close();
+              } else if (result.status === WebExtensionTxStatus.DENIED) {
+                onReject(new UserDenied());
+                close();
+              } else if (result.status === WebExtensionTxStatus.FAIL) {
+                onReject(toWalletError(tx, result.error));
+                close();
               }
             },
             error: (error) => {
-              if (error instanceof WebExtensionUserDenied) {
-                onReject(new UserDenied());
-              } else if (error instanceof WebExtensionCreateTxFailed) {
-                onReject(new CreateTxFailed(tx, error.message));
-              } else if (error instanceof WebExtensionTxFailed) {
-                onReject(
-                  new TxFailed(
-                    tx,
-                    error.txhash,
-                    error.message,
-                    error.raw_message,
-                  ),
-                );
-              } else {
-                onReject(
-                  new TxUnspecifiedError(
-                    tx,
-                    'message' in error ? error.message : String(error),
-                  ),
-                );
-              }
+              onReject(toWalletError(tx, error));
               close();
             },
             complete: onComplete,
@@ -190,30 +177,14 @@ function PostResolver({
                   result: result.payload,
                   success: true,
                 });
+              } else if (result.status === WebExtensionTxStatus.DENIED) {
+                onReject(new UserDenied());
+              } else if (result.status === WebExtensionTxStatus.FAIL) {
+                onReject(toWalletError(tx, result.error));
               }
             },
             error: (error) => {
-              if (error instanceof WebExtensionUserDenied) {
-                onReject(new UserDenied());
-              } else if (error instanceof WebExtensionCreateTxFailed) {
-                onReject(new CreateTxFailed(tx, error.message));
-              } else if (error instanceof WebExtensionTxFailed) {
-                onReject(
-                  new TxFailed(
-                    tx,
-                    error.txhash,
-                    error.message,
-                    error.raw_message,
-                  ),
-                );
-              } else {
-                onReject(
-                  new TxUnspecifiedError(
-                    tx,
-                    'message' in error ? error.message : String(error),
-                  ),
-                );
-              }
+              onReject(toWalletError(tx, error));
             },
             complete: onComplete,
           });
@@ -223,6 +194,24 @@ function PostResolver({
   }
 
   return <div>Unknown case!</div>;
+}
+
+function toWalletError(tx: CreateTxOptions, error: unknown) {
+  if (error instanceof WebExtensionUserDenied) {
+    return new UserDenied();
+  } else if (error instanceof WebExtensionCreateTxFailed) {
+    return new CreateTxFailed(tx, error.message);
+  } else if (error instanceof WebExtensionTxFailed) {
+    return new TxFailed(tx, error.txhash, error.message, error.raw_message);
+  } else if (error instanceof WebExtensionLedgerError) {
+    // TODO replace to TxLedgerError
+    return new CreateTxFailed(tx, `${error.code}: ${error.message}`);
+  } else {
+    return new TxUnspecifiedError(
+      tx,
+      error instanceof Error ? error.message : String(error),
+    );
+  }
 }
 
 const Layer = styled.div`

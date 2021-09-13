@@ -1,6 +1,7 @@
 import {
   WebExtensionCreateTxFailed,
   WebExtensionNetworkInfo,
+  WebExtensionTxDenied,
   WebExtensionTxFail,
   WebExtensionTxFailed,
   WebExtensionTxProgress,
@@ -22,10 +23,16 @@ export function executeTxWithInternalWallet(
   network: WebExtensionNetworkInfo,
   tx: CreateTxOptions,
 ): Observable<
-  WebExtensionTxProgress | WebExtensionTxSucceed | WebExtensionTxFail
+  | WebExtensionTxProgress
+  | WebExtensionTxDenied
+  | WebExtensionTxSucceed
+  | WebExtensionTxFail
 > {
   return new Observable<
-    WebExtensionTxProgress | WebExtensionTxSucceed | WebExtensionTxFail
+    | WebExtensionTxProgress
+    | WebExtensionTxDenied
+    | WebExtensionTxSucceed
+    | WebExtensionTxFail
   >((subscriber) => {
     const lcd = new LCDClient({
       chainID: network.chainID,

@@ -1,6 +1,9 @@
 import {
+  isWebExtensionError,
   WebExtensionCreateTxFailed,
+  WebExtensionLedgerError,
   WebExtensionNetworkInfo,
+  WebExtensionTxDenied,
   WebExtensionTxFail,
   WebExtensionTxFailed,
   WebExtensionTxProgress,
@@ -19,7 +22,10 @@ export function executeTxWithLedgerWallet(
   tx: CreateTxOptions,
   key: LedgerKey,
 ): Observable<
-  WebExtensionTxProgress | WebExtensionTxSucceed | WebExtensionTxFail
+  | WebExtensionTxProgress
+  | WebExtensionTxDenied
+  | WebExtensionTxSucceed
+  | WebExtensionTxFail
 > {
   const lcd = new LCDClient({
     chainID: network.chainID,
@@ -29,7 +35,10 @@ export function executeTxWithLedgerWallet(
   });
 
   return new Observable<
-    WebExtensionTxProgress | WebExtensionTxSucceed | WebExtensionTxFail
+    | WebExtensionTxProgress
+    | WebExtensionTxDenied
+    | WebExtensionTxSucceed
+    | WebExtensionTxFail
   >((subscriber) => {
     lcd
       .wallet(key)
@@ -61,12 +70,34 @@ export function executeTxWithLedgerWallet(
         }
       })
       .catch((error) => {
-        subscriber.next({
-          status: WebExtensionTxStatus.FAIL,
-          error: new WebExtensionTxUnspecifiedError(
-            'message' in error ? error.message : String(error),
-          ),
-        });
+        console.log(
+          'executeTxWithLedgerWallet.ts..()',
+          error instanceof WebExtensionLedgerError,
+          isWebExtensionError(error),
+          error.toString(),
+        );
+        if (isWebExtensionError(error)) {
+          if (
+            error instanceof WebExtensionLedgerError &&
+            error.code === 27014
+          ) {
+            subscriber.next({
+              status: WebExtensionTxStatus.DENIED,
+            });
+          } else {
+            subscriber.next({
+              status: WebExtensionTxStatus.FAIL,
+              error,
+            });
+          }
+        } else {
+          subscriber.next({
+            status: WebExtensionTxStatus.FAIL,
+            error: new WebExtensionTxUnspecifiedError(
+              'message' in error ? error.message : String(error),
+            ),
+          });
+        }
         subscriber.complete();
       });
   });

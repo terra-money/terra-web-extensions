@@ -4,6 +4,7 @@ import {
   WebExtensionTxFail,
   WebExtensionTxStatus,
   WebExtensionTxUnspecifiedError,
+  WebExtensionUserDenied,
 } from '@terra-dev/web-extension';
 import {
   approveHostnames,
@@ -212,16 +213,20 @@ function LedgerWalletTxForm({
 
       executeTxWithLedgerWallet(wallet, txRequest.network, tx, key).subscribe({
         next: (result) => {
-          if (
-            result.status === WebExtensionTxStatus.FAIL &&
-            'toJSON' in result.error
-          ) {
+          if (result.status === WebExtensionTxStatus.SUCCEED) {
+            port.postMessage(result);
+            close();
+          } else if (result.status === WebExtensionTxStatus.DENIED) {
+            port.postMessage({
+              ...result,
+              error: new WebExtensionUserDenied().toJSON(),
+            });
+            close();
+          } else if (result.status === WebExtensionTxStatus.FAIL) {
             port.postMessage({
               ...result,
               error: result.error.toJSON(),
             });
-          } else {
-            port.postMessage(result);
             close();
           }
         },
@@ -288,16 +293,18 @@ function EncryptedWalletTxForm({
         tx,
       ).subscribe({
         next: (result) => {
-          if (
-            result.status === WebExtensionTxStatus.FAIL &&
-            'toJSON' in result.error
-          ) {
+          if (result.status === WebExtensionTxStatus.SUCCEED) {
+            port.postMessage(result);
+          } else if (result.status === WebExtensionTxStatus.DENIED) {
+            port.postMessage({
+              ...result,
+              error: new WebExtensionUserDenied().toJSON(),
+            });
+          } else if (result.status === WebExtensionTxStatus.FAIL) {
             port.postMessage({
               ...result,
               error: result.error.toJSON(),
             });
-          } else {
-            port.postMessage(result);
           }
         },
         error: (error) => {
@@ -308,10 +315,13 @@ function EncryptedWalletTxForm({
         },
         complete: () => {
           port.disconnect();
+          if (txRequest.closeWindowAfterTx) {
+            window.close();
+          }
         },
       });
     },
-    [tx, txRequest.id, txRequest.network],
+    [tx, txRequest.closeWindowAfterTx, txRequest.id, txRequest.network],
   );
 
   return (

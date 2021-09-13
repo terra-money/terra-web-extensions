@@ -24,7 +24,7 @@ import {
 import { IFrameModal } from '../../components/modal/IFrameModal';
 import { contentScriptPortPrefix, DEFAULT_NETWORKS } from '../../env';
 
-function startTxWithIframeModal(
+function startTx(
   id: string,
   terraAddress: string,
   network: WebExtensionNetworkInfo,
@@ -206,7 +206,7 @@ function startAddCW20TokenWithIframeModal(
 }
 
 const contentScriptOptions: ContentScriptOptions = {
-  startTx: startTxWithIframeModal,
+  startTx: startTx,
   startConnect: startConnectWithIframeModal,
   startAddCW20Token: startAddCW20TokenWithIframeModal,
   defaultNetworks: DEFAULT_NETWORKS,

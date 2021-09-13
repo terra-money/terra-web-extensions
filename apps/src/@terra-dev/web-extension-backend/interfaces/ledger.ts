@@ -3,6 +3,7 @@ import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
 import { WebExtensionLedgerError } from '@terra-dev/web-extension';
 import TerraLedgerApp, {
   PublicKeyResponse,
+  SignResponse,
 } from '@terra-money/ledger-terra-js';
 import {
   Key,
@@ -69,16 +70,12 @@ export async function createTransport(): Promise<Transport> {
   if (transport) {
     return transport;
   } else {
-    throw new Error(`Can't connect`);
+    throw new WebExtensionLedgerError(
+      99999,
+      `Failed to create instance of TransportWebUSB`,
+    );
   }
 }
-
-type PublicKeyResponseOrError =
-  | PublicKeyResponse
-  | {
-      return_code: number;
-      error_message: string;
-    };
 
 export async function connectLedger(): Promise<LedgerWallet | undefined> {
   const transport = await createTransport();
@@ -87,17 +84,18 @@ export async function connectLedger(): Promise<LedgerWallet | undefined> {
   await app.initialize();
 
   if (!(transport instanceof TransportWebUSB)) {
-    throw new Error(`transport is not a TransportWebUSB instance`);
+    throw new WebExtensionLedgerError(
+      99999,
+      `transport is not a TransportWebUSB instance`,
+    );
   }
 
-  const publicKey: PublicKeyResponseOrError = await app.getAddressAndPubKey(
+  const publicKey: PublicKeyResponse = await app.getAddressAndPubKey(
     TERRA_APP_PATH,
     TERRA_APP_HRP,
   );
 
   if ('bech32_address' in publicKey) {
-    console.log('ledger.ts..connectLedger()', publicKey);
-
     const usbDevice = pickUSBDeviceInfo(transport.device);
 
     const wallet: LedgerWallet = {
@@ -126,7 +124,7 @@ export async function createLedgerKey(): Promise<LedgerKeyResponse> {
 
   await app.initialize();
 
-  const publicKey: PublicKeyResponseOrError = await app.getAddressAndPubKey(
+  const publicKey: PublicKeyResponse = await app.getAddressAndPubKey(
     TERRA_APP_PATH,
     TERRA_APP_HRP,
   );
@@ -136,7 +134,14 @@ export async function createLedgerKey(): Promise<LedgerKeyResponse> {
 
     const key = new LedgerKey(publicKeyBuffer, app);
 
-    return { key, close: transport.close };
+    return {
+      key,
+      close: () => {
+        try {
+          transport.close();
+        } catch {}
+      },
+    };
   }
 
   throw new WebExtensionLedgerError(
@@ -151,25 +156,49 @@ export class LedgerKey extends Key {
   }
 
   sign(payload: Buffer): Promise<Buffer> {
-    throw new Error('');
+    throw new Error('Not implemented');
   }
 
   createSignature = async (tx: StdSignMsg): Promise<StdSignature> => {
     const publicKeyBuffer = this.publicKey;
 
     if (!publicKeyBuffer) {
-      throw new Error(`Can't get publicKey`);
+      throw new WebExtensionLedgerError(
+        99999,
+        `This LedgerKey does not have publicKeyBuffer`,
+      );
     }
 
     const serializedTx = tx.toJSON();
 
-    const signature = await this.app.sign(TERRA_APP_PATH, serializedTx);
+    const signature: SignResponse = await this.app.sign(
+      TERRA_APP_PATH,
+      serializedTx,
+    );
+
+    if (!('signature' in signature)) {
+      throw new WebExtensionLedgerError(
+        signature.return_code,
+        signature.error_message,
+      );
+    }
+
+    if (!signature.signature || !signature.signature.data) {
+      throw new WebExtensionLedgerError(
+        99999,
+        `The result of TerraApp.sign() does not contain SignResponse.data`,
+      );
+    }
+
     const signatureBuffer = Buffer.from(
       signatureImport(Buffer.from(signature.signature.data)),
     );
 
     if (!signatureBuffer) {
-      throw new Error(`Can't get signature`);
+      throw new WebExtensionLedgerError(
+        99999,
+        `Failed to make Buffer from the result of TerraApp.sign()`,
+      );
     }
 
     return new StdSignature(

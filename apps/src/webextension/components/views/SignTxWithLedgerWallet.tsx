@@ -55,8 +55,8 @@ export function SignTxWithLedgerWallet({
 
   const proceed = useCallback(async () => {
     try {
-      const ledgerKey = await createLedgerKey();
-      onProceed(ledgerKey);
+      const ledgerKeyResponse = await createLedgerKey();
+      onProceed(ledgerKeyResponse);
 
       setGuide(
         <LedgerGuide>
