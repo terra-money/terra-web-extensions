@@ -9,6 +9,7 @@ import { useTokenIcon } from 'webextension/queries/useTokenIcon';
 import { TokenList, TokenRow } from './AddCW20Token';
 
 export interface ManageCW20TokensProps {
+  className?: string;
   initialTokens: string[];
   onRemove: (tokenAddr: string) => void;
   onAdd: (tokenAddr: string) => void;
@@ -17,6 +18,7 @@ export interface ManageCW20TokensProps {
 }
 
 export function ManageCW20Tokens({
+  className,
   initialTokens,
   onRemove,
   onAdd,
@@ -29,7 +31,7 @@ export function ManageCW20Tokens({
   const tokens = useTokenList(initialTokens);
 
   return (
-    <Layout>
+    <Layout className={className}>
       {children}
 
       <TokenList>

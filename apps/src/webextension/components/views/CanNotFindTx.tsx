@@ -1,31 +1,27 @@
-import { FormLayout, Layout } from '@station/ui';
 import { Button } from '@material-ui/core';
+import { FormLayout, Layout } from '@station/ui';
 import React from 'react';
 
-export interface NotFoundWalletProps {
+export interface CanNotFindTxProps {
   className?: string;
-  terraAddress: string;
-  onConfirm: () => void;
+  onConfirm?: () => void;
 }
 
-export function NotFoundWallet({
-  className,
-  terraAddress,
-  onConfirm,
-}: NotFoundWalletProps) {
+export function CanNotFindTx({ className, onConfirm }: CanNotFindTxProps) {
   return (
     <Layout className={className}>
       <FormLayout>
-        <p>{terraAddress} 지갑을 찾을 수 없습니다.</p>
+        <h2>Error</h2>
+        <p>Tx 를 찾을 수 없습니다.</p>
       </FormLayout>
 
-      <footer>
+      {onConfirm && (
         <footer>
           <Button variant="contained" color="primary" onClick={onConfirm}>
             Confirm
           </Button>
         </footer>
-      </footer>
+      )}
     </Layout>
   );
 }

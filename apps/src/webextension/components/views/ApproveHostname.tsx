@@ -1,18 +1,28 @@
-import { FormLayout, Layout } from '@station/ui';
 import { Button } from '@material-ui/core';
+import { FormLayout, Layout } from '@station/ui';
 import React from 'react';
 
-export interface NoWalletsProps {
+export interface ApproveHostnameProps {
   className?: string;
+  hostname: string;
   onCancel: () => void;
   onConfirm: () => void;
 }
 
-export function NoWallets({ className, onCancel, onConfirm }: NoWalletsProps) {
+export function ApproveHostname({
+  className,
+  hostname,
+  onCancel,
+  onConfirm,
+}: ApproveHostnameProps) {
   return (
     <Layout className={className}>
       <FormLayout>
-        <p>지갑이 하나도 없습니다. 지갑을 먼저 생성한 뒤에 시도해주세요.</p>
+        <p>{hostname} 의 접근을 허용하시겠습니까?</p>
+        <p>
+          이 App 이 Extension 에 접근할 수 있습니다. 신뢰할 수 있는 App 인지
+          확인해주세요!
+        </p>
       </FormLayout>
 
       <footer>
@@ -21,7 +31,7 @@ export function NoWallets({ className, onCancel, onConfirm }: NoWalletsProps) {
         </Button>
 
         <Button variant="contained" color="primary" onClick={onConfirm}>
-          Create Wallet
+          Approve
         </Button>
       </footer>
     </Layout>

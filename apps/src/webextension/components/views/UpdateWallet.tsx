@@ -22,6 +22,7 @@ export interface UpdateWalletResult {
 }
 
 export interface UpdateWalletProps {
+  className?: string;
   wallet: WebExtensionWalletInfo;
   onCancel: () => void;
   onUpdate: (result: UpdateWalletResult) => void;
@@ -29,6 +30,7 @@ export interface UpdateWalletProps {
 }
 
 export function UpdateWallet({
+  className,
   wallet,
   onCancel,
   onUpdate,
@@ -72,7 +74,7 @@ export function UpdateWallet({
   // presentation
   // ---------------------------------------------
   return (
-    <Layout>
+    <Layout className={className}>
       {children}
 
       <WalletCardDesignSelector

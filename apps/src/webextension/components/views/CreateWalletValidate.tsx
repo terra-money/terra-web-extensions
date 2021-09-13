@@ -19,6 +19,7 @@ import styled from 'styled-components';
 import { CreateWalletResult } from './CreateWallet';
 
 export interface CreateWalletValidateProps {
+  className?: string;
   createWallet: CreateWalletResult;
   onCancel: () => void;
   onValidate: (result: CreateWalletResult) => void;
@@ -28,6 +29,7 @@ export interface CreateWalletValidateProps {
 const random = () => Math.random() - Math.random();
 
 export function CreateWalletValidate({
+  className,
   createWallet,
   onCancel,
   onValidate,
@@ -82,7 +84,7 @@ export function CreateWalletValidate({
   // ---------------------------------------------
   if (failed > 5) {
     return (
-      <Layout>
+      <Layout className={className}>
         <FormLayout>
           <p>
             Mnemonic Key 를 확인하지 못하셨습니다. 이 지갑 생성은 취소됩니다.
@@ -99,7 +101,7 @@ export function CreateWalletValidate({
   }
 
   return (
-    <Layout ref={containerRef}>
+    <Layout ref={containerRef} className={className}>
       {children}
 
       <Inputs>

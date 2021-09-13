@@ -1,9 +1,9 @@
-import { Layout } from '@station/ui';
-import { Button, createMuiTheme } from '@material-ui/core';
+import { createMuiTheme } from '@material-ui/core';
 import {
   deserializeTx,
   WebExtensionTxFail,
   WebExtensionTxStatus,
+  WebExtensionTxUnspecifiedError,
 } from '@terra-dev/web-extension';
 import {
   approveHostnames,
@@ -24,8 +24,12 @@ import { render } from 'react-dom';
 import { IntlProvider } from 'react-intl';
 import styled, { DefaultTheme } from 'styled-components';
 import { browser } from 'webextension-polyfill-ts';
+import { ApproveHostname } from 'webextension/components/views/ApproveHostname';
+import { CanNotFindTx } from 'webextension/components/views/CanNotFindTx';
+import { CanNotFindWallet } from 'webextension/components/views/CanNotFindWallet';
 import { SignTxWithEncryptedWallet } from 'webextension/components/views/SignTxWithEncryptedWallet';
 import { SignTxWithLedgerWallet } from 'webextension/components/views/SignTxWithLedgerWallet';
+import { UnknownCase } from 'webextension/components/views/UnknownCase';
 import { ErrorBoundary } from '../../components/common/ErrorBoundary';
 import { LocalesProvider, useIntlProps } from '../../contexts/locales';
 import { ThemeProvider } from '../../contexts/theme';
@@ -58,9 +62,13 @@ function AppBase({ className }: AppProps) {
   // ---------------------------------------------
   // callbacks
   // ---------------------------------------------
-  const deny = useCallback((param: { id: string }) => {
+  const deny = useCallback(() => {
+    if (!txRequest) {
+      throw new Error(`Can't find tx information!`);
+    }
+
     const port = browser.runtime.connect(undefined, {
-      name: txPortPrefix + param.id,
+      name: txPortPrefix + txRequest.id,
     });
 
     port.postMessage({
@@ -68,7 +76,26 @@ function AppBase({ className }: AppProps) {
     });
 
     port.disconnect();
-  }, []);
+  }, [txRequest]);
+
+  const cantFindWallet = useCallback(() => {
+    if (!txRequest) {
+      throw new Error(`Can't find tx information!`);
+    }
+
+    const port = browser.runtime.connect(undefined, {
+      name: txPortPrefix + txRequest.id,
+    });
+
+    port.postMessage({
+      status: WebExtensionTxStatus.FAIL,
+      error: new WebExtensionTxUnspecifiedError(
+        `Can't find the wallet "${txRequest.terraAddress}"`,
+      ),
+    });
+
+    port.disconnect();
+  }, [txRequest]);
 
   const approveHostname = useCallback(async () => {
     if (!txRequest) {
@@ -105,52 +132,28 @@ function AppBase({ className }: AppProps) {
   // ---------------------------------------------
   // presentation
   // ---------------------------------------------
-  if (wallet === null) {
-    return null;
-  }
-
   if (!txRequest) {
-    return (
-      <div className={className}>
-        <p>Can't find Tx</p>
-
-        <Button variant="contained" color="secondary" onClick={deny}>
-          Deny
-        </Button>
-      </div>
-    );
+    return <CanNotFindTx className={className} />;
   }
 
   if (!wallet) {
     return (
-      <div className={className}>
-        <p>Undefined the Wallet "{txRequest.terraAddress}"</p>
-
-        <Button variant="contained" color="secondary" onClick={deny}>
-          Deny
-        </Button>
-      </div>
+      <CanNotFindWallet
+        className={className}
+        terraAddress={txRequest.terraAddress}
+        onConfirm={cantFindWallet}
+      />
     );
   }
 
   if (needApproveHostname) {
     return (
-      <Layout className={className}>
-        <header>
-          <h1>Approve this site?</h1>
-        </header>
-
-        <p>{txRequest.hostname}</p>
-
-        <footer>
-          <Button variant="contained" color="secondary" onClick={deny}>
-            Deny
-          </Button>
-          <Button variant="contained" color="primary" onClick={approveHostname}>
-            Approve
-          </Button>
-        </footer>
-      </Layout>
+      <ApproveHostname
+        className={className}
+        hostname={txRequest.hostname}
+        onCancel={deny}
+        onConfirm={approveHostname}
+      />
     );
   }
 
@@ -176,7 +179,7 @@ function AppBase({ className }: AppProps) {
     );
   }
 
-  return <div>Unknown case!</div>;
+  return <UnknownCase detail={JSON.stringify(txRequest)} onConfirm={deny} />;
 }
 
 function LedgerWalletTxForm({
@@ -242,6 +245,7 @@ function LedgerWalletTxForm({
 
   return (
     <SignTxWithLedgerWallet
+      className={className}
       wallet={wallet}
       network={txRequest.network}
       tx={tx}
@@ -327,7 +331,10 @@ function EncryptedWalletTxForm({
 const App = styled(AppBase)`
   background-color: #ffffff;
 
-  max-width: 100vw;
+  width: 100vw;
+  max-width: 800px;
+
+  margin: 0 auto;
 
   padding: 20px;
 
@@ -342,7 +349,7 @@ function Main() {
   return (
     <IntlProvider locale={locale} messages={messages}>
       <ThemeProvider theme={theme}>
-        <GlobalStyle />
+        <GlobalStyle backgroundColor="#ffffff" />
         <App />
       </ThemeProvider>
     </IntlProvider>

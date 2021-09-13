@@ -24,6 +24,7 @@ import React, { ChangeEvent, ReactNode, useCallback, useMemo } from 'react';
 import { Observable } from 'rxjs';
 
 export interface SendTokenProps {
+  className?: string;
   asset: terraswap.AssetInfo;
   onCancel: () => void;
   onProceed: (stream: Observable<TxResultRendering>) => void;
@@ -31,6 +32,7 @@ export interface SendTokenProps {
 }
 
 export function SendToken({
+  className,
   asset,
   onCancel,
   onProceed,
@@ -40,6 +42,7 @@ export function SendToken({
 
   return asset && tokenInfo ? (
     <Form
+      className={className}
       assetInfo={asset}
       tokenInfo={tokenInfo}
       onCancel={onCancel}
@@ -50,12 +53,14 @@ export function SendToken({
 }
 
 function Form({
+  className,
   onCancel,
   onProceed,
   assetInfo,
   tokenInfo,
   children,
 }: SendTokenInfo & {
+  className?: string;
   onCancel: () => void;
   onProceed: (stream: Observable<TxResultRendering>) => void;
   children: ReactNode;
@@ -128,7 +133,7 @@ function Form({
   );
 
   return (
-    <Layout>
+    <Layout className={className}>
       {children}
 
       <MessageBox style={{ marginBottom: 10 }}>

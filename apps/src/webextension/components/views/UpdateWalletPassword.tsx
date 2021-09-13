@@ -25,6 +25,7 @@ export interface UpdateWalletPasswordResult {
 }
 
 export interface UpdateWalletPasswordProps {
+  className?: string;
   encryptedWallet: EncryptedWallet;
   onCancel: () => void;
   onUpdate: (result: UpdateWalletPasswordResult) => void;
@@ -32,6 +33,7 @@ export interface UpdateWalletPasswordProps {
 }
 
 export function UpdateWalletPassword({
+  className,
   encryptedWallet,
   onCancel,
   onUpdate,
@@ -98,7 +100,7 @@ export function UpdateWalletPassword({
   // ---------------------------------------------
   if (failed > 5) {
     return (
-      <Layout>
+      <Layout className={className}>
         <FormLayout>
           <p>비밀번호를 5회 이상 틀렸습니다. 비밀번호 변경이 취소됩니다.</p>
         </FormLayout>
@@ -113,7 +115,7 @@ export function UpdateWalletPassword({
   }
 
   return (
-    <Layout ref={containerRef}>
+    <Layout ref={containerRef} className={className}>
       {children}
 
       <WalletCard

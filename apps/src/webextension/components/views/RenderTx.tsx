@@ -6,11 +6,12 @@ import { useStateRef } from 'use-state-ref';
 import { TxRenderer } from 'webextension/components/tx/TxRenderer';
 
 export interface RenderTxProps {
+  className?: string;
   stream: Observable<TxResultRendering>;
   onComplete: () => void;
 }
 
-export function RenderTx({ stream, onComplete }: RenderTxProps) {
+export function RenderTx({ className, stream, onComplete }: RenderTxProps) {
   const [result, setResult] = useState<TxResultRendering | null>(null);
 
   const onCompleteRef = useStateRef(onComplete);
@@ -46,7 +47,7 @@ export function RenderTx({ stream, onComplete }: RenderTxProps) {
   }, [onComplete, onCompleteRef, stream]);
 
   return (
-    <Layout>
+    <Layout className={className}>
       {result && <TxRenderer result={result} onClose={onComplete} />}
     </Layout>
   );

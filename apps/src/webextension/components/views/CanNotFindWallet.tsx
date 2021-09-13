@@ -1,29 +1,22 @@
-import { FormLayout, Layout } from '@station/ui';
 import { Button } from '@material-ui/core';
-import QRCode from 'qrcode.react';
-import React, { ReactNode } from 'react';
+import { FormLayout, Layout } from '@station/ui';
+import React from 'react';
 
-export interface ViewAddressQRProps {
+export interface CanNotFindWalletProps {
   className?: string;
   terraAddress: string;
   onConfirm: () => void;
-  children?: ReactNode;
 }
 
-export function ViewAddressQR({
+export function CanNotFindWallet({
   className,
   terraAddress,
   onConfirm,
-  children,
-}: ViewAddressQRProps) {
+}: CanNotFindWalletProps) {
   return (
     <Layout className={className}>
-      {children}
-
       <FormLayout>
-        <QRCode value={terraAddress} size={240} />
-
-        <p>{terraAddress}</p>
+        <p>{terraAddress} 지갑을 찾을 수 없습니다</p>
       </FormLayout>
 
       <footer>

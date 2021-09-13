@@ -30,12 +30,14 @@ export interface CreateWalletResult {
 }
 
 export interface CreateWalletProps {
+  className?: string;
   onCancel: () => void;
   onCreate: (result: CreateWalletResult) => void;
   children?: ReactNode;
 }
 
 export function CreateWallet({
+  className,
   onCreate,
   onCancel,
   children,
@@ -95,7 +97,7 @@ export function CreateWallet({
   // presentation
   // ---------------------------------------------
   return (
-    <Layout>
+    <Layout className={className}>
       {children}
 
       <WalletCardDesignSelector

@@ -28,12 +28,14 @@ export interface RecoverWalletResult {
 }
 
 export interface RecoverWalletProps {
+  className?: string;
   onCancel: () => void;
   onCreate: (recoverWallet: RecoverWalletResult) => void;
   children?: ReactNode;
 }
 
 export function RecoverWallet({
+  className,
   onCancel,
   onCreate,
   children,
@@ -95,7 +97,7 @@ export function RecoverWallet({
   // presentation
   // ---------------------------------------------
   return (
-    <Layout>
+    <Layout className={className}>
       {children}
 
       <WalletCardDesignSelector

@@ -20,12 +20,14 @@ export interface CreateNetworkResult {
 }
 
 export interface CreateNetworkProps {
+  className?: string;
   onCancel: () => void;
   onCreate: (result: CreateNetworkResult) => void;
   children?: ReactNode;
 }
 
 export function CreateNetwork({
+  className,
   onCreate,
   onCancel,
   children,
@@ -70,7 +72,7 @@ export function CreateNetwork({
   // presentation
   // ---------------------------------------------
   return (
-    <Layout>
+    <Layout className={className}>
       {children}
 
       <FormLayout>

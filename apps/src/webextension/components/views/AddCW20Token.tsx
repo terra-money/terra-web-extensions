@@ -11,13 +11,19 @@ import { useCW20Tokens } from 'webextension/queries/useCW20Tokens';
 import { useTokenIcon } from 'webextension/queries/useTokenIcon';
 
 export interface AddCW20TokenProps {
+  className?: string;
   onAdd: (tokenAddr: string) => void;
   onRemove: (tokenAddr: string) => void;
   onClose: () => void;
   children?: ReactNode;
 }
 
-export function AddCW20Token({ onAdd, onRemove, children }: AddCW20TokenProps) {
+export function AddCW20Token({
+  className,
+  onAdd,
+  onRemove,
+  children,
+}: AddCW20TokenProps) {
   const { network } = useWallet();
 
   const existsTokens = useCW20Tokens();
@@ -33,7 +39,7 @@ export function AddCW20Token({ onAdd, onRemove, children }: AddCW20TokenProps) {
   const tokens = useFindTokens(search);
 
   return (
-    <Layout>
+    <Layout className={className}>
       {children}
 
       <FormLayout>
