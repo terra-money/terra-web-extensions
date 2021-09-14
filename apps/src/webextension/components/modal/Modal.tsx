@@ -1,5 +1,5 @@
 import { Close } from '@material-ui/icons';
-import React, { cloneElement, ReactElement } from 'react';
+import React, { cloneElement, ReactElement, ReactNode } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { ReactComponent as Logo } from '../../assets/Logo.svg';
 
@@ -9,6 +9,8 @@ export interface ModalProps {
   height?: number;
   children: ReactElement;
   onClose: () => void;
+  onOutboundClick?: () => void;
+  headerTitle?: ReactNode;
 }
 
 const DEFAULT_WIDTH = 400;
@@ -16,15 +18,23 @@ const DEFAULT_HEIGHT = 550;
 const HEADER_HEIGHT = 50;
 const HEADER_PADDING = 20;
 
-function ModalBase({ className, children, onClose }: ModalProps) {
+function ModalBase({
+  className,
+  children,
+  onClose,
+  onOutboundClick,
+  headerTitle,
+}: ModalProps) {
   return (
     <div className={className}>
-      <div className="dim" />
+      <div className="dim" onClick={onOutboundClick} />
       <section>
         <header>
-          <i className="logo">
-            <Logo />
-          </i>
+          {headerTitle ?? (
+            <i className="logo">
+              <Logo />
+            </i>
+          )}
           <button onClick={onClose}>
             <Close style={{ color: '#ffffff' }} />
           </button>
@@ -107,8 +117,10 @@ export const Modal = styled(ModalBase)`
 
       padding: 0 ${HEADER_PADDING}px;
 
+      color: #ffffff;
+
       .logo {
-        color: #ffffff;
+        color: currentColor;
         font-size: 0;
 
         svg {

@@ -41,6 +41,6 @@ export const MiniButton: ComponentType<ButtonProps> = styled(Button).attrs({
   }
 
   .MuiButton-iconSizeSmall > *:first-child {
-    font-size: 1.3em;
+    font-size: 1em;
   }
 ` as any;

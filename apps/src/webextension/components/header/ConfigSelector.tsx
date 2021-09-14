@@ -26,7 +26,13 @@ import { extensionPath } from 'webextension/logics/extensionPath';
 
 const INDEX = extensionPath('index.html');
 
-export function ConfigSelectorBase({ className }: { className?: string }) {
+export function ConfigSelectorBase({
+  className,
+  showIndexLink = false,
+}: {
+  className?: string;
+  showIndexLink?: boolean;
+}) {
   // ---------------------------------------------
   // dependencies
   // ---------------------------------------------
@@ -160,18 +166,22 @@ export function ConfigSelectorBase({ className }: { className?: string }) {
               ))}
             </LinedList>
 
-            <hr />
+            {showIndexLink && (
+              <>
+                <hr />
 
-            <LinedList>
-              <li>
-                <a href={INDEX} target="terra-station" rel="noreferrer">
-                  <i>
-                    <OpenInBrowser />
-                  </i>
-                  <span>Open Terra Station</span>
-                </a>
-              </li>
-            </LinedList>
+                <LinedList>
+                  <li>
+                    <a href={INDEX} target="terra-station" rel="noreferrer">
+                      <i>
+                        <OpenInBrowser />
+                      </i>
+                      <span>Open Terra Station</span>
+                    </a>
+                  </li>
+                </LinedList>
+              </>
+            )}
           </DropdownContainer>
         </Popper>
       </div>

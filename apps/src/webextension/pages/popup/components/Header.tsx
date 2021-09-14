@@ -3,9 +3,9 @@ import React from 'react';
 import { Link, useRouteMatch } from 'react-router-dom';
 import styled from 'styled-components';
 import { ReactComponent as Logo } from 'webextension/assets/Logo.svg';
+import { ConfigSelector } from 'webextension/components/header/ConfigSelector';
 import { extensionPath } from 'webextension/logics/extensionPath';
 import { POPUP_HEADER_HEIGHT, POPUP_HEADER_PADDING } from '../env';
-import { ConfigSelector } from './ConfigSelector';
 
 export interface HeaderProps {
   className?: string;
@@ -35,7 +35,7 @@ function HeaderBase({ className }: HeaderProps) {
           <ArrowBack />
         </Link>
       )}
-      <ConfigSelector />
+      <ConfigSelector showIndexLink />
     </header>
   );
 }
