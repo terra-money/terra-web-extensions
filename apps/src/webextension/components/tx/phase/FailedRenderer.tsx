@@ -1,4 +1,4 @@
-import { TxErrorRendering, TxReceipt } from '@libs/webapp-fns';
+import { TxErrorRendering, TxReceipt } from '@libs/app-fns';
 import { Button } from '@material-ui/core';
 import { ErrorOutlineRounded } from '@material-ui/icons';
 import {

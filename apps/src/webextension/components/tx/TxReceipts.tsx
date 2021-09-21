@@ -1,4 +1,4 @@
-import { TxReceipt } from '@libs/webapp-fns';
+import { TxReceipt } from '@libs/app-fns';
 import { fixHMR } from 'fix-hmr';
 import React from 'react';
 import styled from 'styled-components';

@@ -1,6 +1,6 @@
+import { CW20Icon, cw20TokenInfoQuery } from '@libs/app-fns';
+import { useApp } from '@libs/app-provider';
 import { CW20Addr } from '@libs/types';
-import { CW20Icon, cw20TokenInfoQuery } from '@libs/webapp-fns';
-import { useTerraWebapp } from '@libs/webapp-provider';
 import { Button } from '@material-ui/core';
 import { Layout } from '@station/ui';
 import { useWallet } from '@terra-dev/use-wallet';
@@ -73,7 +73,7 @@ export function ManageCW20Tokens({
 }
 
 function useTokenList(tokens: string[]) {
-  const { mantleEndpoint, mantleFetch } = useTerraWebapp();
+  const { wasmClient } = useApp();
 
   const getTokenIcon = useTokenIcon();
 
@@ -84,27 +84,25 @@ function useTokenList(tokens: string[]) {
 
     Promise.all(
       tokens.map((tokenAddr) => {
-        return cw20TokenInfoQuery(
-          tokenAddr as CW20Addr,
-          mantleEndpoint,
-          mantleFetch,
-        ).then(({ tokenInfo }) => {
-          return {
-            token: tokenAddr as CW20Addr,
-            icon: getTokenIcon({
-              token: {
-                contract_addr: tokenAddr as CW20Addr,
-              },
-            }),
-            symbol: tokenInfo.symbol,
-            protocol: tokenInfo.name,
-          };
-        });
+        return cw20TokenInfoQuery(tokenAddr as CW20Addr, wasmClient).then(
+          ({ tokenInfo }) => {
+            return {
+              token: tokenAddr as CW20Addr,
+              icon: getTokenIcon({
+                token: {
+                  contract_addr: tokenAddr as CW20Addr,
+                },
+              }),
+              symbol: tokenInfo.symbol,
+              protocol: tokenInfo.name,
+            };
+          },
+        );
       }),
     ).then((nextTokenList) => {
       setTokenList(nextTokenList);
     });
-  }, [getTokenIcon, mantleEndpoint, mantleFetch, tokens]);
+  }, [getTokenIcon, tokens, wasmClient]);
 
   return tokenList;
 }

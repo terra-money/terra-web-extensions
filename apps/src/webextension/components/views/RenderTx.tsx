@@ -1,4 +1,4 @@
-import { TxResultRendering } from '@libs/webapp-fns';
+import { TxResultRendering } from '@libs/app-fns';
 import { Layout } from '@station/ui';
 import React, { useEffect, useState } from 'react';
 import { Observable } from 'rxjs';

@@ -1,7 +1,7 @@
+import { CW20Icon, cw20TokenInfoQuery } from '@libs/app-fns';
+import { useApp, useCW20IconsQuery } from '@libs/app-provider';
 import { truncate } from '@libs/formatter';
 import { CW20Addr } from '@libs/types';
-import { CW20Icon, cw20TokenInfoQuery } from '@libs/webapp-fns';
-import { useCW20IconsQuery, useTerraWebapp } from '@libs/webapp-provider';
 import { FormLayout, Layout, MiniButton, TextInput } from '@station/ui';
 import { useWallet } from '@terra-dev/use-wallet';
 import { AccAddress } from '@terra-money/terra.js';
@@ -139,7 +139,7 @@ export const TokenList = styled.ul`
 `;
 
 function useFindTokens(search: string): CW20Icon[] {
-  const { mantleEndpoint, mantleFetch } = useTerraWebapp();
+  const { wasmClient } = useApp();
   const { network } = useWallet();
   const { data: cw20Tokens } = useCW20IconsQuery();
 
@@ -151,25 +151,23 @@ function useFindTokens(search: string): CW20Icon[] {
     if (AccAddress.validate(search)) {
       const tokenAddr: CW20Addr = search as CW20Addr;
 
-      cw20TokenInfoQuery(tokenAddr, mantleEndpoint, mantleFetch).then(
-        ({ tokenInfo }) => {
-          setTokenList([
-            {
-              token: tokenAddr,
-              icon: getTokenIcon(
-                {
-                  token: {
-                    contract_addr: tokenAddr,
-                  },
+      cw20TokenInfoQuery(tokenAddr, wasmClient).then(({ tokenInfo }) => {
+        setTokenList([
+          {
+            token: tokenAddr,
+            icon: getTokenIcon(
+              {
+                token: {
+                  contract_addr: tokenAddr,
                 },
-                tokenInfo,
-              ),
-              symbol: tokenInfo.symbol,
-              protocol: tokenInfo.name,
-            },
-          ]);
-        },
-      );
+              },
+              tokenInfo,
+            ),
+            symbol: tokenInfo.symbol,
+            protocol: tokenInfo.name,
+          },
+        ]);
+      });
     } else if (search.trim().length === 0) {
       setTokenList(
         cw20Tokens?.[network.name]
@@ -186,14 +184,7 @@ function useFindTokens(search: string): CW20Icon[] {
           : [],
       );
     }
-  }, [
-    cw20Tokens,
-    getTokenIcon,
-    mantleEndpoint,
-    mantleFetch,
-    network.name,
-    search,
-  ]);
+  }, [cw20Tokens, getTokenIcon, network.name, search, wasmClient]);
 
   return tokenList;
 }

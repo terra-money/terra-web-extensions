@@ -1,4 +1,4 @@
-import { TxResultRendering, TxStreamPhase } from '@libs/webapp-fns';
+import { TxResultRendering, TxStreamPhase } from '@libs/app-fns';
 import { fixHMR } from 'fix-hmr';
 import React from 'react';
 import styled from 'styled-components';

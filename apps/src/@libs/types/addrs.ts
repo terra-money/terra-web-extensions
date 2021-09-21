@@ -5,7 +5,30 @@ export type CanonicalAddr = string & NominalType<'CanonicalAddr'>;
 export type CW20Addr = string & NominalType<'CW20Addr'>;
 export type LPAddr = string & NominalType<'LPAddr'>;
 
-export type NativeDenom = string & NominalType<'NativeDenom'>;
+export type NativeDenom =
+  | 'uusd'
+  | 'uust' // some nebula contract uses denom by uust
+  | 'uluna'
+  | 'uaud'
+  | 'ucad'
+  | 'uchf'
+  | 'ucny'
+  | 'udkk'
+  | 'ueur'
+  | 'ugbp'
+  | 'uhkd'
+  | 'uidr'
+  | 'uinr'
+  | 'ujpy'
+  | 'ukrw'
+  | 'umnt'
+  | 'unok'
+  | 'uphp'
+  | 'usdr'
+  | 'usek'
+  | 'usgd'
+  | 'uthb'
+  | 'ukrt';
 export type bAssetDenom = string & NominalType<'bAssetDenom'>;
 export type AssetDenom = string & NominalType<'AssetDenom'>;
 export type Denom = NativeDenom | bAssetDenom | AssetDenom;

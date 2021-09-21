@@ -1,11 +1,7 @@
+import { SendTokenInfo, TxResultRendering } from '@libs/app-fns';
+import { useSendForm, useSendTx, useTerraTokenInfo } from '@libs/app-provider';
 import { formatUInput, formatUToken, microfy } from '@libs/formatter';
 import { cw20, HumanAddr, terraswap, Token, u, UST } from '@libs/types';
-import { SendTokenInfo, TxResultRendering } from '@libs/webapp-fns';
-import {
-  useSendForm,
-  useSendTx,
-  useTerraTokenInfo,
-} from '@libs/webapp-provider';
 import { Button, InputAdornment } from '@material-ui/core';
 import { Warning } from '@material-ui/icons';
 import {

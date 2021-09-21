@@ -1,6 +1,6 @@
+import { CW20Icon } from '@libs/app-fns';
+import { useCW20IconsQuery } from '@libs/app-provider';
 import { cw20, terraswap, Token } from '@libs/types';
-import { CW20Icon } from '@libs/webapp-fns';
-import { useCW20IconsQuery } from '@libs/webapp-provider';
 import { useCallback, useMemo } from 'react';
 
 const FALLBACK_ICON = 'https://assets.terra.money/icon/60/UST.png';

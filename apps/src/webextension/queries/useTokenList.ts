@@ -1,6 +1,6 @@
+import { TerraBalancesWithTokenInfo } from '@libs/app-fns';
+import { useTerraBalancesWithTokenInfoQuery } from '@libs/app-provider';
 import { CW20Addr, NATIVE_TOKEN_ASSET_INFOS, terraswap } from '@libs/types';
-import { TerraBalancesWithTokenInfo } from '@libs/webapp-fns';
-import { useTerraBalancesWithTokenInfoQuery } from '@libs/webapp-provider';
 import big from 'big.js';
 import { useMemo } from 'react';
 import { useTokenIcon } from 'webextension/queries/useTokenIcon';
