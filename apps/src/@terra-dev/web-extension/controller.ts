@@ -43,6 +43,10 @@ export class WebExtensionController {
     );
 
     if (!meta) {
+      this._status.next({
+        type: WebExtensionStatusType.NO_AVAILABLE,
+        isMetaExists: false,
+      });
       return;
     }
 
@@ -52,6 +56,7 @@ export class WebExtensionController {
       desktop: {
         chrome: '>70',
         edge: '>80',
+        // TODO temporary disable before publish extensions
         firefox: '>80',
         safari: '>=14',
       },
@@ -60,6 +65,7 @@ export class WebExtensionController {
     if (!isSupportBrowser) {
       this._status.next({
         type: WebExtensionStatusType.NO_AVAILABLE,
+        isMetaExists: true,
         isSupportBrowser: false,
       });
       return;
@@ -96,6 +102,7 @@ export class WebExtensionController {
 
         this._status.next({
           type: WebExtensionStatusType.NO_AVAILABLE,
+          isMetaExists: true,
           isSupportBrowser: true,
           isInstalled: false,
           installLink,
@@ -164,7 +171,7 @@ export class WebExtensionController {
    * Execute transaction
    *
    * @example
-   * client.post({ terraAddress, network, tx: CreateTxOptions })
+   * client.post({ terraAddress, tx: CreateTxOptions })
    *       .subscribe({
    *          next: (result: WebExtensionTxProgress | WebExtensionTxSucceed) => {
    *            switch (result.status) {
@@ -194,7 +201,7 @@ export class WebExtensionController {
    *
    * - Tx is Succeed : TxProgress -> [...TxProgress] -> TxSucceed
    */
-  post = ({ terraAddress, network, tx }: PostParams) => {
+  post = ({ terraAddress, tx }: PostParams) => {
     return new Observable<WebExtensionTxProgress | WebExtensionTxSucceed>(
       (subscriber) => {
         subscriber.next({
@@ -207,7 +214,6 @@ export class WebExtensionController {
           type: FromWebToContentScriptMessage.EXECUTE_TX,
           id,
           terraAddress,
-          network,
           payload: serializeTx(tx),
         };
 
@@ -395,6 +401,7 @@ export class WebExtensionController {
           if (currentStatus.type !== WebExtensionStatusType.NO_AVAILABLE) {
             this._status.next({
               type: WebExtensionStatusType.NO_AVAILABLE,
+              isMetaExists: true,
               isSupportBrowser: true,
               isInstalled: true,
               isApproved: false,

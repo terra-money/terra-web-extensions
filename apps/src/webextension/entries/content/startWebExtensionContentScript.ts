@@ -3,15 +3,14 @@ import {
   FromWebToContentScriptMessage,
   isWebExtensionMessage,
   SerializedCreateTxOptions,
-  WebExtensionWalletInfo,
   WebExtensionAddCW20TokenResponse,
   WebExtensionHasCW20TokensResponse,
-  WebExtensionNetworkInfo,
   WebExtensionStates,
   WebExtensionStatesUpdated,
   WebExtensionTxResponse,
   WebExtensionTxResult,
   WebExtensionTxStatus,
+  WebExtensionWalletInfo,
 } from '@terra-dev/web-extension';
 import {
   hasCW20Tokens,
@@ -23,13 +22,12 @@ import {
 import LocalMessageDuplexStream from 'post-message-stream';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { getDefaultNetworks } from 'webextension/queries/useDefaultNetworks';
 
 export interface ContentScriptOptions {
-  defaultNetworks: WebExtensionNetworkInfo[];
   startTx: (
     id: string,
     terraAddress: string,
-    network: WebExtensionNetworkInfo,
     tx: SerializedCreateTxOptions,
   ) => Observable<WebExtensionTxResult>;
   startConnect: (id: string, hostname: string) => Promise<boolean>;
@@ -40,11 +38,12 @@ export interface ContentScriptOptions {
   ) => Promise<{ [tokenAddr: string]: boolean }>;
 }
 
+const CONNECT_NAME = 'Terra Station';
+
 export function startWebExtensionContentScript({
   startTx,
   startConnect,
   startAddCW20Token,
-  defaultNetworks,
 }: ContentScriptOptions) {
   // ---------------------------------------------
   // only enable the site has <meta name="terra-webextension" legacy="terra.js">
@@ -52,14 +51,30 @@ export function startWebExtensionContentScript({
   const meta = document.querySelector('head > meta[name="terra-webextension"]');
   if (!meta) return;
 
+  // ---------------------------------------------
+  // do nothing if another wallet exists
+  // ---------------------------------------------
+  const connected = meta.getAttribute('connected');
+  if (typeof connected === 'string' && connected !== CONNECT_NAME) {
+    const inpage = document.createElement('script');
+    inpage.innerText = `alert('Terra Station disabled: You installed multiple terra wallet browser extensions. please use only one wallet extension.')`;
+
+    const head = document.querySelector('head');
+    head?.appendChild(inpage);
+    return;
+  }
+
+  // ---------------------------------------------
+  // check dApp is legacy mode
+  // ---------------------------------------------
   const legacy: Set<string> = new Set(
     meta.getAttribute('legacy')?.split(',') ?? [],
   );
 
   // ---------------------------------------------
-  // set the attribute <meta name="terra" connected="true">
+  // set the attribute <meta name="terra" connected="terra-station">
   // ---------------------------------------------
-  meta.setAttribute('connected', 'true');
+  meta.setAttribute('connected', CONNECT_NAME);
 
   // ---------------------------------------------
   // inject inpage scripts
@@ -109,8 +124,14 @@ export function startWebExtensionContentScript({
     }),
   );
 
-  const networkObservable = observeNetworkStorage().pipe(
-    map(({ selectedNetwork }) => selectedNetwork ?? defaultNetworks[0]),
+  const networkObservable = combineLatest([
+    observeNetworkStorage(),
+    getDefaultNetworks(),
+  ]).pipe(
+    map(
+      ([{ selectedNetwork }, defaultNetworks]) =>
+        selectedNetwork ?? defaultNetworks[0],
+    ),
   );
 
   type ExtensionStates = WebExtensionStates & { isApproved: boolean };
@@ -267,7 +288,6 @@ export function startWebExtensionContentScript({
               startTx(
                 data.id.toString(),
                 focusedWallet.terraAddress,
-                states.network,
                 data,
               ).subscribe((txResult) => {
                 switch (txResult.status) {
@@ -372,7 +392,6 @@ export function startWebExtensionContentScript({
             startTx(
               event.data.id.toString(),
               event.data.terraAddress,
-              event.data.network,
               event.data.payload,
             ).subscribe((txResult) => {
               const msg: WebExtensionTxResponse = {

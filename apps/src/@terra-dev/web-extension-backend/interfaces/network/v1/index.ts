@@ -155,3 +155,11 @@ export function observeNetworks(
     }),
   );
 }
+
+export async function readSelectedNetwork(
+  defaultNetworks: WebExtensionNetworkInfo[],
+): Promise<WebExtensionNetworkInfo> {
+  return readNetworkStorage().then(({ selectedNetwork }) => {
+    return selectedNetwork ?? defaultNetworks[0];
+  });
+}

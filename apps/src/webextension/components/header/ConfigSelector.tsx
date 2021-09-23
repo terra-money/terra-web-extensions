@@ -1,4 +1,3 @@
-import { LinedList } from '@station/ui';
 import {
   Button,
   ButtonProps,
@@ -12,6 +11,7 @@ import {
   OpenInBrowser,
   WifiTethering,
 } from '@material-ui/icons';
+import { LinedList } from '@station/ui';
 import { WebExtensionNetworkInfo } from '@terra-dev/web-extension';
 import { removeNetwork, selectNetwork } from '@terra-dev/web-extension-backend';
 import React, { ComponentType, MouseEvent, useCallback, useState } from 'react';
@@ -20,7 +20,6 @@ import { useHistory } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
 import { useLocales } from 'webextension/contexts/locales';
 import { useStore } from 'webextension/contexts/store';
-import { DEFAULT_NETWORKS } from 'webextension/env';
 import { LanguageCode } from 'webextension/locales';
 import { extensionPath } from 'webextension/logics/extensionPath';
 
@@ -42,7 +41,7 @@ export function ConfigSelectorBase({
   // states
   // ---------------------------------------------
   const { locale, locales, updateLocale } = useLocales();
-  const { networks, selectedNetwork } = useStore();
+  const { networks, selectedNetwork, defaultNetworks } = useStore();
 
   const [anchorElement, setAnchorElement] = useState<HTMLElement | null>(null);
 
@@ -129,7 +128,7 @@ export function ConfigSelectorBase({
                     </i>
                     <span>{itemNetwork.name}</span>
                   </div>
-                  {DEFAULT_NETWORKS.indexOf(itemNetwork) === -1 && (
+                  {defaultNetworks.indexOf(itemNetwork) === -1 && (
                     <button onClick={() => onRemoveNetwork(itemNetwork)}>
                       <DeleteForever />
                     </button>

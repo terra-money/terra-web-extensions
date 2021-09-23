@@ -4,6 +4,7 @@ import {
   WalletContext,
   WalletStatus,
 } from '@terra-dev/use-wallet';
+import { WebExtensionNetworkInfo } from '@terra-dev/web-extension';
 import { NetworksData, WalletsData } from '@terra-dev/web-extension-backend';
 import { CreateTxOptions } from '@terra-money/terra.js';
 import React, {
@@ -14,6 +15,7 @@ import React, {
   useContext,
   useMemo,
 } from 'react';
+import { useDefaultNetworks } from 'webextension/queries/useDefaultNetworks';
 import { useNetworksStore } from './useNetworksStore';
 import { useWalletsStore } from './useWalletsStore';
 
@@ -21,21 +23,25 @@ export interface StoreProviderProps {
   children: ReactNode;
 }
 
-export type Store = WalletsData & NetworksData;
+export type Store = WalletsData &
+  NetworksData & { defaultNetworks: WebExtensionNetworkInfo[] };
 
 // @ts-ignore
 const StoreContext: Context<Store> = createContext<Store>();
 
 export function StoreProvider({ children }: StoreProviderProps) {
+  const defaultNetworks = useDefaultNetworks();
+
   const walletsData = useWalletsStore();
-  const networksData = useNetworksStore();
+  const networksData = useNetworksStore(defaultNetworks);
 
   const store = useMemo<Store>(
     () => ({
       ...walletsData,
       ...networksData,
+      defaultNetworks,
     }),
-    [networksData, walletsData],
+    [defaultNetworks, networksData, walletsData],
   );
 
   const wallet = useMemo<Wallet>(() => {

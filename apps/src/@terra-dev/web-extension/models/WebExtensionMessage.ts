@@ -1,7 +1,6 @@
 import { AccAddress } from '@terra-money/terra.js';
 import {
   SerializedCreateTxOptions,
-  WebExtensionNetworkInfo,
   WebExtensionStates,
   WebExtensionTxResult,
 } from '../models';
@@ -10,11 +9,11 @@ import {
 // web -> content script
 // ---------------------------------------------
 export enum FromWebToContentScriptMessage {
-  REFETCH_STATES = 'refetch_states',
-  EXECUTE_TX = 'execute_tx',
-  REQUEST_APPROVAL = 'request_approval',
-  ADD_CW20_TOKENS = 'add_cw20_tokens',
-  HAS_CW20_TOKENS = 'has_cw20_tokens',
+  REFETCH_STATES = 'REFETCH_STATES',
+  EXECUTE_TX = 'EXECUTE_TX',
+  REQUEST_APPROVAL = 'REQUEST_APPROVAL',
+  ADD_CW20_TOKENS = 'ADD_CW20_TOKENS',
+  HAS_CW20_TOKENS = 'HAS_CW20_TOKENS',
 }
 
 export interface RefetchExtensionStates {
@@ -29,9 +28,6 @@ export interface ExecuteExtensionTx {
 
   /** target terra wallet address */
   terraAddress: string;
-
-  /** target network */
-  network: WebExtensionNetworkInfo;
 
   /** transaction payload */
   payload: SerializedCreateTxOptions;
@@ -69,10 +65,10 @@ export interface HasCW20Tokens {
 // content script -> web
 // ---------------------------------------------
 export enum FromContentScriptToWebMessage {
-  STATES_UPDATED = 'states_updated',
-  TX_RESPONSE = 'tx_response',
-  ADD_CW20_TOKENS_RESPONSE = 'add_cw20_tokens_response',
-  HAS_CW20_TOKENS_RESPONSE = 'has_cw20_tokens_response',
+  STATES_UPDATED = 'STATES_UPDATED',
+  TX_RESPONSE = 'TX_RESPONSE',
+  ADD_CW20_TOKENS_RESPONSE = 'ADD_CW20_TOKENS_RESPONSE',
+  HAS_CW20_TOKENS_RESPONSE = 'HAS_CW20_TOKENS_RESPONSE',
 }
 
 export interface WebExtensionStatesUpdated {
