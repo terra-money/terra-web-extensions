@@ -1,4 +1,4 @@
-> This is still under development. Disclosure of this Repo is intended to provide references to Web Extension-compatible Wallet developers. 
+> This is still under development. Disclosure of this Repo is intended to provide references to Web Extension-compatible Wallet developers.
 
 # Development
 
