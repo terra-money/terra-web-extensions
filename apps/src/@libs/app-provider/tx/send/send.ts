@@ -1,12 +1,12 @@
 import { sendTx } from '@libs/app-fns';
+import { useFixedFee } from '@libs/app-provider/hooks/useFixedFee';
 import { HumanAddr, terraswap, Token, u, UST } from '@libs/types';
 import { useConnectedWallet } from '@terra-dev/use-wallet';
 import { useCallback } from 'react';
 import { useApp } from '../../contexts/app';
 import { TERRA_TX_KEYS } from '../../env';
-import { useGasPrice } from '../../hooks/useGasPrice';
 import { useRefetchQueries } from '../../hooks/useRefetchQueries';
-import { useTax } from '../../queries/terra/tax';
+import { useUstTax } from '../../queries/terra/tax';
 
 export interface SendTxParams {
   amount: u<Token>;
@@ -23,11 +23,11 @@ export function useSendTx() {
 
   const { wasmClient, txErrorReporter, constants } = useApp();
 
-  const fixedFee = useGasPrice(constants.fixedGas, 'uusd');
+  const fixedFee = useFixedFee();
 
   const refetchQueries = useRefetchQueries();
 
-  const { taxRate, maxTax } = useTax<UST>('uusd');
+  const { taxRate, maxTax } = useUstTax();
 
   const stream = useCallback(
     ({ asset, memo, toAddr, amount, txFee, onTxSucceed }: SendTxParams) => {

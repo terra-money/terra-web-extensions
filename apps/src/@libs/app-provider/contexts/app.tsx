@@ -1,9 +1,4 @@
-import {
-  AppConstants,
-  AppContractAddress,
-  GasPrice,
-  lastSyncedHeightQuery,
-} from '@libs/app-fns';
+import { GasPrice, lastSyncedHeightQuery } from '@libs/app-fns';
 import { HiveWasmClient, LcdWasmClient, WasmClient } from '@libs/query-client';
 import { useWallet } from '@terra-dev/use-wallet';
 import { NetworkInfo } from '@terra-dev/wallet-types';
@@ -16,13 +11,13 @@ import React, {
   useMemo,
 } from 'react';
 import {
-  defaultFallbackGasPrice,
-  defaultGasPriceEndpoint,
-  defaultHiveWasmClient,
-  defaultLcdWasmClient,
+  DEFAULT_FALLBACK_GAS_PRICE,
+  DEFAULT_GAS_PRICE_ENDPOINTS,
+  DEFAULT_HIVE_WASM_CLIENT,
+  DEFAULT_LCD_WASM_CLIENT,
 } from '../env';
 import { useGasPriceQuery } from '../queries/gasPrice';
-import { TxRefetchMap } from '../types';
+import { AppConstants, AppContractAddress, TxRefetchMap } from '../types';
 
 export interface AppProviderProps<
   ContractAddress extends AppContractAddress,
@@ -33,7 +28,10 @@ export interface AppProviderProps<
   contractAddress: (network: NetworkInfo) => ContractAddress;
   constants: (network: NetworkInfo) => Constants;
 
-  defaultWasmClient?: 'lcd' | 'hive';
+  defaultWasmClient?:
+    | 'lcd'
+    | 'hive'
+    | ((network: NetworkInfo) => 'lcd' | 'hive');
   lcdWasmClient?: (network: NetworkInfo) => LcdWasmClient;
   hiveWasmClient?: (network: NetworkInfo) => HiveWasmClient;
 
@@ -90,10 +88,10 @@ export function AppProvider<
   contractAddress,
   constants,
   defaultWasmClient = 'hive',
-  lcdWasmClient: _lcdWasmClient = defaultLcdWasmClient,
-  hiveWasmClient: _hiveWasmClient = defaultHiveWasmClient,
-  gasPriceEndpoint = defaultGasPriceEndpoint,
-  fallbackGasPrice = defaultFallbackGasPrice,
+  lcdWasmClient: _lcdWasmClient = DEFAULT_LCD_WASM_CLIENT,
+  hiveWasmClient: _hiveWasmClient = DEFAULT_HIVE_WASM_CLIENT,
+  gasPriceEndpoint = DEFAULT_GAS_PRICE_ENDPOINTS,
+  fallbackGasPrice = DEFAULT_FALLBACK_GAS_PRICE,
   queryErrorReporter,
   txErrorReporter,
   refetchMap,
@@ -112,8 +110,12 @@ export function AppProvider<
   >(() => {
     const lcdWasmClient = _lcdWasmClient(network);
     const hiveWasmClient = _hiveWasmClient(network);
+    const wasmClientType =
+      typeof defaultWasmClient === 'function'
+        ? defaultWasmClient(network)
+        : defaultWasmClient;
     const wasmClient =
-      defaultWasmClient === 'lcd' ? lcdWasmClient : hiveWasmClient;
+      wasmClientType === 'lcd' ? lcdWasmClient : hiveWasmClient;
 
     return {
       contractAddress: contractAddress(network),

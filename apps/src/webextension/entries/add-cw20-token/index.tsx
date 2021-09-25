@@ -19,9 +19,9 @@ import { LocalesProvider, useIntlProps } from 'webextension/contexts/locales';
 import { StoreProvider } from 'webextension/contexts/store';
 import { ThemeProvider } from 'webextension/contexts/theme';
 import {
-  APP_TX_REFETCH_MAP,
-  appConstants,
-  appContractAddress,
+  STATION_TX_REFETCH_MAP,
+  STATION_CONSTANTS,
+  STATION_CONTRACT_ADDRESS,
   txPortPrefix,
 } from 'webextension/env';
 
@@ -163,10 +163,10 @@ function Main() {
     <QueryClientProvider client={queryClient}>
       <StoreProvider>
         <AppProvider
-          contractAddress={appContractAddress}
-          constants={appConstants}
+          contractAddress={STATION_CONTRACT_ADDRESS}
+          constants={STATION_CONSTANTS}
           defaultWasmClient="lcd"
-          refetchMap={APP_TX_REFETCH_MAP}
+          refetchMap={STATION_TX_REFETCH_MAP}
         >
           <IntlProvider locale={locale} messages={messages}>
             <ThemeProvider theme={theme}>

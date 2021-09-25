@@ -5,7 +5,7 @@ import {
   terraNativeBalancesQuery,
 } from '@libs/app-fns';
 import { createQueryFn } from '@libs/react-query-utils';
-import { HumanAddr, NativeDenom, Token, u } from '@libs/types';
+import { HumanAddr, NativeDenom, Token, u, UST } from '@libs/types';
 import { useConnectedWallet } from '@terra-dev/use-wallet';
 import { useMemo } from 'react';
 import { useQuery, UseQueryResult } from 'react-query';
@@ -56,4 +56,8 @@ export function useTerraNativeBalanceQuery<T extends Token>(
   return useMemo<u<T>>(() => {
     return pickNativeBalance(denom, nativeBalances);
   }, [denom, nativeBalances]);
+}
+
+export function useUstBalance(walletAddr?: HumanAddr | undefined): u<UST> {
+  return useTerraNativeBalanceQuery<UST>('uusd', walletAddr);
 }

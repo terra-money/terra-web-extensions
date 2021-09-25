@@ -4,14 +4,14 @@ import {
   SendFormInput,
   SendTokenInfo,
 } from '@libs/app-fns';
-import { Token, UST } from '@libs/types';
+import { Token } from '@libs/types';
 import { useForm } from '@libs/use-form';
 import { useConnectedWallet } from '@terra-dev/use-wallet';
 import { useApp } from '../../contexts/app';
-import { useGasPrice } from '../../hooks/useGasPrice';
+import { useFixedFee } from '../../hooks/useFixedFee';
 import { useSendBalanceQuery } from '../../queries/send/balance';
-import { useTerraNativeBalanceQuery } from '../../queries/terra/nativeBalances';
-import { useTax } from '../../queries/terra/tax';
+import { useUstBalance } from '../../queries/terra/nativeBalances';
+import { useUstTax } from '../../queries/terra/tax';
 
 export interface SendFormParams {
   tokenInfo: SendTokenInfo;
@@ -20,16 +20,13 @@ export interface SendFormParams {
 export function useSendForm<T extends Token>({ tokenInfo }: SendFormParams) {
   const connectedWallet = useConnectedWallet();
 
-  const { wasmClient, constants } = useApp();
+  const { wasmClient } = useApp();
 
-  const fixedFee = useGasPrice(constants.fixedGas, 'uusd');
+  const fixedFee = useFixedFee();
 
-  const { taxRate, maxTax } = useTax<UST>('uusd');
+  const { taxRate, maxTax } = useUstTax();
 
-  const uUST = useTerraNativeBalanceQuery<UST>(
-    'uusd',
-    connectedWallet?.walletAddress,
-  );
+  const uUST = useUstBalance(connectedWallet?.walletAddress);
 
   const balance = useSendBalanceQuery<T>(
     'native_token' in tokenInfo.assetInfo

@@ -3,14 +3,14 @@ import {
   cw20SellTokenForm,
   CW20SellTokenFormInput,
 } from '@libs/app-fns';
-import { CW20Addr, HumanAddr, Token, UST } from '@libs/types';
+import { CW20Addr, HumanAddr, Token } from '@libs/types';
 import { useForm } from '@libs/use-form';
 import { useConnectedWallet } from '@terra-dev/use-wallet';
 import { useApp } from '../../contexts/app';
-import { useGasPrice } from '../../hooks/useGasPrice';
+import { useFixedFee } from '../../hooks/useFixedFee';
 import { useCW20Balance } from '../../queries/cw20/balance';
-import { useTerraNativeBalanceQuery } from '../../queries/terra/nativeBalances';
-import { useTax } from '../../queries/terra/tax';
+import { useUstBalance } from '../../queries/terra/nativeBalances';
+import { useUstTax } from '../../queries/terra/tax';
 
 export interface CW20SellTokenFormParams {
   ustTokenPairAddr: HumanAddr;
@@ -23,16 +23,13 @@ export function useCW20SellTokenForm<T extends Token>({
 }: CW20SellTokenFormParams) {
   const connectedWallet = useConnectedWallet();
 
-  const { wasmClient, constants } = useApp();
+  const { wasmClient } = useApp();
 
-  const fixedFee = useGasPrice(constants.fixedGas, 'uusd');
+  const fixedFee = useFixedFee();
 
-  const { taxRate, maxTax } = useTax<UST>('uusd');
+  const { taxRate, maxTax } = useUstTax();
 
-  const uUST = useTerraNativeBalanceQuery<UST>(
-    'uusd',
-    connectedWallet?.walletAddress,
-  );
+  const uUST = useUstBalance(connectedWallet?.walletAddress);
 
   const uToken = useCW20Balance<T>(tokenAddr, connectedWallet?.terraAddress);
 

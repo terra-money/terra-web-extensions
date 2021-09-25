@@ -1,10 +1,16 @@
-import { AppConstants, AppContractAddress } from '@libs/app-fns';
-import { TERRA_QUERY_KEY, TERRA_TX_KEYS } from '@libs/app-provider';
+import {
+  AppConstants,
+  AppContractAddress,
+  TERRA_QUERY_KEY,
+  TERRA_TX_KEYS,
+} from '@libs/app-provider';
 import { Gas, HumanAddr, Rate } from '@libs/types';
 import { NetworkInfo } from '@terra-dev/wallet-types';
 import { WebExtensionNetworkInfo } from '@terra-dev/web-extension';
 
-export function appContractAddress(network: NetworkInfo): AppContractAddress {
+export function STATION_CONTRACT_ADDRESS(
+  network: NetworkInfo,
+): AppContractAddress {
   if (network.chainID.startsWith('columbus')) {
     return {
       terraswap: {
@@ -20,7 +26,7 @@ export function appContractAddress(network: NetworkInfo): AppContractAddress {
   }
 }
 
-export function appConstants(network: NetworkInfo): AppConstants {
+export function STATION_CONSTANTS(network: NetworkInfo): AppConstants {
   return {
     gasWanted: 1_000_000 as Gas,
     fixedGas: 1_671_053 as Gas,
@@ -29,7 +35,7 @@ export function appConstants(network: NetworkInfo): AppConstants {
   };
 }
 
-export const APP_TX_REFETCH_MAP = {
+export const STATION_TX_REFETCH_MAP = {
   [TERRA_TX_KEYS.CW20_BUY]: [
     TERRA_QUERY_KEY.TOKEN_BALANCES,
     TERRA_QUERY_KEY.CW20_BALANCE,

@@ -1,4 +1,5 @@
 import { cw20BuyTokenTx } from '@libs/app-fns';
+import { useFixedFee } from '@libs/app-provider/hooks/useFixedFee';
 import { formatExecuteMsgNumber } from '@libs/formatter';
 import { HumanAddr, Rate, Token, u, UST } from '@libs/types';
 import { useConnectedWallet } from '@terra-dev/use-wallet';
@@ -6,9 +7,8 @@ import big from 'big.js';
 import { useCallback } from 'react';
 import { useApp } from '../../contexts/app';
 import { TERRA_TX_KEYS } from '../../env';
-import { useGasPrice } from '../../hooks/useGasPrice';
 import { useRefetchQueries } from '../../hooks/useRefetchQueries';
-import { useTax } from '../../queries/terra/tax';
+import { useUstTax } from '../../queries/terra/tax';
 import { useTerraswapPoolQuery } from '../../queries/terraswap/pool';
 
 export interface CW20BuyTokenTxParams {
@@ -27,11 +27,11 @@ export function useCW20BuyTokenTx(
 
   const { wasmClient, txErrorReporter, constants } = useApp();
 
-  const fixedFee = useGasPrice(constants.fixedGas, 'uusd');
+  const fixedFee = useFixedFee();
 
   const refetchQueries = useRefetchQueries();
 
-  const { taxRate, maxTax } = useTax<UST>('uusd');
+  const { taxRate, maxTax } = useUstTax();
 
   const { data: { terraswapPool } = {} } =
     useTerraswapPoolQuery<Token>(tokenUstPairAddr);
