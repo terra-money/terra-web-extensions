@@ -4,21 +4,21 @@ import { WasmFetchBaseParams, WasmQueryData } from './interface';
 import { lcdFetch } from './lcd/client';
 import { LcdFetcher } from './lcd/fetch';
 
-export type LcdWasmClient = {
+export type LcdQueryClient = {
   lcdEndpoint: string;
   lcdFetcher: LcdFetcher;
   requestInit?: Omit<RequestInit, 'method' | 'body'>;
 };
 
-export type HiveWasmClient = {
+export type HiveQueryClient = {
   hiveEndpoint: string;
   hiveFetcher: HiveFetcher;
   requestInit?: Omit<RequestInit, 'method' | 'body'>;
 };
 
-export type WasmClient = LcdWasmClient | HiveWasmClient;
+export type QueryClient = LcdQueryClient | HiveQueryClient;
 
-export type WasmFetchParams<WasmQueries> = WasmClient &
+export type WasmFetchParams<WasmQueries> = QueryClient &
   WasmFetchBaseParams<WasmQueries>;
 
 export async function wasmFetch<WasmQueries>(

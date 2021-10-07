@@ -1,18 +1,18 @@
 import {
   defaultHiveFetcher,
   defaultLcdFetcher,
-  HiveWasmClient,
-  LcdWasmClient,
+  HiveQueryClient,
+  LcdQueryClient,
 } from '@libs/query-client';
 import { HumanAddr } from '@libs/types';
 
-export const TEST_HIVE_CLIENT: HiveWasmClient = {
-  hiveEndpoint: 'https://tequila-mantle.anchorprotocol.com',
+export const TEST_HIVE_CLIENT: HiveQueryClient = {
+  hiveEndpoint: 'https://bombay-mantle.terra.dev',
   hiveFetcher: defaultHiveFetcher,
 };
 
-export const TEST_LCD_CLIENT: LcdWasmClient = {
-  lcdEndpoint: 'https://tequila-lcd.terra.dev',
+export const TEST_LCD_CLIENT: LcdQueryClient = {
+  lcdEndpoint: 'https://bombay-lcd.terra.dev',
   lcdFetcher: defaultLcdFetcher,
 };
 

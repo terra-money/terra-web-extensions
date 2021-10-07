@@ -53,17 +53,16 @@ export const STATION_TX_REFETCH_MAP = {
   ],
 };
 
-// TODO update to col-5 and bombay
 export const FALLBACK_NETWORKS: WebExtensionNetworkInfo[] = [
   {
     name: 'mainnet',
-    chainID: 'columbus-4',
+    chainID: 'columbus-5',
     lcd: 'https://lcd.terra.dev',
   },
   {
     name: 'testnet',
-    chainID: 'tequila-0004',
-    lcd: 'https://tequila-lcd.terra.dev',
+    chainID: 'bombay-12',
+    lcd: 'https://bombay-lcd.terra.dev',
   },
 ];
 

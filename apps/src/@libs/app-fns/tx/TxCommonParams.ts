@@ -1,4 +1,4 @@
-import { WasmClient } from '@libs/query-client';
+import { QueryClient } from '@libs/query-client';
 import { Gas, Rate, u, UST } from '@libs/types';
 import { NetworkInfo, TxResult } from '@terra-dev/wallet-types';
 import { CreateTxOptions } from '@terra-money/terra.js';
@@ -11,7 +11,7 @@ export interface TxCommonParams {
   fixedFee: u<UST<string | number>>;
   // network
   network: NetworkInfo;
-  wasmClient: WasmClient;
+  queryClient: QueryClient;
   post: (tx: CreateTxOptions) => Promise<TxResult>;
   // error handle
   txErrorReporter?: (error: unknown) => string;

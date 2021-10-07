@@ -1,8 +1,8 @@
-import { LcdWasmClient } from '@libs/query-client';
+import { LcdQueryClient } from '@libs/query-client';
 import { Rate } from '@libs/types';
 
 export async function terraTreasuryTaxRateQuery(
-  lcdClient: LcdWasmClient,
+  lcdClient: LcdQueryClient,
 ): Promise<Rate> {
   return lcdClient
     .lcdFetcher<{ result: Rate }>(

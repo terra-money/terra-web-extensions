@@ -73,7 +73,7 @@ export function ManageCW20Tokens({
 }
 
 function useTokenList(tokens: string[]) {
-  const { wasmClient } = useApp();
+  const { queryClient } = useApp();
 
   const getTokenIcon = useTokenIcon();
 
@@ -84,7 +84,7 @@ function useTokenList(tokens: string[]) {
 
     Promise.all(
       tokens.map((tokenAddr) => {
-        return cw20TokenInfoQuery(tokenAddr as CW20Addr, wasmClient).then(
+        return cw20TokenInfoQuery(tokenAddr as CW20Addr, queryClient).then(
           ({ tokenInfo }) => {
             return {
               token: tokenAddr as CW20Addr,
@@ -102,7 +102,7 @@ function useTokenList(tokens: string[]) {
     ).then((nextTokenList) => {
       setTokenList(nextTokenList);
     });
-  }, [getTokenIcon, tokens, wasmClient]);
+  }, [getTokenIcon, tokens, queryClient]);
 
   return tokenList;
 }

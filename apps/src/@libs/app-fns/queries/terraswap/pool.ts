@@ -1,5 +1,5 @@
 import {
-  WasmClient,
+  QueryClient,
   wasmFetch,
   WasmQuery,
   WasmQueryData,
@@ -29,10 +29,10 @@ export type TerraswapPool<T extends Token> = WasmQueryData<
 
 export async function terraswapPoolQuery<T extends Token>(
   ustPairAddr: HumanAddr,
-  wasmClient: WasmClient,
+  queryClient: QueryClient,
 ): Promise<TerraswapPool<T>> {
   const { terraswapPool } = await wasmFetch<TerraswapPoolWasmQuery<T>>({
-    ...wasmClient,
+    ...queryClient,
     id: `terraswap--pool=${ustPairAddr}`,
     wasmQuery: {
       terraswapPool: {

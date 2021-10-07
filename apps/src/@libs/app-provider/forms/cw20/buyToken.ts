@@ -22,7 +22,7 @@ export function useCW20BuyTokenForm<T extends Token>({
 }: CW20BuyTokenFormParams) {
   const connectedWallet = useConnectedWallet();
 
-  const { wasmClient } = useApp();
+  const { queryClient } = useApp();
 
   const fixedFee = useFixedFee();
 
@@ -37,7 +37,7 @@ export function useCW20BuyTokenForm<T extends Token>({
     {
       ustTokenPairAddr,
       tokenAddr,
-      wasmClient,
+      queryClient,
       ustBalance: uUST,
       taxRate,
       maxTaxUUSD: maxTax,

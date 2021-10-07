@@ -1,4 +1,4 @@
-import { hiveFetch, lcdFetch, WasmClient } from '@libs/query-client';
+import { hiveFetch, lcdFetch, QueryClient } from '@libs/query-client';
 import {
   cw20,
   HumanAddr,
@@ -44,7 +44,7 @@ export type TerraBalances = {
 export async function terraBalancesQuery(
   walletAddr: HumanAddr | undefined,
   assets: terraswap.AssetInfo[],
-  wasmClient: WasmClient,
+  queryClient: QueryClient,
 ): Promise<TerraBalances> {
   type CW20Query = Record<
     string,
@@ -81,14 +81,14 @@ export async function terraBalancesQuery(
   }, {} as CW20Query);
 
   const balancesPromise: Promise<TerraBalances['balances']> =
-    'lcdEndpoint' in wasmClient
+    'lcdEndpoint' in queryClient
       ? Promise.all([
-          wasmClient.lcdFetcher<LcdBankBalances>(
-            `${wasmClient.lcdEndpoint}/bank/balances/${walletAddr}`,
-            wasmClient.requestInit,
+          queryClient.lcdFetcher<LcdBankBalances>(
+            `${queryClient.lcdEndpoint}/bank/balances/${walletAddr}`,
+            queryClient.requestInit,
           ),
           lcdFetch<any>({
-            ...wasmClient,
+            ...queryClient,
             id: `terra-balances=${walletAddr}`,
             wasmQuery,
           }),
@@ -109,7 +109,7 @@ export async function terraBalancesQuery(
         })
       : hiveFetch<any, NativeBalancesQueryVariables, NativeBalancesQueryResult>(
           {
-            ...wasmClient,
+            ...queryClient,
             id: `terra-balances=${walletAddr}`,
             variables: {
               walletAddress: walletAddr,

@@ -1,4 +1,4 @@
-import { WasmClient } from '@libs/query-client';
+import { QueryClient } from '@libs/query-client';
 import { ISODateFormat, Num } from '@libs/types';
 
 // language=graphql
@@ -75,7 +75,7 @@ class BlockHeightFetcher {
   private fetched: boolean = false;
   private failedCount: number = 0;
 
-  constructor(private client: WasmClient) {}
+  constructor(private client: QueryClient) {}
 
   fetchBlockHeight = () => {
     return new Promise<number>((resolve, reject) => {
@@ -143,7 +143,7 @@ const fetchers: Map<string, BlockHeightFetcher> = new Map<
   BlockHeightFetcher
 >();
 
-export function lastSyncedHeightQuery(client: WasmClient): Promise<number> {
+export function lastSyncedHeightQuery(client: QueryClient): Promise<number> {
   const endpoint: string =
     'lcdEndpoint' in client ? client.lcdEndpoint : client.hiveEndpoint;
 

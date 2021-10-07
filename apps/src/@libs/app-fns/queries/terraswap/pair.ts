@@ -1,5 +1,5 @@
 import {
-  WasmClient,
+  QueryClient,
   wasmFetch,
   WasmQuery,
   WasmQueryData,
@@ -18,7 +18,7 @@ export type TerraswapPair = WasmQueryData<TerraswapPairWasmQuery>;
 export async function terraswapPairQuery(
   terraswapFactoryAddr: HumanAddr,
   assetInfos: [terraswap.AssetInfo, terraswap.AssetInfo],
-  wasmClient: WasmClient,
+  queryClient: QueryClient,
 ): Promise<TerraswapPair> {
   const urlQuery = assetInfos
     .reduce((urlQueries, asset, i) => {
@@ -32,7 +32,7 @@ export async function terraswapPairQuery(
     .join('&');
 
   return wasmFetch<TerraswapPairWasmQuery>({
-    ...wasmClient,
+    ...queryClient,
     id: `terraswap--pair&${urlQuery}`,
     wasmQuery: {
       terraswapPair: {

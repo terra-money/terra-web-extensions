@@ -1,9 +1,9 @@
-import { LcdWasmClient } from '@libs/query-client';
+import { LcdQueryClient } from '@libs/query-client';
 import { NativeDenom, Token, u } from '@libs/types';
 
 export async function terraTreasuryTaxCapQuery<T extends Token>(
   denom: NativeDenom,
-  lcdClient: LcdWasmClient,
+  lcdClient: LcdQueryClient,
 ): Promise<u<T>> {
   return lcdClient
     .lcdFetcher<{ result: u<T> }>(

@@ -10,14 +10,14 @@ const queryFn = createQueryFn(cw20PoolInfoQuery);
 export function useCW20PoolInfoQuery<T extends Token>(
   tokenAddr: CW20Addr,
 ): UseQueryResult<CW20PoolInfo<T> | undefined> {
-  const { wasmClient, queryErrorReporter, contractAddress } = useApp();
+  const { queryClient, queryErrorReporter, contractAddress } = useApp();
 
   const result = useQuery(
     [
       TERRA_QUERY_KEY.STAKING_POOL_INFO,
       tokenAddr,
       contractAddress.terraswap.factory,
-      wasmClient,
+      queryClient,
     ],
     queryFn as any,
     {

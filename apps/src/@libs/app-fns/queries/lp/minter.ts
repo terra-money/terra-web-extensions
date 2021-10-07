@@ -1,5 +1,5 @@
 import {
-  WasmClient,
+  QueryClient,
   wasmFetch,
   WasmQuery,
   WasmQueryData,
@@ -14,10 +14,10 @@ export type LpMinter = WasmQueryData<LpMinterWasmQuery>;
 
 export async function lpMinterQuery(
   lpTokenAddr: LPAddr,
-  wasmClient: WasmClient,
+  queryClient: QueryClient,
 ): Promise<LpMinter> {
   return wasmFetch<LpMinterWasmQuery>({
-    ...wasmClient,
+    ...queryClient,
     id: `lp--minter=${lpTokenAddr}`,
     wasmQuery: {
       minter: {

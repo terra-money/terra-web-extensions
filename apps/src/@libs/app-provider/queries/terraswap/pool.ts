@@ -10,10 +10,10 @@ const queryFn = createQueryFn(terraswapPoolQuery);
 export function useTerraswapPoolQuery<T extends Token>(
   terraswapPairAddr: HumanAddr | undefined,
 ): UseQueryResult<TerraswapPool<T> | undefined> {
-  const { wasmClient, queryErrorReporter } = useApp();
+  const { queryClient, queryErrorReporter } = useApp();
 
   const result = useQuery(
-    [TERRA_QUERY_KEY.TERRASWAP_POOL, terraswapPairAddr, wasmClient],
+    [TERRA_QUERY_KEY.TERRASWAP_POOL, terraswapPairAddr, queryClient],
     queryFn as any,
     {
       refetchInterval: 1000 * 60 * 5,

@@ -15,7 +15,7 @@ export function useTerraBalancesWithTokenInfoQuery(
   assets: terraswap.AssetInfo[],
   walletAddress?: HumanAddr,
 ): UseQueryResult<TerraBalancesWithTokenInfo | undefined> {
-  const { wasmClient, queryErrorReporter } = useApp();
+  const { queryClient, queryErrorReporter } = useApp();
 
   const connectedWallet = useConnectedWallet();
 
@@ -24,7 +24,7 @@ export function useTerraBalancesWithTokenInfoQuery(
       TERRA_QUERY_KEY.TERRA_BALANCES_WITH_TOKEN_INFO,
       walletAddress ?? connectedWallet?.walletAddress,
       assets,
-      wasmClient,
+      queryClient,
     ],
     queryFn,
     {

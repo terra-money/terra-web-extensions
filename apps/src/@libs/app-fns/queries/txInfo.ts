@@ -1,4 +1,4 @@
-import { WasmClient } from '@libs/query-client';
+import { QueryClient } from '@libs/query-client';
 import { Gas, ISODateFormat, Num } from '@libs/types';
 import { TxFailed } from '@terra-dev/wallet-types';
 import { CreateTxOptions } from '@terra-money/terra.js';
@@ -75,19 +75,19 @@ interface LcdTxsFail {
 }
 
 export interface TxInfoQueryParams {
-  wasmClient: WasmClient;
+  queryClient: QueryClient;
   txhash: string;
 }
 
 export async function txInfoQuery({
-  wasmClient,
+  queryClient,
   txhash,
 }: TxInfoQueryParams): Promise<TxInfoData> {
   const fetchTxInfo: Promise<TxInfoData> =
-    'lcdEndpoint' in wasmClient
-      ? wasmClient
+    'lcdEndpoint' in queryClient
+      ? queryClient
           .lcdFetcher<LcdTxs | LcdTxsFail>(
-            `${wasmClient.lcdEndpoint}/txs/${txhash}`,
+            `${queryClient.lcdEndpoint}/txs/${txhash}`,
           )
           .then((result) => {
             if ('logs' in result) {
@@ -110,11 +110,11 @@ export async function txInfoQuery({
               return [];
             }
           })
-      : wasmClient
+      : queryClient
           .hiveFetcher<TxInfoVariables, TxInfoRawData>(
             TX_INFO_QUERY,
             { txhash },
-            `${wasmClient.hiveEndpoint}?txinfo&txhash=${txhash}`,
+            `${queryClient.hiveEndpoint}?txinfo&txhash=${txhash}`,
           )
           .then(({ TxInfos }) => {
             return TxInfos.map(({ TxHash, Success, RawLog: _RawLog }) => {
@@ -155,7 +155,7 @@ export type PollTxInfoParams = TxInfoQueryParams & {
 };
 
 export async function pollTxInfo({
-  wasmClient,
+  queryClient,
   tx,
   txhash,
 }: PollTxInfoParams): Promise<TxInfoData> {
@@ -164,7 +164,7 @@ export async function pollTxInfo({
 
   while (true) {
     const txInfo = await txInfoQuery({
-      wasmClient,
+      queryClient,
       txhash,
     });
 

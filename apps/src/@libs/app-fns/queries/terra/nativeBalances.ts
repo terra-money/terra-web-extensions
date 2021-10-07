@@ -1,4 +1,4 @@
-import { hiveFetch, WasmClient } from '@libs/query-client';
+import { hiveFetch, QueryClient } from '@libs/query-client';
 import {
   AUD,
   CAD,
@@ -108,7 +108,7 @@ export const EMPTY_NATIVE_BALANCES: NativeBalances = {
 
 export async function terraNativeBalancesQuery(
   walletAddr: HumanAddr | undefined,
-  wasmClient: WasmClient,
+  queryClient: QueryClient,
 ): Promise<NativeBalances> {
   if (!walletAddr) {
     return EMPTY_NATIVE_BALANCES;
@@ -117,18 +117,18 @@ export async function terraNativeBalancesQuery(
   const balancesPromise: Promise<
     Array<{ denom: NativeDenom; amount: u<Token> }>
   > =
-    'lcdEndpoint' in wasmClient
-      ? wasmClient
+    'lcdEndpoint' in queryClient
+      ? queryClient
           .lcdFetcher<LcdBankBalances>(
-            `${wasmClient.lcdEndpoint}/bank/balances/${walletAddr}`,
-            wasmClient.requestInit,
+            `${queryClient.lcdEndpoint}/bank/balances/${walletAddr}`,
+            queryClient.requestInit,
           )
           .then(({ result }) => {
             return result;
           })
       : hiveFetch<any, NativeBalancesQueryVariables, NativeBalancesQueryResult>(
           {
-            ...wasmClient,
+            ...queryClient,
             id: `native-balances=${walletAddr}`,
             variables: {
               walletAddress: walletAddr,

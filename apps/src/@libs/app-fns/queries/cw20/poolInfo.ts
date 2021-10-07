@@ -1,4 +1,4 @@
-import { WasmClient } from '@libs/query-client';
+import { QueryClient } from '@libs/query-client';
 import { cw20, CW20Addr, HumanAddr, terraswap, Token, UST } from '@libs/types';
 import { cw20TokenInfoQuery } from '../cw20/tokenInfo';
 import { terraswapPairQuery } from '../terraswap/pair';
@@ -15,7 +15,7 @@ export type CW20PoolInfo<T extends Token> = {
 export async function cw20PoolInfoQuery<T extends Token>(
   tokenAddr: CW20Addr,
   terraswapFactoryAddr: HumanAddr,
-  wasmClient: WasmClient,
+  queryClient: QueryClient,
 ): Promise<CW20PoolInfo<T>> {
   const { terraswapPair } = await terraswapPairQuery(
     terraswapFactoryAddr,
@@ -31,14 +31,14 @@ export async function cw20PoolInfoQuery<T extends Token>(
         },
       },
     ],
-    wasmClient,
+    queryClient,
   );
 
-  const { tokenInfo } = await cw20TokenInfoQuery<T>(tokenAddr, wasmClient);
+  const { tokenInfo } = await cw20TokenInfoQuery<T>(tokenAddr, queryClient);
 
   const { terraswapPool, terraswapPoolInfo } = await terraswapPoolQuery<T>(
     terraswapPair.contract_addr,
-    wasmClient,
+    queryClient,
   );
 
   return {

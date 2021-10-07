@@ -1,5 +1,5 @@
 import {
-  WasmClient,
+  QueryClient,
   wasmFetch,
   WasmQuery,
   WasmQueryData,
@@ -18,10 +18,10 @@ export type TerraswapSimulation = WasmQueryData<TerraswapSimulationWasmQuery>;
 export async function terraswapSimulationQuery(
   ustPairAddr: HumanAddr,
   offerAssetQuery: terraswap.pair.Simulation<Token>['simulation']['offer_asset'],
-  wasmClient: WasmClient,
+  queryClient: QueryClient,
 ): Promise<TerraswapSimulation> {
   const data = await wasmFetch<TerraswapSimulationWasmQuery>({
-    ...wasmClient,
+    ...queryClient,
     wasmQuery: {
       simulation: {
         contractAddress: ustPairAddr,

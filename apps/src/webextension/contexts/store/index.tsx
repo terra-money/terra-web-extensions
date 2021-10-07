@@ -73,6 +73,9 @@ export function StoreProvider({ children }: StoreProviderProps) {
       disconnect: () => {
         throw new Error('not implemented!');
       },
+      sign: (tx: CreateTxOptions) => {
+        throw new Error('not implemented!');
+      },
       post: (tx: CreateTxOptions) => {
         throw new Error('not implemented!');
       },

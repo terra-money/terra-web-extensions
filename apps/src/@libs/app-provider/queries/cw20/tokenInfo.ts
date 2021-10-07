@@ -11,10 +11,10 @@ export function useCW20TokenInfoQuery<T extends Token>(
   tokenAddr: CW20Addr,
   ignoreCache: boolean = false,
 ): UseQueryResult<CW20TokenInfo<T> | undefined> {
-  const { wasmClient, queryErrorReporter } = useApp();
+  const { queryClient, queryErrorReporter } = useApp();
 
   const result = useQuery(
-    [TERRA_QUERY_KEY.CW20_TOKEN_INFO, tokenAddr, wasmClient, ignoreCache],
+    [TERRA_QUERY_KEY.CW20_TOKEN_INFO, tokenAddr, queryClient, ignoreCache],
     queryFn as any,
     {
       refetchInterval: 1000 * 60 * 5,

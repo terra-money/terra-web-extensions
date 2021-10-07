@@ -1,4 +1,4 @@
-import { WasmClient } from '@libs/query-client';
+import { QueryClient } from '@libs/query-client';
 import { TxResult } from '@terra-dev/wallet-types';
 import { TxResultRendering, TxStreamPhase } from '../../models/tx';
 import { pollTxInfo, TxInfoData } from '../../queries/txInfo';
@@ -6,14 +6,14 @@ import { TxHelper } from './TxHelper';
 
 interface Params {
   helper: TxHelper;
-  wasmClient: WasmClient;
+  queryClient: QueryClient;
   onTxSucceed?: () => void;
 }
 
-export function _pollTxInfo({ helper, wasmClient, onTxSucceed }: Params) {
+export function _pollTxInfo({ helper, queryClient, onTxSucceed }: Params) {
   return ({ value: txResult }: TxResultRendering<TxResult>) => {
     return pollTxInfo({
-      wasmClient,
+      queryClient,
       tx: helper.savedTx,
       txhash: txResult.result.txhash,
     }).then((txInfo) => {

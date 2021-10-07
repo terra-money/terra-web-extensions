@@ -10,14 +10,14 @@ const queryFn = createQueryFn(terraswapPairQuery);
 export function useTerraswapPairQuery(
   assetInfos: [terraswap.AssetInfo, terraswap.AssetInfo],
 ): UseQueryResult<TerraswapPair | undefined> {
-  const { wasmClient, queryErrorReporter, contractAddress } = useApp();
+  const { queryClient, queryErrorReporter, contractAddress } = useApp();
 
   const result = useQuery(
     [
       TERRA_QUERY_KEY.TERRASWAP_PAIR,
       contractAddress.terraswap.factory,
       assetInfos,
-      wasmClient,
+      queryClient,
     ],
     queryFn,
     {

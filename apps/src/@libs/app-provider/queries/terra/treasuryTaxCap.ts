@@ -10,10 +10,10 @@ const queryFn = createQueryFn(terraTreasuryTaxCapQuery);
 export function useTerraTreasuryTaxCapQuery<T extends Token>(
   denom: NativeDenom,
 ): UseQueryResult<u<T>> {
-  const { lcdWasmClient, queryErrorReporter } = useApp();
+  const { lcdQueryClient, queryErrorReporter } = useApp();
 
   const result = useQuery(
-    [TERRA_QUERY_KEY.TERRA_TREASURY_TAX_CAP, denom, lcdWasmClient],
+    [TERRA_QUERY_KEY.TERRA_TREASURY_TAX_CAP, denom, lcdQueryClient],
     queryFn as any,
     {
       keepPreviousData: true,

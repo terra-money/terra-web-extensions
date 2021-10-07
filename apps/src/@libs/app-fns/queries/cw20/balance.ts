@@ -1,5 +1,5 @@
 import {
-  WasmClient,
+  QueryClient,
   wasmFetch,
   WasmQuery,
   WasmQueryData,
@@ -17,11 +17,11 @@ export type CW20Balance<T extends Token> = WasmQueryData<
 export async function cw20BalanceQuery<T extends Token>(
   walletAddr: HumanAddr | undefined,
   tokenAddr: CW20Addr | undefined,
-  wasmClient: WasmClient,
+  queryClient: QueryClient,
 ): Promise<CW20Balance<T> | undefined> {
   return walletAddr && tokenAddr
     ? wasmFetch<CW20BalanceWasmQuery<T>>({
-        ...wasmClient,
+        ...queryClient,
         id: `cw20--balance=${tokenAddr}`,
         wasmQuery: {
           tokenBalance: {

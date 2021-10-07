@@ -20,7 +20,7 @@ export interface SendFormParams {
 export function useSendForm<T extends Token>({ tokenInfo }: SendFormParams) {
   const connectedWallet = useConnectedWallet();
 
-  const { wasmClient } = useApp();
+  const { queryClient } = useApp();
 
   const fixedFee = useFixedFee();
 
@@ -42,7 +42,7 @@ export function useSendForm<T extends Token>({ tokenInfo }: SendFormParams) {
       tokenInfo,
       balance,
       walletAddr: connectedWallet?.walletAddress,
-      wasmClient,
+      queryClient,
       ustBalance: uUST,
       taxRate,
       maxTaxUUSD: maxTax,

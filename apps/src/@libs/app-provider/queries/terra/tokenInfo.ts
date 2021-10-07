@@ -10,10 +10,10 @@ const queryFn = createQueryFn(terraTokenInfoQuery);
 export function useTerraTokenInfo<T extends Token>(
   asset: terraswap.AssetInfo,
 ): UseQueryResult<cw20.TokenInfoResponse<T> | undefined> {
-  const { wasmClient, queryErrorReporter } = useApp();
+  const { queryClient, queryErrorReporter } = useApp();
 
   const result = useQuery(
-    [TERRA_QUERY_KEY.TERRA_TOKEN_INFO, asset, wasmClient],
+    [TERRA_QUERY_KEY.TERRA_TOKEN_INFO, asset, queryClient],
     queryFn as any,
     {
       keepPreviousData: true,

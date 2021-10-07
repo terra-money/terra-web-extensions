@@ -65,6 +65,9 @@ export function TxProvider({ children, wallet, network }: TxProviderProps) {
       disconnect: () => {
         throw new Error('not implemented!');
       },
+      sign: () => {
+        throw new Error('not implemented!');
+      },
       post: (tx: CreateTxOptions): Promise<TxResult> => {
         return new Promise<TxResult>((resolve, reject) => {
           setResolver(

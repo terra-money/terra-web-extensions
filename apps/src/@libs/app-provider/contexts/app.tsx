@@ -1,5 +1,9 @@
 import { GasPrice, lastSyncedHeightQuery } from '@libs/app-fns';
-import { HiveWasmClient, LcdWasmClient, WasmClient } from '@libs/query-client';
+import {
+  HiveQueryClient,
+  LcdQueryClient,
+  QueryClient,
+} from '@libs/query-client';
 import { useWallet } from '@terra-dev/use-wallet';
 import { NetworkInfo } from '@terra-dev/wallet-types';
 import React, {
@@ -28,12 +32,12 @@ export interface AppProviderProps<
   contractAddress: (network: NetworkInfo) => ContractAddress;
   constants: (network: NetworkInfo) => Constants;
 
-  defaultWasmClient?:
+  defaultQueryClient?:
     | 'lcd'
     | 'hive'
     | ((network: NetworkInfo) => 'lcd' | 'hive');
-  lcdWasmClient?: (network: NetworkInfo) => LcdWasmClient;
-  hiveWasmClient?: (network: NetworkInfo) => HiveWasmClient;
+  lcdQueryClient?: (network: NetworkInfo) => LcdQueryClient;
+  hiveQueryClient?: (network: NetworkInfo) => HiveQueryClient;
 
   // gas
   gasPriceEndpoint?: (network: NetworkInfo) => string;
@@ -60,9 +64,9 @@ export interface App<
   lastSyncedHeight: () => Promise<number>;
 
   // wasm
-  wasmClient: WasmClient;
-  lcdWasmClient: LcdWasmClient;
-  hiveWasmClient: HiveWasmClient;
+  queryClient: QueryClient;
+  lcdQueryClient: LcdQueryClient;
+  hiveQueryClient: HiveQueryClient;
 
   // gas
   gasPrice: GasPrice;
@@ -87,9 +91,9 @@ export function AppProvider<
   children,
   contractAddress,
   constants,
-  defaultWasmClient = 'hive',
-  lcdWasmClient: _lcdWasmClient = DEFAULT_LCD_WASM_CLIENT,
-  hiveWasmClient: _hiveWasmClient = DEFAULT_HIVE_WASM_CLIENT,
+  defaultQueryClient = 'hive',
+  lcdQueryClient: _lcdQueryClient = DEFAULT_LCD_WASM_CLIENT,
+  hiveQueryClient: _hiveQueryClient = DEFAULT_HIVE_WASM_CLIENT,
   gasPriceEndpoint = DEFAULT_GAS_PRICE_ENDPOINTS,
   fallbackGasPrice = DEFAULT_FALLBACK_GAS_PRICE,
   queryErrorReporter,
@@ -103,39 +107,39 @@ export function AppProvider<
       App<any, any>,
       | 'contractAddress'
       | 'constants'
-      | 'wasmClient'
-      | 'lcdWasmClient'
-      | 'hiveWasmClient'
+      | 'queryClient'
+      | 'lcdQueryClient'
+      | 'hiveQueryClient'
     >
   >(() => {
-    const lcdWasmClient = _lcdWasmClient(network);
-    const hiveWasmClient = _hiveWasmClient(network);
-    const wasmClientType =
-      typeof defaultWasmClient === 'function'
-        ? defaultWasmClient(network)
-        : defaultWasmClient;
-    const wasmClient =
-      wasmClientType === 'lcd' ? lcdWasmClient : hiveWasmClient;
+    const lcdQueryClient = _lcdQueryClient(network);
+    const hiveQueryClient = _hiveQueryClient(network);
+    const queryClientType =
+      typeof defaultQueryClient === 'function'
+        ? defaultQueryClient(network)
+        : defaultQueryClient;
+    const queryClient =
+      queryClientType === 'lcd' ? lcdQueryClient : hiveQueryClient;
 
     return {
       contractAddress: contractAddress(network),
       constants: constants(network),
-      wasmClient,
-      lcdWasmClient,
-      hiveWasmClient,
+      queryClient,
+      lcdQueryClient,
+      hiveQueryClient,
     };
   }, [
-    _hiveWasmClient,
-    _lcdWasmClient,
+    _hiveQueryClient,
+    _lcdQueryClient,
     constants,
     contractAddress,
-    defaultWasmClient,
+    defaultQueryClient,
     network,
   ]);
 
   const lastSyncedHeight = useMemo(() => {
-    return () => lastSyncedHeightQuery(networkBoundStates.wasmClient);
-  }, [networkBoundStates.wasmClient]);
+    return () => lastSyncedHeightQuery(networkBoundStates.queryClient);
+  }, [networkBoundStates.queryClient]);
 
   const {
     data: gasPrice = fallbackGasPrice(network) ?? fallbackGasPrice(network),

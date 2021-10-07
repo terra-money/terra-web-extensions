@@ -21,7 +21,7 @@ export interface SendTxParams {
 export function useSendTx() {
   const connectedWallet = useConnectedWallet();
 
-  const { wasmClient, txErrorReporter, constants } = useApp();
+  const { queryClient, txErrorReporter, constants } = useApp();
 
   const fixedFee = useFixedFee();
 
@@ -47,7 +47,7 @@ export function useSendTx() {
         fixedFee,
         gasWanted: constants.gasWanted,
         gasAdjustment: constants.gasAdjustment,
-        wasmClient,
+        queryClient,
         txErrorReporter,
         onTxSucceed: () => {
           onTxSucceed?.();
@@ -66,7 +66,7 @@ export function useSendTx() {
       refetchQueries,
       taxRate,
       txErrorReporter,
-      wasmClient,
+      queryClient,
     ],
   );
 

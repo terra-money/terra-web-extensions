@@ -1,5 +1,5 @@
 import {
-  WasmClient,
+  QueryClient,
   wasmFetch,
   WasmQuery,
   WasmQueryData,
@@ -17,7 +17,7 @@ export type CW20TokenInfo<T extends Token> = WasmQueryData<
 
 export async function cw20TokenInfoQuery<T extends Token>(
   tokenAddr: CW20Addr,
-  wasmClient: WasmClient,
+  queryClient: QueryClient,
   ignoreCache: boolean = false,
 ): Promise<CW20TokenInfo<T>> {
   if (!ignoreCache && cw20TokenInfoCache.has(tokenAddr)) {
@@ -29,7 +29,7 @@ export async function cw20TokenInfoQuery<T extends Token>(
   }
 
   const { tokenInfo } = await wasmFetch<CW20TokenInfoWasmQuery<T>>({
-    ...wasmClient,
+    ...queryClient,
     id: `cw20--token-info=${tokenAddr}`,
     wasmQuery: {
       tokenInfo: {

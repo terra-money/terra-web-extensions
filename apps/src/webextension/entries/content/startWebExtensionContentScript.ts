@@ -57,7 +57,7 @@ export function startWebExtensionContentScript({
   const connected = meta.getAttribute('connected');
   if (typeof connected === 'string' && connected !== CONNECT_NAME) {
     const inpage = document.createElement('script');
-    inpage.innerText = `alert('Terra Station disabled: You installed multiple terra wallet browser extensions. please use only one wallet extension.')`;
+    inpage.innerText = `alert('Terra Station disabled: You installed multiple Terra wallet browser extensions. please use only one Terra wallet extension.')`;
 
     const head = document.querySelector('head');
     head?.appendChild(inpage);

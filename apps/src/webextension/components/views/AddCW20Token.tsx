@@ -139,7 +139,7 @@ export const TokenList = styled.ul`
 `;
 
 function useFindTokens(search: string): CW20Icon[] {
-  const { wasmClient } = useApp();
+  const { queryClient } = useApp();
   const { network } = useWallet();
   const { data: cw20Tokens } = useCW20IconsQuery();
 
@@ -151,7 +151,7 @@ function useFindTokens(search: string): CW20Icon[] {
     if (AccAddress.validate(search)) {
       const tokenAddr: CW20Addr = search as CW20Addr;
 
-      cw20TokenInfoQuery(tokenAddr, wasmClient).then(({ tokenInfo }) => {
+      cw20TokenInfoQuery(tokenAddr, queryClient).then(({ tokenInfo }) => {
         setTokenList([
           {
             token: tokenAddr,
@@ -184,7 +184,7 @@ function useFindTokens(search: string): CW20Icon[] {
           : [],
       );
     }
-  }, [cw20Tokens, getTokenIcon, network.name, search, wasmClient]);
+  }, [cw20Tokens, getTokenIcon, network.name, search, queryClient]);
 
   return tokenList;
 }

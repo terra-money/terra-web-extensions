@@ -165,7 +165,7 @@ function Main() {
         <AppProvider
           contractAddress={STATION_CONTRACT_ADDRESS}
           constants={STATION_CONSTANTS}
-          defaultWasmClient="lcd"
+          defaultQueryClient="lcd"
           refetchMap={STATION_TX_REFETCH_MAP}
         >
           <IntlProvider locale={locale} messages={messages}>

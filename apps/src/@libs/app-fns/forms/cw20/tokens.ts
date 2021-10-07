@@ -1,4 +1,4 @@
-import { WasmClient } from '@libs/query-client';
+import { QueryClient } from '@libs/query-client';
 import { cw20, CW20Addr, NativeDenom, terraswap, Token } from '@libs/types';
 import { FormReturn } from '@libs/use-form';
 import { nativeTokenInfoQuery } from '../../queries/cw20/nativeTokenInfo';
@@ -22,7 +22,7 @@ export interface SendTokensFormInput {
 
 export interface SendTokensFormDependency {
   //
-  wasmClient: WasmClient;
+  queryClient: QueryClient;
 
   fallbackTokenInfo: SendTokenInfo;
 }
@@ -50,7 +50,7 @@ export const sendTokensForm = (
   ): FormReturn<SendTokensFormStates, SendTokensFormAsyncStates> => {
     if (
       !tokenInfoAsyncStates ||
-      dependency.wasmClient !== prevDependency?.wasmClient ||
+      dependency.queryClient !== prevDependency?.queryClient ||
       input.nativeDenoms !== prevInput?.nativeDenoms ||
       input.cw20Addrs !== prevInput?.cw20Addrs
     ) {
@@ -74,7 +74,7 @@ export const sendTokensForm = (
           input.cw20Addrs.map((tokenAddr) =>
             cw20TokenInfoQuery(
               tokenAddr,
-              dependency.wasmClient,
+              dependency.queryClient,
               //dependency.mantleEndpoint,
               //dependency.mantleFetch,
               //dependency.requestInit,

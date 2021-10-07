@@ -66,8 +66,8 @@ function LedgerVerifyBase({ className }: LedgerVerifyProps) {
     };
 
     const lcd = new LCDClient({
-      chainID: 'tequila-0004',
-      URL: 'https://tequila-lcd.terra.dev',
+      chainID: 'bombay-12',
+      URL: 'https://bombay-lcd.terra.dev',
     });
 
     const key = new LedgerKey(publicKeyBuffer, app);

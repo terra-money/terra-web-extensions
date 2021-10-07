@@ -4157,24 +4157,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@terra-dev/use-wallet@npm:^2.1.0-alpha.1":
-  version: 2.1.0-alpha.1
-  resolution: "@terra-dev/use-wallet@npm:2.1.0-alpha.1"
+"@terra-dev/use-wallet@npm:^2.2.0":
+  version: 2.2.0
+  resolution: "@terra-dev/use-wallet@npm:2.2.0"
   dependencies:
-    "@terra-dev/wallet-types": ^2.1.0-alpha.1
-    "@terra-money/terra.js": ^1.8.0 || ^2.0.0
+    "@terra-dev/wallet-types": ^2.2.0
+    "@terra-money/terra.js": ^2.0.0
   peerDependencies:
     react: ^17.0.0
-  checksum: 2977b8b0fa82c005a02b8329058e5c1ff99c5aa69d3b913ed121a6114c7ee6e72026e9d757eac551b3d3dbd9944cec153f221422ce108bc475657ca3e579f08c
+  checksum: 51b479f4348a46a1c12559d292015ad79349f95e51b0ce250238c3169a204cbdf0c1dc21ce2ff26321ce43ad9f87658da62f6642c4983c454ea6eadb5e192cbd
   languageName: node
   linkType: hard
 
-"@terra-dev/wallet-types@npm:^2.1.0-alpha.1":
-  version: 2.1.0-alpha.1
-  resolution: "@terra-dev/wallet-types@npm:2.1.0-alpha.1"
+"@terra-dev/wallet-types@npm:^2.2.0":
+  version: 2.2.0
+  resolution: "@terra-dev/wallet-types@npm:2.2.0"
   dependencies:
-    "@terra-money/terra.js": ^1.8.0 || ^2.0.0
-  checksum: af32db47a52957e145d524532e2f599a3871f01dfba29ec8ce3b186daf89ab2fb417fffe09209e3098d54ce7d22a239d21930de7e15933f07b3ef01d3ca6ebae
+    "@terra-money/terra.js": ^2.0.0
+  checksum: 0901f7c9e03ac91a180a6e9d8ce66bb466a652f93d096385c5d7dcc740a138d39f163821dc8f0b40b8e37db17b919e6c5faaa815da773ae386e59e3caa6d4b43
   languageName: node
   linkType: hard
 
@@ -4199,9 +4199,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@terra-money/terra.js@npm:^1.8.0 || ^2.0.0":
-  version: 2.0.2
-  resolution: "@terra-money/terra.js@npm:2.0.2"
+"@terra-money/terra.js@npm:2.0.14":
+  version: 2.0.14
+  resolution: "@terra-money/terra.js@npm:2.0.14"
   dependencies:
     axios: ^0.21.1
     bech32: ^2.0.0
@@ -4215,7 +4215,7 @@ __metadata:
     tmp: ^0.2.1
     utf-8-validate: ^5.0.5
     ws: ^7.4.2
-  checksum: 6e9e08d22c9d441624c52c79927a96756eb55722341c369455d706d303ce438ae6371b38d6dddd47ee25819231fcbcf3497b342178b4a8176eebbcc01c66b1cd
+  checksum: 2820ebedadfa0ab1d91b38b1d91ddb6a8a71975e69b56fa83235a331b19529b6f0c116ceb4c739e6029621ed4ccb732ee0a336b42e9ce6e9f2395aa0333e6251
   languageName: node
   linkType: hard
 
@@ -4266,13 +4266,6 @@ __metadata:
   version: 1.0.2
   resolution: "@tsconfig/node16@npm:1.0.2"
   checksum: ca94d3639714672bbfd55f03521d3f56bb6a25479bd425da81faf21f13e1e9d15f40f97377dedbbf477a5841c5b0c8f4cd1b391f33553d750b9202c54c2c07aa
-  languageName: node
-  linkType: hard
-
-"@types/anymatch@npm:*":
-  version: 1.3.1
-  resolution: "@types/anymatch@npm:1.3.1"
-  checksum: 1eeb16286102a98eda415e1ade6fb980ff0a001fc21e777af8932001ebbd324d0d2fbbd5ef51c828346ff71847ba00af3f73d1dfea434efb9b72467b8cf0343a
   languageName: node
   linkType: hard
 
@@ -4631,9 +4624,9 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*, @types/node@npm:^16.7.10":
-  version: 16.7.10
-  resolution: "@types/node@npm:16.7.10"
-  checksum: 0518803caa1a14f4070e770a280eda1c4b4581a425cbda481cdd54b1f34a7ea497ff067fd23b90e3d4f4fdcfba15c1316182875e9cf9f5b2e880de1e595de053
+  version: 16.10.3
+  resolution: "@types/node@npm:16.10.3"
+  checksum: 3fd429bce8a4acb497dcc62b536782a5e87ccf7cd91d64a78b263ae5d66cb72bf84be9eeeff6f84ae0567b065a40b267caa66d311f9e094990a5847bbd168a29
   languageName: node
   linkType: hard
 
@@ -4812,18 +4805,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:*, @types/react@npm:17, @types/react@npm:^17.0.19":
-  version: 17.0.19
-  resolution: "@types/react@npm:17.0.19"
-  dependencies:
-    "@types/prop-types": "*"
-    "@types/scheduler": "*"
-    csstype: ^3.0.2
-  checksum: d5af52623dd863e5a9f64eb72979f19c21e03012e25ee93adc93f664ed7976e81b654128dc653b225ad5ba2aaae24e0febe37face272bb051d6289e23ed7177d
-  languageName: node
-  linkType: hard
-
-"@types/react@npm:>=16.9.0":
+"@types/react@npm:*, @types/react@npm:17, @types/react@npm:>=16.9.0, @types/react@npm:^17.0.19":
   version: 17.0.20
   resolution: "@types/react@npm:17.0.20"
   dependencies:
@@ -4942,7 +4924,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/webpack@npm:^4.41.13":
+"@types/webpack@npm:^4.41.13, @types/webpack@npm:^4.41.26, @types/webpack@npm:^4.41.8":
   version: 4.41.30
   resolution: "@types/webpack@npm:4.41.30"
   dependencies:
@@ -4953,20 +4935,6 @@ __metadata:
     anymatch: ^3.0.0
     source-map: ^0.6.0
   checksum: a247f48905777ac96fd43699cbef0aa053d25316f4242f3b1b9c5193850883fe42397e745a87b209c1da94f61dbbb9db2cef0a74b420bd3fe3af3be6a5ed039f
-  languageName: node
-  linkType: hard
-
-"@types/webpack@npm:^4.41.26, @types/webpack@npm:^4.41.8":
-  version: 4.41.27
-  resolution: "@types/webpack@npm:4.41.27"
-  dependencies:
-    "@types/anymatch": "*"
-    "@types/node": "*"
-    "@types/tapable": ^1
-    "@types/uglify-js": "*"
-    "@types/webpack-sources": "*"
-    source-map: ^0.6.0
-  checksum: e502f308846bae6d2e94df083022be1bf151f7e6be73738854d6c7cf7fb581218712114717190b91f6d16a827f6d977bf9c04deda2e8a81203ad2a712cc9121f
   languageName: node
   linkType: hard
 
@@ -5937,10 +5905,10 @@ __metadata:
     "@storybook/addons": ^6.3.8
     "@storybook/preset-create-react-app": ^3.2.0
     "@storybook/react": ^6.3.8
-    "@terra-dev/use-wallet": ^2.1.0-alpha.1
+    "@terra-dev/use-wallet": ^2.2.0
     "@terra-money/key-utils": ^1.0.2
     "@terra-money/ledger-terra-js": ^1.1.0
-    "@terra-money/terra.js": ^1.8.0 || ^2.0.0
+    "@terra-money/terra.js": ^2.0.14
     "@testing-library/react-hooks": ^7.0.2
     "@types/big.js": ^6.1.2
     "@types/chrome": ^0.0.155

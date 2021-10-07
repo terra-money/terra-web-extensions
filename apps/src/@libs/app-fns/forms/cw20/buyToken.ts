@@ -1,6 +1,6 @@
 import { min } from '@libs/big-math';
 import { demicrofy, microfy } from '@libs/formatter';
-import { WasmClient } from '@libs/query-client';
+import { QueryClient } from '@libs/query-client';
 import { CW20Addr, HumanAddr, Rate, Token, u, UST } from '@libs/types';
 import { FormFunction, FormReturn } from '@libs/use-form';
 import big, { Big, BigSource } from 'big.js';
@@ -14,7 +14,7 @@ export interface CW20BuyTokenFormInput<T extends Token> {
 }
 
 export interface CW20BuyTokenFormDependency {
-  wasmClient: WasmClient;
+  queryClient: QueryClient;
   //
   ustTokenPairAddr: HumanAddr;
   tokenAddr: CW20Addr;
@@ -57,7 +57,7 @@ export type CW20BuyTokenForm<T extends Token> = FormFunction<
 export const cw20BuyTokenForm = <T extends Token>({
   ustTokenPairAddr,
   tokenAddr,
-  wasmClient,
+  queryClient,
   //mantleEndpoint,
   //mantleFetch,
   //requestInit,
@@ -129,7 +129,7 @@ export const cw20BuyTokenForm = <T extends Token>({
               },
             },
           },
-          wasmClient,
+          queryClient,
         ).then(
           ({
             simulation: { return_amount, commission_amount, spread_amount },
@@ -219,7 +219,7 @@ export const cw20BuyTokenForm = <T extends Token>({
               },
             },
           },
-          wasmClient,
+          queryClient,
         ).then(
           ({
             simulation: { return_amount, spread_amount, commission_amount },

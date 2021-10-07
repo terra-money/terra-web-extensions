@@ -2,19 +2,16 @@ import { GasPrice } from '@libs/app-fns';
 import {
   defaultHiveFetcher,
   defaultLcdFetcher,
-  HiveWasmClient,
-  LcdWasmClient,
+  HiveQueryClient,
+  LcdQueryClient,
 } from '@libs/query-client';
 import { NetworkInfo } from '@terra-dev/wallet-types';
 import { UseQueryResult } from 'react-query';
 
-export function DEFAULT_HIVE_WASM_CLIENT(network: NetworkInfo): HiveWasmClient {
-  if (network.chainID.startsWith('tequila')) {
-    return {
-      hiveEndpoint: 'https://tequila-mantle.terra.dev',
-      hiveFetcher: defaultHiveFetcher,
-    };
-  } else if (network.chainID.startsWith('bombay')) {
+export function DEFAULT_HIVE_WASM_CLIENT(
+  network: NetworkInfo,
+): HiveQueryClient {
+  if (network.chainID.startsWith('bombay')) {
     return {
       hiveEndpoint: 'https://bombay-mantle.terra.dev',
       hiveFetcher: defaultHiveFetcher,
@@ -27,7 +24,7 @@ export function DEFAULT_HIVE_WASM_CLIENT(network: NetworkInfo): HiveWasmClient {
   }
 }
 
-export function DEFAULT_LCD_WASM_CLIENT(network: NetworkInfo): LcdWasmClient {
+export function DEFAULT_LCD_WASM_CLIENT(network: NetworkInfo): LcdQueryClient {
   return {
     lcdEndpoint: network.lcd,
     lcdFetcher: defaultLcdFetcher,
@@ -63,28 +60,6 @@ const FALLBACK_GAS_PRICE_COLUMNBUS = {
   uusd: '0.456',
 };
 
-const FALLBACK_GAS_PRICE_TEQUILA = {
-  ...FALLBACK_GAS_PRICE_COLUMNBUS,
-  uluna: '0.15',
-  usdr: '0.1018',
-  uusd: '0.15',
-  ukrw: '178.05',
-  umnt: '431.6259',
-  ueur: '0.125',
-  ucny: '0.97',
-  ujpy: '16',
-  ugbp: '0.11',
-  uinr: '11',
-  ucad: '0.19',
-  uchf: '0.13',
-  uaud: '0.19',
-  usgd: '0.2',
-  uthb: '4.62',
-  usek: '1.25',
-  unok: '1.25',
-  udkk: '0.9',
-};
-
 const FALLBACK_GAS_PRICE_BOMBAY = {
   ...FALLBACK_GAS_PRICE_COLUMNBUS,
   uluna: '0.15',
@@ -108,13 +83,10 @@ const FALLBACK_GAS_PRICE_BOMBAY = {
 };
 
 export function DEFAULT_FALLBACK_GAS_PRICE(network: NetworkInfo): GasPrice {
-  switch (network.chainID) {
-    case 'tequila-0004':
-      return FALLBACK_GAS_PRICE_TEQUILA as GasPrice;
-    case 'bombay-10':
-      return FALLBACK_GAS_PRICE_BOMBAY as GasPrice;
-    default:
-      return FALLBACK_GAS_PRICE_COLUMNBUS as GasPrice;
+  if (network.chainID.startsWith('bombay')) {
+    return FALLBACK_GAS_PRICE_BOMBAY as GasPrice;
+  } else {
+    return FALLBACK_GAS_PRICE_COLUMNBUS as GasPrice;
   }
 }
 
