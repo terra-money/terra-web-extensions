@@ -1,5 +1,5 @@
-import { CW20Icon, cw20TokenInfoQuery } from '@libs/app-fns';
-import { useApp, useCW20IconsQuery } from '@libs/app-provider';
+import { CW20TokenDisplayInfo, cw20TokenInfoQuery } from '@libs/app-fns';
+import { useApp, useCW20TokenDisplayInfosQuery } from '@libs/app-provider';
 import { truncate } from '@libs/formatter';
 import { CW20Addr } from '@libs/types';
 import { FormLayout, Layout, MiniButton, TextInput } from '@station/ui';
@@ -138,14 +138,14 @@ export const TokenList = styled.ul`
   }
 `;
 
-function useFindTokens(search: string): CW20Icon[] {
+function useFindTokens(search: string): CW20TokenDisplayInfo[] {
   const { queryClient } = useApp();
   const { network } = useWallet();
-  const { data: cw20Tokens } = useCW20IconsQuery();
+  const { data: cw20TokenDisplayInfos } = useCW20TokenDisplayInfosQuery();
 
   const getTokenIcon = useTokenIcon();
 
-  const [tokenList, setTokenList] = useState<CW20Icon[]>(() => []);
+  const [tokenList, setTokenList] = useState<CW20TokenDisplayInfo[]>(() => []);
 
   useEffect(() => {
     if (AccAddress.validate(search)) {
@@ -170,21 +170,21 @@ function useFindTokens(search: string): CW20Icon[] {
       });
     } else if (search.trim().length === 0) {
       setTokenList(
-        cw20Tokens?.[network.name]
-          ? Object.values(cw20Tokens[network.name])
+        cw20TokenDisplayInfos?.[network.name]
+          ? Object.values(cw20TokenDisplayInfos[network.name])
           : [],
       );
     } else {
       setTokenList(
-        cw20Tokens?.[network.name]
-          ? Object.values(cw20Tokens[network.name]).filter(
+        cw20TokenDisplayInfos?.[network.name]
+          ? Object.values(cw20TokenDisplayInfos[network.name]).filter(
               ({ symbol }) =>
                 symbol.toLowerCase().indexOf(search.toLowerCase()) > -1,
             )
           : [],
       );
     }
-  }, [cw20Tokens, getTokenIcon, network.name, search, queryClient]);
+  }, [cw20TokenDisplayInfos, getTokenIcon, network.name, search, queryClient]);
 
   return tokenList;
 }

@@ -1,18 +1,18 @@
-import { CW20Icon } from '@libs/app-fns';
-import { useCW20IconsQuery } from '@libs/app-provider';
+import { CW20TokenDisplayInfo } from '@libs/app-fns';
+import { useCW20TokenDisplayInfosQuery } from '@libs/app-provider';
 import { cw20, terraswap, Token } from '@libs/types';
 import { useCallback, useMemo } from 'react';
 
 const FALLBACK_ICON = 'https://assets.terra.money/icon/60/UST.png';
 
 export function useTokenIcon() {
-  const { data: cw20Icons } = useCW20IconsQuery();
+  const { data: cw20TokenDisplayInfos } = useCW20TokenDisplayInfosQuery();
 
   const cw20IconMap = useMemo(() => {
-    const icons = cw20Icons ?? {};
+    const icons = cw20TokenDisplayInfos ?? {};
 
     const networkKeys = Object.keys(icons);
-    const map = new Map<string, CW20Icon>();
+    const map = new Map<string, CW20TokenDisplayInfo>();
 
     for (const networkKey of networkKeys) {
       const tokenKeys = Object.keys(icons[networkKey]);
@@ -23,7 +23,7 @@ export function useTokenIcon() {
     }
 
     return map;
-  }, [cw20Icons]);
+  }, [cw20TokenDisplayInfos]);
 
   return useCallback(
     (

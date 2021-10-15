@@ -1,4 +1,4 @@
-import { CW20Icon, cw20TokenInfoQuery } from '@libs/app-fns';
+import { CW20TokenDisplayInfo, cw20TokenInfoQuery } from '@libs/app-fns';
 import { useApp } from '@libs/app-provider';
 import { CW20Addr } from '@libs/types';
 import { Button } from '@material-ui/core';
@@ -77,7 +77,7 @@ function useTokenList(tokens: string[]) {
 
   const getTokenIcon = useTokenIcon();
 
-  const [tokenList, setTokenList] = useState<CW20Icon[]>(() => []);
+  const [tokenList, setTokenList] = useState<CW20TokenDisplayInfo[]>(() => []);
 
   useEffect(() => {
     setTokenList([]);
