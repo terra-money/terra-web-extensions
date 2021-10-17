@@ -4,7 +4,7 @@ import {
   WalletContext,
   WalletStatus,
 } from '@terra-dev/use-wallet';
-import { WebExtensionNetworkInfo } from '@terra-dev/web-extension';
+import { WebConnectorNetworkInfo } from '@terra-dev/web-connector-interface';
 import { NetworksData, WalletsData } from '@terra-dev/web-extension-backend';
 import { CreateTxOptions } from '@terra-money/terra.js';
 import React, {
@@ -24,7 +24,7 @@ export interface StoreProviderProps {
 }
 
 export type Store = WalletsData &
-  NetworksData & { defaultNetworks: WebExtensionNetworkInfo[] };
+  NetworksData & { defaultNetworks: WebConnectorNetworkInfo[] };
 
 // @ts-ignore
 const StoreContext: Context<Store> = createContext<Store>();

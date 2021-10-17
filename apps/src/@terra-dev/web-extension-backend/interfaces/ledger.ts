@@ -1,6 +1,6 @@
 import Transport from '@ledgerhq/hw-transport';
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
-import { WebExtensionLedgerError } from '@terra-dev/web-extension';
+import { WebConnectorLedgerError } from '@terra-dev/web-connector-interface';
 import TerraLedgerApp, {
   PublicKeyResponse,
   SignResponse,
@@ -70,7 +70,7 @@ export async function createTransport(): Promise<Transport> {
   if (transport) {
     return transport;
   } else {
-    throw new WebExtensionLedgerError(
+    throw new WebConnectorLedgerError(
       99999,
       `Failed to create instance of TransportWebUSB`,
     );
@@ -84,7 +84,7 @@ export async function connectLedger(): Promise<LedgerWallet | undefined> {
   await app.initialize();
 
   if (!(transport instanceof TransportWebUSB)) {
-    throw new WebExtensionLedgerError(
+    throw new WebConnectorLedgerError(
       99999,
       `transport is not a TransportWebUSB instance`,
     );
@@ -110,7 +110,7 @@ export async function connectLedger(): Promise<LedgerWallet | undefined> {
     return wallet;
   }
 
-  throw new WebExtensionLedgerError(
+  throw new WebConnectorLedgerError(
     publicKey.return_code,
     publicKey.error_message,
   );
@@ -144,7 +144,7 @@ export async function createLedgerKey(): Promise<LedgerKeyResponse> {
     };
   }
 
-  throw new WebExtensionLedgerError(
+  throw new WebConnectorLedgerError(
     publicKey.return_code,
     publicKey.error_message,
   );
@@ -163,7 +163,7 @@ export class LedgerKey extends Key {
     const publicKeyBuffer = this.publicKey;
 
     if (!publicKeyBuffer) {
-      throw new WebExtensionLedgerError(
+      throw new WebConnectorLedgerError(
         99999,
         `This LedgerKey does not have publicKeyBuffer`,
       );
@@ -177,14 +177,14 @@ export class LedgerKey extends Key {
     );
 
     if (!('signature' in signature)) {
-      throw new WebExtensionLedgerError(
+      throw new WebConnectorLedgerError(
         signature.return_code,
         signature.error_message,
       );
     }
 
     if (!signature.signature || !signature.signature.data) {
-      throw new WebExtensionLedgerError(
+      throw new WebConnectorLedgerError(
         99999,
         `The result of TerraApp.sign() does not contain SignResponse.data`,
       );
@@ -195,7 +195,7 @@ export class LedgerKey extends Key {
     );
 
     if (!signatureBuffer) {
-      throw new WebExtensionLedgerError(
+      throw new WebConnectorLedgerError(
         99999,
         `Failed to make Buffer from the result of TerraApp.sign()`,
       );

@@ -1,6 +1,6 @@
 import { Dashboard, Functions, WifiTethering } from '@material-ui/icons';
 import { LinedList } from '@station/ui';
-import { useWebExtension } from '@station/web-extension-react';
+import { useWebConnector } from '@station/web-connector-react';
 import React, { ReactNode } from 'react';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
@@ -12,7 +12,7 @@ export interface AppLayoutProps {
 }
 
 function AppLayoutBase({ className, children }: AppLayoutProps) {
-  const { states } = useWebExtension();
+  const { states } = useWebConnector();
 
   return (
     <div className={className}>

@@ -1,17 +1,17 @@
-import { LinedList } from '@station/ui';
 import {
   Money,
   MyLocationOutlined,
   Schedule,
   WifiTethering,
 } from '@material-ui/icons';
-import { WebExtensionNetworkInfo } from '@terra-dev/web-extension';
+import { LinedList } from '@station/ui';
+import { WebConnectorNetworkInfo } from '@terra-dev/web-connector-interface';
 import { CreateTxOptions } from '@terra-money/terra.js';
 import React from 'react';
 
 export interface PrintTxRequestProps {
   className?: string;
-  network: WebExtensionNetworkInfo;
+  network: WebConnectorNetworkInfo;
   tx: CreateTxOptions;
   hostname: string;
   date: Date;

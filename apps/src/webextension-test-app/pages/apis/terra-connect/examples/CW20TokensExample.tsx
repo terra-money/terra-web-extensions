@@ -1,4 +1,4 @@
-import { useWebExtension } from '@station/web-extension-react';
+import { useWebConnector } from '@station/web-connector-react';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 const ancAddr = {
@@ -17,7 +17,7 @@ const bethAddr = {
 };
 
 export function CW20TokensExample() {
-  const { states, hasCW20Tokens, addCW20Tokens } = useWebExtension();
+  const { states, hasCW20Tokens, addCW20Tokens } = useWebConnector();
 
   const [addedStates, setAddedStates] = useState<{
     [tokenAddr: string]: boolean;

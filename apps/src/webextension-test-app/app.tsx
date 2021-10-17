@@ -1,8 +1,8 @@
 import {
   WalletSelectProvider,
-  WebExtensionProvider,
-} from '@station/web-extension-react';
-import { WebExtensionController } from '@terra-dev/web-extension';
+  WebConnectorProvider,
+} from '@station/web-connector-react';
+import { WebConnectorController } from '@terra-dev/web-connector-controller';
 import { GlobalStyle } from 'common/components/GlobalStyle';
 import React from 'react';
 import { render } from 'react-dom';
@@ -13,11 +13,11 @@ import './markdown.css';
 import TerraConnectAPI from './pages/apis/terra-connect/api.mdx';
 import TerraConnectExample from './pages/apis/terra-connect/example.mdx';
 
-const client = new WebExtensionController(window);
+const controller = new WebConnectorController(window);
 
 function App() {
   return (
-    <WebExtensionProvider controller={client}>
+    <WebConnectorProvider controller={controller}>
       <WalletSelectProvider>
         <AppLayout>
           <Switch>
@@ -32,7 +32,7 @@ function App() {
         </AppLayout>
         <GlobalStyle backgroundColor="#ffffff" />
       </WalletSelectProvider>
-    </WebExtensionProvider>
+    </WebConnectorProvider>
   );
 }
 

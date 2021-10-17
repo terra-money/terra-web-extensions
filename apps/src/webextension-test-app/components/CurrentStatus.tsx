@@ -1,13 +1,13 @@
+import { useWebConnector } from '@station/web-connector-react';
 import {
-  WebExtensionStatus,
-  WebExtensionStatusType,
-} from '@terra-dev/web-extension';
-import { useWebExtension } from '@station/web-extension-react';
+  WebConnectorStatus,
+  WebConnectorStatusType,
+} from '@terra-dev/web-connector-interface';
 import bowser from 'bowser';
 import React from 'react';
 
 export function CurrentStatus() {
-  const { status, requestApproval } = useWebExtension();
+  const { status, requestApproval } = useWebConnector();
 
   return (
     <section>
@@ -20,9 +20,9 @@ export function CurrentStatus() {
   );
 }
 
-function InstallMessage({ status }: { status: WebExtensionStatus }) {
+function InstallMessage({ status }: { status: WebConnectorStatus }) {
   if (
-    status.type !== WebExtensionStatusType.NO_AVAILABLE ||
+    status.type !== WebConnectorStatusType.NO_AVAILABLE ||
     status.isInstalled
   ) {
     return null;

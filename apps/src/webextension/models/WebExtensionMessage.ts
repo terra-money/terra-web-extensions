@@ -1,9 +1,9 @@
-import { AccAddress } from '@terra-money/terra.js';
 import {
   SerializedCreateTxOptions,
-  WebExtensionStates,
-  WebExtensionTxResult,
-} from '../models';
+  WebConnectorStates,
+  WebConnectorTxResult,
+} from '@terra-dev/web-connector-interface';
+import { AccAddress } from '@terra-money/terra.js';
 
 // ---------------------------------------------
 // web -> content script
@@ -73,7 +73,7 @@ export enum FromContentScriptToWebMessage {
 
 export interface WebExtensionStatesUpdated {
   type: FromContentScriptToWebMessage.STATES_UPDATED;
-  payload: WebExtensionStates & { isApproved: boolean };
+  payload: WebConnectorStates & { isApproved: boolean };
 }
 
 export interface WebExtensionTxResponse {
@@ -83,7 +83,7 @@ export interface WebExtensionTxResponse {
   id: number;
 
   /** tx response */
-  payload: WebExtensionTxResult;
+  payload: WebConnectorTxResult;
 }
 
 export interface WebExtensionAddCW20TokenResponse {

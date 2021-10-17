@@ -2,7 +2,7 @@ import { vibrate } from '@libs/ui';
 import { WalletCard } from '@station/wallet-card';
 import { Button } from '@material-ui/core';
 import { FormLabel, TextInput } from '@station/ui';
-import { WebExtensionNetworkInfo } from '@terra-dev/web-extension';
+import { WebConnectorNetworkInfo } from '@terra-dev/web-connector-interface';
 import {
   decryptWallet,
   EncryptedWallet,
@@ -17,7 +17,7 @@ import { PrintTxRequest } from 'webextension/components/tx/PrintTxRequest';
 export interface SignTxWithEncryptedWalletProps {
   className?: string;
   wallet: EncryptedWallet;
-  network: WebExtensionNetworkInfo;
+  network: WebConnectorNetworkInfo;
   tx: CreateTxOptions;
   hostname: string;
   date: Date;

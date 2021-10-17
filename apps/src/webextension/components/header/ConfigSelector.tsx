@@ -12,7 +12,7 @@ import {
   WifiTethering,
 } from '@material-ui/icons';
 import { LinedList } from '@station/ui';
-import { WebExtensionNetworkInfo } from '@terra-dev/web-extension';
+import { WebConnectorNetworkInfo } from '@terra-dev/web-connector-interface';
 import { removeNetwork, selectNetwork } from '@terra-dev/web-extension-backend';
 import React, { ComponentType, MouseEvent, useCallback, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
@@ -58,7 +58,7 @@ export function ConfigSelectorBase({
   );
 
   const onSelectNetwork = useCallback(
-    (nextNetwork: WebExtensionNetworkInfo) => {
+    (nextNetwork: WebConnectorNetworkInfo) => {
       selectNetwork(nextNetwork);
       setAnchorElement(null);
     },
@@ -66,7 +66,7 @@ export function ConfigSelectorBase({
   );
 
   const onRemoveNetwork = useCallback(
-    (targetNetwork: WebExtensionNetworkInfo) => {
+    (targetNetwork: WebConnectorNetworkInfo) => {
       removeNetwork(targetNetwork);
       setAnchorElement(null);
     },

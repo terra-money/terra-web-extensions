@@ -1,4 +1,4 @@
-import { WebExtensionNetworkInfo } from '@terra-dev/web-extension';
+import { WebConnectorNetworkInfo } from '@terra-dev/web-connector-interface';
 import {
   NetworksData,
   observeNetworks,
@@ -6,7 +6,7 @@ import {
 import { useEffect, useState } from 'react';
 
 export function useNetworksStore(
-  defaultNetworks: WebExtensionNetworkInfo[],
+  defaultNetworks: WebConnectorNetworkInfo[],
 ): NetworksData {
   const [networks, setNetworks] = useState<NetworksData>(() => ({
     networks: defaultNetworks,

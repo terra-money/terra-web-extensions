@@ -12,13 +12,13 @@ import {
   UserDenied,
 } from '@terra-dev/wallet-types';
 import {
-  WebExtensionCreateTxFailed,
-  WebExtensionLedgerError,
-  WebExtensionNetworkInfo,
-  WebExtensionTxFailed,
-  WebExtensionTxStatus,
-  WebExtensionUserDenied,
-} from '@terra-dev/web-extension';
+  WebConnectorCreateTxFailed,
+  WebConnectorLedgerError,
+  WebConnectorNetworkInfo,
+  WebConnectorTxFailed,
+  WebConnectorTxStatus,
+  WebConnectorUserDenied,
+} from '@terra-dev/web-connector-interface';
 import {
   EncryptedWallet,
   executeTxWithInternalWallet,
@@ -34,7 +34,7 @@ import { SignTxWithLedgerWallet } from 'webextension/components/views/SignTxWith
 export interface TxProviderProps {
   children: ReactNode;
   wallet: EncryptedWallet | LedgerWallet;
-  network: WebExtensionNetworkInfo;
+  network: WebConnectorNetworkInfo;
 }
 
 export function TxProvider({ children, wallet, network }: TxProviderProps) {
@@ -119,7 +119,7 @@ function PostResolver({
 }: {
   tx: CreateTxOptions;
   wallet: EncryptedWallet | LedgerWallet;
-  network: WebExtensionNetworkInfo;
+  network: WebConnectorNetworkInfo;
   onReject: (error: unknown) => void;
   onResolve: (txResult: TxResult) => void;
   onComplete: () => void;
@@ -136,17 +136,17 @@ function PostResolver({
         onProceed={({ key, close }) => {
           executeTxWithLedgerWallet(wallet, network, tx, key).subscribe({
             next: (result) => {
-              if (result.status === WebExtensionTxStatus.SUCCEED) {
+              if (result.status === WebConnectorTxStatus.SUCCEED) {
                 onResolve({
                   ...tx,
                   result: result.payload,
                   success: true,
                 });
                 close();
-              } else if (result.status === WebExtensionTxStatus.DENIED) {
+              } else if (result.status === WebConnectorTxStatus.DENIED) {
                 onReject(new UserDenied());
                 close();
-              } else if (result.status === WebExtensionTxStatus.FAIL) {
+              } else if (result.status === WebConnectorTxStatus.FAIL) {
                 onReject(toWalletError(tx, result.error));
                 close();
               }
@@ -174,15 +174,15 @@ function PostResolver({
         onProceed={(w) => {
           executeTxWithInternalWallet(w, network, tx).subscribe({
             next: (result) => {
-              if (result.status === WebExtensionTxStatus.SUCCEED) {
+              if (result.status === WebConnectorTxStatus.SUCCEED) {
                 onResolve({
                   ...tx,
                   result: result.payload,
                   success: true,
                 });
-              } else if (result.status === WebExtensionTxStatus.DENIED) {
+              } else if (result.status === WebConnectorTxStatus.DENIED) {
                 onReject(new UserDenied());
-              } else if (result.status === WebExtensionTxStatus.FAIL) {
+              } else if (result.status === WebConnectorTxStatus.FAIL) {
                 onReject(toWalletError(tx, result.error));
               }
             },
@@ -200,13 +200,13 @@ function PostResolver({
 }
 
 function toWalletError(tx: CreateTxOptions, error: unknown) {
-  if (error instanceof WebExtensionUserDenied) {
+  if (error instanceof WebConnectorUserDenied) {
     return new UserDenied();
-  } else if (error instanceof WebExtensionCreateTxFailed) {
+  } else if (error instanceof WebConnectorCreateTxFailed) {
     return new CreateTxFailed(tx, error.message);
-  } else if (error instanceof WebExtensionTxFailed) {
+  } else if (error instanceof WebConnectorTxFailed) {
     return new TxFailed(tx, error.txhash, error.message, error.raw_message);
-  } else if (error instanceof WebExtensionLedgerError) {
+  } else if (error instanceof WebConnectorLedgerError) {
     // TODO replace to TxLedgerError
     return new CreateTxFailed(tx, `${error.code}: ${error.message}`);
   } else {

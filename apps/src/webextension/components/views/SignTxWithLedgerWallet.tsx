@@ -2,9 +2,9 @@ import { vibrate } from '@libs/ui';
 import { Button } from '@material-ui/core';
 import { WalletCard } from '@station/wallet-card';
 import {
-  WebExtensionLedgerError,
-  WebExtensionNetworkInfo,
-} from '@terra-dev/web-extension';
+  WebConnectorLedgerError,
+  WebConnectorNetworkInfo,
+} from '@terra-dev/web-connector-interface';
 import {
   createLedgerKey,
   LedgerKeyResponse,
@@ -20,7 +20,7 @@ import { PrintTxRequest } from 'webextension/components/tx/PrintTxRequest';
 export interface SignTxWithLedgerWalletProps {
   className?: string;
   wallet: LedgerWallet;
-  network: WebExtensionNetworkInfo;
+  network: WebConnectorNetworkInfo;
   tx: CreateTxOptions;
   hostname: string;
   date: Date;
@@ -70,7 +70,7 @@ export function SignTxWithLedgerWallet({
     } catch (e) {
       containerRef.current?.animate(vibrate, { duration: 100 });
 
-      if (e instanceof WebExtensionLedgerError) {
+      if (e instanceof WebConnectorLedgerError) {
         setGuide(<LedgerGuide code={e.code}>{e.message}</LedgerGuide>);
       } else {
         setGuide(

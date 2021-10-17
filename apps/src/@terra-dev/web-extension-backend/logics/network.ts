@@ -1,4 +1,4 @@
-import { WebExtensionNetworkInfo } from '@terra-dev/web-extension';
+import { WebConnectorNetworkInfo } from '@terra-dev/web-connector-interface';
 
 export enum NetworkNameInvalid {
   SAME_NAME_EXISTS = 'SAME_NAME_EXISTS',
@@ -6,7 +6,7 @@ export enum NetworkNameInvalid {
 
 export function validateNetworkName(
   name: string,
-  networks: WebExtensionNetworkInfo[],
+  networks: WebConnectorNetworkInfo[],
 ): NetworkNameInvalid | null {
   if (name.length === 0) {
     return null;

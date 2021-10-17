@@ -1,4 +1,4 @@
-import { useWalletSelect } from '@station/web-extension-react';
+import { useWalletSelect } from '@station/web-connector-react';
 import React from 'react';
 
 export function WalletSelectExample() {

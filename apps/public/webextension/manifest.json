@@ -41,10 +41,10 @@
   },
   
   "web_accessible_resources": [
+    "inpage.js",
     "tx.html",
     "connect.html",
-    "add-cw20-token.html",
-    "*.js.map"
+    "add-cw20-token.html"
   ],
   
   "content_security_policy": "script-src 'self' 'unsafe-eval' 'sha256-/13BBW2yQVtpCsBV7JiO23y7pwEFFUobOzefJ27Nltg='; object-src 'self'"

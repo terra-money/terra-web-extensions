@@ -1,5 +1,5 @@
 import { WalletCard, WalletCardSelector } from '@station/wallet-card';
-import { useWalletSelect } from '@station/web-extension-react';
+import { useWalletSelect } from '@station/web-connector-react';
 import React, { useCallback, useMemo } from 'react';
 import styled from 'styled-components';
 

@@ -1,16 +1,16 @@
 import {
-  isWebExtensionError,
-  WebExtensionCreateTxFailed,
-  WebExtensionLedgerError,
-  WebExtensionNetworkInfo,
-  WebExtensionTxDenied,
-  WebExtensionTxFail,
-  WebExtensionTxFailed,
-  WebExtensionTxProgress,
-  WebExtensionTxStatus,
-  WebExtensionTxSucceed,
-  WebExtensionTxUnspecifiedError,
-} from '@terra-dev/web-extension';
+  isWebConnectorError,
+  WebConnectorCreateTxFailed,
+  WebConnectorLedgerError,
+  WebConnectorNetworkInfo,
+  WebConnectorTxDenied,
+  WebConnectorTxFail,
+  WebConnectorTxFailed,
+  WebConnectorTxProgress,
+  WebConnectorTxStatus,
+  WebConnectorTxSucceed,
+  WebConnectorTxUnspecifiedError,
+} from '@terra-dev/web-connector-interface';
 import { LedgerKey } from '@terra-dev/web-extension-backend/interfaces';
 import { LedgerWallet } from '@terra-dev/web-extension-backend/models';
 import { CreateTxOptions, isTxError, LCDClient } from '@terra-money/terra.js';
@@ -18,14 +18,14 @@ import { Observable } from 'rxjs';
 
 export function executeTxWithLedgerWallet(
   wallet: LedgerWallet,
-  network: WebExtensionNetworkInfo,
+  network: WebConnectorNetworkInfo,
   tx: CreateTxOptions,
   key: LedgerKey,
 ): Observable<
-  | WebExtensionTxProgress
-  | WebExtensionTxDenied
-  | WebExtensionTxSucceed
-  | WebExtensionTxFail
+  | WebConnectorTxProgress
+  | WebConnectorTxDenied
+  | WebConnectorTxSucceed
+  | WebConnectorTxFail
 > {
   const lcd = new LCDClient({
     chainID: network.chainID,
@@ -35,10 +35,10 @@ export function executeTxWithLedgerWallet(
   });
 
   return new Observable<
-    | WebExtensionTxProgress
-    | WebExtensionTxDenied
-    | WebExtensionTxSucceed
-    | WebExtensionTxFail
+    | WebConnectorTxProgress
+    | WebConnectorTxDenied
+    | WebConnectorTxSucceed
+    | WebConnectorTxFail
   >((subscriber) => {
     lcd
       .wallet(key)
@@ -47,19 +47,19 @@ export function executeTxWithLedgerWallet(
       .then((data) => {
         if (isTxError(data)) {
           subscriber.next({
-            status: WebExtensionTxStatus.FAIL,
+            status: WebConnectorTxStatus.FAIL,
             error: !!data.txhash
-              ? new WebExtensionTxFailed(
+              ? new WebConnectorTxFailed(
                   data.txhash,
                   data.raw_log,
                   data.raw_log,
                 )
-              : new WebExtensionCreateTxFailed(data.raw_log),
+              : new WebConnectorCreateTxFailed(data.raw_log),
           });
           subscriber.complete();
         } else {
           subscriber.next({
-            status: WebExtensionTxStatus.SUCCEED,
+            status: WebConnectorTxStatus.SUCCEED,
             payload: {
               txhash: data.txhash,
               height: data.height,
@@ -72,28 +72,28 @@ export function executeTxWithLedgerWallet(
       .catch((error) => {
         console.log(
           'executeTxWithLedgerWallet.ts..()',
-          error instanceof WebExtensionLedgerError,
-          isWebExtensionError(error),
+          error instanceof WebConnectorLedgerError,
+          isWebConnectorError(error),
           error.toString(),
         );
-        if (isWebExtensionError(error)) {
+        if (isWebConnectorError(error)) {
           if (
-            error instanceof WebExtensionLedgerError &&
+            error instanceof WebConnectorLedgerError &&
             error.code === 27014
           ) {
             subscriber.next({
-              status: WebExtensionTxStatus.DENIED,
+              status: WebConnectorTxStatus.DENIED,
             });
           } else {
             subscriber.next({
-              status: WebExtensionTxStatus.FAIL,
+              status: WebConnectorTxStatus.FAIL,
               error,
             });
           }
         } else {
           subscriber.next({
-            status: WebExtensionTxStatus.FAIL,
-            error: new WebExtensionTxUnspecifiedError(
+            status: WebConnectorTxStatus.FAIL,
+            error: new WebConnectorTxUnspecifiedError(
               'message' in error ? error.message : String(error),
             ),
           });

@@ -1,12 +1,12 @@
 import {
   SerializedCreateTxOptions,
-  WebExtensionTxDenied,
-  WebExtensionTxFail,
-  WebExtensionTxProgress,
-  WebExtensionTxResult,
-  WebExtensionTxStatus,
-  WebExtensionTxSucceed,
-} from '@terra-dev/web-extension';
+  WebConnectorTxDenied,
+  WebConnectorTxFail,
+  WebConnectorTxProgress,
+  WebConnectorTxResult,
+  WebConnectorTxStatus,
+  WebConnectorTxSucceed,
+} from '@terra-dev/web-connector-interface';
 import {
   findWallet,
   hasCW20Tokens,
@@ -30,8 +30,8 @@ function startTx(
   id: string,
   terraAddress: string,
   tx: SerializedCreateTxOptions,
-): Observable<WebExtensionTxResult> {
-  return new Observable<WebExtensionTxResult>((subscriber) => {
+): Observable<WebConnectorTxResult> {
+  return new Observable<WebConnectorTxResult>((subscriber) => {
     getDefaultNetworks()
       .then((defaultNetworks) => {
         return Promise.all([
@@ -90,7 +90,7 @@ function startTx(
             title: 'Tx',
             onClose: () => {
               subscriber.next({
-                status: WebExtensionTxStatus.DENIED,
+                status: WebConnectorTxStatus.DENIED,
               });
               endTx();
             },
@@ -107,10 +107,10 @@ function startTx(
         // ---------------------------------------------
         const onMessage = (
           msg:
-            | WebExtensionTxProgress
-            | WebExtensionTxSucceed
-            | WebExtensionTxFail
-            | WebExtensionTxDenied,
+            | WebConnectorTxProgress
+            | WebConnectorTxSucceed
+            | WebConnectorTxFail
+            | WebConnectorTxDenied,
         ) => {
           if (!msg.status) {
             return;
@@ -119,9 +119,9 @@ function startTx(
           subscriber.next(msg);
 
           switch (msg.status) {
-            case WebExtensionTxStatus.SUCCEED:
-            case WebExtensionTxStatus.FAIL:
-            case WebExtensionTxStatus.DENIED:
+            case WebConnectorTxStatus.SUCCEED:
+            case WebConnectorTxStatus.FAIL:
+            case WebConnectorTxStatus.DENIED:
               endTx();
               break;
           }

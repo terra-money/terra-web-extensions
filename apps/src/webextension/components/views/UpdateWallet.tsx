@@ -1,7 +1,7 @@
-import { WalletCardDesignSelector } from '@station/wallet-card/components/WalletCardDesignSelector';
 import { Button } from '@material-ui/core';
 import { FormLabel, FormLayout, Layout, TextInput } from '@station/ui';
-import { WebExtensionWalletInfo } from '@terra-dev/web-extension';
+import { WalletCardDesignSelector } from '@station/wallet-card/components/WalletCardDesignSelector';
+import { WebConnectorWalletInfo } from '@terra-dev/web-connector-interface';
 import {
   validateWalletName,
   WalletNameInvalid,
@@ -23,7 +23,7 @@ export interface UpdateWalletResult {
 
 export interface UpdateWalletProps {
   className?: string;
-  wallet: WebExtensionWalletInfo;
+  wallet: WebConnectorWalletInfo;
   onCancel: () => void;
   onUpdate: (result: UpdateWalletResult) => void;
   children?: ReactNode;

@@ -1,14 +1,14 @@
 import {
-  WebExtensionCreateTxFailed,
-  WebExtensionNetworkInfo,
-  WebExtensionTxDenied,
-  WebExtensionTxFail,
-  WebExtensionTxFailed,
-  WebExtensionTxProgress,
-  WebExtensionTxStatus,
-  WebExtensionTxSucceed,
-  WebExtensionTxUnspecifiedError,
-} from '@terra-dev/web-extension';
+  WebConnectorCreateTxFailed,
+  WebConnectorNetworkInfo,
+  WebConnectorTxDenied,
+  WebConnectorTxFail,
+  WebConnectorTxFailed,
+  WebConnectorTxProgress,
+  WebConnectorTxStatus,
+  WebConnectorTxSucceed,
+  WebConnectorTxUnspecifiedError,
+} from '@terra-dev/web-connector-interface';
 import {
   CreateTxOptions,
   isTxError,
@@ -20,19 +20,19 @@ import { Wallet } from '../models/InternalWallet';
 
 export function executeTxWithInternalWallet(
   wallet: Wallet,
-  network: WebExtensionNetworkInfo,
+  network: WebConnectorNetworkInfo,
   tx: CreateTxOptions,
 ): Observable<
-  | WebExtensionTxProgress
-  | WebExtensionTxDenied
-  | WebExtensionTxSucceed
-  | WebExtensionTxFail
+  | WebConnectorTxProgress
+  | WebConnectorTxDenied
+  | WebConnectorTxSucceed
+  | WebConnectorTxFail
 > {
   return new Observable<
-    | WebExtensionTxProgress
-    | WebExtensionTxDenied
-    | WebExtensionTxSucceed
-    | WebExtensionTxFail
+    | WebConnectorTxProgress
+    | WebConnectorTxDenied
+    | WebConnectorTxSucceed
+    | WebConnectorTxFail
   >((subscriber) => {
     const lcd = new LCDClient({
       chainID: network.chainID,
@@ -52,19 +52,19 @@ export function executeTxWithInternalWallet(
       .then((data) => {
         if (isTxError(data)) {
           subscriber.next({
-            status: WebExtensionTxStatus.FAIL,
+            status: WebConnectorTxStatus.FAIL,
             error: !!data.txhash
-              ? new WebExtensionTxFailed(
+              ? new WebConnectorTxFailed(
                   data.txhash,
                   data.raw_log,
                   data.raw_log,
                 )
-              : new WebExtensionCreateTxFailed(data.raw_log),
+              : new WebConnectorCreateTxFailed(data.raw_log),
           });
           subscriber.complete();
         } else {
           subscriber.next({
-            status: WebExtensionTxStatus.SUCCEED,
+            status: WebConnectorTxStatus.SUCCEED,
             payload: {
               txhash: data.txhash,
               height: data.height,
@@ -76,8 +76,8 @@ export function executeTxWithInternalWallet(
       })
       .catch((error) => {
         subscriber.next({
-          status: WebExtensionTxStatus.FAIL,
-          error: new WebExtensionTxUnspecifiedError(
+          status: WebConnectorTxStatus.FAIL,
+          error: new WebConnectorTxUnspecifiedError(
             'message' in error ? error.message : String(error),
           ),
         });

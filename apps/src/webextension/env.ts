@@ -6,7 +6,7 @@ import {
 } from '@libs/app-provider';
 import { Gas, HumanAddr, Rate } from '@libs/types';
 import { NetworkInfo } from '@terra-dev/wallet-types';
-import { WebExtensionNetworkInfo } from '@terra-dev/web-extension';
+import { WebConnectorNetworkInfo } from '@terra-dev/web-connector-interface';
 
 export function STATION_CONTRACT_ADDRESS(
   network: NetworkInfo,
@@ -53,7 +53,7 @@ export const STATION_TX_REFETCH_MAP = {
   ],
 };
 
-export const FALLBACK_NETWORKS: WebExtensionNetworkInfo[] = [
+export const FALLBACK_NETWORKS: WebConnectorNetworkInfo[] = [
   {
     name: 'mainnet',
     chainID: 'columbus-5',

@@ -1,7 +1,7 @@
-export class WebExtensionUserDenied extends Error {
+export class WebConnectorUserDenied extends Error {
   constructor() {
     super('User Denied');
-    this.name = 'WebExtensionUserDenied';
+    this.name = 'WebConnectorUserDenied';
   }
 
   toString = () => {
@@ -15,10 +15,10 @@ export class WebExtensionUserDenied extends Error {
   };
 }
 
-export class WebExtensionCreateTxFailed extends Error {
+export class WebConnectorCreateTxFailed extends Error {
   constructor(message: string) {
     super(message);
-    this.name = 'WebExtensionCreateTxFailed';
+    this.name = 'WebConnectorCreateTxFailed';
   }
 
   toString = () => {
@@ -33,14 +33,14 @@ export class WebExtensionCreateTxFailed extends Error {
   };
 }
 
-export class WebExtensionTxFailed extends Error {
+export class WebConnectorTxFailed extends Error {
   constructor(
     public readonly txhash: string | undefined,
     message: string,
     public readonly raw_message: any,
   ) {
     super(message);
-    this.name = 'WebExtensionTxFailed';
+    this.name = 'WebConnectorTxFailed';
   }
 
   toString = () => {
@@ -59,10 +59,10 @@ export class WebExtensionTxFailed extends Error {
   };
 }
 
-export class WebExtensionTxUnspecifiedError extends Error {
+export class WebConnectorTxUnspecifiedError extends Error {
   constructor(message: string) {
     super(message);
-    this.name = 'WebExtensionTxUnspecifiedError';
+    this.name = 'WebConnectorTxUnspecifiedError';
   }
 
   toString = () => {
@@ -77,10 +77,10 @@ export class WebExtensionTxUnspecifiedError extends Error {
   };
 }
 
-export class WebExtensionLedgerError extends Error {
+export class WebConnectorLedgerError extends Error {
   constructor(public readonly code: number, message: string) {
     super(message);
-    this.name = 'WebExtensionLedgerError';
+    this.name = 'WebConnectorLedgerError';
   }
 
   toString = () => {
@@ -96,39 +96,39 @@ export class WebExtensionLedgerError extends Error {
   };
 }
 
-export function isWebExtensionError(error: unknown): boolean {
+export function isWebConnectorError(error: unknown): boolean {
   return (
-    error instanceof WebExtensionUserDenied ||
-    error instanceof WebExtensionCreateTxFailed ||
-    error instanceof WebExtensionTxFailed ||
-    error instanceof WebExtensionLedgerError ||
-    error instanceof WebExtensionTxUnspecifiedError
+    error instanceof WebConnectorUserDenied ||
+    error instanceof WebConnectorCreateTxFailed ||
+    error instanceof WebConnectorTxFailed ||
+    error instanceof WebConnectorLedgerError ||
+    error instanceof WebConnectorTxUnspecifiedError
   );
 }
 
 export function createTxErrorFromJson(
   json: any,
 ):
-  | WebExtensionUserDenied
-  | WebExtensionCreateTxFailed
-  | WebExtensionTxFailed
-  | WebExtensionLedgerError
-  | WebExtensionTxUnspecifiedError {
+  | WebConnectorUserDenied
+  | WebConnectorCreateTxFailed
+  | WebConnectorTxFailed
+  | WebConnectorLedgerError
+  | WebConnectorTxUnspecifiedError {
   switch (json.name) {
-    case 'WebExtensionUserDenied':
-      return new WebExtensionUserDenied();
-    case 'WebExtensionCreateTxFailed':
-      return new WebExtensionCreateTxFailed(json.message);
-    case 'WebExtensionLedgerError':
-      return new WebExtensionLedgerError(json.code, json.message);
-    case 'WebExtensionTxFailed':
-      return new WebExtensionTxFailed(
+    case 'WebConnectorUserDenied':
+      return new WebConnectorUserDenied();
+    case 'WebConnectorCreateTxFailed':
+      return new WebConnectorCreateTxFailed(json.message);
+    case 'WebConnectorLedgerError':
+      return new WebConnectorLedgerError(json.code, json.message);
+    case 'WebConnectorTxFailed':
+      return new WebConnectorTxFailed(
         json.txhash,
         json.message,
         json.raw_message,
       );
     default:
-      return new WebExtensionTxUnspecifiedError(
+      return new WebConnectorTxUnspecifiedError(
         'message' in json ? json.message : String(json),
       );
   }

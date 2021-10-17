@@ -41,6 +41,20 @@ export function createConfig(
         ],
       }),
     ),
+    // inpage
+    merge(
+      baseConfig,
+      createEntry({
+        outDir: out,
+        env,
+        entry: [
+          {
+            name: 'inpage',
+            script: path.resolve(app, 'entries/inpage/index.ts'),
+          },
+        ],
+      }),
+    ),
     // html
     merge(
       baseConfig,

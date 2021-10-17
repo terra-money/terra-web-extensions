@@ -1,17 +1,10 @@
 import {
-  FromContentScriptToWebMessage,
-  FromWebToContentScriptMessage,
-  isWebExtensionMessage,
   SerializedCreateTxOptions,
-  WebExtensionAddCW20TokenResponse,
-  WebExtensionHasCW20TokensResponse,
-  WebExtensionStates,
-  WebExtensionStatesUpdated,
-  WebExtensionTxResponse,
-  WebExtensionTxResult,
-  WebExtensionTxStatus,
-  WebExtensionWalletInfo,
-} from '@terra-dev/web-extension';
+  WebConnectorStates,
+  WebConnectorTxResult,
+  WebConnectorTxStatus,
+  WebConnectorWalletInfo,
+} from '@terra-dev/web-connector-interface';
 import {
   hasCW20Tokens,
   observeHostnamesStorage,
@@ -22,6 +15,16 @@ import {
 import LocalMessageDuplexStream from 'post-message-stream';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { browser } from 'webextension-polyfill-ts';
+import {
+  FromContentScriptToWebMessage,
+  FromWebToContentScriptMessage,
+  isWebExtensionMessage,
+  WebExtensionAddCW20TokenResponse,
+  WebExtensionHasCW20TokensResponse,
+  WebExtensionStatesUpdated,
+  WebExtensionTxResponse,
+} from 'webextension/models/WebExtensionMessage';
 import { getDefaultNetworks } from 'webextension/queries/useDefaultNetworks';
 
 export interface ContentScriptOptions {
@@ -29,7 +32,7 @@ export interface ContentScriptOptions {
     id: string,
     terraAddress: string,
     tx: SerializedCreateTxOptions,
-  ) => Observable<WebExtensionTxResult>;
+  ) => Observable<WebConnectorTxResult>;
   startConnect: (id: string, hostname: string) => Promise<boolean>;
   startAddCW20Token: (
     id: string,
@@ -45,6 +48,18 @@ export function startWebExtensionContentScript({
   startConnect,
   startAddCW20Token,
 }: ContentScriptOptions) {
+  (() => {
+    console.log(
+      'startWebExtensionContentScript.ts..startWebExtensionContentScript()',
+      Date.now(),
+    );
+    const inpage = document.createElement('script');
+    inpage.src = browser.runtime.getURL('inpage.js');
+
+    const head = document.querySelector('head');
+    head?.appendChild(inpage);
+  })();
+
   // ---------------------------------------------
   // only enable the site has <meta name="terra-webextension" legacy="terra.js">
   // ---------------------------------------------
@@ -57,7 +72,7 @@ export function startWebExtensionContentScript({
   const connected = meta.getAttribute('connected');
   if (typeof connected === 'string' && connected !== CONNECT_NAME) {
     const inpage = document.createElement('script');
-    inpage.innerText = `alert('Terra Station disabled: You installed multiple Terra wallet browser extensions. please use only one Terra wallet extension.')`;
+    inpage.innerText = `alert('Terra Station disabled: You installed another Terra wallet browser extensions. please use only one Terra wallet browser extension.')`;
 
     const head = document.querySelector('head');
     head?.appendChild(inpage);
@@ -97,7 +112,7 @@ export function startWebExtensionContentScript({
   // listen extension storage states
   // ---------------------------------------------
   type WalletsStates = {
-    wallets: WebExtensionWalletInfo[];
+    wallets: WebConnectorWalletInfo[];
     focusedWalletAddress: string | undefined;
     isApproved: boolean;
   };
@@ -134,7 +149,7 @@ export function startWebExtensionContentScript({
     ),
   );
 
-  type ExtensionStates = WebExtensionStates & { isApproved: boolean };
+  type ExtensionStates = WebConnectorStates & { isApproved: boolean };
 
   const extensionStates = combineLatest([
     extensionStateLastUpdated,
@@ -165,10 +180,10 @@ export function startWebExtensionContentScript({
       target: 'station:inpage',
     });
 
-    let _states: WebExtensionStates | null = null;
-    let _statesResolvers: Set<(_: WebExtensionStates) => void> = new Set();
+    let _states: WebConnectorStates | null = null;
+    let _statesResolvers: Set<(_: WebConnectorStates) => void> = new Set();
 
-    function resolveStates(callback: (_: WebExtensionStates) => void) {
+    function resolveStates(callback: (_: WebConnectorStates) => void) {
       if (_states) {
         callback(_states);
       } else {
@@ -179,7 +194,7 @@ export function startWebExtensionContentScript({
     function getFocusedWallet({
       wallets,
       focusedWalletAddress,
-    }: WebExtensionStates): WebExtensionWalletInfo {
+    }: WebConnectorStates): WebConnectorWalletInfo {
       if (wallets.length === 0) {
         throw new Error('the wallets should have at least one more wallet!!!');
       }
@@ -240,7 +255,7 @@ export function startWebExtensionContentScript({
         // connect
         // ---------------------------------------------
         case 'connect':
-          function approveConnect(states: WebExtensionStates) {
+          function approveConnect(states: WebConnectorStates) {
             const focusedWallet = getFocusedWallet(states);
 
             pageStream.write({
@@ -291,7 +306,7 @@ export function startWebExtensionContentScript({
                 data,
               ).subscribe((txResult) => {
                 switch (txResult.status) {
-                  case WebExtensionTxStatus.DENIED:
+                  case WebConnectorTxStatus.DENIED:
                     pageStream.write({
                       name: 'onPost',
                       id: data.id,
@@ -304,7 +319,7 @@ export function startWebExtensionContentScript({
                       },
                     });
                     break;
-                  case WebExtensionTxStatus.FAIL:
+                  case WebConnectorTxStatus.FAIL:
                     pageStream.write({
                       name: 'onPost',
                       id: data.id,
@@ -318,7 +333,7 @@ export function startWebExtensionContentScript({
                       },
                     });
                     break;
-                  case WebExtensionTxStatus.SUCCEED:
+                  case WebConnectorTxStatus.SUCCEED:
                     pageStream.write({
                       name: 'onPost',
                       id: data.id,

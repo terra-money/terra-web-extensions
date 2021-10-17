@@ -1,8 +1,8 @@
-import { useWebExtension } from '@station/web-extension-react';
+import { useWebConnector } from '@station/web-connector-react';
 import React from 'react';
 
 export function NetworkExample() {
-  const { states } = useWebExtension();
+  const { states } = useWebConnector();
 
   if (!states) return null;
 
