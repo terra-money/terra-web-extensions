@@ -1,7 +1,7 @@
 {
   "$schema": "https://rocket-hangar.github.io/rocket-punch/schemas/packages.json",
   "@terra-dev/*": {
-    "version": "0.6.0",
-    "tag": "latest"
+    "version": "0.7.0-alpha.3",
+    "tag": "alpha"
   }
 }

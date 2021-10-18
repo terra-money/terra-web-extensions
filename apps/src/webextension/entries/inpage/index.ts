@@ -30,7 +30,7 @@ import {
   isWebExtensionMessage,
   RefetchExtensionStates,
   RequestApproval,
-} from 'webextension/models/WebExtensionMessage';
+} from '../../models/WebExtensionMessage';
 
 function canRequestApproval(status: WebConnectorStatus): boolean {
   return (

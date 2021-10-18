@@ -145,22 +145,22 @@ export class WebConnectorController {
    * @example
    * client.post(terraAddress, tx: CreateTxOptions)
    *       .subscribe({
-   *          next: (result: WebExtensionTxProgress | WebExtensionTxSucceed) => {
+   *          next: (result: WebConnectorTxProgress | WebConnectorTxSucceed) => {
    *            switch (result.status) {
-   *              case WebExtensionTxStatus.PROGRESS:
+   *              case WebConnectorTxStatus.PROGRESS:
    *                console.log('in progress', result.payload)
    *                break;
-   *              case WebExtensionTxStatus.SUCCEED:
+   *              case WebConnectorTxStatus.SUCCEED:
    *                console.log('succeed', result.payload)
    *                break;
    *            }
    *          },
    *          error: (error) => {
-   *            if (error instanceof WebExtensionUserDenied) {
+   *            if (error instanceof WebConnectorUserDenied) {
    *              console.log('user denied')
-   *            } else if (error instanceof WebExtensionCreateTxFailed) {
+   *            } else if (error instanceof WebConnectorCreateTxFailed) {
    *              console.log('create tx failed', error.message)
-   *            } else if (error instanceof WebExtensionTxFailed) {
+   *            } else if (error instanceof WebConnectorTxFailed) {
    *              console.log('tx failed', error.txhash, error.message, error.raw_message)
    *            } else {
    *              console.log('unspecified error', 'message' in error ? error.message : String(error))

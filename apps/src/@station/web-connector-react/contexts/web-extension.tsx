@@ -74,7 +74,6 @@ export function WebConnectorProvider({
     controller.refetchStates();
 
     const statusSubscription = controller.status().subscribe((nextStatus) => {
-      console.log('web-extension.tsx..()', nextStatus);
       setStatus(nextStatus);
     });
 
