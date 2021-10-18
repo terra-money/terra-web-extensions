@@ -52,25 +52,7 @@ export function startWebExtensionContentScript({
   // only enable the site has <meta name="terra-web-connect" legacy="terra.js">
   // ---------------------------------------------
   const meta = document.querySelector('head > meta[name="terra-web-connect"]');
-  console.log(
-    'startWebExtensionContentScript.ts..startWebExtensionContentScript()',
-    meta,
-  );
   if (!meta) return;
-
-  //// ---------------------------------------------
-  //// do nothing if another wallet exists
-  //// ---------------------------------------------
-  //const connected = meta.getAttribute('connected');
-  //
-  //if (typeof connected === 'string' && connected !== CONNECT_NAME) {
-  //  const inpage = document.createElement('script');
-  //  inpage.innerText = `alert('Terra Station disabled: You installed another Terra wallet browser extensions. please use only one Terra wallet browser extension.')`;
-  //
-  //  const head = document.querySelector('head');
-  //  head?.appendChild(inpage);
-  //  return;
-  //}
 
   // ---------------------------------------------
   // check dApp is legacy mode
@@ -80,7 +62,7 @@ export function startWebExtensionContentScript({
   );
 
   // ---------------------------------------------
-  // set the attribute <meta name="terra-web-connect" connected="terra-station">
+  // set the attribute <meta name="terra-web-connect" connected="Terra Station">
   // ---------------------------------------------
   meta.setAttribute('connected', CONNECT_NAME);
 
