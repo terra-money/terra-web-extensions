@@ -35,7 +35,7 @@ function HeaderBase({ className }: HeaderProps) {
           <ArrowBack />
         </Link>
       )}
-      <ConfigSelector showIndexLink />
+      <ConfigSelector />
     </header>
   );
 }

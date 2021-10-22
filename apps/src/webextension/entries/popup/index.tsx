@@ -105,7 +105,6 @@ function MainBase({ className }: { className?: string }) {
 }
 
 const Main = styled(MainBase)`
-  padding: 20px;
   background-color: var(--color-content-background);
 `;
 

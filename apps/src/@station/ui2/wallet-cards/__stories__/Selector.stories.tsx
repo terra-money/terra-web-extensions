@@ -3,7 +3,6 @@ import {
   EmptyWalletCard,
   WalletCard,
   WalletCardSelector,
-  WalletIcon,
   WalletMoreMenus,
 } from '@station/ui2';
 import { Meta } from '@storybook/react';
@@ -61,11 +60,7 @@ export const Selector = () => {
         terraAddress="terra12hnhh5vtyg5juqnzm43970nh4fw42pt27nw9g9"
         showCopyTerraAddress
         onShowQRCode={console.log}
-        icon={<WalletIcon design="terra" />}
-        style={{
-          backgroundColor: '#2043b5',
-          color: '#ffffff',
-        }}
+        design="terra"
       >
         {menus}
       </WalletCard>
@@ -75,11 +70,7 @@ export const Selector = () => {
         terraAddress="terra12hnhh5vtyg5juqnzm43970nh4fw42pt27nw9g9"
         showCopyTerraAddress
         onShowQRCode={console.log}
-        icon={<WalletIcon design="anchor" />}
-        style={{
-          backgroundColor: '#4bdb4b',
-          color: '#1e1e1e',
-        }}
+        design="anchor"
       >
         {menus}
       </WalletCard>
@@ -89,11 +80,7 @@ export const Selector = () => {
         terraAddress="terra12hnhh5vtyg5juqnzm43970nh4fw42pt27nw9g9"
         showCopyTerraAddress
         onShowQRCode={console.log}
-        icon={<WalletIcon design="mirror" />}
-        style={{
-          backgroundColor: '#1db1ff',
-          color: '#010f3d',
-        }}
+        design="mirror"
       >
         {menus}
       </WalletCard>

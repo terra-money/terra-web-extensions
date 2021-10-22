@@ -1,41 +1,63 @@
 import { formatUTokenWithPostfixUnits } from '@libs/formatter';
-import { QRCodeIcon } from '@libs/icons';
 import { AnimateNumber } from '@libs/ui';
-import { WalletCard, WalletCardSelector } from '@station/wallet-card';
-import { Tooltip } from '@material-ui/core';
+import { Menu } from '@mantine/core';
 import {
-  AccountBalanceWallet,
-  Add,
   AddCircleOutline,
-  DeleteForever,
-  FilterNone,
-  Send,
-  Settings,
   SettingsBackupRestore,
-  SwapCalls,
   Usb,
-  VpnKey,
   Web,
 } from '@material-ui/icons';
-import { LinedList, MiniButton, MiniIconButton } from '@station/ui';
+import { LinedList } from '@station/ui';
+import {
+  Box,
+  Button,
+  EmptyWalletCard,
+  ListBox,
+  WalletCard,
+  WalletCardSelector,
+  WalletMoreMenus,
+} from '@station/ui2';
 import {
   focusWallet,
   isLedgerSupportBrowser,
   removeWallet,
 } from '@terra-dev/web-extension-backend';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import {
+  MdAccountBalanceWallet,
+  MdAdd,
+  MdAddCircle,
+  MdCallToAction,
+  MdChevronRight,
+  MdDelete,
+  MdEdit,
+  MdErrorOutline,
+  MdSettings,
+  MdUpload,
+  MdVpnKey,
+} from 'react-icons/md';
 import { FormattedMessage } from 'react-intl';
 import { Link, useHistory } from 'react-router-dom';
-import useCopyClipboard from 'react-use-clipboard';
 import styled from 'styled-components';
+import { ReactComponent as TerraIcon } from 'webextension/assets/terra.svg';
+import { ConfigSelector } from 'webextension/components/header/ConfigSelector';
 import { useStore } from 'webextension/contexts/store';
+import { extensionPath } from 'webextension/logics/extensionPath';
 import { useTokenList } from 'webextension/queries/useTokenList';
+
+const INDEX = extensionPath('index.html');
+
+function navItemRenderer(length: number, itemIndex: number) {
+  return itemIndex >= length - 1 ? <MdAddCircle /> : <MdCallToAction />;
+}
 
 function DashboardBase({ className }: { className?: string }) {
   const history = useHistory();
 
-  const { wallets, focusedWallet, focusedWalletIndex, selectedNetwork } =
-    useStore();
+  const { wallets, focusedWallet, focusedWalletIndex } = useStore();
+
+  const [selectedCardIndex, setSelectedCardIndex] =
+    useState<number>(focusedWalletIndex);
 
   const isLedgerSupport = useMemo(() => {
     return isLedgerSupportBrowser();
@@ -46,277 +68,336 @@ function DashboardBase({ className }: { className?: string }) {
       const nextWallet = wallets[nextSelectedIndex];
       if (nextWallet) {
         await focusWallet(nextWallet.terraAddress);
+        setSelectedCardIndex(nextSelectedIndex);
+      } else {
+        setSelectedCardIndex(nextSelectedIndex);
       }
     },
     [wallets],
   );
 
-  const tokens = useTokenList();
+  useEffect(() => {
+    setSelectedCardIndex(focusedWalletIndex);
+  }, [focusedWalletIndex]);
 
-  const [isCopiedTerraAddress, copyTerraAddress] = useCopyClipboard(
-    focusedWallet?.terraAddress ?? '',
-  );
+  const showTokenList = useMemo(() => {
+    return selectedCardIndex === focusedWalletIndex;
+  }, [focusedWalletIndex, selectedCardIndex]);
+
+  const tokens = useTokenList();
 
   return (
     <section className={className}>
       <header>
+        <section>
+          <a href={INDEX} target="terra-station-index">
+            <TerraIcon />
+          </a>
+          <ConfigSelector />
+        </section>
+
         <WalletCardSelector
           className="wallet-cards"
-          cardWidth={276}
-          selectedIndex={focusedWalletIndex}
+          cardWidth={280}
+          cardHeight={140}
+          selectedIndex={selectedCardIndex}
           onSelect={updateSelectedIndex}
-          onCreate={() => history.push('/wallets/create')}
+          navItemRenderer={navItemRenderer}
         >
-          {wallets.map(({ name, terraAddress, design }) => (
+          {wallets.map((wallet) => (
             <WalletCard
-              key={name}
-              name={name}
-              terraAddress={terraAddress}
-              design={design}
-            />
+              key={wallet.terraAddress}
+              name={wallet.name}
+              terraAddress={wallet.terraAddress}
+              showCopyTerraAddress
+              onShowQRCode={() =>
+                history.push(`/wallet/${wallet.terraAddress}/qr`)
+              }
+              design={wallet.design}
+            >
+              <WalletMoreMenus>
+                <Menu.Item
+                  icon={<MdEdit />}
+                  onClick={() =>
+                    history.push(`/wallet/${wallet.terraAddress}/update`)
+                  }
+                >
+                  Edit wallet
+                </Menu.Item>
+
+                {'encryptedWallet' in wallet && (
+                  <Menu.Item
+                    icon={<MdVpnKey />}
+                    onClick={() =>
+                      history.push(`/wallet/${wallet.terraAddress}/password`)
+                    }
+                  >
+                    <FormattedMessage id="wallet.change-password" />
+                  </Menu.Item>
+                )}
+
+                {'encryptedWallet' in wallet && (
+                  <Menu.Item
+                    icon={<MdUpload />}
+                    onClick={() =>
+                      history.push(`/wallet/${wallet.terraAddress}/export`)
+                    }
+                  >
+                    Export wallet
+                  </Menu.Item>
+                )}
+
+                {/* TODO Run Verify Ledger */}
+                {'usbDevice' in wallet && (
+                  <Menu.Item
+                    icon={<MdAccountBalanceWallet />}
+                    onClick={() => alert('verify ledger')}
+                  >
+                    Export wallet
+                  </Menu.Item>
+                )}
+
+                {/* TODO Confirm Dialog */}
+                <Menu.Item
+                  icon={<MdDelete />}
+                  onClick={() => removeWallet(wallet)}
+                >
+                  <FormattedMessage id="wallet.delete" />
+                </Menu.Item>
+              </WalletMoreMenus>
+            </WalletCard>
           ))}
+
+          <EmptyWalletCard>Create or recover a wallet</EmptyWalletCard>
         </WalletCardSelector>
-
-        <div className="wallet-actions">
-          {wallets.length > 0 && !!focusedWallet && (
-            <>
-              <Tooltip
-                title={isCopiedTerraAddress ? 'Copied' : 'Copy Address'}
-                placement="top"
-                arrow
-              >
-                <MiniIconButton onClick={copyTerraAddress}>
-                  <FilterNone />
-                </MiniIconButton>
-              </Tooltip>
-
-              <Tooltip title="QR Code" placement="top" arrow>
-                <MiniIconButton
-                  component={Link}
-                  to={`/wallet/${focusedWallet.terraAddress}/qr`}
-                >
-                  <QRCodeIcon />
-                </MiniIconButton>
-              </Tooltip>
-
-              <Tooltip title="Edit Wallet" placement="top" arrow>
-                <MiniIconButton
-                  component={Link}
-                  to={`/wallet/${focusedWallet.terraAddress}/update`}
-                >
-                  <Settings />
-                </MiniIconButton>
-              </Tooltip>
-
-              {'encryptedWallet' in focusedWallet && (
-                <Tooltip
-                  title={<FormattedMessage id="wallet.change-password" />}
-                  placement="top"
-                  arrow
-                >
-                  <MiniIconButton
-                    component={Link}
-                    to={`/wallet/${focusedWallet.terraAddress}/password`}
-                  >
-                    <VpnKey />
-                  </MiniIconButton>
-                </Tooltip>
-              )}
-
-              {'encryptedWallet' in focusedWallet && (
-                <Tooltip title="Export wallet" placement="top" arrow>
-                  <MiniIconButton
-                    component={Link}
-                    to={`/wallet/${focusedWallet.terraAddress}/export`}
-                  >
-                    <SwapCalls />
-                  </MiniIconButton>
-                </Tooltip>
-              )}
-
-              {/* TODO Run Verify Ledger */}
-              {'usbDevice' in focusedWallet && (
-                <Tooltip title="Verify Ledger" placement="top" arrow>
-                  <MiniIconButton component={Link} to={`/ledger/verify`}>
-                    <AccountBalanceWallet />
-                  </MiniIconButton>
-                </Tooltip>
-              )}
-
-              {/* TODO Confirm Dialog */}
-              <Tooltip
-                title={<FormattedMessage id="wallet.delete" />}
-                placement="top"
-                arrow
-              >
-                <MiniIconButton
-                  onClick={() => {
-                    removeWallet(focusedWallet);
-                  }}
-                >
-                  <DeleteForever />
-                </MiniIconButton>
-              </Tooltip>
-            </>
-          )}
-        </div>
       </header>
 
-      <LinedList
-        className="user-balances"
-        iconMarginRight="0.6em"
-        firstLetterUpperCase={false}
-      >
-        {tokens?.map(({ asset, balance, info, icon, isCW20Token }, i) => (
-          <li key={'token' + i}>
-            <div>
-              {'token' in asset ? (
-                <a
-                  href={`https://finder.terra.money/${selectedNetwork?.chainID}/address/${asset.token.contract_addr}`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <i>
-                    <img src={icon} alt={info?.name} />
-                  </i>
-                </a>
-              ) : (
-                <i>
-                  <img src={icon} alt={info?.name} />
-                </i>
-              )}
-              <span>{info?.symbol}</span>
-            </div>
-            <div>
-              <AnimateNumber format={formatUTokenWithPostfixUnits}>
-                {balance}
-              </AnimateNumber>
+      <main>
+        {showTokenList && (
+          <>
+            {focusedWallet && tokens && tokens.length > 0 ? (
+              <ListBox enableItemInteraction disableItemPadding>
+                {tokens.map(
+                  ({ asset, balance, info, icon, isCW20Token }, i) => (
+                    <li key={'token' + i}>
+                      <TokenItem
+                        to={`/wallet/${focusedWallet.terraAddress}/send/${
+                          'native_token' in asset
+                            ? asset.native_token.denom
+                            : asset.token.contract_addr
+                        }`}
+                      >
+                        <div>
+                          {'token' in asset ? (
+                            <img src={icon} alt={info?.name} />
+                          ) : (
+                            <img src={icon} alt={info?.name} />
+                          )}
+                          <span>{info?.symbol}</span>
+                        </div>
 
-              {focusedWallet && (
-                <SendButton
-                  to={`/wallet/${focusedWallet.terraAddress}/send/${
-                    'native_token' in asset
-                      ? asset.native_token.denom
-                      : asset.token.contract_addr
-                  }`}
-                >
-                  <Send /> Send
-                </SendButton>
-              )}
-            </div>
-          </li>
-        ))}
-      </LinedList>
+                        <div>
+                          <AnimateNumber
+                            format={formatUTokenWithPostfixUnits}
+                            decimalPointsFontSize="0.8em"
+                          >
+                            {balance}
+                          </AnimateNumber>
 
-      <div className="token-actions">
-        <MiniButton startIcon={<Add />} component={Link} to={`/tokens/add`}>
-          Add Token
-        </MiniButton>
+                          <MdChevronRight />
+                        </div>
+                      </TokenItem>
+                    </li>
+                  ),
+                )}
+              </ListBox>
+            ) : (
+              <EmptyMessage>
+                <h1>
+                  <MdErrorOutline /> Wallet empty
+                </h1>
+                <p>This wallet doesn't hold any coins yet</p>
+              </EmptyMessage>
+            )}
 
-        <MiniButton startIcon={<Settings />} component={Link} to={`/tokens`}>
-          Manage Tokens
-        </MiniButton>
-      </div>
+            <footer className="token-actions">
+              <Button<Link>
+                variant="dim"
+                size="medium"
+                leftIcon={<MdAdd />}
+                component={Link as any}
+                to={`/tokens/add`}
+              >
+                Add Token
+              </Button>
 
-      <LinedList className="wallets-actions" iconMarginRight="0.6em">
-        {isLedgerSupport && (
-          <li>
-            <a href="/connect-ledger.html" target="_blank" rel="noreferrer">
-              <i>
-                <Usb />
-              </i>
-              <span>
-                <FormattedMessage id="wallet.new.ledger" />
-              </span>
-            </a>
-          </li>
+              <Button<Link>
+                variant="dim"
+                size="medium"
+                leftIcon={<MdSettings />}
+                component={Link as any}
+                to={`/tokens`}
+              >
+                Manage Token
+              </Button>
+            </footer>
+          </>
         )}
-        <li>
-          <Link to="/wallets/create">
-            <i>
-              <AddCircleOutline />
-            </i>
-            <span>
-              <FormattedMessage id="wallet.new" />
-            </span>
-          </Link>
-        </li>
-        <li>
-          <Link to="/wallets/recover">
-            <i>
-              <SettingsBackupRestore />
-            </i>
-            <span>
-              <FormattedMessage id="wallet.recover" />
-            </span>
-          </Link>
-        </li>
-        <li>
-          <Link to="/dapps">
-            <i>
-              <Web />
-            </i>
-            <span>Whitelist dApps</span>
-          </Link>
-        </li>
-      </LinedList>
+
+        {!showTokenList && (
+          <>
+            <LinedList className="wallets-actions" iconMarginRight="0.6em">
+              {isLedgerSupport && (
+                <li>
+                  <a
+                    href="/connect-ledger.html"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <i>
+                      <Usb />
+                    </i>
+                    <span>
+                      <FormattedMessage id="wallet.new.ledger" />
+                    </span>
+                  </a>
+                </li>
+              )}
+              <li>
+                <Link to="/wallets/create">
+                  <i>
+                    <AddCircleOutline />
+                  </i>
+                  <span>
+                    <FormattedMessage id="wallet.new" />
+                  </span>
+                </Link>
+              </li>
+              <li>
+                <Link to="/wallets/recover">
+                  <i>
+                    <SettingsBackupRestore />
+                  </i>
+                  <span>
+                    <FormattedMessage id="wallet.recover" />
+                  </span>
+                </Link>
+              </li>
+              <li>
+                <Link to="/dapps">
+                  <i>
+                    <Web />
+                  </i>
+                  <span>Whitelist dApps</span>
+                </Link>
+              </li>
+            </LinedList>
+          </>
+        )}
+      </main>
     </section>
   );
 }
 
-const SendButton = styled(Link)`
-  font-size: 12px;
+const TokenItem = styled(Link)`
+  padding: 0 20px;
+  height: 60px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
   text-decoration: none;
 
-  margin-left: 10px;
+  color: inherit;
 
-  padding: 5px 10px;
+  > :first-child {
+    display: flex;
+    align-items: center;
 
-  border-radius: 15px;
-  background-color: #eeeeee;
+    font-size: 14px;
+    font-weight: 700;
 
-  svg {
-    font-size: 0.8em;
+    img {
+      width: 16px;
+      height: 16px;
+
+      margin-right: 8px;
+    }
+  }
+
+  > :last-child {
+    display: flex;
+    align-items: center;
+
+    font-size: 15px;
+    font-weight: 500;
+
+    > :last-child {
+      margin-left: 15px;
+    }
+  }
+`;
+
+const EmptyMessage = styled(Box)`
+  h1 {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.5;
+
+    svg {
+      display: inline-block;
+      transform: translateY(0.15em) scale(1.2);
+    }
+  }
+
+  p {
+    margin-top: 5px;
+
+    font-size: 14px;
+    line-height: 1.5;
   }
 `;
 
 export const Dashboard = styled(DashboardBase)`
-  .wallet-cards {
-    margin: 20px auto 0 auto;
-  }
+  header {
+    background-color: var(--color-header-background);
+    color: var(--color-header-text);
 
-  .wallet-actions {
-    height: 50px;
+    padding: 20px;
+    height: 244px;
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    > section {
+      width: 100%;
+      height: 20px;
 
-    > :not(:first-child) {
-      margin-left: 10px;
+      display: flex;
+      justify-content: space-between;
+
+      a {
+        width: 20px;
+        color: inherit;
+      }
+    }
+
+    .wallet-cards {
+      width: 100%;
+      height: 180px;
     }
   }
 
-  .token-actions {
-    height: 50px;
+  main {
+    max-height: calc(100vh - 244px);
+    overflow-y: auto;
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    padding: 20px;
 
-    > :not(:first-child) {
-      margin-left: 10px;
+    .token-actions {
+      margin-top: 20px;
+
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap: 14px;
     }
-  }
-
-  .empty-wallets {
-    margin: 30px 0 20px 0;
-    text-align: center;
-  }
-
-  .user-balances,
-  .wallets-actions {
-    margin-top: 10px;
-    font-size: 17px;
   }
 `;

@@ -77,10 +77,12 @@ export const getIdFromTxPort = (name: string) => name.substr(3);
 export const getIdFromContentScriptPort = (name: string) => name.substr(8);
 
 export const cardDesigns = [
-  'anchor',
   'terra',
-  '#147368',
-  '#7e1d7b',
-  '#113558',
-  '#c35942',
+  'anchor',
+  'mirror',
+  '#00a9b4',
+  '#00ae69',
+  '#6c19fe',
+  '#f55275',
+  '#fea00d',
 ];

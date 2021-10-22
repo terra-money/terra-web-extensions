@@ -1,41 +1,26 @@
-import {
-  Button,
-  ButtonProps,
-  ClickAwayListener,
-  Popper,
-} from '@material-ui/core';
-import {
-  AddCircleOutline,
-  DeleteForever,
-  Language,
-  OpenInBrowser,
-  WifiTethering,
-} from '@material-ui/icons';
-import { LinedList } from '@station/ui';
-import { WebConnectorNetworkInfo } from '@terra-dev/web-connector-interface';
+import { Divider, Menu } from '@mantine/core';
+import { useMenuStyles } from '@station/ui2';
 import { removeNetwork, selectNetwork } from '@terra-dev/web-extension-backend';
-import React, { ComponentType, MouseEvent, useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
+import {
+  MdDeleteForever,
+  MdLanguage,
+  MdPodcasts,
+  MdSettings,
+} from 'react-icons/md';
 import { FormattedMessage } from 'react-intl';
 import { useHistory } from 'react-router-dom';
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 import { useLocales } from 'webextension/contexts/locales';
 import { useStore } from 'webextension/contexts/store';
-import { LanguageCode } from 'webextension/locales';
-import { extensionPath } from 'webextension/logics/extensionPath';
 
-const INDEX = extensionPath('index.html');
-
-export function ConfigSelectorBase({
-  className,
-  showIndexLink = false,
-}: {
-  className?: string;
-  showIndexLink?: boolean;
-}) {
+export function ConfigSelector() {
   // ---------------------------------------------
   // dependencies
   // ---------------------------------------------
   const history = useHistory();
+
+  const { classes: menuStyles } = useMenuStyles();
 
   // ---------------------------------------------
   // states
@@ -43,228 +28,97 @@ export function ConfigSelectorBase({
   const { locale, locales, updateLocale } = useLocales();
   const { networks, selectedNetwork, defaultNetworks } = useStore();
 
-  const [anchorElement, setAnchorElement] = useState<HTMLElement | null>(null);
-
-  const dropdownOpened = !!anchorElement;
-
   // ---------------------------------------------
   // callbacks
   // ---------------------------------------------
-  const onToggleDropdown = useCallback(
-    ({ currentTarget }: MouseEvent<HTMLElement>) => {
-      setAnchorElement((prev) => (prev ? null : currentTarget));
-    },
-    [],
-  );
-
-  const onSelectNetwork = useCallback(
-    (nextNetwork: WebConnectorNetworkInfo) => {
-      selectNetwork(nextNetwork);
-      setAnchorElement(null);
-    },
-    [],
-  );
-
-  const onRemoveNetwork = useCallback(
-    (targetNetwork: WebConnectorNetworkInfo) => {
-      removeNetwork(targetNetwork);
-      setAnchorElement(null);
-    },
-    [],
-  );
-
   const onCreateNetwork = useCallback(() => {
     history.push('/networks/create');
-    setAnchorElement(null);
   }, [history]);
-
-  const onSelectLocale = useCallback(
-    (nextLocale: LanguageCode) => {
-      updateLocale(nextLocale);
-      setAnchorElement(null);
-    },
-    [updateLocale],
-  );
 
   // ---------------------------------------------
   // presentation
   // ---------------------------------------------
   return (
-    <ClickAwayListener onClickAway={() => setAnchorElement(null)}>
-      <div className={className}>
-        <AnchorButton onClick={onToggleDropdown}>
-          <div>
-            <i>
-              <WifiTethering />
-            </i>
-            <span>{selectedNetwork?.name}</span>
-            <i>
-              <Language />
-            </i>
-            <span>
-              <FormattedMessage id={`locale.${locale}`} />
-            </span>
-          </div>
-        </AnchorButton>
+    <Menu
+      control={
+        <MenuControl>
+          <span>{selectedNetwork?.name}</span>
+          <hr />
+          <span>
+            <FormattedMessage id={`locale.${locale}`} />
+          </span>
+          <MdSettings />
+        </MenuControl>
+      }
+      placement="end"
+      transition="scale-y"
+      classNames={menuStyles}
+    >
+      <Menu.Label>
+        <MdPodcasts style={{ transform: 'translateY(1px)' }} /> Network
+      </Menu.Label>
 
-        <Popper
-          open={dropdownOpened}
-          anchorEl={anchorElement}
-          placement="bottom"
+      {networks.map((itemNetwork) => (
+        <Menu.Item
+          key={'network-' + itemNetwork.name}
+          aria-selected={itemNetwork.name === selectedNetwork?.name}
+          onClick={() => selectNetwork(itemNetwork)}
+          rightSection={
+            defaultNetworks.indexOf(itemNetwork) === -1 ? (
+              <MdDeleteForever onClick={() => removeNetwork(itemNetwork)} />
+            ) : undefined
+          }
         >
-          <DropdownContainer>
-            <LinedList>
-              {networks.map((itemNetwork) => (
-                <li
-                  key={itemNetwork.name}
-                  data-selected={itemNetwork.name === selectedNetwork?.name}
-                >
-                  <div
-                    style={{ cursor: 'pointer' }}
-                    onClick={() => onSelectNetwork(itemNetwork)}
-                  >
-                    <i>
-                      <WifiTethering />
-                    </i>
-                    <span>{itemNetwork.name}</span>
-                  </div>
-                  {defaultNetworks.indexOf(itemNetwork) === -1 && (
-                    <button onClick={() => onRemoveNetwork(itemNetwork)}>
-                      <DeleteForever />
-                    </button>
-                  )}
-                </li>
-              ))}
-              <li data-selected="false">
-                <div style={{ cursor: 'pointer' }} onClick={onCreateNetwork}>
-                  <i>
-                    <AddCircleOutline />
-                  </i>
-                  <span>Add a new network</span>
-                </div>
-              </li>
-            </LinedList>
+          {itemNetwork.name[0].toUpperCase() + itemNetwork.name.substring(1)}
+        </Menu.Item>
+      ))}
 
-            <hr />
+      <Menu.Item onClick={onCreateNetwork}>Add a new network</Menu.Item>
 
-            <LinedList>
-              {locales.map((itemLocale) => (
-                <li key={itemLocale} data-selected={itemLocale === locale}>
-                  <div
-                    style={{ cursor: 'pointer' }}
-                    onClick={() => onSelectLocale(itemLocale)}
-                  >
-                    <i>
-                      <Language />
-                    </i>
-                    <span>
-                      <FormattedMessage id={'locale.' + itemLocale} />
-                    </span>
-                  </div>
-                </li>
-              ))}
-            </LinedList>
+      <Divider />
 
-            {showIndexLink && (
-              <>
-                <hr />
+      <Menu.Label>
+        <MdLanguage style={{ transform: 'translateY(1px)' }} /> Language
+      </Menu.Label>
 
-                <LinedList>
-                  <li>
-                    <a href={INDEX} target="terra-station" rel="noreferrer">
-                      <i>
-                        <OpenInBrowser />
-                      </i>
-                      <span>Open Terra Station</span>
-                    </a>
-                  </li>
-                </LinedList>
-              </>
-            )}
-          </DropdownContainer>
-        </Popper>
-      </div>
-    </ClickAwayListener>
+      {locales.map((itemLocale) => (
+        <Menu.Item
+          key={'locale-' + itemLocale}
+          aria-selected={itemLocale === locale}
+          onClick={() => updateLocale(itemLocale)}
+        >
+          <FormattedMessage id={'locale.' + itemLocale} />
+        </Menu.Item>
+      ))}
+    </Menu>
   );
 }
 
-export const AnchorButton: ComponentType<ButtonProps> = styled(Button)`
-  && {
-    color: #ffffff;
-    font-size: 12px;
-    font-weight: normal;
-    text-transform: none;
+const MenuControl = styled.div`
+  text-transform: uppercase;
+  user-select: none;
 
-    div {
-      display: flex;
-      align-items: center;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--color-header-text);
 
-      i {
-        svg {
-          font-size: 1.2em;
-          transform: translateY(0.2em);
-        }
+  display: flex;
+  align-items: center;
 
-        margin-right: 0.3em;
-
-        &:nth-of-type(2) {
-          margin-left: 1em;
-        }
-      }
-
-      span:first-letter {
-        text-transform: uppercase;
-      }
-    }
-  }
-`;
-
-export const ConfigSelector = styled(ConfigSelectorBase)`
-  position: relative;
-  display: inline-block;
-`;
-
-const dropdownEnter = keyframes`
-  0% {
-    opacity: 0;
-    transform: scale(1, 0.4);
-  }
-  
-  100% {
-    opacity: 1;
-    transform: scale(1, 1);
-  }
-`;
-
-const DropdownContainer = styled.div`
-  min-width: 200px;
-
-  font-size: 13px;
-
-  background-color: #ffffff;
-  box-shadow: 0 0 21px 4px rgba(0, 0, 0, 0.3);
-  border-radius: 12px;
-
-  padding: 1em;
-
-  transform-origin: top;
-  animation: ${dropdownEnter} 0.1s ease-out;
-
-  h2 {
-    font-size: 1.2em;
-    font-weight: normal;
-    text-align: center;
-
-    margin-bottom: 0.5em;
-
-    &:not(:first-child) {
-      margin-top: 1.2em;
-    }
-  }
+  cursor: pointer;
 
   hr {
-    margin: 0.5em -13px;
+    width: 1px;
+    height: 15px;
     border: 0;
-    border-bottom: 1px solid #eeeeee;
+    border-left: 1px solid var(--white);
+    opacity: 0.2;
+    margin: 0 10px;
+  }
+
+  svg {
+    margin-left: 15px;
+    width: 20px;
+    height: 20px;
   }
 `;

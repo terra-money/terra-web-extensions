@@ -95,6 +95,7 @@
   
   /* menu */
   --color-menu-background: var(--white);
+  --color-menu-background-selected: var(--desaturated-300);
   --color-menu-line: var(--desaturated-300);
   --color-menu-text: var(--primary-400);
 }

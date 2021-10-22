@@ -1,7 +1,14 @@
 import { truncate } from '@libs/formatter';
 import { Tooltip, TooltipStylesNames } from '@mantine/core';
+import { WalletIcon } from '@station/ui2/wallet-cards/WalletIcon';
 import { fixHMR } from 'fix-hmr';
-import React, { DetailedHTMLProps, HTMLAttributes, ReactNode } from 'react';
+import React, {
+  CSSProperties,
+  DetailedHTMLProps,
+  HTMLAttributes,
+  ReactNode,
+  useMemo,
+} from 'react';
 import { MdOutlineFilterNone, MdQrCode2 } from 'react-icons/md';
 import useClipboard from 'react-use-clipboard';
 import styled from 'styled-components';
@@ -13,7 +20,7 @@ export interface WalletCardProps
   terraAddress: string;
   showCopyTerraAddress?: boolean;
   onShowQRCode?: (terraAddress: string) => void;
-  icon?: ReactNode;
+  design: 'terra' | 'anchor' | 'mirror' | string;
 }
 
 const useTooltipStyles = createMantineStyles<TooltipStylesNames>({
@@ -33,13 +40,54 @@ const useTooltipStyles = createMantineStyles<TooltipStylesNames>({
   },
 });
 
+function matchDesign(design: string): {
+  icon: ReactNode;
+  style: CSSProperties;
+} {
+  switch (design) {
+    case 'terra':
+      return {
+        icon: <WalletIcon design="terra" />,
+        style: {
+          backgroundColor: '#2043b5',
+          color: '#ffffff',
+        },
+      };
+    case 'anchor':
+      return {
+        icon: <WalletIcon design="anchor" />,
+        style: {
+          backgroundColor: '#4bdb4b',
+          color: '#1e1e1e',
+        },
+      };
+    case 'mirror':
+      return {
+        icon: <WalletIcon design="mirror" />,
+        style: {
+          backgroundColor: '#1db1ff',
+          color: '#010f3d',
+        },
+      };
+  }
+
+  return {
+    icon: <WalletIcon design={design} />,
+    style: {
+      backgroundColor: design,
+      color: '#ffffff',
+    },
+  };
+}
+
 function Component({
   name,
   terraAddress,
-  icon,
   children,
   showCopyTerraAddress,
   onShowQRCode,
+  design,
+  style: _style,
   ...divProps
 }: WalletCardProps) {
   const { classes: tooltipClasses } = useTooltipStyles();
@@ -48,8 +96,12 @@ function Component({
     successDuration: 1000,
   });
 
+  const { icon, style } = useMemo(() => {
+    return matchDesign(design);
+  }, [design]);
+
   return (
-    <div {...divProps}>
+    <div {...divProps} style={{ ..._style, ...style }}>
       <div className="icon">{icon}</div>
 
       <div className="info">
@@ -70,7 +122,9 @@ function Component({
               />
             </Tooltip>
           )}
-          {typeof onShowQRCode === 'function' && <MdQrCode2 />}
+          {typeof onShowQRCode === 'function' && (
+            <MdQrCode2 onClick={() => onShowQRCode(terraAddress)} />
+          )}
         </footer>
       </div>
 
@@ -91,6 +145,11 @@ const StyledComponent = styled(Component)`
     position: absolute;
     left: 20px;
     top: 20px;
+
+    svg {
+      width: 30px;
+      height: 30px;
+    }
   }
 
   .info {

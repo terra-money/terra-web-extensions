@@ -8,9 +8,14 @@ export interface ListBoxProps
     HTMLUListElement
   > {
   enableItemInteraction?: boolean;
+  disableItemPadding?: boolean;
 }
 
-function Component(ulProps: ListBoxProps) {
+function Component({
+  enableItemInteraction,
+  disableItemPadding,
+  ...ulProps
+}: ListBoxProps) {
   return <ul {...ulProps} />;
 }
 
@@ -41,7 +46,7 @@ const StyledComponent = styled(Component)`
   list-style: none;
 
   li {
-    padding: 20px;
+    padding: ${({ disableItemPadding }) => (disableItemPadding ? 0 : '20px')};
     font-size: 14px;
 
     ${({ enableItemInteraction = false }) =>
@@ -60,6 +65,10 @@ const StyledComponent = styled(Component)`
       border-bottom-left-radius: 8px;
       border-bottom-right-radius: 8px;
     }
+  }
+
+  &:empty {
+    display: none;
   }
 `;
 

@@ -1,6 +1,7 @@
-import { Menu, MenuProps, MenuStylesNames } from '@mantine/core';
+import { Menu, MenuProps } from '@mantine/core';
+import { SvgButton } from '@station/ui2';
 import React from 'react';
-import { createMantineStyles } from '../mantine-utils/createMantineStyles';
+import { useMenuStyles } from '../styles/menu';
 import { ReactComponent as MoreIcon } from './assets/icons/more.svg';
 
 export interface WalletMoreMenusProps
@@ -11,27 +12,15 @@ export function WalletMoreMenus(props: WalletMoreMenusProps) {
 
   return (
     <Menu
-      control={<MoreIcon style={{ cursor: 'pointer' }} />}
+      control={
+        <SvgButton width={24} height={24}>
+          <MoreIcon />
+        </SvgButton>
+      }
       placement="end"
       classNames={menuClasses}
+      transition="scale-y"
       {...props}
-    ></Menu>
+    />
   );
 }
-
-const useMenuStyles = createMantineStyles<MenuStylesNames>({
-  body: {
-    width: 170,
-    padding: '8px 0',
-    backgroundColor: 'var(--color-menu-background)',
-    border: 'none',
-  },
-  item: {
-    fontSize: 12,
-    borderRadius: 0,
-    color: 'var(--color-menu-text)',
-  },
-  itemIcon: {
-    fontSize: 15,
-  },
-});

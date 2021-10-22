@@ -4,7 +4,7 @@ import { ReactComponent as LedgerIcon } from './assets/symbols/ledger.svg';
 import { ReactComponent as MirrorIcon } from './assets/symbols/mirror.svg';
 import { ReactComponent as AnchorIcon } from './assets/symbols/anchor.svg';
 
-type IconDesign = 'terra' | 'anchor' | 'mirror' | 'ledger';
+type IconDesign = 'terra' | 'anchor' | 'mirror' | string;
 
 export interface WalletIconProps {
   design: IconDesign;
@@ -16,10 +16,9 @@ export function WalletIcon({ design }: WalletIconProps) {
       return <TerraIcon />;
     case 'anchor':
       return <AnchorIcon />;
-    case 'ledger':
-      return <LedgerIcon />;
     case 'mirror':
       return <MirrorIcon />;
+    default:
+      return <LedgerIcon />;
   }
-  return null;
 }

@@ -2,7 +2,6 @@ import { fixHMR } from 'fix-hmr';
 import React, {
   DetailedHTMLProps,
   HTMLAttributes,
-  ReactElement,
   ReactNode,
   useMemo,
 } from 'react';
@@ -15,7 +14,7 @@ export interface WalletCardSelectorProps
   > {
   cardWidth: number;
   cardHeight: number;
-  children?: ReactElement | ReactElement[] | null | undefined;
+  children?: ReactNode;
   selectedIndex: number;
   onSelect: (nextSelectedIndex: number) => void;
   navItemRenderer?: (length: number, itemIndex: number) => ReactNode;
