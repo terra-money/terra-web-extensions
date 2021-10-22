@@ -10,5 +10,6 @@ export * from './form/SingleLineFormContainer';
 export * from './mantine-utils/createMantineStyles';
 export * from './wallet-cards/EmptyWalletCard';
 export * from './wallet-cards/WalletCard';
+export * from './wallet-cards/WalletCardSelector';
 export * from './wallet-cards/WalletIcon';
 export * from './wallet-cards/WalletMoreMenus';

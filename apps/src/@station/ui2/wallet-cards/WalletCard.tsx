@@ -45,7 +45,7 @@ function Component({
   const { classes: tooltipClasses } = useTooltipStyles();
 
   const [isCopied, setCopied] = useClipboard(terraAddress, {
-    successDuration: 1000 * 5,
+    successDuration: 1000,
   });
 
   return (
