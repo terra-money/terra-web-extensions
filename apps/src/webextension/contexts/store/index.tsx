@@ -46,7 +46,7 @@ export function StoreProvider({ children }: StoreProviderProps) {
 
   const wallet = useMemo<Wallet>(() => {
     return {
-      availableConnectTypes: [ConnectType.WEBEXTENSION],
+      availableConnectTypes: [ConnectType.WEB_CONNECT],
       availableInstallTypes: [],
       status: !!walletsData.focusedWallet
         ? WalletStatus.WALLET_CONNECTED
@@ -55,7 +55,7 @@ export function StoreProvider({ children }: StoreProviderProps) {
       wallets: walletsData.focusedWallet
         ? [
             {
-              connectType: ConnectType.WEBEXTENSION,
+              connectType: ConnectType.WEB_CONNECT,
               terraAddress: walletsData.focusedWallet.terraAddress,
               design: walletsData.focusedWallet.design,
             },

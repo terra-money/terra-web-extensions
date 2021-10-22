@@ -1,17 +1,100 @@
 :root {
-  --color-gray08: #ffffff;
-  --color-gray11: #e8e8e8;
-  --color-gray14: #f5f5f5;
-  --color-gray18: #ffffff;
-  --color-gray22: #f0f0f0;
-  --color-gray24: #eeeeee;
-  --color-gray34: #cccccc;
-  --color-white44: #685F75;
-  --color-white52: #463F51;
-  --color-white64: #332E3C;
-  --color-white80: #272231;
-  --color-white92: #0C0816;
-  --color-white100: #000000;
+  /* color palette */
+  --primary-500: #0045a7;
+  --primary-400: #2043b5;
+  --primary-300: #0759e7;
+  --primary-300-focused: hsl(218, 94%, 37%);
+  --primary-200: #3082f4;
+  --primary-100: #459cf4;
+  --desaturated-800: #627bcb;
+  --desaturated-400: #cfd8ea;
+  --desaturated-300: #ebeff8;
+  --desaturated-200: #f3f5fd;
+  --desaturated-100: #f9faff;
+  --gray-800: #1c1c1c;
+  --gray-700: #212121;
+  --gray-600: #252526;
+  --gray-500: #343536;
+  --gray-400: #4c4d4e;
+  --gray-300: #8d8d8d;
+  --gray-200: #dbdbdb;
+  --gray-100: #f3f3f3;
+  --white: #fff;
+  --danger-01: #ff5561;
+  --danger-01-focused: hsl(356, 100%, 57%);
+  --danger-02: #fff6f7;
+  --warning-01: #fd9a02;
+  --warning-02: #fffaf2;
+  --success-01: #1daa8e;
+  --success-02: #f3fbf9;
+  --purple-01: #7a6ff0;
+  --extension-navy: #0b132f;
   
-  --text-color: skyblue;
+  --opacity-disabled: 0.5;
+  
+  /* header */
+  --color-header-background: var(--extension-navy);
+  --color-header-text: var(--primary-100);
+
+  /* content */
+  --color-content-background: var(--desaturated-100);
+  --color-content-text: var(--primary-400);
+  --color-content-text-danger: var(--danger-01);
+  
+  /* box */
+  --color-box-background: var(--white);
+  --color-box-border: var(--desaturated-300);
+  --color-box-text: var(--primary-400);
+
+  /* listbox */
+  --color-listbox-background: var(--white);
+  --color-listbox-background-focused: var(--desaturated-100);
+  --color-listbox-border: var(--desaturated-300);
+  --color-listbox-text: var(--primary-400);
+  
+  /* buttons */
+  --color-button-primary-background: var(--primary-300);
+  --color-button-primary-text: var(--gray-100);
+  --color-button-primary-background-hover: var(--primary-300-focused);
+  --color-button-primary-text-hover: var(--white);
+  
+  --color-button-danger-background: var(--danger-01);
+  --color-button-danger-text: var(--gray-100);
+  --color-button-danger-background-hover: var(--danger-01-focused);
+  --color-button-danger-text-hover: var(--white);
+  
+  --color-button-dim-background: var(--desaturated-300);
+  --color-button-dim-text: var(--primary-400);
+  --color-button-dim-background-hover: var(--desaturated-400);
+  
+  --color-button-outline-stroke: 1px solid var(--primary-400);
+  --color-button-outline-text: var(--primary-400);
+  --color-button-outline-background-hover: var(--desaturated-300);
+  --color-button-outline-text-hover: var(--primary-500);
+  
+  /* form */
+  --color-form-label: var(--primary-400);
+  --color-form-label-invalid: var(--danger-01);
+  
+  --color-form-background: var(--white);
+  --color-form-border: var(--desaturated-400);
+  --color-form-text: var(--primary-400);
+  --color-form-placeholder: hsla(226, 70%, 42%, 0.5);
+  
+  --color-form-background-focused: var(--white);
+  --color-form-border-focused: var(--primary-100);
+  --color-form-text-focused: var(--primary-400);
+  
+  --color-form-background-readonly: var(--desaturated-300);
+  --color-form-border-readonly: var(--desaturated-400);
+  --color-form-text-readonly: var(--primary-400);
+  
+  --color-form-background-invalid: var(--white);
+  --color-form-border-invalid: var(--danger-01);
+  --color-form-text-invalid: var(--danger-01);
+  
+  /* menu */
+  --color-menu-background: var(--white);
+  --color-menu-line: var(--desaturated-300);
+  --color-menu-text: var(--primary-400);
 }

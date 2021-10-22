@@ -1,5 +1,7 @@
 const path = require('path');
 
+process.env.FAST_REFRESH = 'false';
+
 module.exports = {
   stories: ['../src/**/*.stories.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
   typescript: {
@@ -16,10 +18,13 @@ module.exports = {
     },
     '@storybook/addon-links',
     '@storybook/addon-essentials',
+    '@storybook/addon-backgrounds',
     {
       name: '@storybook/preset-create-react-app',
       options: {
-        scriptsPackageName: path.dirname(require.resolve('react-scripts/package.json')),
+        scriptsPackageName: path.dirname(
+          require.resolve('react-scripts/package.json'),
+        ),
       },
     },
   ],

@@ -1,7 +1,4 @@
 import { AppProvider } from '@libs/app-provider';
-import { createMuiTheme } from '@material-ui/core';
-import { yScroller } from '@station/ui';
-import { GlobalStyle } from 'common/components/GlobalStyle';
 import React, { useEffect, useRef } from 'react';
 import { render } from 'react-dom';
 import { IntlProvider } from 'react-intl';
@@ -13,18 +10,15 @@ import {
   Switch,
   useLocation,
 } from 'react-router-dom';
-import styled, { DefaultTheme } from 'styled-components';
+import styled from 'styled-components';
 import { ErrorBoundary } from 'webextension/components/common/ErrorBoundary';
 import { LocalesProvider, useIntlProps } from 'webextension/contexts/locales';
 import { StoreProvider } from 'webextension/contexts/store';
-import { ThemeProvider } from 'webextension/contexts/theme';
 import {
-  STATION_TX_REFETCH_MAP,
   STATION_CONSTANTS,
   STATION_CONTRACT_ADDRESS,
+  STATION_TX_REFETCH_MAP,
 } from 'webextension/env';
-import { Header } from './components/Header';
-import { POPUP_CONTENT_HEIGHT, POPUP_HEADER_HEIGHT, POPUP_WIDTH } from './env';
 import { DApps } from './pages/dapps';
 import { Dashboard } from './pages/dashboard';
 import { LedgerVerify } from './pages/ledger/verify';
@@ -38,14 +32,6 @@ import { WalletQR } from './pages/wallets/qr';
 import { WalletsRecover } from './pages/wallets/recover';
 import { WalletSend } from './pages/wallets/send';
 import { WalletUpdate } from './pages/wallets/update';
-
-const theme: DefaultTheme = createMuiTheme({
-  typography: {
-    button: {
-      textTransform: 'none',
-    },
-  },
-});
 
 const queryClient = new QueryClient();
 
@@ -73,61 +59,44 @@ function MainBase({ className }: { className?: string }) {
           refetchMap={STATION_TX_REFETCH_MAP}
         >
           <IntlProvider locale={locale} messages={messages}>
-            <ThemeProvider theme={theme}>
-              <GlobalStyle />
-              <div className={className}>
-                <Header />
-                <section ref={containerRef} style={{ position: 'relative' }}>
-                  <Switch>
-                    <Route exact path="/" component={Dashboard} />
-                    <Route
-                      exact
-                      path="/wallets/create"
-                      component={WalletsCreate}
-                    />
-                    <Route
-                      exact
-                      path="/wallets/recover"
-                      component={WalletsRecover}
-                    />
-                    <Route
-                      path="/wallet/:terraAddress/qr"
-                      component={WalletQR}
-                    />
-                    <Route
-                      path="/wallet/:terraAddress/update"
-                      component={WalletUpdate}
-                    />
-                    <Route
-                      path="/wallet/:terraAddress/password"
-                      component={WalletChangePassword}
-                    />
-                    <Route
-                      path="/wallet/:terraAddress/export"
-                      component={WalletExport}
-                    />
-                    <Route
-                      path="/wallet/:terraAddress/send/:token"
-                      component={WalletSend}
-                    />
-                    <Route exact path="/dapps" component={DApps} />
-                    <Route
-                      exact
-                      path="/ledger/verify"
-                      component={LedgerVerify}
-                    />
-                    <Route
-                      exact
-                      path="/networks/create"
-                      component={NetworksCreate}
-                    />
-                    <Route exact path="/tokens" component={TokensList} />
-                    <Route exact path="/tokens/add" component={TokensAdd} />
-                    <Redirect to="/" />
-                  </Switch>
-                </section>
-              </div>
-            </ThemeProvider>
+            <main className={className} ref={containerRef}>
+              <Switch>
+                <Route exact path="/" component={Dashboard} />
+                <Route exact path="/wallets/create" component={WalletsCreate} />
+                <Route
+                  exact
+                  path="/wallets/recover"
+                  component={WalletsRecover}
+                />
+                <Route path="/wallet/:terraAddress/qr" component={WalletQR} />
+                <Route
+                  path="/wallet/:terraAddress/update"
+                  component={WalletUpdate}
+                />
+                <Route
+                  path="/wallet/:terraAddress/password"
+                  component={WalletChangePassword}
+                />
+                <Route
+                  path="/wallet/:terraAddress/export"
+                  component={WalletExport}
+                />
+                <Route
+                  path="/wallet/:terraAddress/send/:token"
+                  component={WalletSend}
+                />
+                <Route exact path="/dapps" component={DApps} />
+                <Route exact path="/ledger/verify" component={LedgerVerify} />
+                <Route
+                  exact
+                  path="/networks/create"
+                  component={NetworksCreate}
+                />
+                <Route exact path="/tokens" component={TokensList} />
+                <Route exact path="/tokens/add" component={TokensAdd} />
+                <Redirect to="/" />
+              </Switch>
+            </main>
           </IntlProvider>
         </AppProvider>
       </StoreProvider>
@@ -136,27 +105,8 @@ function MainBase({ className }: { className?: string }) {
 }
 
 const Main = styled(MainBase)`
-  min-width: ${POPUP_WIDTH}px;
-  min-height: ${POPUP_HEADER_HEIGHT + POPUP_CONTENT_HEIGHT}px;
-  max-height: ${POPUP_HEADER_HEIGHT + POPUP_CONTENT_HEIGHT}px;
-
-  display: flex;
-  flex-direction: column;
-
-  > section {
-    min-height: ${POPUP_CONTENT_HEIGHT}px;
-    max-height: ${POPUP_CONTENT_HEIGHT}px;
-    padding: 20px;
-
-    ${yScroller};
-
-    background-color: #ffffff;
-
-    border-top-left-radius: 24px;
-    border-top-right-radius: 24px;
-
-    box-shadow: 0 4px 18px 3px rgba(0, 0, 0, 0.33);
-  }
+  padding: 20px;
+  background-color: var(--color-content-background);
 `;
 
 render(

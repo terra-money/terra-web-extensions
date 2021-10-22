@@ -1,6 +1,5 @@
 import { AppProvider } from '@libs/app-provider';
 import { createMuiTheme } from '@material-ui/core';
-import { GlobalStyle } from 'common/components/GlobalStyle';
 import { fixHMR } from 'fix-hmr';
 import React, { useEffect, useRef } from 'react';
 import { render } from 'react-dom';
@@ -13,9 +12,9 @@ import { LocalesProvider, useIntlProps } from 'webextension/contexts/locales';
 import { StoreProvider } from 'webextension/contexts/store';
 import { ThemeProvider } from 'webextension/contexts/theme';
 import {
-  STATION_TX_REFETCH_MAP,
   STATION_CONSTANTS,
   STATION_CONTRACT_ADDRESS,
+  STATION_TX_REFETCH_MAP,
 } from 'webextension/env';
 import { Header } from './components/Header';
 import { Dashboard } from './pages/dashboard';
@@ -55,7 +54,6 @@ function MainBase({ className }: { className?: string }) {
         >
           <IntlProvider locale={locale} messages={messages}>
             <ThemeProvider theme={theme}>
-              <GlobalStyle backgroundColor="#ffffff" />
               <div className={className}>
                 <Header />
                 <section ref={containerRef} style={{ position: 'relative' }}>

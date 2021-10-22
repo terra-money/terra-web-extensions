@@ -20,7 +20,7 @@ export default defineConfig({
   //define: {
   //  'process.env': {},
   //},
-  publicDir: path.join(__dirname, 'public/webextension-test-app'),
+  publicDir: path.join(__dirname, 'public/common'),
   server: {
     https: {
       cert: process.env.LOCALHOST_HTTPS_CERT,

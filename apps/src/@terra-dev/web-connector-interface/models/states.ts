@@ -1,5 +1,5 @@
-import { WebConnectorNetworkInfo } from './WebConnectorNetworkInfo';
-import { WebConnectorWalletInfo } from './WebConnectorWalletInfo';
+import { WebConnectorNetworkInfo } from './network';
+import { WebConnectorWalletInfo } from './wallet';
 
 export interface WebConnectorStates {
   focusedWalletAddress: string | undefined;

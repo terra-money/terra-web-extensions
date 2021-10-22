@@ -1,8 +1,8 @@
 import type { CreateTxOptions } from '@terra-money/terra.js';
 import type { Observable, Observer } from 'rxjs';
-import { WebConnectorStates } from './models/WebConnectorStates';
-import { WebConnectorStatus } from './models/WebConnectorStatus';
-import { WebConnectorTxResult } from './models/WebConnectorTxResult';
+import { WebConnectorStates } from './models/states';
+import { WebConnectorStatus } from './models/status';
+import { WebConnectorTxResult } from './models/tx';
 
 export interface TerraWebConnectorInfo {
   icon: string;
@@ -18,8 +18,6 @@ export interface TerraWebConnector {
   // ---------------------------------------------
   checkBrowserAvailability: (userAgent: string) => boolean;
 
-  //hasInitialSession: () => boolean;
-
   open: (
     hostWindow: Window,
     statusObserver: Observer<WebConnectorStatus>,
@@ -27,16 +25,6 @@ export interface TerraWebConnector {
   ) => void;
 
   close: () => void;
-
-  // ---------------------------------------------
-  // status
-  // ---------------------------------------------
-  //status: () => Observable<WebConnectorStatus>;
-
-  // ---------------------------------------------
-  // states
-  // ---------------------------------------------
-  //states: () => Observable<WebConnectorStates | null>;
 
   // ---------------------------------------------
   // commands

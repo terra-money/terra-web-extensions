@@ -96,6 +96,9 @@ export class WebConnectorLedgerError extends Error {
   };
 }
 
+// ---------------------------------------------
+// functions
+// ---------------------------------------------
 export function isWebConnectorError(error: unknown): boolean {
   return (
     error instanceof WebConnectorUserDenied ||

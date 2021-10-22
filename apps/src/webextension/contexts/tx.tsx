@@ -42,13 +42,13 @@ export function TxProvider({ children, wallet, network }: TxProviderProps) {
 
   const states = useMemo<Wallet>(() => {
     return {
-      availableConnectTypes: [ConnectType.WEBEXTENSION],
+      availableConnectTypes: [ConnectType.WEB_CONNECT],
       availableInstallTypes: [],
       status: WalletStatus.WALLET_CONNECTED,
       network,
       wallets: [
         {
-          connectType: ConnectType.WEBEXTENSION,
+          connectType: ConnectType.WEB_CONNECT,
           terraAddress: wallet.terraAddress,
           design: wallet.design,
         },

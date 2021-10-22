@@ -19,7 +19,6 @@ import {
   TxRequest,
   Wallet,
 } from '@terra-dev/web-extension-backend';
-import { GlobalStyle } from 'common/components/GlobalStyle';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { render } from 'react-dom';
 import { IntlProvider } from 'react-intl';
@@ -359,7 +358,6 @@ function Main() {
   return (
     <IntlProvider locale={locale} messages={messages}>
       <ThemeProvider theme={theme}>
-        <GlobalStyle backgroundColor="#ffffff" />
         <App />
       </ThemeProvider>
     </IntlProvider>

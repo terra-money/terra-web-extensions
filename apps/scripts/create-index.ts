@@ -31,12 +31,9 @@ function createIndex(packageRoot: string, addedExports: string[]) {
   });
 }
 
-createIndex(path.resolve(__dirname, '../src/@libs/webapp-fns'), [
+createIndex(path.resolve(__dirname, '../src/@libs/app-fns'), ['./errors']);
+createIndex(path.resolve(__dirname, '../src/@libs/app-provider'), [
   './env',
   './types',
 ]);
-createIndex(path.resolve(__dirname, '../src/@libs/webapp-provider'), [
-  './env',
-  './types',
-]);
-createIndex(path.resolve(__dirname, '../src/@station/ui'), []);
+createIndex(path.resolve(__dirname, '../src/@station/ui2'), ['./theme']);
