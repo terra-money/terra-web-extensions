@@ -1,18 +1,17 @@
-import { Button } from '@material-ui/core';
-import { FormLabel, FormLayout, Layout, TextInput } from '@station/ui';
-import { WalletCardDesignSelector } from '@station/wallet-card/components/WalletCardDesignSelector';
+import {
+  Button,
+  SingleLineFormContainer,
+  WalletCard,
+  WalletCardSelector,
+} from '@station/ui2';
 import { WebConnectorWalletInfo } from '@terra-dev/web-connector-interface';
 import {
   validateWalletName,
   WalletNameInvalid,
 } from '@terra-dev/web-extension-backend';
-import React, {
-  ChangeEvent,
-  ReactNode,
-  useCallback,
-  useMemo,
-  useState,
-} from 'react';
+import React, { ChangeEvent, useCallback, useMemo, useState } from 'react';
+import { FormFooter } from 'webextension/components/layouts/FormFooter';
+import { FormMain } from 'webextension/components/layouts/FormMain';
 import { useStore } from 'webextension/contexts/store';
 import { cardDesigns } from 'webextension/env';
 
@@ -26,7 +25,6 @@ export interface UpdateWalletProps {
   wallet: WebConnectorWalletInfo;
   onCancel: () => void;
   onUpdate: (result: UpdateWalletResult) => void;
-  children?: ReactNode;
 }
 
 export function UpdateWallet({
@@ -34,7 +32,6 @@ export function UpdateWallet({
   wallet,
   onCancel,
   onUpdate,
-  children,
 }: UpdateWalletProps) {
   // ---------------------------------------------
   // queries
@@ -46,7 +43,10 @@ export function UpdateWallet({
   // ---------------------------------------------
   const [name, setName] = useState<string>(wallet.name);
 
-  const [design, setDesign] = useState<string>(wallet.design);
+  const [designIndex, setDesignIndex] = useState<number>(() => {
+    const i = cardDesigns.findIndex((design) => wallet.design === design);
+    return i > -1 ? i : 0;
+  });
 
   // ---------------------------------------------
   // logics
@@ -66,60 +66,63 @@ export function UpdateWallet({
   const update = useCallback(() => {
     onUpdate({
       name,
-      design,
+      design: cardDesigns[designIndex],
     });
-  }, [design, name, onUpdate]);
+  }, [name, onUpdate, designIndex]);
 
   // ---------------------------------------------
   // presentation
   // ---------------------------------------------
   return (
-    <Layout className={className}>
-      {children}
+    <div className={className}>
+      <WalletCardSelector
+        cardWidth={280}
+        cardHeight={140}
+        selectedIndex={designIndex}
+        onSelect={setDesignIndex}
+        translateY={-10}
+        style={{
+          height: 168,
+          backgroundColor: 'var(--color-header-background)',
+        }}
+      >
+        {cardDesigns.map((design) => (
+          <WalletCard
+            key={'card-' + design}
+            name={name}
+            terraAddress={wallet.terraAddress}
+            design={design}
+          />
+        ))}
+      </WalletCardSelector>
 
-      <WalletCardDesignSelector
-        style={{ margin: '1em auto 3em auto' }}
-        name={name}
-        design={design}
-        terraAddress={wallet.terraAddress}
-        designs={cardDesigns}
-        onChange={setDesign}
-        cardWidth={210}
-      />
-
-      <FormLayout>
-        <FormLabel label="Wallet name">
-          <TextInput
-            fullWidth
+      <FormMain>
+        <SingleLineFormContainer label="Wallet name" invalid={invalidName}>
+          <input
+            type="text"
             placeholder="Enter 5-20 alphanumeric characters"
             value={name}
-            error={!!invalidName}
-            helperText={invalidName}
             onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
               setName(target.value)
             }
           />
-        </FormLabel>
-      </FormLayout>
+        </SingleLineFormContainer>
+      </FormMain>
 
-      <footer>
-        <Button variant="contained" color="secondary" onClick={onCancel}>
-          Cancel
-        </Button>
-
+      <FormFooter>
         <Button
-          variant="contained"
-          color="primary"
+          variant="primary"
+          size="large"
           disabled={
             name.length === 0 ||
             !!invalidName ||
-            (name === wallet.name && design === wallet.design)
+            (name === wallet.name && cardDesigns[designIndex] === wallet.design)
           }
           onClick={update}
         >
           Update
         </Button>
-      </footer>
-    </Layout>
+      </FormFooter>
+    </div>
   );
 }

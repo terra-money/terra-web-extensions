@@ -1,6 +1,7 @@
-import { FormLayout, Layout } from '@station/ui';
-import { Button } from '@material-ui/core';
+import { Button, Message } from '@station/ui2';
 import React from 'react';
+import { FormFooter } from 'webextension/components/layouts/FormFooter';
+import { FormMain } from 'webextension/components/layouts/FormMain';
 
 export interface NotFoundWalletProps {
   className?: string;
@@ -14,18 +15,18 @@ export function NotFoundWallet({
   onConfirm,
 }: NotFoundWalletProps) {
   return (
-    <Layout className={className}>
-      <FormLayout>
-        <p>{terraAddress} 지갑을 찾을 수 없습니다.</p>
-      </FormLayout>
+    <div className={className}>
+      <FormMain>
+        <Message variant="warning">
+          {terraAddress} 지갑을 찾을 수 없습니다.
+        </Message>
+      </FormMain>
 
-      <footer>
-        <footer>
-          <Button variant="contained" color="primary" onClick={onConfirm}>
-            Confirm
-          </Button>
-        </footer>
-      </footer>
-    </Layout>
+      <FormFooter>
+        <Button variant="primary" size="large" onClick={onConfirm}>
+          Confirm
+        </Button>
+      </FormFooter>
+    </div>
   );
 }

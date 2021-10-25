@@ -1,7 +1,5 @@
 import { vibrate } from '@libs/ui';
-import { WalletCard } from '@station/wallet-card';
-import { Button } from '@material-ui/core';
-import { FormLabel, FormLayout, Layout, TextInput } from '@station/ui';
+import { Button, Message, SingleLineFormContainer } from '@station/ui2';
 import {
   decryptWallet,
   EncryptedWallet,
@@ -12,13 +10,14 @@ import {
 } from '@terra-dev/web-extension-backend';
 import React, {
   ChangeEvent,
-  ReactNode,
   useCallback,
   useMemo,
   useRef,
   useState,
 } from 'react';
 import { PasswordStrength } from 'webextension/components/form/PasswordStrength';
+import { FormFooter } from 'webextension/components/layouts/FormFooter';
+import { FormMain } from 'webextension/components/layouts/FormMain';
 
 export interface UpdateWalletPasswordResult {
   encryptedWallet: EncryptedWallet;
@@ -29,7 +28,6 @@ export interface UpdateWalletPasswordProps {
   encryptedWallet: EncryptedWallet;
   onCancel: () => void;
   onUpdate: (result: UpdateWalletPasswordResult) => void;
-  children?: ReactNode;
 }
 
 export function UpdateWalletPassword({
@@ -37,9 +35,8 @@ export function UpdateWalletPassword({
   encryptedWallet,
   onCancel,
   onUpdate,
-  children,
 }: UpdateWalletPasswordProps) {
-  const containerRef = useRef<HTMLElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   // ---------------------------------------------
   // states
@@ -100,86 +97,74 @@ export function UpdateWalletPassword({
   // ---------------------------------------------
   if (failed > 5) {
     return (
-      <Layout className={className}>
-        <FormLayout>
-          <p>비밀번호를 5회 이상 틀렸습니다. 비밀번호 변경이 취소됩니다.</p>
-        </FormLayout>
+      <div className={className}>
+        <FormMain>
+          <Message variant="warning">
+            비밀번호를 5회 이상 틀렸습니다. 비밀번호 변경이 취소됩니다.
+          </Message>
+        </FormMain>
 
-        <footer>
-          <Button variant="contained" color="primary" onClick={onCancel}>
+        <FormFooter>
+          <Button variant="primary" size="large" onClick={onCancel}>
             Confirm
           </Button>
-        </footer>
-      </Layout>
+        </FormFooter>
+      </div>
     );
   }
 
   return (
-    <Layout ref={containerRef} className={className}>
-      {children}
-
-      <WalletCard
-        name={encryptedWallet.name}
-        terraAddress={encryptedWallet.terraAddress}
-        design={encryptedWallet.design}
-        style={{ display: 'block', width: 270, margin: '0 auto 25px auto' }}
-      />
-
-      <FormLayout>
-        <FormLabel label="Current password">
-          <TextInput
-            fullWidth
+    <div ref={containerRef} className={className}>
+      <FormMain>
+        <SingleLineFormContainer
+          label="Current password"
+          invalid={invalidCurrentPassword}
+        >
+          <input
             type="password"
             placeholder="Must be at least 10 characters"
             value={currentPassword}
-            error={!!invalidCurrentPassword}
-            helperText={invalidCurrentPassword}
             onChange={({ target }: ChangeEvent<HTMLInputElement>) => {
               setInvalidCurrentPassword(null);
               setCurrentPassword(target.value);
             }}
           />
-        </FormLabel>
+        </SingleLineFormContainer>
 
-        <FormLabel label="New password">
-          <TextInput
-            fullWidth
+        <SingleLineFormContainer
+          label="New password"
+          invalid={invalidNextPassword}
+          suggest={<PasswordStrength password={nextPassword} />}
+        >
+          <input
             type="password"
             placeholder="Must be at least 10 characters"
             value={nextPassword}
-            error={!!invalidNextPassword}
-            helperText={invalidNextPassword}
             onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
               setNextPassword(target.value)
             }
           />
-        </FormLabel>
+        </SingleLineFormContainer>
 
-        <PasswordStrength password={nextPassword} />
-
-        <FormLabel label="Confirm new password">
-          <TextInput
-            fullWidth
+        <SingleLineFormContainer
+          label="Confirm new password"
+          invalid={invalidNextPasswordConfirm}
+        >
+          <input
             type="password"
             placeholder="Confirm your password"
             value={nextPasswordConfirm}
-            error={!!invalidNextPasswordConfirm}
-            helperText={invalidNextPasswordConfirm}
             onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
               setNextPasswordConfirm(target.value)
             }
           />
-        </FormLabel>
-      </FormLayout>
+        </SingleLineFormContainer>
+      </FormMain>
 
-      <footer>
-        <Button variant="contained" color="secondary" onClick={onCancel}>
-          Cancel
-        </Button>
-
+      <FormFooter>
         <Button
-          variant="contained"
-          color="primary"
+          variant="primary"
+          size="large"
           disabled={
             currentPassword.length === 0 ||
             nextPassword.length === 0 ||
@@ -192,7 +177,7 @@ export function UpdateWalletPassword({
         >
           Change password
         </Button>
-      </footer>
-    </Layout>
+      </FormFooter>
+    </div>
   );
 }

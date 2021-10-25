@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+/** @deprecated */
 export const Layout = styled.section`
   font-size: 12px;
 

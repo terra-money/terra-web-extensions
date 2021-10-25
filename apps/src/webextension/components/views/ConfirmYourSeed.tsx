@@ -1,5 +1,6 @@
 import { vibrate } from '@libs/ui';
 import { Button, Message, SingleLineFormContainer } from '@station/ui2';
+import { MnemonicKey } from '@terra-money/terra.js';
 import React, {
   ChangeEvent,
   useCallback,
@@ -8,15 +9,14 @@ import React, {
   useState,
 } from 'react';
 import styled from 'styled-components';
-import { NewWalletResult } from 'webextension/components/views/NewWallet';
 import { FormFooter } from '../layouts/FormFooter';
 import { FormMain } from '../layouts/FormMain';
 
 export interface ConfirmYourSeedProps {
   className?: string;
-  createWallet: NewWalletResult;
+  mk: MnemonicKey;
   onCancel: () => void;
-  onValidate: (result: NewWalletResult) => void;
+  onValidate: () => void;
 }
 
 const random = () => Math.random() - Math.random();
@@ -25,14 +25,14 @@ const MAX_FAILED = 3;
 
 export function ConfirmYourSeed({
   className,
-  createWallet,
+  mk,
   onCancel,
   onValidate,
 }: ConfirmYourSeedProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const confirm = useMemo(() => {
-    const words = createWallet.mk.mnemonic.split(' ');
+    const words = mk.mnemonic.split(' ');
 
     const q1 = Math.floor((Math.random() * words.length) / 2);
     const q2 = Math.floor(Math.random() * (words.length - q1)) + q1;
@@ -48,7 +48,7 @@ export function ConfirmYourSeed({
       .sort(random);
 
     return { words, q1, q2, word1, word2, samples };
-  }, [createWallet.mk.mnemonic]);
+  }, [mk.mnemonic]);
 
   // ---------------------------------------------
   // states
@@ -63,7 +63,7 @@ export function ConfirmYourSeed({
   // ---------------------------------------------
   const validate = useCallback(() => {
     if (word1 === confirm.word1 && word2 === confirm.word2) {
-      onValidate(createWallet);
+      onValidate();
     } else {
       containerRef.current?.animate(vibrate, { duration: 100 });
 
@@ -71,7 +71,7 @@ export function ConfirmYourSeed({
       setWord2('');
       setFailed((prev) => prev + 1);
     }
-  }, [confirm.word1, confirm.word2, createWallet, onValidate, word1, word2]);
+  }, [confirm.word1, confirm.word2, onValidate, word1, word2]);
 
   // ---------------------------------------------
   // presentation

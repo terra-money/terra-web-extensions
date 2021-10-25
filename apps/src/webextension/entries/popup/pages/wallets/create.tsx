@@ -1,11 +1,12 @@
 import { Step } from '@station/ui2';
 import {
   addWallet,
+  createMnemonicKey,
   createWallet,
   EncryptedWallet,
   encryptWallet,
 } from '@terra-dev/web-extension-backend';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { SubLayout } from 'webextension/components/layouts/SubLayout';
 import { ConfirmYourSeed } from 'webextension/components/views/ConfirmYourSeed';
@@ -16,13 +17,16 @@ import {
 import { WriteDownYourSeed } from 'webextension/components/views/WriteDownYourSeed';
 
 export function WalletsCreate({ history }: RouteComponentProps) {
+  const mk = useMemo(() => {
+    return createMnemonicKey();
+  }, []);
+
   const [newWallet, setNewWallet] = useState<NewWalletResult | null>(null);
   const [writeDownSeeds, setWriteDownSeeds] = useState<boolean>(false);
 
   //// dummy data
   //const [newWallet, setNewWallet] = useState<NewWalletResult | null>(() => ({
   //  name: 'hello',
-  //  mk: createMnemonicKey(),
   //  password: '1234567890',
   //  design: 'anchor',
   //}));
@@ -36,21 +40,22 @@ export function WalletsCreate({ history }: RouteComponentProps) {
     setNewWallet(next);
   }, []);
 
-  const validate = useCallback(
-    async ({ name, design, password, mk }: NewWalletResult) => {
-      const encryptedWallet: EncryptedWallet = {
-        name,
-        design,
-        terraAddress: mk.accAddress,
-        encryptedWallet: encryptWallet(createWallet(mk), password),
-      };
+  const validate = useCallback(async () => {
+    if (!newWallet) {
+      return;
+    }
 
-      await addWallet(encryptedWallet);
+    const encryptedWallet: EncryptedWallet = {
+      name: newWallet.name,
+      design: newWallet.design,
+      terraAddress: mk.accAddress,
+      encryptedWallet: encryptWallet(createWallet(mk), newWallet.password),
+    };
 
-      history.push('/');
-    },
-    [history],
-  );
+    await addWallet(encryptedWallet);
+
+    history.push('/');
+  }, [history, mk, newWallet]);
 
   if (!newWallet) {
     return (
@@ -67,21 +72,14 @@ export function WalletsCreate({ history }: RouteComponentProps) {
   if (!writeDownSeeds) {
     return (
       <SubLayout title="Write down your seed" onBack={cancel}>
-        <WriteDownYourSeed
-          mk={newWallet.mk}
-          onConfirm={() => setWriteDownSeeds(true)}
-        />
+        <WriteDownYourSeed mk={mk} onConfirm={() => setWriteDownSeeds(true)} />
       </SubLayout>
     );
   }
 
   return (
     <SubLayout title="Write down your seed" onBack={cancel}>
-      <ConfirmYourSeed
-        createWallet={newWallet!}
-        onCancel={cancel}
-        onValidate={validate}
-      />
+      <ConfirmYourSeed mk={mk} onCancel={cancel} onValidate={validate} />
     </SubLayout>
   );
 }

@@ -1,42 +1,77 @@
+import { Step } from '@station/ui2';
 import {
   addWallet,
   createWallet,
   EncryptedWallet,
   encryptWallet,
 } from '@terra-dev/web-extension-backend';
-import React, { useCallback } from 'react';
+import { MnemonicKey } from '@terra-money/terra.js';
+import React, { useCallback, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
+import { SubLayout } from 'webextension/components/layouts/SubLayout';
 import {
-  RecoverWallet,
-  RecoverWalletResult,
-} from 'webextension/components/views/RecoverWallet';
+  NewWallet,
+  NewWalletResult,
+} from 'webextension/components/views/NewWallet';
+import { RecoverWallet } from 'webextension/components/views/RecoverWallet';
 
 export function WalletsRecover({ history }: RouteComponentProps) {
+  const [newWallet, setNewWallet] = useState<NewWalletResult | null>(null);
+
+  //// dummy data
+  //const [newWallet, setNewWallet] = useState<NewWalletResult | null>(() => ({
+  //  name: 'hello',
+  //  password: '1234567890',
+  //  design: 'anchor',
+  //}));
+
   const cancel = useCallback(() => {
     history.push('/');
   }, [history]);
 
-  const create = useCallback(
-    async ({ name, design, password, mk }: RecoverWalletResult) => {
+  const create = useCallback(async (next: NewWalletResult) => {
+    setNewWallet(next);
+  }, []);
+
+  const confirm = useCallback(
+    async (mk: MnemonicKey) => {
+      if (!newWallet) {
+        return;
+      }
+
       const encryptedWallet: EncryptedWallet = {
-        name,
-        design,
+        name: newWallet.name,
+        design: newWallet.design,
         terraAddress: mk.accAddress,
-        encryptedWallet: encryptWallet(createWallet(mk), password),
+        encryptedWallet: encryptWallet(createWallet(mk), newWallet.password),
       };
 
       await addWallet(encryptedWallet);
 
       history.push('/');
     },
-    [history],
+    [history, newWallet],
   );
 
+  if (!newWallet) {
+    return (
+      <SubLayout
+        title="Recover existing wallet"
+        onBack={cancel}
+        rightSection={<Step steps={['1', '2']} selectedIndex={0} />}
+      >
+        <NewWallet onConfirm={create} />
+      </SubLayout>
+    );
+  }
+
   return (
-    <RecoverWallet onCancel={cancel} onCreate={create}>
-      <header>
-        <h1>Recover Wallet</h1>
-      </header>
-    </RecoverWallet>
+    <SubLayout
+      title="Enter your seed phrase"
+      onBack={cancel}
+      rightSection={<Step steps={['1', '2']} selectedIndex={1} />}
+    >
+      <RecoverWallet onConfirm={confirm} />
+    </SubLayout>
   );
 }

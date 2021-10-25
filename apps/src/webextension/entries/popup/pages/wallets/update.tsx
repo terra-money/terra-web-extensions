@@ -1,6 +1,8 @@
 import { updateWallet } from '@terra-dev/web-extension-backend';
 import React, { useCallback } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
+import { SubLayout } from 'webextension/components/layouts/SubLayout';
+import { InProgress } from 'webextension/components/views/InProgress';
 import { NotFoundWallet } from 'webextension/components/views/NotFoundWallet';
 import {
   UpdateWallet,
@@ -41,16 +43,26 @@ export function WalletUpdate({
 
   if (wallet === FindWalletStatus.NOT_FOUND) {
     return (
-      <NotFoundWallet
-        terraAddress={match.params.terraAddress}
-        onConfirm={cancel}
-      />
+      <SubLayout title="Not found wallet" onBack={cancel}>
+        <NotFoundWallet
+          terraAddress={match.params.terraAddress}
+          onConfirm={cancel}
+        />
+      </SubLayout>
     );
   }
 
   if (wallet === FindWalletStatus.IN_PROGRESS) {
-    return null;
+    return (
+      <SubLayout title="Edit wallet" onBack={cancel}>
+        <InProgress>Searching for wallet</InProgress>
+      </SubLayout>
+    );
   }
 
-  return <UpdateWallet wallet={wallet} onCancel={cancel} onUpdate={update} />;
+  return (
+    <SubLayout title="Edit wallet" onBack={cancel}>
+      <UpdateWallet wallet={wallet} onCancel={cancel} onUpdate={update} />
+    </SubLayout>
+  );
 }

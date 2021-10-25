@@ -1,15 +1,21 @@
+import { Button, ListBox, SvgButton } from '@station/ui2';
 import {
   disapproveHostname,
   observeHostnamesStorage,
 } from '@terra-dev/web-extension-backend';
 import React, { useCallback, useEffect, useState } from 'react';
+import { MdDeleteForever } from 'react-icons/md';
+import { RouteComponentProps } from 'react-router-dom';
 import styled from 'styled-components';
+import { FormFooter } from 'webextension/components/layouts/FormFooter';
+import { FormMain } from 'webextension/components/layouts/FormMain';
+import { SubLayout } from 'webextension/components/layouts/SubLayout';
 
-export interface DAppsProps {
-  className?: string;
-}
+export function DApps({ history }: RouteComponentProps) {
+  const cancel = useCallback(() => {
+    history.push('/');
+  }, [history]);
 
-function DAppsBase({ className }: DAppsProps) {
   const [approvedHostnames, setApprovedHostnames] = useState<string[]>(
     () => [],
   );
@@ -31,21 +37,41 @@ function DAppsBase({ className }: DAppsProps) {
   }, []);
 
   return (
-    <div className={className}>
-      <ul>
-        {approvedHostnames.map((approvedHostname) => (
-          <li key={approvedHostname}>
-            {approvedHostname}
-            <button onClick={() => disapprove(approvedHostname)}>
-              Disapprove
-            </button>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <SubLayout title="Whitelist dApps" onBack={cancel}>
+      <FormMain>
+        <ListBox>
+          {approvedHostnames.map((approvedHostname) => (
+            <ListItem key={approvedHostname}>
+              <span>{approvedHostname}</span>
+              <SvgButton
+                width={24}
+                height={24}
+                onClick={() => disapprove(approvedHostname)}
+              >
+                <MdDeleteForever />
+              </SvgButton>
+            </ListItem>
+          ))}
+        </ListBox>
+      </FormMain>
+
+      <FormFooter>
+        <Button variant="primary" size="large" onClick={cancel}>
+          Confirm
+        </Button>
+      </FormFooter>
+    </SubLayout>
   );
 }
 
-export const DApps = styled(DAppsBase)`
-  // TODO
+const ListItem = styled.li`
+  padding: 0 20px;
+  height: 60px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  font-size: 14px;
+  font-weight: 700;
 `;

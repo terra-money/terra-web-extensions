@@ -5,12 +5,10 @@ import {
   WalletCardSelector,
 } from '@station/ui2';
 import {
-  createMnemonicKey,
   validatePasswordConfirm,
   validateWalletName,
   validateWalletPassword,
 } from '@terra-dev/web-extension-backend';
-import { MnemonicKey } from '@terra-money/terra.js';
 import React, { ChangeEvent, useCallback, useMemo, useState } from 'react';
 import { PasswordStrength } from 'webextension/components/form/PasswordStrength';
 import { FormFooter } from 'webextension/components/layouts/FormFooter';
@@ -22,7 +20,6 @@ export interface NewWalletResult {
   name: string;
   design: string;
   password: string;
-  mk: MnemonicKey;
 }
 
 export interface NewWalletProps {
@@ -35,10 +32,6 @@ export function NewWallet({ className, onConfirm }: NewWalletProps) {
   // queries
   // ---------------------------------------------
   const { wallets } = useStore();
-
-  const mk = useMemo(() => {
-    return createMnemonicKey();
-  }, []);
 
   // ---------------------------------------------
   // states
@@ -76,9 +69,8 @@ export function NewWallet({ className, onConfirm }: NewWalletProps) {
       name,
       design: cardDesigns[designIndex],
       password,
-      mk,
     });
-  }, [onConfirm, name, designIndex, password, mk]);
+  }, [onConfirm, name, designIndex, password]);
 
   // ---------------------------------------------
   // presentation
@@ -100,7 +92,7 @@ export function NewWallet({ className, onConfirm }: NewWalletProps) {
           <WalletCard
             key={'card-' + design}
             name={name.length > 0 ? name : 'Type your wallet name'}
-            terraAddress={mk.accAddress}
+            terraAddress="XXXXXXXXXXXXXXXXXXXXX"
             design={design}
           />
         ))}
@@ -109,6 +101,7 @@ export function NewWallet({ className, onConfirm }: NewWalletProps) {
       <FormMain>
         <SingleLineFormContainer label="Wallet name" invalid={invalidName}>
           <input
+            type="text"
             placeholder="Enter 5-20 alphanumeric characters"
             value={name}
             onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
