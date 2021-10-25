@@ -2,6 +2,7 @@ import { WebConnectorNetworkInfo } from '@terra-dev/web-connector-interface';
 import { addNetwork } from '@terra-dev/web-extension-backend';
 import React, { useCallback } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
+import { SubLayout } from 'webextension/components/layouts/SubLayout';
 import {
   CreateNetwork,
   CreateNetworkResult,
@@ -28,10 +29,8 @@ export function NetworksCreate({ history }: RouteComponentProps<{}>) {
   );
 
   return (
-    <CreateNetwork onCancel={cancel} onCreate={create}>
-      <header>
-        <h1>Add a new network</h1>
-      </header>
-    </CreateNetwork>
+    <SubLayout title="Add a new Network" onBack={cancel}>
+      <CreateNetwork onCreate={create} />
+    </SubLayout>
   );
 }

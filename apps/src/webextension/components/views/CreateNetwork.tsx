@@ -1,16 +1,11 @@
-import { Button } from '@material-ui/core';
-import { FormLabel, FormLayout, Layout, TextInput } from '@station/ui';
+import { Button, SingleLineFormContainer } from '@station/ui2';
 import {
   validateNetworkLcdURL,
   validateNetworkName,
 } from '@terra-dev/web-extension-backend';
-import React, {
-  ChangeEvent,
-  ReactNode,
-  useCallback,
-  useMemo,
-  useState,
-} from 'react';
+import React, { ChangeEvent, useCallback, useMemo, useState } from 'react';
+import { FormFooter } from 'webextension/components/layouts/FormFooter';
+import { FormMain } from 'webextension/components/layouts/FormMain';
 import { useStore } from 'webextension/contexts/store';
 
 export interface CreateNetworkResult {
@@ -21,17 +16,10 @@ export interface CreateNetworkResult {
 
 export interface CreateNetworkProps {
   className?: string;
-  onCancel: () => void;
   onCreate: (result: CreateNetworkResult) => void;
-  children?: ReactNode;
 }
 
-export function CreateNetwork({
-  className,
-  onCreate,
-  onCancel,
-  children,
-}: CreateNetworkProps) {
+export function CreateNetwork({ className, onCreate }: CreateNetworkProps) {
   // ---------------------------------------------
   // queries
   // ---------------------------------------------
@@ -72,53 +60,43 @@ export function CreateNetwork({
   // presentation
   // ---------------------------------------------
   return (
-    <Layout className={className}>
-      {children}
-
-      <FormLayout>
-        <FormLabel label="Network name">
-          <TextInput
-            fullWidth
+    <div className={className}>
+      <FormMain>
+        <SingleLineFormContainer label="Network name" invalid={invalidName}>
+          <input
+            type="text"
             value={name}
-            error={!!invalidName}
-            helperText={invalidName}
             onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
               setName(target.value)
             }
           />
-        </FormLabel>
+        </SingleLineFormContainer>
 
-        <FormLabel label="Chain ID">
-          <TextInput
-            fullWidth
+        <SingleLineFormContainer label="Chain ID">
+          <input
+            type="text"
             value={chainID}
             onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
               setChainID(target.value)
             }
           />
-        </FormLabel>
+        </SingleLineFormContainer>
 
-        <FormLabel label="LCD">
-          <TextInput
-            fullWidth
+        <SingleLineFormContainer label="LCD" invalid={invalidLcd}>
+          <input
+            type="text"
             value={lcd}
-            error={!!invalidLcd}
-            helperText={invalidLcd}
             onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
               setLcd(target.value)
             }
           />
-        </FormLabel>
-      </FormLayout>
+        </SingleLineFormContainer>
+      </FormMain>
 
-      <footer>
-        <Button variant="contained" color="secondary" onClick={onCancel}>
-          Cancel
-        </Button>
-
+      <FormFooter>
         <Button
-          variant="contained"
-          color="primary"
+          variant="primary"
+          size="large"
           disabled={
             name.length === 0 ||
             chainID.length === 0 ||
@@ -128,9 +106,9 @@ export function CreateNetwork({
           }
           onClick={create}
         >
-          Next
+          Create network
         </Button>
-      </footer>
-    </Layout>
+      </FormFooter>
+    </div>
   );
 }
