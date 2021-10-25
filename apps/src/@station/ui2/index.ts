@@ -9,6 +9,7 @@ export * from './form/FormSelect';
 export * from './form/FormSuggest';
 export * from './form/SingleLineFormContainer';
 export * from './mantine-utils/createMantineStyles';
+export * from './primitives/SvgIcon';
 export * from './styles/menu';
 export * from './wallet-cards/EmptyWalletCard';
 export * from './wallet-cards/WalletCard';

@@ -1,9 +1,12 @@
 import { fixHMR } from 'fix-hmr';
 import React, {
+  Children,
   DetailedHTMLProps,
   HTMLAttributes,
   ReactNode,
+  useEffect,
   useMemo,
+  useState,
 } from 'react';
 import styled from 'styled-components';
 
@@ -29,10 +32,22 @@ function Component({
   navItemRenderer,
   ...ulProps
 }: WalletCardSelectorProps) {
+  const [animate, setAnimate] = useState<boolean>(false);
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setAnimate(true);
+    }, 1000);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, []);
+
   const cards = useMemo(() => {
     if (!children) return null;
 
-    const arrayedChildren = Array.isArray(children) ? children : [children];
+    const arrayedChildren = Children.toArray(children);
 
     if (arrayedChildren.length === 0) return null;
 
@@ -63,7 +78,7 @@ function Component({
   }, [cardWidth, children, onSelect, selectedIndex]);
 
   return (
-    <div {...ulProps}>
+    <div {...ulProps} data-animate={animate}>
       <ul className="cards">{cards}</ul>
       {cards && cards.length > 0 && typeof navItemRenderer === 'function' && (
         <ul className="nav">
@@ -99,9 +114,6 @@ const StyledComponent = styled(Component)`
     > li {
       position: absolute;
 
-      will-change: transform, opacity, filter;
-      transition: transform 0.3s ease-in-out, opacity 0.3s;
-
       user-select: none;
 
       > * {
@@ -113,6 +125,15 @@ const StyledComponent = styled(Component)`
         * {
           pointer-events: none;
         }
+      }
+    }
+  }
+
+  &[data-animate='true'] {
+    .cards {
+      > li {
+        will-change: transform, opacity, filter;
+        transition: transform 0.3s ease-in-out, opacity 0.3s;
       }
     }
   }

@@ -25,7 +25,7 @@ export interface AnimateNumberProps<T extends BigSource>
   ease?: (nomalizedTime: number) => number;
   duration?: number;
   id?: string;
-  decimalPointsFontSize?: `${number}em`;
+  decimalPointsFontSize?: `${number}em` | `${number}px`;
 }
 
 const defaultInitialValue = big(0);
@@ -115,7 +115,7 @@ export function AnimateNumber<T extends BigSource>({
   );
 }
 
-const Sub = styled.sub<{ fontSize?: `${number}em` }>`
+const Sub = styled.sub<{ fontSize?: `${number}em` | `${number}px` }>`
   display: ${({ fontSize }) => (fontSize ? 'inline' : 'none')};
 
   vertical-align: initial;
@@ -124,5 +124,9 @@ const Sub = styled.sub<{ fontSize?: `${number}em` }>`
   &::before {
     content: '.';
     display: inline;
+  }
+
+  &:empty {
+    display: none;
   }
 `;

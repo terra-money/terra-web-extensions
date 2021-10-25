@@ -2,17 +2,11 @@ import { formatUTokenWithPostfixUnits } from '@libs/formatter';
 import { AnimateNumber } from '@libs/ui';
 import { Menu } from '@mantine/core';
 import {
-  AddCircleOutline,
-  SettingsBackupRestore,
-  Usb,
-  Web,
-} from '@material-ui/icons';
-import { LinedList } from '@station/ui';
-import {
   Box,
   Button,
   EmptyWalletCard,
   ListBox,
+  SvgIcon,
   WalletCard,
   WalletCardSelector,
   WalletMoreMenus,
@@ -24,22 +18,24 @@ import {
 } from '@terra-dev/web-extension-backend';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
-  MdAccountBalanceWallet,
   MdAdd,
   MdAddCircle,
+  MdAddCircleOutline,
   MdCallToAction,
   MdChevronRight,
   MdDelete,
   MdEdit,
   MdErrorOutline,
   MdSettings,
+  MdSettingsBackupRestore,
   MdUpload,
   MdVpnKey,
+  MdWeb,
 } from 'react-icons/md';
 import { FormattedMessage } from 'react-intl';
 import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
-import { ReactComponent as TerraIcon } from 'webextension/assets/terra.svg';
+import { LedgerIcon, TerraIcon } from 'webextension/assets';
 import { ConfigSelector } from 'webextension/components/header/ConfigSelector';
 import { useStore } from 'webextension/contexts/store';
 import { extensionPath } from 'webextension/logics/extensionPath';
@@ -150,7 +146,7 @@ function DashboardBase({ className }: { className?: string }) {
                 {/* TODO Run Verify Ledger */}
                 {'usbDevice' in wallet && (
                   <Menu.Item
-                    icon={<MdAccountBalanceWallet />}
+                    icon={<LedgerIcon />}
                     onClick={() => alert('verify ledger')}
                   >
                     Export wallet
@@ -177,39 +173,37 @@ function DashboardBase({ className }: { className?: string }) {
           <>
             {focusedWallet && tokens && tokens.length > 0 ? (
               <ListBox enableItemInteraction disableItemPadding>
-                {tokens.map(
-                  ({ asset, balance, info, icon, isCW20Token }, i) => (
-                    <li key={'token' + i}>
-                      <TokenItem
-                        to={`/wallet/${focusedWallet.terraAddress}/send/${
-                          'native_token' in asset
-                            ? asset.native_token.denom
-                            : asset.token.contract_addr
-                        }`}
-                      >
-                        <div>
-                          {'token' in asset ? (
-                            <img src={icon} alt={info?.name} />
-                          ) : (
-                            <img src={icon} alt={info?.name} />
-                          )}
-                          <span>{info?.symbol}</span>
-                        </div>
+                {tokens.map(({ asset, balance, info, icon }, i) => (
+                  <li key={'token' + i}>
+                    <TokenItem
+                      to={`/wallet/${focusedWallet.terraAddress}/send/${
+                        'native_token' in asset
+                          ? asset.native_token.denom
+                          : asset.token.contract_addr
+                      }`}
+                    >
+                      <div>
+                        {'token' in asset ? (
+                          <img src={icon} alt={info?.name} />
+                        ) : (
+                          <img src={icon} alt={info?.name} />
+                        )}
+                        <span>{info?.symbol}</span>
+                      </div>
 
-                        <div>
-                          <AnimateNumber
-                            format={formatUTokenWithPostfixUnits}
-                            decimalPointsFontSize="0.8em"
-                          >
-                            {balance}
-                          </AnimateNumber>
+                      <div>
+                        <AnimateNumber
+                          format={formatUTokenWithPostfixUnits}
+                          decimalPointsFontSize="12px"
+                        >
+                          {balance}
+                        </AnimateNumber>
 
-                          <MdChevronRight />
-                        </div>
-                      </TokenItem>
-                    </li>
-                  ),
-                )}
+                        <MdChevronRight />
+                      </div>
+                    </TokenItem>
+                  </li>
+                ))}
               </ListBox>
             ) : (
               <EmptyMessage>
@@ -220,84 +214,106 @@ function DashboardBase({ className }: { className?: string }) {
               </EmptyMessage>
             )}
 
-            <footer className="token-actions">
-              <Button<Link>
-                variant="dim"
-                size="medium"
-                leftIcon={<MdAdd />}
-                component={Link as any}
-                to={`/tokens/add`}
-              >
-                Add Token
-              </Button>
+            {focusedWallet && tokens && (
+              <footer className="token-actions">
+                <Button<Link>
+                  variant="dim"
+                  size="medium"
+                  leftIcon={<MdAdd />}
+                  component={Link as any}
+                  to={`/tokens/add`}
+                >
+                  Add Token
+                </Button>
 
-              <Button<Link>
-                variant="dim"
-                size="medium"
-                leftIcon={<MdSettings />}
-                component={Link as any}
-                to={`/tokens`}
-              >
-                Manage Token
-              </Button>
-            </footer>
+                {tokens.some(({ isCW20Token }) => isCW20Token) && (
+                  <Button<Link>
+                    variant="dim"
+                    size="medium"
+                    leftIcon={<MdSettings />}
+                    component={Link as any}
+                    to={`/tokens`}
+                  >
+                    Manage Token
+                  </Button>
+                )}
+              </footer>
+            )}
           </>
         )}
 
         {!showTokenList && (
           <>
-            <LinedList className="wallets-actions" iconMarginRight="0.6em">
+            <ListBox enableItemInteraction disableItemPadding>
               {isLedgerSupport && (
-                <li>
+                <ToolListItem>
                   <a
                     href="/connect-ledger.html"
                     target="_blank"
                     rel="noreferrer"
                   >
-                    <i>
-                      <Usb />
-                    </i>
                     <span>
                       <FormattedMessage id="wallet.new.ledger" />
                     </span>
+                    <SvgIcon width={24} height={24}>
+                      <LedgerIcon />
+                    </SvgIcon>
                   </a>
-                </li>
+                </ToolListItem>
               )}
-              <li>
+              <ToolListItem>
                 <Link to="/wallets/create">
-                  <i>
-                    <AddCircleOutline />
-                  </i>
                   <span>
                     <FormattedMessage id="wallet.new" />
                   </span>
+                  <SvgIcon width={24} height={24}>
+                    <MdAddCircleOutline />
+                  </SvgIcon>
                 </Link>
-              </li>
-              <li>
+              </ToolListItem>
+              <ToolListItem>
                 <Link to="/wallets/recover">
-                  <i>
-                    <SettingsBackupRestore />
-                  </i>
                   <span>
                     <FormattedMessage id="wallet.recover" />
                   </span>
+                  <SvgIcon width={24} height={24}>
+                    <MdSettingsBackupRestore />
+                  </SvgIcon>
                 </Link>
-              </li>
-              <li>
+              </ToolListItem>
+              <ToolListItem>
                 <Link to="/dapps">
-                  <i>
-                    <Web />
-                  </i>
                   <span>Whitelist dApps</span>
+                  <SvgIcon width={24} height={24}>
+                    <MdWeb />
+                  </SvgIcon>
                 </Link>
-              </li>
-            </LinedList>
+              </ToolListItem>
+            </ListBox>
           </>
         )}
       </main>
     </section>
   );
 }
+
+const ToolListItem = styled.li`
+  a {
+    padding: 0 20px;
+    height: 60px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    text-decoration: none;
+
+    color: inherit;
+
+    font-size: 14px;
+    font-weight: 700;
+  }
+`;
 
 const TokenItem = styled(Link)`
   padding: 0 20px;
@@ -395,9 +411,12 @@ export const Dashboard = styled(DashboardBase)`
     .token-actions {
       margin-top: 20px;
 
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      column-gap: 14px;
+      display: flex;
+      gap: 14px;
+
+      > * {
+        flex: 1;
+      }
     }
   }
 `;
