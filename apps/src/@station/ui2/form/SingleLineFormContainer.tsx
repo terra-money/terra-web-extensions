@@ -153,7 +153,6 @@ const StyledComponent = styled(Component)`
         border: none;
         outline: none;
         background-color: transparent;
-        padding: 15px 12px;
 
         width: 100%;
 
@@ -167,10 +166,13 @@ const StyledComponent = styled(Component)`
 
       input {
         font-size: 14px;
+        height: 45px;
+        padding: 0 12px;
       }
 
       textarea {
         font-size: 12px;
+        padding: 15px 12px;
       }
     }
   }
@@ -180,7 +182,6 @@ const StyledComponent = styled(Component)`
 
     font-size: 12px;
 
-    left: 0;
     right: 0;
     bottom: -1.5em;
 

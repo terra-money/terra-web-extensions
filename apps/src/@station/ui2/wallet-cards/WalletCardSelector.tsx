@@ -21,6 +21,7 @@ export interface WalletCardSelectorProps
   selectedIndex: number;
   onSelect: (nextSelectedIndex: number) => void;
   navItemRenderer?: (length: number, itemIndex: number) => ReactNode;
+  translateY?: number;
 }
 
 function Component({
@@ -30,6 +31,7 @@ function Component({
   selectedIndex,
   onSelect,
   navItemRenderer,
+  translateY = 0,
   ...ulProps
 }: WalletCardSelectorProps) {
   const [animate, setAnimate] = useState<boolean>(false);
@@ -104,8 +106,8 @@ const StyledComponent = styled(Component)`
     position: absolute;
     left: 50%;
     top: 50%;
-    transform: ${({ cardWidth, cardHeight }) =>
-      `translate(-${cardWidth / 2}px, -${cardHeight / 2}px)`};
+    transform: ${({ cardWidth, cardHeight, translateY = 0 }) =>
+      `translate(-${cardWidth / 2}px, -${cardHeight / 2 - translateY}px)`};
 
     list-style: none;
     padding: 0;

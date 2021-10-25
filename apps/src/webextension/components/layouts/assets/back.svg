@@ -1,0 +1,6 @@
+<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <g transform="translate(-20 -18)" fill="none" fill-rule="evenodd">
+        <path d="M20 18h24v24H20z"/>
+        <path fill="currentColor" fill-rule="nonzero" d="M31.67 21.87 29.9 20.1 20 30l9.9 9.9 1.77-1.77L23.54 30z"/>
+    </g>
+</svg>

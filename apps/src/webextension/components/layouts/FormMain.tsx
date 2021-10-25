@@ -1,10 +1,12 @@
 import styled from 'styled-components';
 
-export const FormLayout = styled.div`
+export const FormMain = styled.div`
   display: flex;
   flex-direction: column;
 
-  > * {
+  padding: 28px 20px 0 20px;
+
+  > :not(:last-child) {
     margin-bottom: 20px;
   }
 `;

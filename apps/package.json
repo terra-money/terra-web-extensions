@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "webextension:dev": "multiplerun webextension-dev",
-    "webextension:watch": "cross-env TS_NODE_PROJECT=tsconfig.script.json INSPECT_CHROME=9222 node -r ts-node/register -r tsconfig-paths/register scripts/webextension.watch.ts",
+    "webextension:watch": "cross-env TS_NODE_PROJECT=tsconfig.script.json INSPECT_CHROME=9222 node -r ts-node/register -r tsconfig-paths/register --max-old-space-size=8192 scripts/webextension.watch.ts",
     "webextension:build": "cross-env TS_NODE_PROJECT=tsconfig.script.json INSPECT_CHROME=9222 node -r ts-node/register -r tsconfig-paths/register scripts/webextension.build.ts",
     "webextension-reloader:watch": "cross-env TS_NODE_PROJECT=tsconfig.script.json INSPECT_CHROME=9222 node -r ts-node/register -r tsconfig-paths/register scripts/webextension-reloader.watch.ts",
     "webextension-test-app:start": "vite --config webextension-test-app.vite.ts",

@@ -35,6 +35,7 @@
   /* header */
   --color-header-background: var(--extension-navy);
   --color-header-text: var(--primary-100);
+  --color-header-text-03: rgba(69, 156, 244, 0.3);
 
   /* content */
   --color-content-background: var(--desaturated-100);
@@ -98,4 +99,14 @@
   --color-menu-background-selected: var(--desaturated-300);
   --color-menu-line: var(--desaturated-300);
   --color-menu-text: var(--primary-400);
+  
+  /* message */
+  --color-message-danger-background: rgba(255, 85, 97, 0.1);
+  --color-message-danger-text: var(--danger-01);
+  
+  --color-message-warning-background: hsla(36, 98%, 50%, 0.1);
+  --color-message-warning-text: var(--warning-01);
+  
+  --color-message-success-background: hsla(168, 71%, 39%, 0.1);
+  --color-message-success-text: var(--success-01);
 }

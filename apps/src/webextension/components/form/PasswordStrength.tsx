@@ -1,14 +1,17 @@
 import { passwordStrength } from 'check-password-strength';
-import { fixHMR } from 'fix-hmr';
-import React, { useMemo } from 'react';
-import styled from 'styled-components';
+import React, { CSSProperties, useMemo } from 'react';
 
 export interface PasswordStrengthProps {
   className?: string;
+  style?: CSSProperties;
   password: string;
 }
 
-function PasswordStrengthBase({ className, password }: PasswordStrengthProps) {
+export function PasswordStrength({
+  className,
+  style,
+  password,
+}: PasswordStrengthProps) {
   const strength = useMemo(() => {
     if (password.length === 0) {
       return null;
@@ -16,11 +19,9 @@ function PasswordStrengthBase({ className, password }: PasswordStrengthProps) {
     return passwordStrength(password);
   }, [password]);
 
-  return strength ? <p>Password strength is "{strength.value}"</p> : null;
+  return strength ? (
+    <span className={className} style={style}>
+      {strength.value}
+    </span>
+  ) : null;
 }
-
-export const StyledPasswordStrength = styled(PasswordStrengthBase)`
-  // TODO
-`;
-
-export const PasswordStrength = fixHMR(StyledPasswordStrength);
