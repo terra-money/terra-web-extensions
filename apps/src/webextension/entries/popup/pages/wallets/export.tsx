@@ -1,17 +1,15 @@
-import { fixHMR } from 'fix-hmr';
-import styled from 'styled-components';
-import React from 'react';
+import React, { useCallback } from 'react';
+import { RouteComponentProps } from 'react-router-dom';
+import { SubLayout } from 'webextension/components/layouts/SubLayout';
 
-export interface WalletExportProps {
-  className?: string;
+export function WalletExport({ history }: RouteComponentProps) {
+  const cancel = useCallback(() => {
+    history.push('/');
+  }, [history]);
+
+  return (
+    <SubLayout title="Export wallet" onBack={cancel}>
+      TODO
+    </SubLayout>
+  );
 }
-
-function WalletExportBase({ className }: WalletExportProps) {
-  return <div className={className}>WalletExport</div>;
-}
-
-export const StyledWalletExport = styled(WalletExportBase)`
-  // TODO
-`;
-
-export const WalletExport = fixHMR(StyledWalletExport);

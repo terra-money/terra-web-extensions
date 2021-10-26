@@ -12,8 +12,10 @@ import {
   WalletMoreMenus,
 } from '@station/ui2';
 import {
+  EncryptedWallet,
   focusWallet,
   isLedgerSupportBrowser,
+  LedgerWallet,
   removeWallet,
 } from '@terra-dev/web-extension-backend';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
@@ -38,8 +40,10 @@ import styled from 'styled-components';
 import { LedgerIcon, TerraIcon } from 'webextension/assets';
 import { ConfigSelector } from 'webextension/components/header/ConfigSelector';
 import { useStore } from 'webextension/contexts/store';
-import { useAddCW20TokensDialog } from 'webextension/entries/popup/dialogs/useAddCW20Tokens';
-import { useManageCW20TokensDialog } from 'webextension/entries/popup/dialogs/useManageCW20Tokens';
+import { useAddCW20TokensDialog } from 'webextension/entries/popup/dialogs/useAddCW20TokensDialog';
+import { useDeleteWalletDialog } from 'webextension/entries/popup/dialogs/useDeleteWalletDialog';
+import { useManageCW20TokensDialog } from 'webextension/entries/popup/dialogs/useManageCW20TokensDialog';
+import { useTerraAddressQrDialog } from 'webextension/entries/popup/dialogs/useTerraAddressQrDialog';
 import { extensionPath } from 'webextension/logics/extensionPath';
 import { useTokenList } from 'webextension/queries/useTokenList';
 
@@ -55,6 +59,8 @@ function DashboardBase({ className }: { className?: string }) {
   const [openAddCW20Tokens, addCW20TokensElement] = useAddCW20TokensDialog();
   const [openManageCW20Tokens, manageCW20TokensElement] =
     useManageCW20TokensDialog();
+  const [openDeleteWallet, deleteWalletElement] = useDeleteWalletDialog();
+  const [openTerraAddressQr, terraAddressQrElement] = useTerraAddressQrDialog();
 
   const { wallets, focusedWallet, focusedWalletIndex } = useStore();
 
@@ -86,6 +92,17 @@ function DashboardBase({ className }: { className?: string }) {
     return selectedCardIndex === focusedWalletIndex;
   }, [focusedWalletIndex, selectedCardIndex]);
 
+  const deleteWallet = useCallback(
+    async (wallet: EncryptedWallet | LedgerWallet) => {
+      const result = await openDeleteWallet({ wallet });
+
+      if (result) {
+        await removeWallet(wallet);
+      }
+    },
+    [openDeleteWallet],
+  );
+
   const tokens = useTokenList();
 
   return (
@@ -113,7 +130,7 @@ function DashboardBase({ className }: { className?: string }) {
               terraAddress={wallet.terraAddress}
               showCopyTerraAddress
               onShowQRCode={() =>
-                history.push(`/wallet/${wallet.terraAddress}/qr`)
+                openTerraAddressQr({ terraAddress: wallet.terraAddress })
               }
               design={wallet.design}
             >
@@ -159,10 +176,9 @@ function DashboardBase({ className }: { className?: string }) {
                   </Menu.Item>
                 )}
 
-                {/* TODO Confirm Dialog */}
                 <Menu.Item
                   icon={<MdDelete />}
-                  onClick={() => removeWallet(wallet)}
+                  onClick={() => deleteWallet(wallet)}
                 >
                   <FormattedMessage id="wallet.delete" />
                 </Menu.Item>
@@ -300,6 +316,8 @@ function DashboardBase({ className }: { className?: string }) {
 
       {addCW20TokensElement}
       {manageCW20TokensElement}
+      {deleteWalletElement}
+      {terraAddressQrElement}
     </section>
   );
 }

@@ -26,7 +26,6 @@ import { NetworksCreate } from './pages/networks/create';
 import { WalletChangePassword } from './pages/wallets/change-password';
 import { WalletsCreate } from './pages/wallets/create';
 import { WalletExport } from './pages/wallets/export';
-import { WalletQR } from './pages/wallets/qr';
 import { WalletsRecover } from './pages/wallets/recover';
 import { WalletSend } from './pages/wallets/send';
 import { WalletUpdate } from './pages/wallets/update';
@@ -66,7 +65,6 @@ function MainBase({ className }: { className?: string }) {
                   path="/wallets/recover"
                   component={WalletsRecover}
                 />
-                <Route path="/wallet/:terraAddress/qr" component={WalletQR} />
                 <Route
                   path="/wallet/:terraAddress/update"
                   component={WalletUpdate}
