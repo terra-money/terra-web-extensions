@@ -1,12 +1,12 @@
 import { CW20TokenDisplayInfo, cw20TokenInfoQuery } from '@libs/app-fns';
 import { useApp } from '@libs/app-provider';
 import { CW20Addr } from '@libs/types';
-import { Button } from '@material-ui/core';
-import { Layout } from '@station/ui';
+import { Button } from '@station/ui2';
 import { useWallet } from '@terra-dev/use-wallet';
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useCW20Tokens } from 'webextension/queries/useCW20Tokens';
 import { useTokenIcon } from 'webextension/queries/useTokenIcon';
+import { FormFooter } from '../layouts/FormFooter';
 import { TokenList, TokenRow } from './AddCW20Token';
 
 export interface ManageCW20TokensProps {
@@ -16,7 +16,6 @@ export interface ManageCW20TokensProps {
   onAdd: (tokenAddr: string) => void;
   onAddAll?: () => void;
   onClose: () => void;
-  children?: ReactNode;
 }
 
 export function ManageCW20Tokens({
@@ -24,7 +23,6 @@ export function ManageCW20Tokens({
   initialTokens,
   onRemove,
   onAdd,
-  children,
   onAddAll,
   onClose,
 }: ManageCW20TokensProps) {
@@ -35,9 +33,7 @@ export function ManageCW20Tokens({
   const tokens = useTokenList(initialTokens);
 
   return (
-    <Layout className={className}>
-      {children}
-
+    <div className={className}>
       <TokenList>
         {tokens.map(({ token, symbol, icon }) => {
           const exists = existsTokens.has(token);
@@ -58,17 +54,17 @@ export function ManageCW20Tokens({
       </TokenList>
 
       {onAddAll && (
-        <footer>
-          <Button variant="contained" color="secondary" onClick={onClose}>
+        <FormFooter>
+          <Button variant="danger" size="large" onClick={onClose}>
             Cancel
           </Button>
 
-          <Button variant="contained" color="primary" onClick={onAddAll}>
+          <Button variant="primary" size="large" onClick={onAddAll}>
             Add all tokens
           </Button>
-        </footer>
+        </FormFooter>
       )}
-    </Layout>
+    </div>
   );
 }
 

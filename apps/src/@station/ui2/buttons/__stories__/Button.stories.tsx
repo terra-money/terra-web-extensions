@@ -18,7 +18,7 @@ export default {
   title: 'station/buttons',
 } as Meta;
 
-export const Styles = () => {
+export const Button_ = () => {
   return (
     <div>
       <section>
@@ -146,7 +146,7 @@ export const Styles = () => {
   );
 };
 
-export const Generic = () => {
+export const Button_Generic = () => {
   return (
     <HashRouter>
       <div

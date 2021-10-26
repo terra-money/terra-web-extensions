@@ -38,6 +38,8 @@ import styled from 'styled-components';
 import { LedgerIcon, TerraIcon } from 'webextension/assets';
 import { ConfigSelector } from 'webextension/components/header/ConfigSelector';
 import { useStore } from 'webextension/contexts/store';
+import { useAddCW20TokensDialog } from 'webextension/entries/popup/dialogs/useAddCW20Tokens';
+import { useManageCW20TokensDialog } from 'webextension/entries/popup/dialogs/useManageCW20Tokens';
 import { extensionPath } from 'webextension/logics/extensionPath';
 import { useTokenList } from 'webextension/queries/useTokenList';
 
@@ -49,6 +51,10 @@ function navItemRenderer(length: number, itemIndex: number) {
 
 function DashboardBase({ className }: { className?: string }) {
   const history = useHistory();
+
+  const [openAddCW20Tokens, addCW20TokensElement] = useAddCW20TokensDialog();
+  const [openManageCW20Tokens, manageCW20TokensElement] =
+    useManageCW20TokensDialog();
 
   const { wallets, focusedWallet, focusedWalletIndex } = useStore();
 
@@ -216,23 +222,21 @@ function DashboardBase({ className }: { className?: string }) {
 
             {focusedWallet && tokens && (
               <footer className="token-actions">
-                <Button<Link>
+                <Button
                   variant="dim"
                   size="medium"
                   leftIcon={<MdAdd />}
-                  component={Link as any}
-                  to={`/tokens/add`}
+                  onClick={() => openAddCW20Tokens({})}
                 >
                   Add Token
                 </Button>
 
                 {tokens.some(({ isCW20Token }) => isCW20Token) && (
-                  <Button<Link>
+                  <Button
                     variant="dim"
                     size="medium"
                     leftIcon={<MdSettings />}
-                    component={Link as any}
-                    to={`/tokens`}
+                    onClick={() => openManageCW20Tokens({})}
                   >
                     Manage Token
                   </Button>
@@ -293,6 +297,9 @@ function DashboardBase({ className }: { className?: string }) {
           </>
         )}
       </main>
+
+      {addCW20TokensElement}
+      {manageCW20TokensElement}
     </section>
   );
 }

@@ -6,8 +6,8 @@ import {
 import React from 'react';
 import { createMantineStyles } from '../mantine-utils/createMantineStyles';
 
-type ButtonSize = 'large' | 'default' | 'medium' | 'small' | 'tiny';
-type ButtonVariant = 'primary' | 'danger' | 'dim' | 'outline';
+export type ButtonSize = 'large' | 'default' | 'medium' | 'small' | 'tiny';
+export type ButtonVariant = 'primary' | 'danger' | 'dim' | 'outline';
 
 export const useButtonStyles = createMantineStyles<
   ButtonStylesNames,

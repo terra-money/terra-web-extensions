@@ -2,10 +2,11 @@ import { CW20TokenDisplayInfo, cw20TokenInfoQuery } from '@libs/app-fns';
 import { useApp, useCW20TokenDisplayInfosQuery } from '@libs/app-provider';
 import { truncate } from '@libs/formatter';
 import { CW20Addr } from '@libs/types';
-import { FormLayout, Layout, MiniButton, TextInput } from '@station/ui';
+import { CircleButton, SearchTextInput } from '@station/ui2';
 import { useWallet } from '@terra-dev/use-wallet';
 import { AccAddress } from '@terra-money/terra.js';
-import React, { ChangeEvent, ReactNode, useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
+import { MdDone, MdOutlineLaunch } from 'react-icons/md';
 import styled from 'styled-components';
 import { useCW20Tokens } from 'webextension/queries/useCW20Tokens';
 import { useTokenIcon } from 'webextension/queries/useTokenIcon';
@@ -15,14 +16,12 @@ export interface AddCW20TokenProps {
   onAdd: (tokenAddr: string) => void;
   onRemove: (tokenAddr: string) => void;
   onClose: () => void;
-  children?: ReactNode;
 }
 
 export function AddCW20Token({
   className,
   onAdd,
   onRemove,
-  children,
 }: AddCW20TokenProps) {
   const { network } = useWallet();
 
@@ -39,39 +38,38 @@ export function AddCW20Token({
   const tokens = useFindTokens(search);
 
   return (
-    <Layout className={className}>
-      {children}
-
-      <FormLayout>
-        <TextInput
-          fullWidth
-          placeholder="Search symbol or address..."
-          value={search}
-          onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
-            setSearch(target.value)
-          }
-        />
-      </FormLayout>
+    <div className={className}>
+      <SearchTextInput
+        placeholder="Search symbol or address..."
+        value={search}
+        onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
+          setSearch(target.value)
+        }
+      />
 
       <TokenList>
-        {tokens.map(({ token, symbol, icon }) => {
-          const exists = existsTokens.has(token);
-          return (
-            <TokenRow
-              key={token}
-              added={exists}
-              icon={icon}
-              name={symbol}
-              addr={token}
-              link={`https://finder.terra.money/${network.chainID}/address/${token}`}
-              onChange={(nextAdded) =>
-                nextAdded ? onAdd(token) : onRemove(token)
-              }
-            />
-          );
-        })}
+        {tokens
+          .filter(
+            ({ symbol }) => symbol.toLowerCase().indexOf('delisted') === -1,
+          )
+          .map(({ token, symbol, icon }) => {
+            const exists = existsTokens.has(token);
+            return (
+              <TokenRow
+                key={token}
+                added={exists}
+                icon={icon}
+                name={symbol}
+                addr={token}
+                link={`https://finder.terra.money/${network.chainID}/address/${token}`}
+                onChange={(nextAdded) =>
+                  nextAdded ? onAdd(token) : onRemove(token)
+                }
+              />
+            );
+          })}
       </TokenList>
-    </Layout>
+    </div>
   );
 }
 
@@ -90,20 +88,31 @@ export function TokenRow({
   link: string;
   onChange: (added: boolean) => void;
 }) {
-  return (
+  const [hide, setHide] = useState<boolean>(false);
+
+  return hide ? null : (
     <li>
-      <div>
-        <p>
-          <img src={icon} alt={name} /> {name}
-        </p>
-        <a href={link} target="_blank" rel="noreferrer">
-          {truncate(addr)}
-        </a>
+      <div className="icon-wrapper">
+        <img src={icon} alt={name} onError={() => setHide(true)} />
       </div>
-      <div>
-        <MiniButton onClick={() => onChange(!added)}>
-          {added ? 'Added' : 'Add'}
-        </MiniButton>
+      <div className="label-wrapper">
+        <div>{name}</div>
+        <div>
+          <a href={link} target="_blank" rel="noreferrer">
+            {truncate(addr)} <MdOutlineLaunch />
+          </a>
+        </div>
+      </div>
+      <div className="button-wrapper">
+        {added ? (
+          <CircleButton variant="primary" onClick={() => onChange(!added)}>
+            <MdDone />
+          </CircleButton>
+        ) : (
+          <CircleButton variant="dim" onClick={() => onChange(!added)}>
+            +
+          </CircleButton>
+        )}
       </div>
     </li>
   );
@@ -115,25 +124,46 @@ export const TokenList = styled.ul`
 
   display: flex;
   flex-direction: column;
-  gap: 10px;
+
+  height: var(--token-list-height, auto);
+  overflow-y: auto;
 
   li {
-    border: 1px solid #cccccc;
-    border-radius: 3px;
-    padding: 10px;
+    padding: 12px 0;
+
+    color: var(--color-content-text);
 
     display: flex;
     justify-content: space-between;
     align-items: center;
 
-    p {
-      display: flex;
-      align-items: center;
-      gap: 10px;
+    .icon-wrapper {
+      padding-right: 12px;
+
+      img {
+        width: 24px;
+      }
     }
 
-    img {
-      height: 1em;
+    .label-wrapper {
+      flex: 1;
+
+      font-size: 14px;
+      font-weight: bold;
+
+      a {
+        font-size: 11px;
+        font-weight: normal;
+        text-decoration: none;
+
+        svg {
+          vertical-align: middle;
+        }
+      }
+    }
+
+    &:not(:last-child) {
+      border-bottom: 1px solid var(--color-listbox-border);
     }
   }
 `;

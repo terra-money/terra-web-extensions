@@ -1,6 +1,7 @@
-import { Box, ListBox } from '@station/ui2';
+import { Box, Button, ListBox } from '@station/ui2';
+import { Modal } from '@station/ui2/containers/Modal';
 import { Meta } from '@storybook/react';
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
 export default {
@@ -8,6 +9,8 @@ export default {
 } as Meta;
 
 export const Styles = () => {
+  const [openModal, setOpenModal] = useState<boolean>(false);
+
   return (
     <Layout>
       <Box>Hello</Box>
@@ -16,9 +19,23 @@ export const Styles = () => {
         <li>B</li>
         <li>C</li>
       </ListBox>
+      <Button onClick={() => setOpenModal((prev) => !prev)}>Open Modal</Button>
+      {openModal && (
+        <Modal onClose={() => setOpenModal(false)}>
+          <ModalContent>Test Content</ModalContent>
+        </Modal>
+      )}
     </Layout>
   );
 };
+
+const ModalContent = styled.div`
+  width: 300px;
+  height: 240px;
+
+  display: grid;
+  place-content: center;
+`;
 
 const Layout = styled.div`
   display: flex;

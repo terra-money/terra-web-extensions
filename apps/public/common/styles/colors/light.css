@@ -109,4 +109,8 @@
   
   --color-message-success-background: hsla(168, 71%, 39%, 0.1);
   --color-message-success-text: var(--success-01);
+  
+  /* modal */
+  --color-dialog-background: var(--white);
+  --color-dialog-color: var(--primary-400);
 }

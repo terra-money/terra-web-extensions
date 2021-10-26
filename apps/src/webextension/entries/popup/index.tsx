@@ -23,8 +23,6 @@ import { DApps } from './pages/dapps';
 import { Dashboard } from './pages/dashboard';
 import { LedgerVerify } from './pages/ledger/verify';
 import { NetworksCreate } from './pages/networks/create';
-import { TokensAdd } from './pages/tokens/add';
-import { TokensList } from './pages/tokens/list';
 import { WalletChangePassword } from './pages/wallets/change-password';
 import { WalletsCreate } from './pages/wallets/create';
 import { WalletExport } from './pages/wallets/export';
@@ -92,8 +90,6 @@ function MainBase({ className }: { className?: string }) {
                   path="/networks/create"
                   component={NetworksCreate}
                 />
-                <Route exact path="/tokens" component={TokensList} />
-                <Route exact path="/tokens/add" component={TokensAdd} />
                 <Redirect to="/" />
               </Switch>
             </main>
