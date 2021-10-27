@@ -10,6 +10,7 @@ export interface IFrameModalProps {
   onClose: () => void;
 }
 
+/** @deprecated */
 export function IFrameModal({ title, src, ...modalProps }: IFrameModalProps) {
   return (
     <Modal {...modalProps}>

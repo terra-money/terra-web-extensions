@@ -1,3 +1,4 @@
+import { IFramePoppingModal, SvgIcon } from '@station/ui2';
 import {
   SerializedCreateTxOptions,
   WebConnectorTxDenied,
@@ -18,13 +19,21 @@ import { createElement } from 'react';
 import { render } from 'react-dom';
 import { Observable } from 'rxjs';
 import { browser } from 'webextension-polyfill-ts';
+import { TerraIcon } from 'webextension/assets';
 import { getDefaultNetworks } from 'webextension/queries/useDefaultNetworks';
-import { IFrameModal } from '../../components/modal/IFrameModal';
 import { contentScriptPortPrefix } from '../../env';
 import {
   ContentScriptOptions,
   startWebExtensionContentScript,
 } from './startWebExtensionContentScript';
+
+const logo = createElement(SvgIcon, {
+  width: 20,
+  height: 20,
+  children: createElement(TerraIcon),
+});
+
+const MODAL_WIDTH = 450;
 
 function startTx(
   id: string,
@@ -85,15 +94,18 @@ function startTx(
         const src = `${txHtml}?${toURLSearchParams(txRequest)}`;
 
         if (modalContainer) {
-          const modal = createElement(IFrameModal, {
+          const modal = createElement(IFramePoppingModal, {
+            logo,
             src: `${txHtml}?${toURLSearchParams(txRequest)}`,
-            title: 'Tx',
             onClose: () => {
               subscriber.next({
                 status: WebConnectorTxStatus.DENIED,
               });
               endTx();
             },
+            width: `${MODAL_WIDTH}px`,
+            height: '70vh',
+            maxHeight: '800px',
           });
 
           render(modal, modalContainer);
@@ -150,13 +162,16 @@ function startConnectWithIframeModal(
 
     const html = browser.runtime.getURL('connect.html');
 
-    const modal = createElement(IFrameModal, {
+    const modal = createElement(IFramePoppingModal, {
+      logo,
       src: `${html}?id=${id}&hostname=${hostname}`,
-      title: 'Connect',
+      title: 'Approve site',
       onClose: () => {
         resolve(false);
         endConnect();
       },
+      width: `${MODAL_WIDTH}px`,
+      height: '600px',
     });
 
     render(modal, modalContainer);
@@ -192,11 +207,12 @@ function startAddCW20TokenWithIframeModal(
 
     const html = browser.runtime.getURL('add-cw20-token.html');
 
-    const modal = createElement(IFrameModal, {
+    const modal = createElement(IFramePoppingModal, {
+      logo,
       src: `${html}?id=${id}&chain-id=${chainID}&token-addrs=${tokenAddrs.join(
         ',',
       )}`,
-      title: 'Add CW20 Tokens',
+      title: 'Add tokens',
       onClose: () => {
         hasCW20Tokens(chainID, tokenAddrs).then((hasTokens) => {
           resolve(hasTokens);
@@ -206,6 +222,9 @@ function startAddCW20TokenWithIframeModal(
           endConnect();
         });
       },
+      width: `${MODAL_WIDTH}px`,
+      height: '70vh',
+      maxHeight: `${300 + tokenAddrs.length * 60}px`,
     });
 
     render(modal, modalContainer);

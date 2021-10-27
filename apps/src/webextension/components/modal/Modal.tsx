@@ -73,6 +73,7 @@ const contentEnter = keyframes`
   }
 `;
 
+/** @deprecated */
 export const Modal = styled(ModalBase)`
   all: initial;
 

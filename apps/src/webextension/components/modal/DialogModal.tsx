@@ -26,4 +26,5 @@ function DialogModalBase({
 
 export const StyledDialogModal = styled(DialogModalBase)``;
 
+/** @deprecated */
 export const DialogModal = fixHMR(StyledDialogModal);
