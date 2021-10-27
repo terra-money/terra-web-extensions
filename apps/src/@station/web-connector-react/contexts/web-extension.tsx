@@ -36,14 +36,20 @@ export interface WebConnectorState {
     terraAddress: string,
     tx: CreateTxOptions,
   ) => Observable<WebConnectorTxResult>;
-  addCW20Tokens: (
-    chainID: string,
-    ...tokenAddrs: string[]
-  ) => Promise<{ [tokenAddr: string]: boolean }>;
   hasCW20Tokens: (
     chainID: string,
     ...tokenAddrs: string[]
   ) => Promise<{ [tokenAddr: string]: boolean }>;
+  addCW20Tokens: (
+    chainID: string,
+    ...tokenAddrs: string[]
+  ) => Promise<{ [tokenAddr: string]: boolean }>;
+  hasNetwork: (chainID: string, lcd: string) => Promise<boolean>;
+  addNetwork: (
+    name: string | undefined,
+    chainID: string,
+    lcd: string,
+  ) => Promise<boolean>;
 }
 
 const WebConnectorContext: Context<WebConnectorState> =
@@ -95,8 +101,10 @@ export function WebConnectorProvider({
       refetchStates: controller.refetchStates,
       requestApproval,
       post: controller.post,
-      addCW20Tokens: controller.addCW20Tokens,
       hasCW20Tokens: controller.hasCW20Tokens,
+      addCW20Tokens: controller.addCW20Tokens,
+      hasNetwork: controller.hasNetwork,
+      addNetwork: controller.addNetwork,
     }),
     [controller, status, states, requestApproval],
   );

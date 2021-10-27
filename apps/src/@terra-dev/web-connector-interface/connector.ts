@@ -1,5 +1,6 @@
 import type { CreateTxOptions } from '@terra-money/terra.js';
 import type { Observable, Observer } from 'rxjs';
+import { WebConnectorNetworkInfo } from './models/network';
 import { WebConnectorStates } from './models/states';
 import { WebConnectorStatus } from './models/status';
 import { WebConnectorTxResult } from './models/tx';
@@ -38,13 +39,19 @@ export interface TerraWebConnector {
     tx: CreateTxOptions,
   ) => Observable<WebConnectorTxResult>;
 
+  hasCW20Tokens: (
+    chainID: string,
+    ...tokenAddrs: string[]
+  ) => Promise<{ [tokenAddr: string]: boolean }>;
+
   addCW20Tokens: (
     chainID: string,
     ...tokenAddrs: string[]
   ) => Promise<{ [tokenAddr: string]: boolean }>;
 
-  hasCW20Tokens: (
-    chainID: string,
-    ...tokenAddrs: string[]
-  ) => Promise<{ [tokenAddr: string]: boolean }>;
+  hasNetwork: (
+    network: Omit<WebConnectorNetworkInfo, 'name'>,
+  ) => Promise<boolean>;
+
+  addNetwork: (network: WebConnectorNetworkInfo) => Promise<boolean>;
 }

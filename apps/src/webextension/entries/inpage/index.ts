@@ -3,6 +3,7 @@ import {
   serializeTx,
   TerraWebConnector,
   TerraWebConnectorInfo,
+  WebConnectorNetworkInfo,
   WebConnectorStates,
   WebConnectorStatus,
   WebConnectorStatusType,
@@ -23,10 +24,12 @@ import {
 } from 'rxjs';
 import {
   AddCW20Tokens,
+  AddNetwork,
   ExecuteExtensionTx,
   FromContentScriptToWebMessage,
   FromWebToContentScriptMessage,
   HasCW20Tokens,
+  HasNetwork,
   isWebExtensionMessage,
   RefetchExtensionStates,
   RequestApproval,
@@ -204,51 +207,6 @@ class WebExtensionController implements TerraWebConnector {
     );
   };
 
-  addCW20Tokens = (
-    chainID: string,
-    ...tokenAddrs: string[]
-  ): Promise<{ [tokenAddr: string]: boolean }> => {
-    if (!tokenAddrs.every((tokenAddr) => AccAddress.validate(tokenAddr))) {
-      console.error(
-        `There is invalid CW20 token address "${tokenAddrs.join(', ')}"`,
-      );
-    }
-
-    const id = Date.now();
-
-    const msg: AddCW20Tokens = {
-      type: FromWebToContentScriptMessage.ADD_CW20_TOKENS,
-      id,
-      chainID,
-      tokenAddrs,
-    };
-
-    this.hostWindow?.postMessage(msg, '*');
-
-    return new Promise<{ [tokenAddr: string]: boolean }>((resolve) => {
-      const callback = (event: MessageEvent) => {
-        if (
-          !isWebExtensionMessage(event.data) ||
-          event.data.type !==
-            FromContentScriptToWebMessage.ADD_CW20_TOKENS_RESPONSE ||
-          event.data.id !== id
-        ) {
-          return;
-        }
-
-        resolve(event.data.payload);
-
-        this.hostWindow?.removeEventListener('message', callback);
-      };
-
-      this.hostWindow?.addEventListener('message', callback);
-
-      return () => {
-        this.hostWindow?.removeEventListener('message', callback);
-      };
-    });
-  };
-
   hasCW20Tokens = (
     chainID: string,
     ...tokenAddrs: string[]
@@ -287,10 +245,111 @@ class WebExtensionController implements TerraWebConnector {
       };
 
       this.hostWindow?.addEventListener('message', callback);
+    });
+  };
 
-      return () => {
+  addCW20Tokens = (
+    chainID: string,
+    ...tokenAddrs: string[]
+  ): Promise<{ [tokenAddr: string]: boolean }> => {
+    if (!tokenAddrs.every((tokenAddr) => AccAddress.validate(tokenAddr))) {
+      console.error(
+        `There is invalid CW20 token address "${tokenAddrs.join(', ')}"`,
+      );
+    }
+
+    const id = Date.now();
+
+    const msg: AddCW20Tokens = {
+      type: FromWebToContentScriptMessage.ADD_CW20_TOKENS,
+      id,
+      chainID,
+      tokenAddrs,
+    };
+
+    this.hostWindow?.postMessage(msg, '*');
+
+    return new Promise<{ [tokenAddr: string]: boolean }>((resolve) => {
+      const callback = (event: MessageEvent) => {
+        if (
+          !isWebExtensionMessage(event.data) ||
+          event.data.type !==
+            FromContentScriptToWebMessage.ADD_CW20_TOKENS_RESPONSE ||
+          event.data.id !== id
+        ) {
+          return;
+        }
+
+        resolve(event.data.payload);
+
         this.hostWindow?.removeEventListener('message', callback);
       };
+
+      this.hostWindow?.addEventListener('message', callback);
+    });
+  };
+
+  hasNetwork = (
+    network: Omit<WebConnectorNetworkInfo, 'name'>,
+  ): Promise<boolean> => {
+    const id = Date.now();
+
+    const msg: HasNetwork = {
+      type: FromWebToContentScriptMessage.HAS_NETWORK,
+      id,
+      ...network,
+    };
+
+    this.hostWindow?.postMessage(msg, '*');
+
+    return new Promise<boolean>((resolve) => {
+      const callback = (event: MessageEvent) => {
+        if (
+          !isWebExtensionMessage(event.data) ||
+          event.data.type !==
+            FromContentScriptToWebMessage.HAS_NETWORK_RESPONSE ||
+          event.data.id !== id
+        ) {
+          return;
+        }
+
+        resolve(event.data.payload);
+
+        this.hostWindow?.removeEventListener('message', callback);
+      };
+
+      this.hostWindow?.addEventListener('message', callback);
+    });
+  };
+
+  addNetwork = (network: WebConnectorNetworkInfo): Promise<boolean> => {
+    const id = Date.now();
+
+    const msg: AddNetwork = {
+      type: FromWebToContentScriptMessage.ADD_NETWORK,
+      id,
+      ...network,
+    };
+
+    this.hostWindow?.postMessage(msg, '*');
+
+    return new Promise<boolean>((resolve) => {
+      const callback = (event: MessageEvent) => {
+        if (
+          !isWebExtensionMessage(event.data) ||
+          event.data.type !==
+            FromContentScriptToWebMessage.ADD_NETWORK_RESPONSE ||
+          event.data.id !== id
+        ) {
+          return;
+        }
+
+        resolve(event.data.payload);
+
+        this.hostWindow?.removeEventListener('message', callback);
+      };
+
+      this.hostWindow?.addEventListener('message', callback);
     });
   };
 

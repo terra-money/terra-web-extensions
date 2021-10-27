@@ -180,6 +180,10 @@ export class WebConnectorController {
     return this._connector!.post(terraAddress, tx);
   };
 
+  hasCW20Tokens = (chainID: string, ...tokenAddrs: string[]) => {
+    return this._connector!.hasCW20Tokens(chainID, ...tokenAddrs);
+  };
+
   /**
    * Add CW20 Token to extension dashboard
    */
@@ -187,8 +191,19 @@ export class WebConnectorController {
     return this._connector!.addCW20Tokens(chainID, ...tokenAddrs);
   };
 
-  hasCW20Tokens = (chainID: string, ...tokenAddrs: string[]) => {
-    return this._connector!.hasCW20Tokens(chainID, ...tokenAddrs);
+  hasNetwork = (chainID: string, lcd: string) => {
+    return this._connector!.hasNetwork({
+      chainID,
+      lcd,
+    });
+  };
+
+  addNetwork = (name: string | undefined, chainID: string, lcd: string) => {
+    return this._connector!.addNetwork({
+      name: name ?? '',
+      chainID,
+      lcd,
+    });
   };
 
   /**

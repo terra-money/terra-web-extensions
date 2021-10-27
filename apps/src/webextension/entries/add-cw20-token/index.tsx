@@ -19,9 +19,9 @@ import { LocalesProvider, useIntlProps } from 'webextension/contexts/locales';
 import { StoreProvider } from 'webextension/contexts/store';
 import { ThemeProvider } from 'webextension/contexts/theme';
 import {
-  STATION_TX_REFETCH_MAP,
   STATION_CONSTANTS,
   STATION_CONTRACT_ADDRESS,
+  STATION_TX_REFETCH_MAP,
   txPortPrefix,
 } from 'webextension/env';
 
@@ -29,11 +29,11 @@ export interface AppProps {
   className?: string;
 }
 
-function AppBase({ className }: AppProps) {
+function Component({ className }: AppProps) {
   // ---------------------------------------------
   // read hash urls
   // ---------------------------------------------
-  const addTokenInfo = useMemo(() => {
+  const addTokenQuery = useMemo(() => {
     const queries = window.location.search;
 
     const params = new URLSearchParams(queries);
@@ -58,7 +58,7 @@ function AppBase({ className }: AppProps) {
   const [initialTokens, setInitialTokens] = useState<string[]>(() => []);
 
   useEffect(() => {
-    hasCW20Tokens(addTokenInfo.chainID, addTokenInfo.tokenAddrs).then(
+    hasCW20Tokens(addTokenQuery.chainID, addTokenQuery.tokenAddrs).then(
       (result) => {
         setTokensExists(
           !Object.keys(result).some((tokenAddr) => !result[tokenAddr]),
@@ -66,57 +66,57 @@ function AppBase({ className }: AppProps) {
       },
     );
 
-    setInitialTokens(addTokenInfo.tokenAddrs);
-  }, [addTokenInfo.chainID, addTokenInfo.tokenAddrs]);
+    setInitialTokens(addTokenQuery.tokenAddrs);
+  }, [addTokenQuery.chainID, addTokenQuery.tokenAddrs]);
 
   // ---------------------------------------------
   // callbacks
   // ---------------------------------------------
   const add = useCallback(
     async (tokenAddr: string) => {
-      await addCW20Tokens(addTokenInfo.chainID, [tokenAddr]);
+      await addCW20Tokens(addTokenQuery.chainID, [tokenAddr]);
     },
-    [addTokenInfo.chainID],
+    [addTokenQuery.chainID],
   );
 
   const remove = useCallback(
     async (tokenAddr: string) => {
-      await removeCW20Tokens(addTokenInfo.chainID, [tokenAddr]);
+      await removeCW20Tokens(addTokenQuery.chainID, [tokenAddr]);
     },
-    [addTokenInfo.chainID],
+    [addTokenQuery.chainID],
   );
 
   const addAll = useCallback(async () => {
-    await addCW20Tokens(addTokenInfo.chainID, addTokenInfo.tokenAddrs);
+    await addCW20Tokens(addTokenQuery.chainID, addTokenQuery.tokenAddrs);
 
     const port = browser.runtime.connect(undefined, {
-      name: txPortPrefix + addTokenInfo.id,
+      name: txPortPrefix + addTokenQuery.id,
     });
 
     port.postMessage(
-      addTokenInfo.tokenAddrs.reduce((result, tokenAddr) => {
+      addTokenQuery.tokenAddrs.reduce((result, tokenAddr) => {
         result[tokenAddr] = true;
         return result;
       }, {} as { [tokenAddr: string]: boolean }),
     );
 
     port.disconnect();
-  }, [addTokenInfo.chainID, addTokenInfo.id, addTokenInfo.tokenAddrs]);
+  }, [addTokenQuery.chainID, addTokenQuery.id, addTokenQuery.tokenAddrs]);
 
   const close = useCallback(async () => {
     const port = browser.runtime.connect(undefined, {
-      name: txPortPrefix + addTokenInfo.id,
+      name: txPortPrefix + addTokenQuery.id,
     });
 
     const result = await hasCW20Tokens(
-      addTokenInfo.chainID,
-      addTokenInfo.tokenAddrs,
+      addTokenQuery.chainID,
+      addTokenQuery.tokenAddrs,
     );
 
     port.postMessage(result);
 
     port.disconnect();
-  }, [addTokenInfo.chainID, addTokenInfo.id, addTokenInfo.tokenAddrs]);
+  }, [addTokenQuery.chainID, addTokenQuery.id, addTokenQuery.tokenAddrs]);
 
   // ---------------------------------------------
   // presentation
@@ -138,19 +138,15 @@ function AppBase({ className }: AppProps) {
       onAdd={add}
       onAddAll={addAll}
       onClose={close}
-    >
-      <header>
-        <h1>Add tokens</h1>
-      </header>
-    </ManageCW20Tokens>
+    />
   );
 }
 
-export const StyledApp = styled(AppBase)`
+export const StyledComponent = styled(Component)`
   // TODO
 `;
 
-export const App = fixHMR(StyledApp);
+const App = fixHMR(StyledComponent);
 
 const theme: DefaultTheme = createMuiTheme();
 
@@ -163,9 +159,9 @@ function Main() {
     <QueryClientProvider client={queryClient}>
       <StoreProvider>
         <AppProvider
+          defaultQueryClient="lcd"
           contractAddress={STATION_CONTRACT_ADDRESS}
           constants={STATION_CONSTANTS}
-          defaultQueryClient="lcd"
           refetchMap={STATION_TX_REFETCH_MAP}
         >
           <IntlProvider locale={locale} messages={messages}>

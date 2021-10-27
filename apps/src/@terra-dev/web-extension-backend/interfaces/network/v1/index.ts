@@ -36,6 +36,17 @@ export async function findNetwork(
   return networks.find((network) => network.name === name);
 }
 
+export async function findSimilarNetwork(
+  defaultNetworks: WebConnectorNetworkInfo[],
+  chainID: string,
+  lcd: string,
+): Promise<WebConnectorNetworkInfo | undefined> {
+  const { networks } = await readNetworkStorage();
+  return [...defaultNetworks, ...networks].find((targetNetwork) => {
+    return targetNetwork.chainID === chainID && targetNetwork.lcd === lcd;
+  });
+}
+
 export async function addNetwork(
   network: WebConnectorNetworkInfo,
 ): Promise<void> {

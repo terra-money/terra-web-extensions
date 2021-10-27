@@ -1,11 +1,13 @@
 import {
   SerializedCreateTxOptions,
+  WebConnectorNetworkInfo,
   WebConnectorStates,
   WebConnectorTxResult,
   WebConnectorTxStatus,
   WebConnectorWalletInfo,
 } from '@terra-dev/web-connector-interface';
 import {
+  findSimilarNetwork,
   hasCW20Tokens,
   observeHostnamesStorage,
   observeNetworkStorage,
@@ -21,7 +23,9 @@ import {
   FromWebToContentScriptMessage,
   isWebExtensionMessage,
   WebExtensionAddCW20TokenResponse,
+  WebExtensionAddNetworkResponse,
   WebExtensionHasCW20TokensResponse,
+  WebExtensionHasNetworkResponse,
   WebExtensionStatesUpdated,
   WebExtensionTxResponse,
 } from '../../models/WebExtensionMessage';
@@ -34,11 +38,15 @@ export interface ContentScriptOptions {
     tx: SerializedCreateTxOptions,
   ) => Observable<WebConnectorTxResult>;
   startConnect: (id: string, hostname: string) => Promise<boolean>;
-  startAddCW20Token: (
+  startAddCW20Tokens: (
     id: string,
     chainID: string,
     ...tokenAddrs: string[]
   ) => Promise<{ [tokenAddr: string]: boolean }>;
+  startAddNetwork: (
+    id: string,
+    network: WebConnectorNetworkInfo,
+  ) => Promise<boolean>;
 }
 
 const CONNECT_NAME = 'Terra Station';
@@ -46,7 +54,8 @@ const CONNECT_NAME = 'Terra Station';
 export function startWebExtensionContentScript({
   startTx,
   startConnect,
-  startAddCW20Token,
+  startAddCW20Tokens,
+  startAddNetwork,
 }: ContentScriptOptions) {
   // ---------------------------------------------
   // only enable the site has <meta name="terra-web-connect" legacy="terra.js">
@@ -399,8 +408,22 @@ export function startWebExtensionContentScript({
               window.postMessage(msg, '*');
             });
             break;
+          case FromWebToContentScriptMessage.HAS_CW20_TOKENS:
+            hasCW20Tokens(event.data.chainID, event.data.tokenAddrs).then(
+              (result) => {
+                const msg: WebExtensionHasCW20TokensResponse = {
+                  type: FromContentScriptToWebMessage.HAS_CW20_TOKENS_RESPONSE,
+                  id: +event.data.id,
+                  chainID: event.data.chainID,
+                  payload: result,
+                };
+
+                window.postMessage(msg, '*');
+              },
+            );
+            break;
           case FromWebToContentScriptMessage.ADD_CW20_TOKENS:
-            startAddCW20Token(
+            startAddCW20Tokens(
               Date.now().toString(),
               event.data.chainID,
               ...event.data.tokenAddrs,
@@ -415,19 +438,40 @@ export function startWebExtensionContentScript({
               window.postMessage(msg, '*');
             });
             break;
-          case FromWebToContentScriptMessage.HAS_CW20_TOKENS:
-            hasCW20Tokens(event.data.chainID, event.data.tokenAddrs).then(
-              (result) => {
-                const msg: WebExtensionHasCW20TokensResponse = {
-                  type: FromContentScriptToWebMessage.HAS_CW20_TOKENS_RESPONSE,
+          case FromWebToContentScriptMessage.HAS_NETWORK:
+            getDefaultNetworks()
+              .then((defaultNetworks) =>
+                findSimilarNetwork(
+                  defaultNetworks,
+                  event.data.chainID,
+                  event.data.lcd,
+                ),
+              )
+              .then((foundNetwork) => {
+                const msg: WebExtensionHasNetworkResponse = {
+                  type: FromContentScriptToWebMessage.HAS_NETWORK_RESPONSE,
                   id: +event.data.id,
-                  chainID: event.data.chainID,
-                  payload: result,
+                  payload: !!foundNetwork,
                 };
 
                 window.postMessage(msg, '*');
-              },
-            );
+              });
+            break;
+          case FromWebToContentScriptMessage.ADD_NETWORK:
+            startAddNetwork(Date.now().toString(), {
+              name: event.data.name ?? '',
+              chainID: event.data.chainID,
+              lcd: event.data.lcd,
+            }).then((result) => {
+              const msg: WebExtensionAddNetworkResponse = {
+                type: FromContentScriptToWebMessage.ADD_NETWORK_RESPONSE,
+                id: +event.data.id,
+                payload: result,
+              };
+
+              window.postMessage(msg, '*');
+            });
+            break;
         }
       },
       false,

@@ -92,6 +92,11 @@ export function createConfig(
             script: path.resolve(app, 'entries/add-cw20-token/index.tsx'),
             html: path.resolve(app, 'entries/add-cw20-token/index.html'),
           },
+          {
+            name: 'add-network',
+            script: path.resolve(app, 'entries/add-network/index.tsx'),
+            html: path.resolve(app, 'entries/add-network/index.html'),
+          },
         ],
       }),
     ),

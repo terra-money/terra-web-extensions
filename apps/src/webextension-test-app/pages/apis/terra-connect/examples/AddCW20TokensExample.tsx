@@ -16,7 +16,7 @@ const bethAddr = {
   testnet: 'terra19mkj9nec6e3y5754tlnuz4vem7lzh4n0lc2s3l',
 };
 
-export function CW20TokensExample() {
+export function AddCW20TokensExample() {
   const { states, hasCW20Tokens, addCW20Tokens } = useWebConnector();
 
   const [addedStates, setAddedStates] = useState<{
