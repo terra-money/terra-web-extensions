@@ -77,7 +77,7 @@ function ComponentBase({
 }
 
 const Component = styled(ComponentBase)`
-  max-width: 900px;
+  width: 400px;
   min-height: 450px;
   max-height: 450px;
 

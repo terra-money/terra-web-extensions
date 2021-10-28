@@ -61,9 +61,14 @@ function ComponentBase({
 }
 
 const Component = styled(ComponentBase)`
-  max-width: 900px;
-  min-height: 450px;
-  max-height: 450px;
+  width: 400px;
+  min-height: 500px;
+  max-height: 500px;
 
   --token-list-height: 350px;
+
+  @media (max-width: 699px) {
+    min-height: 450px;
+    max-height: 450px;
+  }
 `;
