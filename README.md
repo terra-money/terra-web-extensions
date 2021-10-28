@@ -7,15 +7,14 @@
 ```sh
 yarn install
 cd apps
-yarn run webextension:dev
+yarn run start
 ```
 
 ## 2-1. Chrome
 
-1. Go to `chrome://extensions` page
-2. Turn on "Developer mode" on right top corner
-3. Click "Load unpacked"
-4. Choose the `~/apps/dev/webextension` directory
+You don't need to setting on chrome browser.
+
+When you run `yarn run start` script, you can get a chromium browser with setted the dev extension.
 
 ## 2-2. Firefox
 
@@ -29,9 +28,3 @@ yarn run webextension:dev
 1. Allow `Develop / Allow Unsigned Extensions` on the Safari Menubar
 2. Open XCode project the `~/safari-webextension/terra-connect`
 3. Run
-
-## 3. Debugging Web and Web Extension
-
-<img src="readme-assets/terminals.png" width="700" alt="Terminals" />
-
-1. Open `http://localhost:8001` (see the second terminal `keys` line)
