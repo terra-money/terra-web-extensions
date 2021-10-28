@@ -14,8 +14,11 @@ import {
   NewWalletResult,
 } from 'webextension/components/views/NewWallet';
 import { RecoverWallet } from 'webextension/components/views/RecoverWallet';
+import { useStore } from 'webextension/contexts/store';
 
 export function WalletsRecover({ history }: RouteComponentProps) {
+  const { wallets } = useStore();
+
   const [newWallet, setNewWallet] = useState<NewWalletResult | null>(null);
 
   //// dummy data
@@ -60,7 +63,7 @@ export function WalletsRecover({ history }: RouteComponentProps) {
         onBack={cancel}
         rightSection={<Step steps={['1', '2']} selectedIndex={0} />}
       >
-        <NewWallet onConfirm={create} />
+        <NewWallet wallets={wallets} onConfirm={create} />
       </SubLayout>
     );
   }
@@ -71,7 +74,7 @@ export function WalletsRecover({ history }: RouteComponentProps) {
       onBack={cancel}
       rightSection={<Step steps={['1', '2']} selectedIndex={1} />}
     >
-      <RecoverWallet onConfirm={confirm} />
+      <RecoverWallet wallets={wallets} onConfirm={confirm} />
     </SubLayout>
   );
 }

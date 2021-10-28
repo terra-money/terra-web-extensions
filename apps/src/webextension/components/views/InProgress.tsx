@@ -1,37 +1,26 @@
 import React, { ReactNode } from 'react';
 import { RotateSpinner } from 'react-spinners-kit';
-import styled from 'styled-components';
-import { FormMain } from 'webextension/components/layouts/FormMain';
+import { ViewCenterLayout } from './components/ViewCenterLayout';
 
 export interface InProgressProps {
   className?: string;
-  children: ReactNode;
+  title: string;
+  children?: ReactNode;
 }
 
-export function InProgress({ className, children }: InProgressProps) {
+export function InProgress({ className, title, children }: InProgressProps) {
   return (
-    <div className={className}>
-      <FormMain>
-        <CenterLayout>
+    <ViewCenterLayout
+      className={className}
+      icon={
+        <div style={{ marginBottom: 15 }}>
           <RotateSpinner size={48} color="#2043b5" />
-          <p>{children}</p>
-        </CenterLayout>
-      </FormMain>
-    </div>
+        </div>
+      }
+      title={title}
+      footer={null}
+    >
+      {children}
+    </ViewCenterLayout>
   );
 }
-
-const CenterLayout = styled.div`
-  margin-top: 60px;
-  text-align: center;
-
-  p {
-    margin-top: 10px;
-
-    font-size: 18px;
-    font-weight: 500;
-    line-height: 1.5;
-
-    color: var(--color-content-text);
-  }
-`;

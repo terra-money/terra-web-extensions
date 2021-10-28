@@ -8,11 +8,11 @@ import { AccAddress } from '@terra-money/terra.js';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { MdDone, MdOutlineLaunch } from 'react-icons/md';
 import styled from 'styled-components';
-import { useCW20Tokens } from 'webextension/queries/useCW20Tokens';
 import { useTokenIcon } from 'webextension/queries/useTokenIcon';
 
 export interface AddCW20TokenProps {
   className?: string;
+  existsTokens: Set<string>;
   onAdd: (tokenAddr: string) => void;
   onRemove: (tokenAddr: string) => void;
   onClose: () => void;
@@ -20,12 +20,11 @@ export interface AddCW20TokenProps {
 
 export function AddCW20Token({
   className,
+  existsTokens,
   onAdd,
   onRemove,
 }: AddCW20TokenProps) {
   const { network } = useWallet();
-
-  const existsTokens = useCW20Tokens();
 
   // ---------------------------------------------
   // states
@@ -38,7 +37,15 @@ export function AddCW20Token({
   const tokens = useFindTokens(search);
 
   return (
-    <div className={className}>
+    <div
+      className={className}
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 10,
+        maxHeight: '100%',
+      }}
+    >
       <SearchTextInput
         placeholder="Search symbol or address..."
         value={search}
@@ -47,7 +54,7 @@ export function AddCW20Token({
         }
       />
 
-      <TokenList>
+      <TokenList style={{ flex: 1, minHeight: 0, overflowY: 'auto' }}>
         {tokens
           .filter(
             ({ symbol }) => symbol.toLowerCase().indexOf('delisted') === -1,
@@ -124,9 +131,6 @@ export const TokenList = styled.ul`
 
   display: flex;
   flex-direction: column;
-
-  height: var(--token-list-height, auto);
-  overflow-y: auto;
 
   li {
     padding: 12px 0;

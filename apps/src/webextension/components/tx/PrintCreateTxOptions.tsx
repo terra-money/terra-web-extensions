@@ -63,7 +63,7 @@ export const PrintCreateTxOptions = styled(PrintCreateTxOptionsBase)`
   list-style: none;
   padding: 0;
 
-  margin: 20px 0;
+  font-size: 12px;
 
   > li {
     &:not(:first-child) {
@@ -71,12 +71,14 @@ export const PrintCreateTxOptions = styled(PrintCreateTxOptionsBase)`
     }
 
     border-radius: 8px;
-    border: 1px solid #81a2cb;
-    background-color: #f7fbff;
+    border: 1px solid var(--desaturated-400);
+    background-color: var(--white);
 
-    padding: 10px;
+    padding: 0 15px;
 
     h3 {
+      height: 45px;
+
       font-size: 1em;
 
       user-select: none;

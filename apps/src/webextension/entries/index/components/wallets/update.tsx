@@ -1,11 +1,12 @@
 import type { DialogProps, OpenDialog } from '@libs/use-dialog';
 import { useDialog } from '@libs/use-dialog';
+import { useWallet } from '@terra-dev/use-wallet';
 import { updateWallet } from '@terra-dev/web-extension-backend';
 import type { ReactNode } from 'react';
 import React, { useCallback } from 'react';
 import styled from 'styled-components';
 import { DialogModal } from 'webextension/components/modal/DialogModal';
-import { NotFoundWallet } from 'webextension/components/views/NotFoundWallet';
+import { CanNotFindWallet } from 'webextension/components/views/CanNotFindWallet';
 import {
   UpdateWallet,
   UpdateWalletResult,
@@ -32,6 +33,8 @@ function ComponentBase({
   closeDialog,
   terraAddress,
 }: DialogProps<FormParams, FormReturn>) {
+  const { network } = useWallet();
+
   const wallet = useFindWallet(terraAddress);
 
   const update = useCallback(
@@ -55,7 +58,11 @@ function ComponentBase({
   if (wallet === FindWalletStatus.NOT_FOUND) {
     return (
       <DialogModal onClose={closeDialog} headerTitle="Update Wallet">
-        <NotFoundWallet terraAddress={terraAddress} onConfirm={closeDialog} />
+        <CanNotFindWallet
+          chainID={network.chainID}
+          terraAddress={terraAddress}
+          onConfirm={closeDialog}
+        />
       </DialogModal>
     );
   }

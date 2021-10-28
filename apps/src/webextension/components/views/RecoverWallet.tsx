@@ -1,30 +1,27 @@
 import { vibrate } from '@libs/ui';
 import { Button, SingleLineFormContainer } from '@station/ui2';
 import {
+  EncryptedWallet,
+  LedgerWallet,
   restoreMnemonicKey,
   validateMnemonicKey,
 } from '@terra-dev/web-extension-backend';
 import { MnemonicKey } from '@terra-money/terra.js';
-import React, {
-  ReactNode,
-  useCallback,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { FormMain } from 'webextension/components/layouts/FormMain';
-import { useStore } from 'webextension/contexts/store';
 import { FormFooter } from '../layouts/FormFooter';
 
 export interface RecoverWalletProps {
   className?: string;
+  wallets: (EncryptedWallet | LedgerWallet)[];
   onConfirm: (mk: MnemonicKey) => void;
-  children?: ReactNode;
 }
 
-export function RecoverWallet({ className, onConfirm }: RecoverWalletProps) {
-  const { wallets } = useStore();
-
+export function RecoverWallet({
+  className,
+  wallets,
+  onConfirm,
+}: RecoverWalletProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [mnemonic, setMnemonic] = useState<string>('');

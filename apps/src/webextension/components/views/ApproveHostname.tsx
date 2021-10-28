@@ -1,6 +1,7 @@
-import { Button } from '@material-ui/core';
-import { FormLayout, Layout } from '@station/ui';
+import { Button } from '@station/ui2';
 import React from 'react';
+import { MdDomainVerification } from 'react-icons/md';
+import { ViewCenterLayout } from './components/ViewCenterLayout';
 
 export interface ApproveHostnameProps {
   className?: string;
@@ -16,24 +17,22 @@ export function ApproveHostname({
   onConfirm,
 }: ApproveHostnameProps) {
   return (
-    <Layout className={className}>
-      <FormLayout>
-        <p>{hostname} 의 접근을 허용하시겠습니까?</p>
-        <p>
-          이 App 이 Extension 에 접근할 수 있습니다. 신뢰할 수 있는 App 인지
-          확인해주세요!
-        </p>
-      </FormLayout>
-
-      <footer>
-        <Button variant="contained" color="secondary" onClick={onCancel}>
-          Cancel
-        </Button>
-
-        <Button variant="contained" color="primary" onClick={onConfirm}>
-          Approve
-        </Button>
-      </footer>
-    </Layout>
+    <ViewCenterLayout
+      className={className}
+      icon={<MdDomainVerification />}
+      title="Approve this site?"
+      footer={
+        <>
+          <Button variant="danger" size="large" onClick={onCancel}>
+            Deny
+          </Button>
+          <Button variant="primary" size="large" onClick={onConfirm}>
+            Approve
+          </Button>
+        </>
+      }
+    >
+      <p>{hostname}</p>
+    </ViewCenterLayout>
   );
 }

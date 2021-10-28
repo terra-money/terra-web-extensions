@@ -1,6 +1,7 @@
-import { Button } from '@material-ui/core';
-import { FormLayout, Layout } from '@station/ui';
+import { Button } from '@station/ui2';
 import React from 'react';
+import { MdMoodBad } from 'react-icons/md';
+import { ViewCenterLayout } from './components/ViewCenterLayout';
 
 export interface CanNotFindTxProps {
   className?: string;
@@ -9,19 +10,15 @@ export interface CanNotFindTxProps {
 
 export function CanNotFindTx({ className, onConfirm }: CanNotFindTxProps) {
   return (
-    <Layout className={className}>
-      <FormLayout>
-        <h2>Error</h2>
-        <p>Tx 를 찾을 수 없습니다.</p>
-      </FormLayout>
-
-      {onConfirm && (
-        <footer>
-          <Button variant="contained" color="primary" onClick={onConfirm}>
-            Confirm
-          </Button>
-        </footer>
-      )}
-    </Layout>
+    <ViewCenterLayout
+      className={className}
+      icon={<MdMoodBad />}
+      title="Can't find Tx"
+      footer={
+        <Button variant="primary" size="large" onClick={onConfirm}>
+          Close
+        </Button>
+      }
+    />
   );
 }

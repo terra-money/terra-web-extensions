@@ -9,6 +9,7 @@ import React, { ReactNode, useCallback } from 'react';
 import styled from 'styled-components';
 import { DialogLayout } from 'webextension/components/layouts/DialogLayout';
 import { AddCW20Token } from 'webextension/components/views/AddCW20Token';
+import { useCW20Tokens } from 'webextension/queries/useCW20Tokens';
 
 interface FormParams {
   className?: string;
@@ -28,6 +29,8 @@ function ComponentBase({
   closeDialog,
 }: DialogProps<FormParams, FormReturn>) {
   const { network } = useWallet();
+
+  const existsTokens = useCW20Tokens();
 
   const cancel = useCallback(() => {
     closeDialog();
@@ -54,7 +57,12 @@ function ComponentBase({
         onClose={() => closeDialog()}
         className={className}
       >
-        <AddCW20Token onAdd={add} onRemove={remove} onClose={cancel} />
+        <AddCW20Token
+          existsTokens={existsTokens}
+          onAdd={add}
+          onRemove={remove}
+          onClose={cancel}
+        />
       </DialogLayout>
     </Modal>
   );
@@ -64,8 +72,6 @@ const Component = styled(ComponentBase)`
   width: 400px;
   min-height: 500px;
   max-height: 500px;
-
-  --token-list-height: 350px;
 
   @media (max-width: 699px) {
     min-height: 450px;

@@ -1,5 +1,5 @@
 import { vibrate } from '@libs/ui';
-import { Button, Message, SingleLineFormContainer } from '@station/ui2';
+import { Button, SingleLineFormContainer } from '@station/ui2';
 import { MnemonicKey } from '@terra-money/terra.js';
 import React, {
   ChangeEvent,
@@ -8,7 +8,9 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import { MdMoodBad } from 'react-icons/md';
 import styled from 'styled-components';
+import { ViewCenterLayout } from 'webextension/components/views/components/ViewCenterLayout';
 import { FormFooter } from '../layouts/FormFooter';
 import { FormMain } from '../layouts/FormMain';
 
@@ -78,19 +80,18 @@ export function ConfirmYourSeed({
   // ---------------------------------------------
   if (failed > MAX_FAILED) {
     return (
-      <div className={className}>
-        <FormMain>
-          <Message variant="danger">
-            Mnemonic Key 를 확인하지 못하셨습니다. 이 지갑 생성은 취소됩니다.
-          </Message>
-        </FormMain>
-
-        <FormFooter>
-          <Button variant="danger" size="large" onClick={onCancel}>
+      <ViewCenterLayout
+        className={className}
+        icon={<MdMoodBad />}
+        title="Failed to confirm"
+        footer={
+          <Button variant="primary" size="large" onClick={onCancel}>
             Confirm
           </Button>
-        </FormFooter>
-      </div>
+        }
+      >
+        <p>Mnemonic Key 를 확인하지 못하셨습니다. 이 지갑 생성은 취소됩니다.</p>
+      </ViewCenterLayout>
     );
   }
 

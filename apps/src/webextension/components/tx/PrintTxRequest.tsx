@@ -1,13 +1,8 @@
-import {
-  Money,
-  MyLocationOutlined,
-  Schedule,
-  WifiTethering,
-} from '@material-ui/icons';
-import { LinedList } from '@station/ui';
 import { WebConnectorNetworkInfo } from '@terra-dev/web-connector-interface';
 import { CreateTxOptions } from '@terra-money/terra.js';
+import { fixHMR } from 'fix-hmr';
 import React from 'react';
+import styled from 'styled-components';
 
 export interface PrintTxRequestProps {
   className?: string;
@@ -17,7 +12,7 @@ export interface PrintTxRequestProps {
   date: Date;
 }
 
-export function PrintTxRequest({
+function Component({
   className,
   network,
   tx,
@@ -25,47 +20,23 @@ export function PrintTxRequest({
   date,
 }: PrintTxRequestProps) {
   return (
-    <LinedList
-      className={className}
-      iconMarginRight="0.6em"
-      firstLetterUpperCase={false}
-    >
+    <ul className={className}>
       <li>
-        <div>
-          <i>
-            <WifiTethering />
-          </i>
-          <span>NETWORK</span>
-        </div>
+        <b>Network</b>
         <span>
           {network.name} ({network.chainID})
         </span>
       </li>
       <li>
-        <div>
-          <i>
-            <MyLocationOutlined />
-          </i>
-          <span>ORIGIN</span>
-        </div>
+        <b>Origin</b>
         <span>{hostname}</span>
       </li>
       <li>
-        <div>
-          <i>
-            <Schedule />
-          </i>
-          <span>TIMESTAMP</span>
-        </div>
+        <b>Timestamp</b>
         <span>{date.toLocaleString()}</span>
       </li>
       <li>
-        <div>
-          <i>
-            <Money />
-          </i>
-          <span>FEE</span>
-        </div>
+        <b>Fee</b>
         <span>
           {tx.fee &&
             tx.fee.amount
@@ -78,6 +49,27 @@ export function PrintTxRequest({
               .join(', ')}
         </span>
       </li>
-    </LinedList>
+    </ul>
   );
 }
+
+const StyledComponent = styled(Component)`
+  padding: 0;
+  list-style: none;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  color: var(--color-content-text);
+
+  li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    font-size: 12px;
+  }
+`;
+
+export const PrintTxRequest = fixHMR(StyledComponent);

@@ -7,8 +7,11 @@ import {
   CreateNetwork,
   CreateNetworkResult,
 } from 'webextension/components/views/CreateNetwork';
+import { useStore } from 'webextension/contexts/store';
 
 export function NetworksCreate({ history }: RouteComponentProps<{}>) {
+  const { networks } = useStore();
+
   const cancel = useCallback(() => {
     history.push('/');
   }, [history]);
@@ -30,7 +33,7 @@ export function NetworksCreate({ history }: RouteComponentProps<{}>) {
 
   return (
     <SubLayout title="Add a new Network" onBack={cancel}>
-      <CreateNetwork onCreate={create} />
+      <CreateNetwork networks={networks} onCreate={create} />
     </SubLayout>
   );
 }

@@ -143,6 +143,10 @@ const StyledComponent = styled(Component)`
     > main {
       flex: 1;
       background-color: #f9faff;
+
+      iframe {
+        background-color: #0b132f;
+      }
     }
   }
 `;

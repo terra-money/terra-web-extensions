@@ -24,6 +24,7 @@ import {
   STATION_TX_REFETCH_MAP,
   txPortPrefix,
 } from 'webextension/env';
+import { useCW20Tokens } from 'webextension/queries/useCW20Tokens';
 
 export interface AppProps {
   className?: string;
@@ -56,6 +57,8 @@ function Component({ className }: AppProps) {
   const [tokensExists, setTokensExists] = useState<boolean>(false);
 
   const [initialTokens, setInitialTokens] = useState<string[]>(() => []);
+
+  const existsTokens = useCW20Tokens();
 
   useEffect(() => {
     hasCW20Tokens(addTokenQuery.chainID, addTokenQuery.tokenAddrs).then(
@@ -122,18 +125,13 @@ function Component({ className }: AppProps) {
   // presentation
   // ---------------------------------------------
   if (tokensExists) {
-    return (
-      <AlreadyCW20TokensExists onConfirm={close}>
-        <header>
-          <h1>Add tokens</h1>
-        </header>
-      </AlreadyCW20TokensExists>
-    );
+    return <AlreadyCW20TokensExists onConfirm={close} />;
   }
 
   return (
     <ManageCW20Tokens
       initialTokens={initialTokens}
+      existsTokens={existsTokens}
       onRemove={remove}
       onAdd={add}
       onAddAll={addAll}

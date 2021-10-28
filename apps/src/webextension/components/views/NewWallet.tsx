@@ -5,6 +5,8 @@ import {
   WalletCardSelector,
 } from '@station/ui2';
 import {
+  EncryptedWallet,
+  LedgerWallet,
   validatePasswordConfirm,
   validateWalletName,
   validateWalletPassword,
@@ -12,7 +14,6 @@ import {
 import React, { ChangeEvent, useCallback, useMemo, useState } from 'react';
 import { PasswordStrength } from 'webextension/components/form/PasswordStrength';
 import { FormFooter } from 'webextension/components/layouts/FormFooter';
-import { useStore } from 'webextension/contexts/store';
 import { cardDesigns } from 'webextension/env';
 import { FormMain } from '../layouts/FormMain';
 
@@ -24,15 +25,11 @@ export interface NewWalletResult {
 
 export interface NewWalletProps {
   className?: string;
+  wallets: (EncryptedWallet | LedgerWallet)[];
   onConfirm: (result: NewWalletResult) => void;
 }
 
-export function NewWallet({ className, onConfirm }: NewWalletProps) {
-  // ---------------------------------------------
-  // queries
-  // ---------------------------------------------
-  const { wallets } = useStore();
-
+export function NewWallet({ className, wallets, onConfirm }: NewWalletProps) {
   // ---------------------------------------------
   // states
   // ---------------------------------------------

@@ -16,6 +16,7 @@ export function IFramePoppingModal({
         title={src}
         src={src}
         frameBorder={0}
+        allowTransparency={false}
         style={{ width: '100%', height: '100%' }}
       />
     </PoppingModal>

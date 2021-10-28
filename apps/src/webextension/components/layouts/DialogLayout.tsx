@@ -35,6 +35,10 @@ function Component({
 const StyledComponent = styled(Component)`
   padding: 24px;
 
+  display: grid;
+  grid-template-rows: auto 1fr;
+  max-height: 100%;
+
   header {
     height: 24px;
 
@@ -43,6 +47,12 @@ const StyledComponent = styled(Component)`
     align-items: center;
 
     margin-bottom: 20px;
+  }
+
+  main {
+    height: 100%;
+    min-height: 0;
+    max-height: 100%;
   }
 `;
 

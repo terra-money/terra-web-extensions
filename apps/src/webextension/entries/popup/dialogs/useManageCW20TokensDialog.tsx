@@ -10,6 +10,7 @@ import React, { ReactNode, useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { DialogLayout } from 'webextension/components/layouts/DialogLayout';
 import { ManageCW20Tokens } from 'webextension/components/views/ManageCW20Tokens';
+import { useCW20Tokens } from 'webextension/queries/useCW20Tokens';
 
 interface FormParams {
   className?: string;
@@ -31,6 +32,8 @@ function ComponentBase({
   const { network } = useWallet();
 
   const [initialTokens, setInitialTokens] = useState<string[] | null>(null);
+
+  const existsTokens = useCW20Tokens();
 
   useEffect(() => {
     readCW20Storage().then(({ cw20Tokens }) => {
@@ -66,6 +69,7 @@ function ComponentBase({
         {initialTokens && (
           <ManageCW20Tokens
             initialTokens={initialTokens}
+            existsTokens={existsTokens}
             onRemove={remove}
             onAdd={add}
             onClose={cancel}
@@ -80,6 +84,4 @@ const Component = styled(ComponentBase)`
   width: 400px;
   min-height: 450px;
   max-height: 450px;
-
-  --token-list-height: 350px;
 `;

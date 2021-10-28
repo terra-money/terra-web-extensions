@@ -1,9 +1,10 @@
+import { useWallet } from '@terra-dev/use-wallet';
 import { updateWallet } from '@terra-dev/web-extension-backend';
 import React, { useCallback } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { SubLayout } from 'webextension/components/layouts/SubLayout';
+import { CanNotFindWallet } from 'webextension/components/views/CanNotFindWallet';
 import { InProgress } from 'webextension/components/views/InProgress';
-import { NotFoundWallet } from 'webextension/components/views/NotFoundWallet';
 import {
   UpdateWalletPassword,
   UpdateWalletPasswordResult,
@@ -21,6 +22,8 @@ export function WalletChangePassword({
   const cancel = useCallback(() => {
     history.push('/');
   }, [history]);
+
+  const { network } = useWallet();
 
   const wallet = useFindWallet(match.params.terraAddress);
 
@@ -43,7 +46,8 @@ export function WalletChangePassword({
   if (wallet === FindWalletStatus.NOT_FOUND) {
     return (
       <SubLayout title="Not found wallet" onBack={cancel}>
-        <NotFoundWallet
+        <CanNotFindWallet
+          chainID={network.chainID}
           terraAddress={match.params.terraAddress}
           onConfirm={cancel}
         />
@@ -54,7 +58,7 @@ export function WalletChangePassword({
   if (wallet === FindWalletStatus.IN_PROGRESS) {
     return (
       <SubLayout title="Change password" onBack={cancel}>
-        <InProgress>Searching for wallet</InProgress>
+        <InProgress title="Searching for wallet" />
       </SubLayout>
     );
   }

@@ -1,7 +1,5 @@
 import { vibrate } from '@libs/ui';
-import { WalletCard } from '@station/wallet-card';
-import { Button } from '@material-ui/core';
-import { FormLabel, TextInput } from '@station/ui';
+import { Button, SingleLineFormContainer, WalletCard } from '@station/ui2';
 import { WebConnectorNetworkInfo } from '@terra-dev/web-connector-interface';
 import {
   decryptWallet,
@@ -11,8 +9,10 @@ import {
 import { CreateTxOptions } from '@terra-money/terra.js';
 import React, { ChangeEvent, useCallback, useRef, useState } from 'react';
 import styled from 'styled-components';
+import { FormMain } from 'webextension/components/layouts/FormMain';
 import { PrintCreateTxOptions } from 'webextension/components/tx/PrintCreateTxOptions';
 import { PrintTxRequest } from 'webextension/components/tx/PrintTxRequest';
+import { FormFooter } from '../layouts/FormFooter';
 
 export interface SignTxWithEncryptedWalletProps {
   className?: string;
@@ -35,7 +35,7 @@ export function SignTxWithEncryptedWallet({
   onDeny,
   onProceed,
 }: SignTxWithEncryptedWalletProps) {
-  const containerRef = useRef<HTMLElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   // ---------------------------------------------
   // states
@@ -63,89 +63,64 @@ export function SignTxWithEncryptedWallet({
   }, [onProceed, password, wallet.encryptedWallet]);
 
   return (
-    <Section ref={containerRef} className={className}>
+    <Container ref={containerRef} className={className}>
       <header>
         <WalletCard
-          className="wallet-card"
           name={wallet.name}
           terraAddress={wallet.terraAddress}
           design={wallet.design}
+          style={{ width: 280, height: 140 }}
         />
       </header>
 
-      <PrintTxRequest
-        className="wallets-actions"
-        network={network}
-        tx={tx}
-        hostname={hostname}
-        date={date}
-      />
+      <FormMain>
+        <PrintTxRequest
+          className="wallets-actions"
+          network={network}
+          tx={tx}
+          hostname={hostname}
+          date={date}
+        />
 
-      <PrintCreateTxOptions className="tx" tx={tx} />
+        <PrintCreateTxOptions className="tx" tx={tx} />
 
-      <section className="form">
-        <FormLabel label="Wallet password">
-          <TextInput
-            fullWidth
+        <SingleLineFormContainer invalid={invalidPassword}>
+          <input
             type="password"
+            placeholder="Enter your password"
             value={password}
             onChange={({ target }: ChangeEvent<HTMLInputElement>) => {
               setPassword(target.value);
               setInvalidPassword(null);
             }}
-            error={!!invalidPassword}
-            helperText={invalidPassword}
           />
-        </FormLabel>
-      </section>
+        </SingleLineFormContainer>
+      </FormMain>
 
-      <footer>
-        <Button variant="contained" color="secondary" onClick={onDeny}>
+      <FormFooter>
+        <Button variant="danger" size="large" onClick={onDeny}>
           Deny
         </Button>
 
         <Button
-          variant="contained"
-          color="primary"
+          variant="primary"
+          size="large"
           disabled={password.length === 0 || !!invalidPassword}
           onClick={proceed}
         >
           Submit
         </Button>
-      </footer>
-    </Section>
+      </FormFooter>
+    </Container>
   );
 }
 
-export const Section = styled.section`
-  header {
+export const Container = styled.section`
+  > header {
+    height: 168px;
     display: flex;
     justify-content: center;
 
-    .wallet-card {
-      width: 276px;
-    }
-
-    margin-bottom: 30px;
-  }
-
-  .tx {
-    margin: 30px 0;
-  }
-
-  .form {
-    margin: 30px 0;
-  }
-
-  footer {
-    display: flex;
-
-    > * {
-      flex: 1;
-
-      &:not(:first-child) {
-        margin-left: 10px;
-      }
-    }
+    background-color: var(--color-header-background);
   }
 `;

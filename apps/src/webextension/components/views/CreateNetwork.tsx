@@ -1,4 +1,5 @@
 import { Button, SingleLineFormContainer } from '@station/ui2';
+import { WebConnectorNetworkInfo } from '@terra-dev/web-connector-interface';
 import {
   validateNetworkLcdURL,
   validateNetworkName,
@@ -6,7 +7,6 @@ import {
 import React, { ChangeEvent, useCallback, useMemo, useState } from 'react';
 import { FormFooter } from 'webextension/components/layouts/FormFooter';
 import { FormMain } from 'webextension/components/layouts/FormMain';
-import { useStore } from 'webextension/contexts/store';
 
 export interface CreateNetworkResult {
   name: string;
@@ -16,15 +16,15 @@ export interface CreateNetworkResult {
 
 export interface CreateNetworkProps {
   className?: string;
+  networks: WebConnectorNetworkInfo[];
   onCreate: (result: CreateNetworkResult) => void;
 }
 
-export function CreateNetwork({ className, onCreate }: CreateNetworkProps) {
-  // ---------------------------------------------
-  // queries
-  // ---------------------------------------------
-  const { networks } = useStore();
-
+export function CreateNetwork({
+  className,
+  networks,
+  onCreate,
+}: CreateNetworkProps) {
   // ---------------------------------------------
   // states
   // ---------------------------------------------

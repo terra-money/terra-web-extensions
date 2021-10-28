@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 export interface SingleLineFormContainerProps
   extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
-  label: ReactNode;
+  label?: ReactNode;
   suggest?: ReactNode;
 
   leftSection?: ReactNode;
@@ -33,10 +33,12 @@ function Component({
       aria-readonly={readOnly}
       aria-disabled={disabled}
     >
-      <header>
-        <div className="label-wrapper">{label}</div>
-        <div className="suggest-wrapper">{suggest}</div>
-      </header>
+      {(!!label || !!suggest) && (
+        <header>
+          <div className="label-wrapper">{label}</div>
+          <div className="suggest-wrapper">{suggest}</div>
+        </header>
+      )}
 
       <main>
         <div className="left-section-wrapper">{leftSection}</div>

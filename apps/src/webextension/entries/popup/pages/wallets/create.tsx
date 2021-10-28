@@ -15,11 +15,14 @@ import {
   NewWalletResult,
 } from 'webextension/components/views/NewWallet';
 import { WriteDownYourSeed } from 'webextension/components/views/WriteDownYourSeed';
+import { useStore } from 'webextension/contexts/store';
 
 export function WalletsCreate({ history }: RouteComponentProps) {
   const mk = useMemo(() => {
     return createMnemonicKey();
   }, []);
+
+  const { wallets } = useStore();
 
   const [newWallet, setNewWallet] = useState<NewWalletResult | null>(null);
   const [writeDownSeeds, setWriteDownSeeds] = useState<boolean>(false);
@@ -64,7 +67,7 @@ export function WalletsCreate({ history }: RouteComponentProps) {
         onBack={cancel}
         rightSection={<Step steps={['1', '2', '3']} selectedIndex={0} />}
       >
-        <NewWallet onConfirm={create} />
+        <NewWallet wallets={wallets} onConfirm={create} />
       </SubLayout>
     );
   }

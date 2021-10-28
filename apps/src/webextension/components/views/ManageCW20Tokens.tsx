@@ -4,7 +4,6 @@ import { CW20Addr } from '@libs/types';
 import { Button } from '@station/ui2';
 import { useWallet } from '@terra-dev/use-wallet';
 import React, { useEffect, useState } from 'react';
-import { useCW20Tokens } from 'webextension/queries/useCW20Tokens';
 import { useTokenIcon } from 'webextension/queries/useTokenIcon';
 import { FormFooter } from '../layouts/FormFooter';
 import { TokenList, TokenRow } from './AddCW20Token';
@@ -12,6 +11,7 @@ import { TokenList, TokenRow } from './AddCW20Token';
 export interface ManageCW20TokensProps {
   className?: string;
   initialTokens: string[];
+  existsTokens: Set<string>;
   onRemove: (tokenAddr: string) => void;
   onAdd: (tokenAddr: string) => void;
   onAddAll?: () => void;
@@ -21,14 +21,13 @@ export interface ManageCW20TokensProps {
 export function ManageCW20Tokens({
   className,
   initialTokens,
+  existsTokens,
   onRemove,
   onAdd,
   onAddAll,
   onClose,
 }: ManageCW20TokensProps) {
   const { network } = useWallet();
-
-  const existsTokens = useCW20Tokens();
 
   const tokens = useTokenList(initialTokens);
 
@@ -54,7 +53,7 @@ export function ManageCW20Tokens({
       </TokenList>
 
       {onAddAll && (
-        <FormFooter>
+        <FormFooter style={{ padding: '40px 0' }}>
           <Button variant="danger" size="large" onClick={onClose}>
             Cancel
           </Button>

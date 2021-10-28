@@ -1,4 +1,3 @@
-import { createMuiTheme } from '@material-ui/core';
 import {
   deserializeTx,
   WebConnectorTxFail,
@@ -22,7 +21,7 @@ import {
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { render } from 'react-dom';
 import { IntlProvider } from 'react-intl';
-import styled, { DefaultTheme } from 'styled-components';
+import styled from 'styled-components';
 import { browser } from 'webextension-polyfill-ts';
 import { ApproveHostname } from 'webextension/components/views/ApproveHostname';
 import { CanNotFindTx } from 'webextension/components/views/CanNotFindTx';
@@ -32,14 +31,13 @@ import { SignTxWithLedgerWallet } from 'webextension/components/views/SignTxWith
 import { UnknownCase } from 'webextension/components/views/UnknownCase';
 import { ErrorBoundary } from '../../components/common/ErrorBoundary';
 import { LocalesProvider, useIntlProps } from '../../contexts/locales';
-import { ThemeProvider } from '../../contexts/theme';
 import { txPortPrefix } from '../../env';
 
 export interface AppProps {
   className?: string;
 }
 
-function AppBase({ className }: AppProps) {
+function Component({ className }: AppProps) {
   // ---------------------------------------------
   // read hash urls
   // ---------------------------------------------
@@ -140,6 +138,7 @@ function AppBase({ className }: AppProps) {
     return (
       <CanNotFindWallet
         className={className}
+        chainID={txRequest.network.chainID}
         terraAddress={txRequest.terraAddress}
         onConfirm={cantFindWallet}
       />
@@ -337,29 +336,19 @@ function EncryptedWalletTxForm({
   );
 }
 
-const App = styled(AppBase)`
-  background-color: #ffffff;
-
+const App = styled(Component)`
   width: 100vw;
   max-width: 800px;
 
   margin: 0 auto;
-
-  padding: 20px;
-
-  font-size: 13px;
 `;
-
-const theme: DefaultTheme = createMuiTheme();
 
 function Main() {
   const { locale, messages } = useIntlProps();
 
   return (
     <IntlProvider locale={locale} messages={messages}>
-      <ThemeProvider theme={theme}>
-        <App />
-      </ThemeProvider>
+      <App />
     </IntlProvider>
   );
 }
