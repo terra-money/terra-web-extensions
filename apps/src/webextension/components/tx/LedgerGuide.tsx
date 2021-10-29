@@ -19,6 +19,9 @@ function LedgerGuideBase({ className, code, children }: LedgerGuideProps) {
       <div className={className}>
         <h3>Ledger Error Code: {code}</h3>
         <div dangerouslySetInnerHTML={{ __html: ledgerErrorGuides[code] }} />
+        <div className="origin-message">
+          <b>Original message:</b> {children}
+        </div>
       </div>
     );
   }
@@ -32,10 +35,30 @@ function LedgerGuideBase({ className, code, children }: LedgerGuideProps) {
 }
 
 export const StyledLedgerGuide = styled(LedgerGuideBase)`
-  border: 1px solid black;
-  border-radius: 5px;
+  background-color: var(--color-ledger-guide-background);
+  border: 1px solid var(--color-ledger-guide-border);
+  border-radius: 8px;
+
+  font-size: 12px;
+  line-height: 1.5;
+
+  color: var(--color-ledger-guide-text);
+
+  padding: 12px 15px;
 
   word-break: break-all;
+
+  h3 {
+    margin-bottom: 10px;
+  }
+
+  .origin-message {
+    margin-top: 10px;
+    border-radius: 8px;
+    background-color: rgba(0, 0, 0, 0.05);
+
+    padding: 15px;
+  }
 `;
 
 export const LedgerGuide = fixHMR(StyledLedgerGuide);

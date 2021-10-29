@@ -8,6 +8,9 @@ export const FormFooter = styled.footer`
 
   padding: 40px 20px;
 
+  max-width: 800px;
+  margin: 0 auto;
+
   > button,
   a {
     flex: 1;

@@ -113,4 +113,9 @@
   /* modal */
   --color-dialog-background: var(--white);
   --color-dialog-color: var(--primary-400);
+  
+  /* ledger guide */
+  --color-ledger-guide-background: var(--desaturated-300);
+  --color-ledger-guide-border: var(--desaturated-400);
+  --color-ledger-guide-text: var(--primary-400);
 }

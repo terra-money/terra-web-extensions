@@ -1,18 +1,18 @@
 import { vibrate } from '@libs/ui';
-import { Button } from '@material-ui/core';
-import { WalletCard } from '@station/wallet-card';
+import { Button, WalletCard } from '@station/ui2';
 import {
   WebConnectorLedgerError,
   WebConnectorNetworkInfo,
 } from '@terra-dev/web-connector-interface';
 import {
-  createLedgerKey,
   LedgerKeyResponse,
   LedgerWallet,
 } from '@terra-dev/web-extension-backend';
 import { CreateTxOptions } from '@terra-money/terra.js';
 import React, { ReactNode, useCallback, useRef, useState } from 'react';
 import styled from 'styled-components';
+import { FormFooter } from 'webextension/components/layouts/FormFooter';
+import { FormMain } from 'webextension/components/layouts/FormMain';
 import { LedgerGuide } from 'webextension/components/tx/LedgerGuide';
 import { PrintCreateTxOptions } from 'webextension/components/tx/PrintCreateTxOptions';
 import { PrintTxRequest } from 'webextension/components/tx/PrintTxRequest';
@@ -24,6 +24,7 @@ export interface SignTxWithLedgerWalletProps {
   tx: CreateTxOptions;
   hostname: string;
   date: Date;
+  createLedgerKey: () => Promise<LedgerKeyResponse>;
   onDeny: () => void;
   onProceed: (ledgerKey: LedgerKeyResponse) => void;
 }
@@ -37,6 +38,7 @@ export function SignTxWithLedgerWallet({
   date,
   onDeny,
   onProceed,
+  createLedgerKey,
 }: SignTxWithLedgerWalletProps) {
   const containerRef = useRef<HTMLElement>(null);
 
@@ -80,80 +82,60 @@ export function SignTxWithLedgerWallet({
         );
       }
     }
-  }, [onProceed]);
+  }, [createLedgerKey, onProceed]);
 
   return (
-    <Section ref={containerRef} className={className}>
+    <Container ref={containerRef} className={className}>
       <header>
         <WalletCard
           className="wallet-card"
           name={wallet.name}
           terraAddress={wallet.terraAddress}
           design={wallet.design}
+          style={{ width: 280, height: 140 }}
         />
       </header>
 
-      <PrintTxRequest
-        className="wallets-actions"
-        network={network}
-        tx={tx}
-        hostname={hostname}
-        date={date}
-      />
+      <FormMain>
+        <PrintTxRequest
+          className="wallets-actions"
+          network={network}
+          tx={tx}
+          hostname={hostname}
+          date={date}
+        />
 
-      <PrintCreateTxOptions className="tx" tx={tx} />
+        <PrintCreateTxOptions className="tx" tx={tx} />
 
-      {guide}
+        {guide}
+      </FormMain>
 
       {!ledgerSignStarted && (
-        <footer>
-          <Button variant="contained" color="secondary" onClick={onDeny}>
+        <FormFooter>
+          <Button variant="danger" size="large" onClick={onDeny}>
             Deny
           </Button>
 
           <Button
-            variant="contained"
-            color="primary"
+            variant="primary"
+            size="large"
             disabled={false}
             onClick={proceed}
           >
             Submit
           </Button>
-        </footer>
+        </FormFooter>
       )}
-    </Section>
+    </Container>
   );
 }
 
-export const Section = styled.section`
-  header {
-    display: flex;
-    justify-content: center;
+export const Container = styled.section`
+  > header {
+    height: 188px;
+    display: grid;
+    place-content: center;
 
-    .wallet-card {
-      width: 276px;
-    }
-
-    margin-bottom: 30px;
-  }
-
-  .tx {
-    margin: 30px 0;
-  }
-
-  .form {
-    margin: 30px 0;
-  }
-
-  footer {
-    display: flex;
-
-    > * {
-      flex: 1;
-
-      &:not(:first-child) {
-        margin-left: 10px;
-      }
-    }
+    background-color: var(--color-header-background);
   }
 `;
