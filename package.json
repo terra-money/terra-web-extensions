@@ -9,6 +9,7 @@
     "open-extension-ready-chrome"
   ],
   "scripts": {
+    "storybook:build": "yarn workspace apps run storybook:build",
     "format": "prettier --write \"**/*.{ts,tsx}\"",
     "lint": "eslint \"**/*.{js,jsx,ts,tsx}\"",
     "prepare": "husky install"
