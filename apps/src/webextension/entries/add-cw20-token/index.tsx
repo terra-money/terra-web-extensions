@@ -1,5 +1,4 @@
 import { AppProvider } from '@libs/app-provider';
-import { createMuiTheme } from '@material-ui/core';
 import {
   addCW20Tokens,
   hasCW20Tokens,
@@ -10,14 +9,13 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { render } from 'react-dom';
 import { IntlProvider } from 'react-intl';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import styled, { DefaultTheme } from 'styled-components';
+import styled from 'styled-components';
 import { browser } from 'webextension-polyfill-ts';
 import { ErrorBoundary } from 'webextension/components/common/ErrorBoundary';
 import { AlreadyCW20TokensExists } from 'webextension/components/views/AlreadyCW20TokensExists';
 import { ManageCW20Tokens } from 'webextension/components/views/ManageCW20Tokens';
 import { LocalesProvider, useIntlProps } from 'webextension/contexts/locales';
 import { StoreProvider } from 'webextension/contexts/store';
-import { ThemeProvider } from 'webextension/contexts/theme';
 import {
   STATION_CONSTANTS,
   STATION_CONTRACT_ADDRESS,
@@ -146,8 +144,6 @@ export const StyledComponent = styled(Component)`
 
 const App = fixHMR(StyledComponent);
 
-const theme: DefaultTheme = createMuiTheme();
-
 const queryClient = new QueryClient();
 
 function Main() {
@@ -163,9 +159,7 @@ function Main() {
           refetchMap={STATION_TX_REFETCH_MAP}
         >
           <IntlProvider locale={locale} messages={messages}>
-            <ThemeProvider theme={theme}>
-              <App />
-            </ThemeProvider>
+            <App />
           </IntlProvider>
         </AppProvider>
       </StoreProvider>

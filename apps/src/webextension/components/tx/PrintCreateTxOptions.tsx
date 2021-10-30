@@ -1,10 +1,10 @@
-import { ExpandLess, ExpandMore } from '@material-ui/icons';
 import {
   CreateTxOptions,
   Msg,
   MsgExecuteContract,
 } from '@terra-money/terra.js';
 import React, { useState } from 'react';
+import { MdExpandLess, MdExpandMore } from 'react-icons/md';
 import styled from 'styled-components';
 
 export interface TxDetailProps {
@@ -30,7 +30,7 @@ function MsgBlock({ msg }: { msg: Msg }) {
       <li>
         <h3 onClick={() => setOpen((prev) => !prev)}>
           <span>MsgExecuteContract</span>
-          {open ? <ExpandLess /> : <ExpandMore />}
+          {open ? <MdExpandLess /> : <MdExpandMore />}
         </h3>
         {open && (
           <ul>

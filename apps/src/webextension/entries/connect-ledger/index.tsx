@@ -1,4 +1,3 @@
-import { createMuiTheme } from '@material-ui/core';
 import {
   addWallet,
   connectLedger,
@@ -15,18 +14,9 @@ import { IntlProvider } from 'react-intl';
 import { HashRouter } from 'react-router-dom';
 import { combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
-import styled, { DefaultTheme } from 'styled-components';
+import styled from 'styled-components';
 import { ErrorBoundary } from 'webextension/components/common/ErrorBoundary';
 import { LocalesProvider, useIntlProps } from 'webextension/contexts/locales';
-import { ThemeProvider } from '../../contexts/theme';
-
-const theme: DefaultTheme = createMuiTheme({
-  typography: {
-    button: {
-      textTransform: 'none',
-    },
-  },
-});
 
 export interface ConnectLedgerProps {
   className?: string;
@@ -88,24 +78,22 @@ function ConnectLedgerBase({ className }: ConnectLedgerProps) {
 
   return (
     <IntlProvider locale={locale} messages={messages}>
-      <ThemeProvider theme={theme}>
-        <div className={className}>
-          <h3>Can add this devices</h3>
-          <ul>
-            {usbDevices.map(({ serialNumber, productName }, i) => (
-              <li key={'device' + (serialNumber ?? i)}>
-                {productName} ({serialNumber})
-              </li>
-            ))}
-          </ul>
+      <div className={className}>
+        <h3>Can add this devices</h3>
+        <ul>
+          {usbDevices.map(({ serialNumber, productName }, i) => (
+            <li key={'device' + (serialNumber ?? i)}>
+              {productName} ({serialNumber})
+            </li>
+          ))}
+        </ul>
 
-          <h3>Errors</h3>
-          <pre>{error}</pre>
+        <h3>Errors</h3>
+        <pre>{error}</pre>
 
-          <h3>Actions</h3>
-          <button onClick={connect}>Connect Ledger</button>
-        </div>
-      </ThemeProvider>
+        <h3>Actions</h3>
+        <button onClick={connect}>Connect Ledger</button>
+      </div>
     </IntlProvider>
   );
 }

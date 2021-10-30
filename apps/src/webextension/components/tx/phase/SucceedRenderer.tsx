@@ -1,8 +1,8 @@
 import { TxReceipt } from '@libs/app-fns';
-import { Button } from '@material-ui/core';
-import { DoneAllRounded } from '@material-ui/icons';
+import { Button } from '@station/ui2';
 import { fixHMR } from 'fix-hmr';
 import React from 'react';
+import { MdDoneAll } from 'react-icons/md';
 import styled from 'styled-components';
 import { TxReceipts } from '../TxReceipts';
 import { Layout } from './Layout';
@@ -21,7 +21,7 @@ function SucceedRendererBase({
   return (
     <Layout className={className}>
       <figure>
-        <DoneAllRounded />
+        <MdDoneAll />
       </figure>
 
       <h2>Complete</h2>
@@ -29,7 +29,7 @@ function SucceedRendererBase({
       <TxReceipts receipts={receipts} />
 
       {onClose && (
-        <Button variant="contained" color="primary" onClick={onClose}>
+        <Button variant="primary" size="large" onClick={onClose}>
           OK
         </Button>
       )}

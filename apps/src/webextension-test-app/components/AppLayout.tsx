@@ -1,6 +1,6 @@
-import { Dashboard, Functions, WifiTethering } from '@material-ui/icons';
 import { useWebConnector } from '@station/web-connector-react';
 import React, { ReactNode } from 'react';
+import { MdDashboard, MdFunctions, MdWifiTethering } from 'react-icons/md';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 import { WalletSelector } from './WalletSelector';
@@ -22,7 +22,7 @@ function AppLayoutBase({ className, children }: AppLayoutProps) {
           <li>
             <NavLink to="/">
               <i>
-                <Dashboard />
+                <MdDashboard />
               </i>
               <span>Overview</span>
             </NavLink>
@@ -30,7 +30,7 @@ function AppLayoutBase({ className, children }: AppLayoutProps) {
           <li>
             <NavLink to="/apis/terra-connect/api">
               <i>
-                <Functions />
+                <MdFunctions />
               </i>
               <span>API</span>
             </NavLink>
@@ -38,7 +38,7 @@ function AppLayoutBase({ className, children }: AppLayoutProps) {
           <li>
             <NavLink to="/apis/terra-connect/example">
               <i>
-                <Functions />
+                <MdFunctions />
               </i>
               <span>API Example</span>
             </NavLink>
@@ -52,7 +52,7 @@ function AppLayoutBase({ className, children }: AppLayoutProps) {
             <li>
               <div>
                 <i>
-                  <WifiTethering />
+                  <MdWifiTethering />
                 </i>
                 <span>Network</span>
               </div>

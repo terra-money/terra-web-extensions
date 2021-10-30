@@ -1,6 +1,5 @@
 import { TxErrorRendering, TxReceipt } from '@libs/app-fns';
-import { Button } from '@material-ui/core';
-import { ErrorOutlineRounded } from '@material-ui/icons';
+import { Button } from '@station/ui2';
 import {
   CreateTxFailed,
   Timeout,
@@ -10,6 +9,7 @@ import {
 } from '@terra-dev/wallet-types';
 import { fixHMR } from 'fix-hmr';
 import React, { ReactNode } from 'react';
+import { MdErrorOutline } from 'react-icons/md';
 import styled from 'styled-components';
 import { TxReceipts } from '../TxReceipts';
 import { Layout } from './Layout';
@@ -30,7 +30,7 @@ function FailedRendererBase({
   return (
     <Layout className={className}>
       <figure>
-        <ErrorOutlineRounded />
+        <MdErrorOutline />
       </figure>
 
       {renderTxFailedReason(failedReason)}
@@ -38,7 +38,7 @@ function FailedRendererBase({
       <TxReceipts receipts={receipts} />
 
       {onClose && (
-        <Button variant="contained" color="primary" onClick={onClose}>
+        <Button variant="primary" size="large" onClick={onClose}>
           OK
         </Button>
       )}

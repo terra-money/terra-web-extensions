@@ -1,5 +1,5 @@
 import { TxReceipt } from '@libs/app-fns';
-import { Button } from '@material-ui/core';
+import { Button } from '@station/ui2';
 import { fixHMR } from 'fix-hmr';
 import React from 'react';
 import { RotateSpinner } from 'react-spinners-kit';
@@ -24,7 +24,11 @@ function PostRendererBase({ className, receipts, onClose }: PostRendererProps) {
 
       <TxReceipts receipts={receipts} />
 
-      {onClose && <Button onClick={onClose}>Stop</Button>}
+      {onClose && (
+        <Button variant="primary" size="large" onClick={onClose}>
+          Stop
+        </Button>
+      )}
     </Layout>
   );
 }
