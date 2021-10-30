@@ -340,9 +340,6 @@ function EncryptedWalletTxForm({
 
 const App = styled(Component)`
   width: 100vw;
-  max-width: 800px;
-
-  margin: 0 auto;
 `;
 
 function Main() {
