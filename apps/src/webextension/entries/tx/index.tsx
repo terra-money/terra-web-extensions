@@ -7,6 +7,7 @@ import {
 } from '@terra-dev/web-connector-interface';
 import {
   approveHostnames,
+  createLedgerKey,
   EncryptedWallet,
   executeTxWithInternalWallet,
   executeTxWithLedgerWallet,
@@ -256,6 +257,7 @@ function LedgerWalletTxForm({
       date={txRequest.date}
       onDeny={deny}
       onProceed={proceed}
+      createLedgerKey={createLedgerKey}
     />
   );
 }

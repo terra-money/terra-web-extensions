@@ -64,8 +64,9 @@ function DashboardBase({ className }: { className?: string }) {
 
   const { wallets, focusedWallet, focusedWalletIndex } = useStore();
 
-  const [selectedCardIndex, setSelectedCardIndex] =
-    useState<number>(focusedWalletIndex);
+  const [selectedCardIndex, setSelectedCardIndex] = useState<number>(() =>
+    wallets.length > 0 ? focusedWalletIndex : 0,
+  );
 
   const isLedgerSupport = useMemo(() => {
     return isLedgerSupportBrowser();
@@ -85,7 +86,7 @@ function DashboardBase({ className }: { className?: string }) {
   );
 
   useEffect(() => {
-    setSelectedCardIndex(focusedWalletIndex);
+    setSelectedCardIndex(focusedWalletIndex >= 0 ? focusedWalletIndex : 0);
   }, [focusedWalletIndex]);
 
   const showTokenList = useMemo(() => {

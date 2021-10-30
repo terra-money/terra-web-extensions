@@ -76,7 +76,7 @@ const StyledComponent = styled(Component)`
 
     p {
       text-align: center;
-      max-width: 90%;
+      max-width: 90vw;
       margin: 0 auto;
     }
 

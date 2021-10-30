@@ -74,6 +74,17 @@ const enter = keyframes`
 `;
 
 const StyledComponent = styled(Component)`
+  all: initial;
+  font-family: sans-serif;
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    font-family: var(--font-family);
+  }
+
   position: fixed;
   z-index: 100000;
 
@@ -132,7 +143,7 @@ const StyledComponent = styled(Component)`
       }
 
       h1 {
-        margin-top: 16px;
+        margin: 16px 0 0 0;
 
         font-size: 24px;
         font-weight: bold;

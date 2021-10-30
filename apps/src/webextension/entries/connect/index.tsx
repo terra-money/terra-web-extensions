@@ -1,38 +1,25 @@
-import { Layout } from '@station/ui';
-import { Button, createMuiTheme } from '@material-ui/core';
+import { Button } from '@station/ui2';
 import {
-  addWallet,
   approveHostnames,
-  createWallet,
-  EncryptedWallet,
-  encryptWallet,
   readWalletsStorage,
-  restoreMnemonicKey,
-  Wallet,
 } from '@terra-dev/web-extension-backend';
 import React, { useCallback, useMemo, useState } from 'react';
 import { render } from 'react-dom';
+import { MdDomainVerification } from 'react-icons/md';
 import { IntlProvider } from 'react-intl';
-import styled, { DefaultTheme } from 'styled-components';
+import styled from 'styled-components';
 import { browser } from 'webextension-polyfill-ts';
+import { ApproveHostname } from 'webextension/components/views/ApproveHostname';
+import { ViewCenterLayout } from 'webextension/components/views/components/ViewCenterLayout';
 import { ErrorBoundary } from '../../components/common/ErrorBoundary';
-import {
-  CreateNewWalletForm,
-  CreateNewWalletResult,
-} from '../../components/form/CreateNewWalletForm';
-import {
-  RecoverMnemonicForm,
-  RecoverMnemonicResult,
-} from '../../components/form/RecoverMnemonicForm';
 import { LocalesProvider, useIntlProps } from '../../contexts/locales';
-import { ThemeProvider } from '../../contexts/theme';
 import { txPortPrefix } from '../../env';
 
 export interface AppProps {
   className?: string;
 }
 
-function AppBase({ className }: AppProps) {
+function Component({ className }: AppProps) {
   // ---------------------------------------------
   // read hash urls
   // ---------------------------------------------
@@ -57,7 +44,7 @@ function AppBase({ className }: AppProps) {
   // ---------------------------------------------
   // states
   // ---------------------------------------------
-  const [walletCreatePages, setWalletCreatePages] = useState<number>(-1);
+  const [noWallets, setNoWallets] = useState<boolean>(false);
 
   // ---------------------------------------------
   // callbacks
@@ -90,181 +77,58 @@ function AppBase({ className }: AppProps) {
     if (wallets.length > 0) {
       await approve();
     } else {
-      setWalletCreatePages(0);
+      setNoWallets(true);
     }
   }, [approve]);
 
   // ---------------------------------------------
   // presentation
   // ---------------------------------------------
-  if (walletCreatePages === 0) {
+  if (noWallets) {
     return (
-      <Layout>
-        <header>
-          <h1>You don't have any wallets</h1>
-        </header>
-
-        <p>Do you want to create new wallet?</p>
-
-        <Button variant="contained" color="secondary" onClick={approve}>
-          Cancel
-        </Button>
-
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => setWalletCreatePages(1)}
+      <div className={className}>
+        <ViewCenterLayout
+          className="content"
+          icon={<MdDomainVerification />}
+          title="You don't have any wallets"
+          footer={
+            <Button variant="primary" size="large" onClick={deny}>
+              OK
+            </Button>
+          }
         >
-          Create New Wallet
-        </Button>
-
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => setWalletCreatePages(2)}
-        >
-          Recover Existing Wallet
-        </Button>
-      </Layout>
+          <p>Please make any wallets first!</p>
+        </ViewCenterLayout>
+      </div>
     );
-  } else if (walletCreatePages === 1) {
-    return <CreateNewWallet onApprove={approve} />;
-  } else if (walletCreatePages === 2) {
-    return <RecoverMnemonic onApprove={approve} />;
   }
 
   return (
-    <Layout className={className}>
-      <header>
-        <h1>Approve this site?</h1>
-      </header>
-
-      <p>{connectInfo.hostname}</p>
-
-      <footer>
-        <Button variant="contained" color="secondary" onClick={deny}>
-          Deny
-        </Button>
-        <Button variant="contained" color="primary" onClick={approveConnect}>
-          Approve
-        </Button>
-      </footer>
-    </Layout>
+    <div className={className}>
+      <ApproveHostname
+        className="content"
+        hostname={connectInfo.hostname}
+        onCancel={deny}
+        onConfirm={approveConnect}
+      />
+    </div>
   );
 }
 
-interface ApproveWithWalletProps {
-  onApprove: () => void;
-}
+export const App = styled(Component)`
+  min-height: 100vh;
 
-function CreateNewWallet({ onApprove }: ApproveWithWalletProps) {
-  const [result, setResult] = useState<CreateNewWalletResult | null>(null);
-
-  const approve = useCallback(async () => {
-    if (!result) {
-      throw new Error(`Don't call when result is empty!`);
-    }
-
-    const encryptedWallet: EncryptedWallet = {
-      name: result.name,
-      design: result.design,
-      terraAddress: result.mk.accAddress,
-      encryptedWallet: encryptWallet(createWallet(result.mk), result.password),
-    };
-
-    await addWallet(encryptedWallet);
-
-    onApprove();
-  }, [result, onApprove]);
-
-  return (
-    <Layout>
-      <header>
-        <h1>Approve + Add New Wallet</h1>
-      </header>
-
-      <CreateNewWalletForm onChange={setResult} />
-
-      <footer>
-        <Button variant="contained" color="secondary" onClick={onApprove}>
-          Cancel
-        </Button>
-
-        <Button
-          variant="contained"
-          color="primary"
-          disabled={!result}
-          onClick={approve}
-        >
-          Create Wallet
-        </Button>
-      </footer>
-    </Layout>
-  );
-}
-
-function RecoverMnemonic({ onApprove }: ApproveWithWalletProps) {
-  const [result, setResult] = useState<RecoverMnemonicResult | null>(null);
-
-  const recover = useCallback(async () => {
-    if (!result) {
-      throw new Error(`Don't call when result is empty!`);
-    }
-
-    const mk = restoreMnemonicKey(result.mnemonic);
-
-    const wallet: Wallet = createWallet(mk);
-
-    const encryptedWallet: EncryptedWallet = {
-      name: result.name,
-      design: result.design,
-      terraAddress: mk.accAddress,
-      encryptedWallet: encryptWallet(wallet, result.password),
-    };
-
-    await addWallet(encryptedWallet);
-
-    onApprove();
-  }, [onApprove, result]);
-
-  return (
-    <Layout>
-      <header>
-        <h1>Approve + Recover Existing Wallet</h1>
-
-        <RecoverMnemonicForm onChange={setResult} />
-
-        <footer>
-          <Button variant="contained" color="secondary" onClick={onApprove}>
-            Cancel
-          </Button>
-
-          <Button
-            variant="contained"
-            color="primary"
-            disabled={!result}
-            onClick={recover}
-          >
-            Recover Wallet
-          </Button>
-        </footer>
-      </header>
-    </Layout>
-  );
-}
-
-export const App = styled(AppBase)``;
-
-const theme: DefaultTheme = createMuiTheme();
+  .content {
+    min-height: 100vh;
+  }
+`;
 
 function Main() {
   const { locale, messages } = useIntlProps();
 
   return (
     <IntlProvider locale={locale} messages={messages}>
-      <ThemeProvider theme={theme}>
-        <App />
-      </ThemeProvider>
+      <App />
     </IntlProvider>
   );
 }
