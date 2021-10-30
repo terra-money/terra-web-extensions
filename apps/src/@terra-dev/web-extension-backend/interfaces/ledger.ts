@@ -5,12 +5,7 @@ import TerraLedgerApp, {
   PublicKeyResponse,
   SignResponse,
 } from '@terra-money/ledger-terra-js';
-import {
-  Key,
-  PublicKey,
-  StdSignature,
-  StdSignMsg,
-} from '@terra-money/terra.js';
+import { Key, PublicKey, SignatureV2, SignDoc } from '@terra-money/terra.js';
 import { Observable } from 'rxjs';
 import { signatureImport } from 'secp256k1';
 import { LedgerWallet, pickUSBDeviceInfo } from '../models';
@@ -151,25 +146,43 @@ export async function createLedgerKey(): Promise<LedgerKeyResponse> {
 }
 
 export class LedgerKey extends Key {
-  constructor(publicKey: Buffer | undefined, private app: TerraLedgerApp) {
-    super(publicKey);
+  constructor(
+    private publicKeyBuffer: Buffer | undefined,
+    private app: TerraLedgerApp,
+  ) {
+    super(
+      (() => {
+        const publicKey = publicKeyBuffer
+          ? PublicKey.fromAmino({
+              type: 'tendermint/PubKeySecp256k1',
+              value: publicKeyBuffer.toString('base64'),
+            })
+          : undefined;
+
+        return publicKey;
+      })(),
+    );
   }
 
   sign(payload: Buffer): Promise<Buffer> {
     throw new Error('Not implemented');
   }
 
-  createSignature = async (tx: StdSignMsg): Promise<StdSignature> => {
-    const publicKeyBuffer = this.publicKey;
+  //public async createSignature(signDoc:SignDoc): Promise<SignatureV2> {
+  //  console.log('ledger.ts..createSignature()');
+  //
+  //  throw new Error('????');
+  //}
 
-    if (!publicKeyBuffer) {
+  public async createSignatureAmino(tx: SignDoc): Promise<SignatureV2> {
+    if (!this.publicKey) {
       throw new WebConnectorLedgerError(
         99999,
-        `This LedgerKey does not have publicKeyBuffer`,
+        `[web-extension-backend] This LedgerKey does not have publicKey`,
       );
     }
 
-    const serializedTx = tx.toJSON();
+    const serializedTx = tx.toAminoJSON();
 
     const signature: SignResponse = await this.app.sign(
       TERRA_APP_PATH,
@@ -183,13 +196,6 @@ export class LedgerKey extends Key {
       );
     }
 
-    if (!signature.signature || !signature.signature.data) {
-      throw new WebConnectorLedgerError(
-        99999,
-        `The result of TerraApp.sign() does not contain SignResponse.data`,
-      );
-    }
-
     const signatureBuffer = Buffer.from(
       signatureImport(Buffer.from(signature.signature.data)),
     );
@@ -197,16 +203,70 @@ export class LedgerKey extends Key {
     if (!signatureBuffer) {
       throw new WebConnectorLedgerError(
         99999,
-        `Failed to make Buffer from the result of TerraApp.sign()`,
+        `[web-extension-backend] Failed to make Buffer from the result of TerraApp.sign()`,
       );
     }
 
-    return new StdSignature(
-      signatureBuffer.toString('base64'),
-      PublicKey.fromData({
-        type: 'tendermint/PubKeySecp256k1',
-        value: publicKeyBuffer.toString('base64'),
-      }),
+    return new SignatureV2(
+      this.publicKey!,
+      new SignatureV2.Descriptor(
+        new SignatureV2.Descriptor.Single(
+          SignatureV2.SignMode.SIGN_MODE_LEGACY_AMINO_JSON,
+          signatureBuffer.toString('base64'),
+        ),
+      ),
+      tx.sequence,
     );
-  };
+  }
+
+  //createSignature = async (tx: StdSignMsg): Promise<StdSignature> => {
+  //  const publicKeyBuffer = this.publicKey;
+  //
+  //  if (!publicKeyBuffer) {
+  //    throw new WebConnectorLedgerError(
+  //      99999,
+  //      `This LedgerKey does not have publicKeyBuffer`,
+  //    );
+  //  }
+  //
+  //  const serializedTx = tx.toJSON();
+  //
+  //  const signature: SignResponse = await this.app.sign(
+  //    TERRA_APP_PATH,
+  //    serializedTx,
+  //  );
+  //
+  //  if (!('signature' in signature)) {
+  //    throw new WebConnectorLedgerError(
+  //      signature.return_code,
+  //      signature.error_message,
+  //    );
+  //  }
+  //
+  //  if (!signature.signature || !signature.signature.data) {
+  //    throw new WebConnectorLedgerError(
+  //      99999,
+  //      `The result of TerraApp.sign() does not contain SignResponse.data`,
+  //    );
+  //  }
+  //
+  //  const signatureBuffer = Buffer.from(
+  //    signatureImport(Buffer.from(signature.signature.data)),
+  //  );
+  //
+  //  if (!signatureBuffer) {
+  //    throw new WebConnectorLedgerError(
+  //      99999,
+  //      `Failed to make Buffer from the result of TerraApp.sign()`,
+  //    );
+  //  }
+  //
+  //  return new Signature(
+  //    signatureBuffer.toString('base64'),
+  //    PublicKey.fromData({
+  //      type: 'tendermint/PubKeySecp256k1',
+  //      value: publicKeyBuffer.toString('base64'),
+  //    }),
+  //  );
+  //};
 }

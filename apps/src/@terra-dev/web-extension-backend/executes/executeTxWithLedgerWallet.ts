@@ -13,7 +13,12 @@ import {
 } from '@terra-dev/web-connector-interface';
 import { LedgerKey } from '@terra-dev/web-extension-backend/interfaces';
 import { LedgerWallet } from '@terra-dev/web-extension-backend/models';
-import { CreateTxOptions, isTxError, LCDClient } from '@terra-money/terra.js';
+import {
+  CreateTxOptions,
+  isTxError,
+  LCDClient,
+  SignatureV2,
+} from '@terra-money/terra.js';
 import { Observable } from 'rxjs';
 
 export function executeTxWithLedgerWallet(
@@ -42,7 +47,10 @@ export function executeTxWithLedgerWallet(
   >((subscriber) => {
     lcd
       .wallet(key)
-      .createAndSignTx(tx)
+      .createAndSignTx({
+        ...tx,
+        signMode: SignatureV2.SignMode.SIGN_MODE_LEGACY_AMINO_JSON,
+      })
       .then((signed) => lcd.tx.broadcastSync(signed))
       .then((data) => {
         if (isTxError(data)) {

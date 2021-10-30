@@ -1,6 +1,6 @@
 import { Meta } from '@storybook/react';
 import { WebConnectorLedgerError } from '@terra-dev/web-connector-interface';
-import { MsgExecuteContract, StdFee } from '@terra-money/terra.js';
+import { MsgExecuteContract, Fee } from '@terra-money/terra.js';
 import React from 'react';
 import { SignTxWithLedgerWallet } from '../SignTxWithLedgerWallet';
 
@@ -35,7 +35,7 @@ export const SignTxWithLedgerWallet_ = () => {
               },
             ),
           ],
-          fee: new StdFee(100000, '1500000uusd'),
+          fee: new Fee(100000, '1500000uusd'),
         }}
         hostname="https://app.anchorprotocol.com"
         date={new Date()}

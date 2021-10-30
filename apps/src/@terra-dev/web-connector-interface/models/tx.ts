@@ -1,4 +1,4 @@
-import { CreateTxOptions, Msg, StdFee } from '@terra-money/terra.js';
+import { CreateTxOptions, Fee, Msg } from '@terra-money/terra.js';
 import {
   WebConnectorCreateTxFailed,
   WebConnectorTxFailed,
@@ -60,16 +60,21 @@ export function serializeTx(tx: CreateTxOptions): SerializedCreateTxOptions {
     memo: tx.memo,
     gasPrices: tx.gasPrices?.toString(),
     gasAdjustment: tx.gasAdjustment?.toString(),
-    account_number: tx.account_number,
-    sequence: tx.sequence,
     feeDenoms: tx.feeDenoms,
   };
 }
 
 export function deserializeTx(tx: SerializedCreateTxOptions): CreateTxOptions {
+  const msgs = tx.msgs.map((msg) => JSON.parse(msg));
+  const isProto = '@type' in msgs[0];
+
   return {
     ...tx,
-    msgs: tx.msgs.map((msg) => Msg.fromData(JSON.parse(msg))),
-    fee: tx.fee ? StdFee.fromData(JSON.parse(tx.fee)) : undefined,
+    msgs: msgs.map((msg) => (isProto ? Msg.fromData(msg) : Msg.fromAmino(msg))),
+    fee: tx.fee
+      ? isProto
+        ? Fee.fromData(JSON.parse(tx.fee))
+        : Fee.fromAmino(JSON.parse(tx.fee))
+      : undefined,
   };
 }

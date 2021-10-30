@@ -8,7 +8,7 @@ import TerraLedgerApp, {
   AppInfoResponse,
   VersionResponse,
 } from '@terra-money/ledger-terra-js';
-import { LCDClient, MsgSend, StdFee, StdTx } from '@terra-money/terra.js';
+import { LCDClient, MsgSend, Fee, Tx } from '@terra-money/terra.js';
 import { CreateTxOptions } from '@terra-money/terra.js';
 import { fixHMR } from 'fix-hmr';
 import React, { useCallback, useState } from 'react';
@@ -53,7 +53,7 @@ function LedgerVerifyBase({ className }: LedgerVerifyProps) {
     console.log('test::publicKeyBuffer', publicKeyBuffer);
 
     const tx: CreateTxOptions = {
-      fee: new StdFee(1000000, '200000uusd'),
+      fee: new Fee(1000000, '200000uusd'),
       msgs: [
         new MsgSend(
           publicKey.bech32_address,
@@ -71,7 +71,7 @@ function LedgerVerifyBase({ className }: LedgerVerifyProps) {
     });
 
     const key = new LedgerKey(publicKeyBuffer, app);
-    const stdTx: StdTx = await lcd.wallet(key).createAndSignTx(tx);
+    const stdTx: Tx = await lcd.wallet(key).createAndSignTx(tx);
 
     const result = await lcd.tx.broadcastSync(stdTx);
 

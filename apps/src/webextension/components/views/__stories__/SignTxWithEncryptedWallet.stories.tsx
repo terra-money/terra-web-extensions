@@ -4,7 +4,7 @@ import {
   createWallet,
   encryptWallet,
 } from '@terra-dev/web-extension-backend';
-import { MsgExecuteContract, StdFee } from '@terra-money/terra.js';
+import { MsgExecuteContract, Fee } from '@terra-money/terra.js';
 import React from 'react';
 import { SignTxWithEncryptedWallet } from '../SignTxWithEncryptedWallet';
 import { PopupStoryContainer } from './components/PopupStoryContainer';
@@ -44,7 +44,7 @@ export const SignTxWithEncryptedWallet_ = () => {
               },
             ),
           ],
-          fee: new StdFee(100000, '1500000uusd'),
+          fee: new Fee(100000, '1500000uusd'),
         }}
         hostname="https://app.anchorprotocol.com"
         date={new Date()}

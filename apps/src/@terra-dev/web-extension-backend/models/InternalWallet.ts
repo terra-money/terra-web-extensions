@@ -29,9 +29,14 @@ export function restoreMnemonicKey(mnemonic: string): MnemonicKey {
 }
 
 export function createWallet(mk: MnemonicKey): Wallet {
+  if (!mk.publicKey) {
+    throw new Error(`Can't find publicKey from this MnemonicKey`);
+  }
+
   return {
     privateKey: mk.privateKey.toString('hex'),
-    publicKey: mk.publicKey?.toString('hex') ?? '',
+    //publicKey: mk.publicKey?.toString('hex') ?? '',
+    publicKey: Buffer.from(mk.publicKey.encodeAminoPubkey()).toString('hex'),
     terraAddress: mk.accAddress,
   };
 }

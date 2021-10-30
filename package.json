@@ -31,6 +31,6 @@
     "prettier": "^2.4.1"
   },
   "resolutions": {
-    "@terra-money/terra.js": "2.0.14"
+    "@terra-money/terra.js": "2.1.19"
   }
 }

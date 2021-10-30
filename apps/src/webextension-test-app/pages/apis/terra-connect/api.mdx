@@ -74,7 +74,7 @@ WebExtension에 Transaction을 요청한다.
 ```js
 // Anchor deposit 10 USD
 const tx = {
-  fee: new StdFee(
+  fee: new Fee(
     6000000, // gasFee
     new Coins({
       uusd: '1000000'
