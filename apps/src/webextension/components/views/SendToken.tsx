@@ -2,22 +2,15 @@ import { SendTokenInfo, TxResultRendering } from '@libs/app-fns';
 import { useSendForm, useSendTx, useTerraTokenInfo } from '@libs/app-provider';
 import { formatUInput, formatUToken, microfy } from '@libs/formatter';
 import { cw20, HumanAddr, terraswap, Token, u, UST } from '@libs/types';
-import { Button, InputAdornment } from '@material-ui/core';
-import { Warning } from '@material-ui/icons';
-import {
-  FormLabel,
-  FormLabelAside,
-  FormLayout,
-  Layout,
-  MessageBox,
-  MiniButton,
-  NumberInput,
-  TextInput,
-} from '@station/ui';
+import { EmptyNumberInput } from '@libs/ui';
+import { Button, FormSuggest, SingleLineFormContainer } from '@station/ui2';
 import { useConnectedWallet } from '@terra-dev/use-wallet';
 import big, { BigSource } from 'big.js';
 import React, { ChangeEvent, ReactNode, useCallback, useMemo } from 'react';
+import { MdWarning } from 'react-icons/md';
 import { Observable } from 'rxjs';
+import { FormFooter } from '../layouts/FormFooter';
+import { FormMain } from '../layouts/FormMain';
 
 export interface SendTokenProps {
   className?: string;
@@ -129,89 +122,79 @@ function Form({
   );
 
   return (
-    <Layout className={className}>
+    <div className={className}>
       {children}
 
-      <MessageBox style={{ marginBottom: 10 }}>
-        <Warning /> Use{' '}
+      <div style={{ marginBottom: 10 }}>
+        <MdWarning /> Use{' '}
         <a href="https://bridge.terra.money/" target="_blank" rel="noreferrer">
           Terra Bridge
         </a>{' '}
         for cross-chain transfers
-      </MessageBox>
+      </div>
 
-      <FormLayout>
-        <FormLabel label="To address">
-          <TextInput
-            fullWidth
+      <FormMain>
+        <SingleLineFormContainer
+          label="To address"
+          invalid={states.invalidToAddr}
+        >
+          <input
             placeholder="terra1..."
             value={states.toAddr}
             onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
               updateInput({ toAddr: target.value })
             }
-            error={!!states.invalidToAddr}
-            helperText={states.invalidToAddr}
           />
-        </FormLabel>
+        </SingleLineFormContainer>
 
-        <FormLabel
+        <SingleLineFormContainer
           label="Amount"
-          aside={
-            <FormLabelAside>
-              <MiniButton
-                onClick={() =>
-                  updateInput({ amount: formatUInput(states.maxAmount) })
-                }
-              >
-                Available: {formatUToken(states.maxAmount)}
-              </MiniButton>
-            </FormLabelAside>
+          suggest={
+            <FormSuggest
+              label="Available:"
+              amount={formatUToken(states.maxAmount)}
+              onClick={() =>
+                updateInput({ amount: formatUInput(states.maxAmount) })
+              }
+            />
           }
+          rightSection={tokenInfo.symbol}
+          invalid={states.invalidAmount}
         >
-          <NumberInput<Token>
-            fullWidth
+          <EmptyNumberInput<Token>
             placeholder="0"
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  {tokenInfo.symbol}
-                </InputAdornment>
-              ),
-            }}
             value={states.amount}
             onChange={(nextValue) =>
               updateInput({
                 amount: nextValue,
               })
             }
-            error={!!states.invalidAmount}
-            helperText={states.invalidAmount}
           />
-        </FormLabel>
+        </SingleLineFormContainer>
 
-        <FormLabel label="Memo (optional)">
-          <TextInput
-            fullWidth
+        <SingleLineFormContainer
+          label="Memo (optional)"
+          invalid={states.invalidMemo}
+        >
+          <input
             value={states.memo}
             onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
               updateInput({ memo: target.value })
             }
-            error={!!states.invalidMemo}
-            helperText={states.invalidMemo}
           />
-        </FormLabel>
-      </FormLayout>
+        </SingleLineFormContainer>
+      </FormMain>
 
       <p>{states.warningEmptyMemo ?? states.warningNextTxFee}</p>
 
-      <footer>
-        <Button variant="contained" color="secondary" onClick={onCancel}>
+      <FormFooter>
+        <Button variant="danger" size="large" onClick={onCancel}>
           Cancel
         </Button>
 
         <Button
-          variant="contained"
-          color="primary"
+          variant="primary"
+          size="large"
           disabled={
             !connectedWallet ||
             !connectedWallet.availablePost ||
@@ -232,7 +215,7 @@ function Form({
         >
           Send
         </Button>
-      </footer>
-    </Layout>
+      </FormFooter>
+    </div>
   );
 }

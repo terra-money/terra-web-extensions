@@ -1,5 +1,4 @@
 import { Dashboard, Functions, WifiTethering } from '@material-ui/icons';
-import { LinedList } from '@station/ui';
 import { useWebConnector } from '@station/web-connector-react';
 import React, { ReactNode } from 'react';
 import { NavLink } from 'react-router-dom';
@@ -19,11 +18,7 @@ function AppLayoutBase({ className, children }: AppLayoutProps) {
       <nav>
         <WalletSelector />
 
-        <LinedList
-          iconMarginRight="1em"
-          firstLetterUpperCase={false}
-          style={{ marginTop: 30 }}
-        >
+        <ul style={{ marginTop: 30 }}>
           <li>
             <NavLink to="/">
               <i>
@@ -48,16 +43,12 @@ function AppLayoutBase({ className, children }: AppLayoutProps) {
               <span>API Example</span>
             </NavLink>
           </li>
-        </LinedList>
+        </ul>
 
         <div />
 
         {states && (
-          <LinedList
-            iconMarginRight="1em"
-            firstLetterUpperCase={false}
-            style={{ marginBottom: 30 }}
-          >
+          <ul style={{ marginBottom: 30 }}>
             <li>
               <div>
                 <i>
@@ -69,7 +60,7 @@ function AppLayoutBase({ className, children }: AppLayoutProps) {
                 {states.network.name} ({states.network.chainID})
               </span>
             </li>
-          </LinedList>
+          </ul>
         )}
       </nav>
       <main>

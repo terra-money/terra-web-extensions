@@ -1,7 +1,7 @@
 import { CircleButton } from '@station/ui2/buttons/CircleButton';
 import { Meta } from '@storybook/react';
 import React from 'react';
-import { MdDone, MdPlusOne, MdSearch } from 'react-icons/all';
+import { MdDone, MdPlusOne, MdSearch } from 'react-icons/md';
 import styled from 'styled-components';
 
 export default {

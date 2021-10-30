@@ -1,4 +1,4 @@
-import { WalletCard, WalletCardSelector } from '@station/wallet-card';
+import { WalletCard, WalletCardSelector } from '@station/ui2';
 import { useWalletSelect } from '@station/web-connector-react';
 import React, { useCallback, useMemo } from 'react';
 import styled from 'styled-components';
@@ -32,12 +32,13 @@ export function WalletSelector() {
     <Layout>
       <WalletCardSelector
         cardWidth={180}
+        cardHeight={90}
         selectedIndex={selectedIndex}
         onSelect={selectCard}
+        style={{ height: 110 }}
       >
         {wallets.map((wallet) => (
           <WalletCard
-            variant="small"
             key={wallet.name}
             name={wallet.name}
             terraAddress={wallet.terraAddress}

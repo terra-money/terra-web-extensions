@@ -434,6 +434,9 @@ export const Dashboard = styled(DashboardBase)`
 
     padding: 20px;
 
+    max-width: 800px;
+    margin: 0 auto;
+
     .token-actions {
       margin-top: 20px;
 

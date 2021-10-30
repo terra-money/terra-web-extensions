@@ -20,6 +20,7 @@ import {
   WebConnectorUserDenied,
 } from '@terra-dev/web-connector-interface';
 import {
+  createLedgerKey,
   EncryptedWallet,
   executeTxWithInternalWallet,
   executeTxWithLedgerWallet,
@@ -132,6 +133,7 @@ function PostResolver({
         tx={tx}
         hostname={'foo-network'}
         date={new Date()}
+        createLedgerKey={createLedgerKey}
         onDeny={() => onReject(new UserDenied())}
         onProceed={({ key, close }) => {
           executeTxWithLedgerWallet(wallet, network, tx, key).subscribe({

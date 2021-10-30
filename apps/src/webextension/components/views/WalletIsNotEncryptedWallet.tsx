@@ -1,6 +1,7 @@
-import { FormLayout, Layout } from '@station/ui';
-import { Button } from '@material-ui/core';
+import { Button } from '@station/ui2';
 import React from 'react';
+import { MdMoodBad } from 'react-icons/md';
+import { ViewCenterLayout } from './components/ViewCenterLayout';
 
 export interface WalletIsNotEncryptedWalletProps {
   className?: string;
@@ -14,18 +15,17 @@ export function WalletIsNotEncryptedWallet({
   onConfirm,
 }: WalletIsNotEncryptedWalletProps) {
   return (
-    <Layout className={className}>
-      <FormLayout>
-        <p>{terraAddress} 은 비밀번호를 변경할 수 없는 Wallet 입니다.</p>
-      </FormLayout>
-
-      <footer>
-        <footer>
-          <Button variant="contained" color="primary" onClick={onConfirm}>
-            Confirm
-          </Button>
-        </footer>
-      </footer>
-    </Layout>
+    <ViewCenterLayout
+      className={className}
+      icon={<MdMoodBad />}
+      title="Error"
+      footer={
+        <Button variant="primary" size="large" onClick={onConfirm}>
+          Close
+        </Button>
+      }
+    >
+      <p>{terraAddress} 은 비밀번호를 변경할 수 없는 Wallet 입니다.</p>
+    </ViewCenterLayout>
   );
 }

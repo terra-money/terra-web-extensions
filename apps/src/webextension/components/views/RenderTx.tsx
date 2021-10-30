@@ -1,5 +1,4 @@
 import { TxResultRendering } from '@libs/app-fns';
-import { Layout } from '@station/ui';
 import React, { useEffect, useState } from 'react';
 import { Observable } from 'rxjs';
 import { useStateRef } from 'use-state-ref';
@@ -47,8 +46,8 @@ export function RenderTx({ className, stream, onComplete }: RenderTxProps) {
   }, [onComplete, onCompleteRef, stream]);
 
   return (
-    <Layout className={className}>
+    <div className={className}>
       {result && <TxRenderer result={result} onClose={onComplete} />}
-    </Layout>
+    </div>
   );
 }

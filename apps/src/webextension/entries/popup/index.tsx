@@ -32,7 +32,7 @@ import { WalletUpdate } from './pages/wallets/update';
 
 const queryClient = new QueryClient();
 
-function MainBase({ className }: { className?: string }) {
+function Component({ className }: { className?: string }) {
   const { locale, messages } = useIntlProps();
 
   const location = useLocation();
@@ -98,7 +98,7 @@ function MainBase({ className }: { className?: string }) {
   );
 }
 
-const Main = styled(MainBase)`
+export const Main = styled(Component)`
   background-color: var(--color-content-background);
 `;
 

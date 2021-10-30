@@ -1,6 +1,7 @@
-import { Button } from '@material-ui/core';
-import { FormLayout, Layout } from '@station/ui';
+import { Button } from '@station/ui2';
 import React from 'react';
+import { MdMoodBad } from 'react-icons/md';
+import { ViewCenterLayout } from './components/ViewCenterLayout';
 
 export interface UnknownCaseProps {
   className?: string;
@@ -14,17 +15,17 @@ export function UnknownCase({
   onConfirm,
 }: UnknownCaseProps) {
   return (
-    <Layout>
-      <FormLayout>
-        <h3>Error</h3>
-        <p>{detail}</p>
-      </FormLayout>
-
-      <footer>
-        <Button variant="contained" color="primary" onClick={onConfirm}>
-          Confirm
+    <ViewCenterLayout
+      className={className}
+      icon={<MdMoodBad />}
+      title="Unknown case"
+      footer={
+        <Button variant="primary" size="large" onClick={onConfirm}>
+          Close
         </Button>
-      </footer>
-    </Layout>
+      }
+    >
+      <p>{detail}</p>
+    </ViewCenterLayout>
   );
 }

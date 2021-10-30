@@ -1,7 +1,7 @@
 import { SearchTextInput } from '@station/ui2/form/SearchTextInput';
 import { Meta } from '@storybook/react';
 import React, { useState } from 'react';
-import { MdSearch } from 'react-icons/all';
+import { MdSearch } from 'react-icons/md';
 import styled from 'styled-components';
 
 export default {
