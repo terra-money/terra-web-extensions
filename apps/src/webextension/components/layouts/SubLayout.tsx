@@ -24,15 +24,13 @@ function Component({
   return (
     <div {...divProps}>
       <header>
-        <div>
-          <SvgButton width={24} height={24} onClick={onBack}>
-            <BackIcon />
-          </SvgButton>
-
-          {rightSection}
-        </div>
+        <SvgButton width={24} height={24} onClick={onBack}>
+          <BackIcon />
+        </SvgButton>
 
         <h1>{title}</h1>
+
+        <div className="right-section">{rightSection}</div>
       </header>
       <main>{children}</main>
     </div>
@@ -45,26 +43,25 @@ const StyledComponent = styled(Component)`
   height: 100vh;
 
   > header {
-    height: 116px;
+    height: 64px;
     background-color: var(--color-header-background);
     color: var(--color-header-text);
 
-    padding: 18px 20px 0 20px;
+    padding: 0 20px;
 
-    > div {
-      height: 24px;
-
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-
-      margin-bottom: 18px;
-    }
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
     > h1 {
-      font-size: 24px;
+      flex: 1;
+      font-size: 18px;
       font-weight: bold;
-      line-height: 1.5;
+      text-align: center;
+    }
+
+    > .right-section {
+      width: 24px;
     }
   }
 

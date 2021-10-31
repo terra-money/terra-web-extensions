@@ -10,6 +10,8 @@ import {
   WalletCard,
   WalletCardSelector,
   WalletMoreMenus,
+  TerraIcon,
+  LedgerIcon,
 } from '@station/ui2';
 import {
   EncryptedWallet,
@@ -37,7 +39,6 @@ import {
 import { FormattedMessage } from 'react-intl';
 import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
-import { LedgerIcon, TerraIcon } from 'webextension/assets';
 import { ConfigSelector } from 'webextension/components/header/ConfigSelector';
 import { useStore } from 'webextension/contexts/store';
 import { useAddCW20TokensDialog } from 'webextension/entries/popup/dialogs/useAddCW20TokensDialog';

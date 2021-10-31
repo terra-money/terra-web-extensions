@@ -1,4 +1,4 @@
-import { Step } from '@station/ui2';
+import { DonutIcon } from '@station/ui2';
 import {
   addWallet,
   createMnemonicKey,
@@ -65,7 +65,7 @@ export function WalletsCreate({ history }: RouteComponentProps) {
       <SubLayout
         title="New wallet"
         onBack={cancel}
-        rightSection={<Step steps={['1', '2', '3']} selectedIndex={0} />}
+        rightSection={<DonutIcon ratio={0} />}
       >
         <NewWallet wallets={wallets} onConfirm={create} />
       </SubLayout>
@@ -74,14 +74,22 @@ export function WalletsCreate({ history }: RouteComponentProps) {
 
   if (!writeDownSeeds) {
     return (
-      <SubLayout title="Write down your seed" onBack={cancel}>
+      <SubLayout
+        title="Write down your seed"
+        onBack={cancel}
+        rightSection={<DonutIcon ratio={0.5} />}
+      >
         <WriteDownYourSeed mk={mk} onConfirm={() => setWriteDownSeeds(true)} />
       </SubLayout>
     );
   }
 
   return (
-    <SubLayout title="Write down your seed" onBack={cancel}>
+    <SubLayout
+      title="Write down your seed"
+      onBack={cancel}
+      rightSection={<DonutIcon ratio={1} />}
+    >
       <ConfirmYourSeed mk={mk} onCancel={cancel} onValidate={validate} />
     </SubLayout>
   );

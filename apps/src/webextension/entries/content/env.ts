@@ -1,6 +1,5 @@
-import { SvgIcon } from '@station/ui2';
+import { SvgIcon, TerraIcon } from '@station/ui2';
 import { createElement } from 'react';
-import { TerraIcon } from 'webextension/assets';
 
 export const LOGO = createElement(SvgIcon, {
   width: 20,

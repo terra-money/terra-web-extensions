@@ -1,4 +1,4 @@
-import { Step } from '@station/ui2';
+import { DonutIcon } from '@station/ui2';
 import {
   addWallet,
   createWallet,
@@ -61,7 +61,7 @@ export function WalletsRecover({ history }: RouteComponentProps) {
       <SubLayout
         title="Recover existing wallet"
         onBack={cancel}
-        rightSection={<Step steps={['1', '2']} selectedIndex={0} />}
+        rightSection={<DonutIcon ratio={0} />}
       >
         <NewWallet wallets={wallets} onConfirm={create} />
       </SubLayout>
@@ -72,7 +72,7 @@ export function WalletsRecover({ history }: RouteComponentProps) {
     <SubLayout
       title="Enter your seed phrase"
       onBack={cancel}
-      rightSection={<Step steps={['1', '2']} selectedIndex={1} />}
+      rightSection={<DonutIcon ratio={1} />}
     >
       <RecoverWallet wallets={wallets} onConfirm={confirm} />
     </SubLayout>

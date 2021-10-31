@@ -13,6 +13,8 @@ export * from './form/FormSelect';
 export * from './form/FormSuggest';
 export * from './form/SearchTextInput';
 export * from './form/SingleLineFormContainer';
+export * from './icons/DonutIcon';
+export * from './icons/index';
 export * from './layouts/Step';
 export * from './mantine-utils/createMantineStyles';
 export * from './messages/Message';
