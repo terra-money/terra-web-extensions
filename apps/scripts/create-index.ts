@@ -36,4 +36,4 @@ createIndex(path.resolve(__dirname, '../src/@libs/app-provider'), [
   './env',
   './types',
 ]);
-createIndex(path.resolve(__dirname, '../src/@station/ui2'), ['./theme']);
+createIndex(path.resolve(__dirname, '../src/@station/ui'), ['./theme']);

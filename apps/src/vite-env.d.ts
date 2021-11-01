@@ -1,4 +1,5 @@
 /// <reference types="vite/client" />
+/// <reference types="@rocket-scripts/react-preset/typings"/>
 
 declare module '*.svg' {
   import React from 'react';

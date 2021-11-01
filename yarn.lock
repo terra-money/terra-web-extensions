@@ -5179,6 +5179,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/marked@npm:^3.0.2":
+  version: 3.0.2
+  resolution: "@types/marked@npm:3.0.2"
+  checksum: 48c3c190f97bffafbaacfc2ebcb8b87bfee12977b302ebf5ca028258f8131ffa1d3042455eaac4087bc816a3d5e0c8f65f4250e792b9dd18a533d49e99742d35
+  languageName: node
+  linkType: hard
+
 "@types/mdast@npm:^3.0.0":
   version: 3.0.3
   resolution: "@types/mdast@npm:3.0.3"
@@ -6526,6 +6533,7 @@ __metadata:
     "@types/d3-timer": ^2.0.1
     "@types/fs-extra": ^9.0.13
     "@types/jest": ^26.0.24
+    "@types/marked": ^3.0.2
     "@types/mdx-js__react": ^1.5.4
     "@types/node": ^16.11.1
     "@types/numeral": ^2.0.2
@@ -6556,6 +6564,7 @@ __metadata:
     graphql: ^15.6.1
     jest: ^26.6.3
     lint-staged: ^11.2.3
+    marked: ^3.0.8
     multiplerun: ^2.0.1
     numeral: ^2.0.6
     post-message-stream: ^3.0.0
@@ -15490,6 +15499,15 @@ fsevents@^1.2.7:
   peerDependencies:
     react: ">= 0.14.0"
   checksum: 9809d898ef71a0897f55e40481b8128a6041600d90387cf1d4126736bf8be0ba1f5594e57c655973b9aa60a877ad9e28e93124131e1e4902ca759a087a427027
+  languageName: node
+  linkType: hard
+
+"marked@npm:^3.0.8":
+  version: 3.0.8
+  resolution: "marked@npm:3.0.8"
+  bin:
+    marked: bin/marked
+  checksum: 3cdeaa126bbeca5b1b8d2f91e9728018dcd63b250233f3607009a4d70bb6bd9df8c769f1bc52ce9856d1316c91c9dacb1d94d80696f76d094146b4fab126a4eb
   languageName: node
   linkType: hard
 

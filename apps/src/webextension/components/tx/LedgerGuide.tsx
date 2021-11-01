@@ -1,3 +1,4 @@
+import { Markdown } from '@station/ui';
 import { ledgerErrorGuides } from '@terra-dev/ledger-guide-messages';
 import { fixHMR } from 'fix-hmr';
 import React, { ReactNode } from 'react';
@@ -6,10 +7,10 @@ import styled from 'styled-components';
 export interface LedgerGuideProps {
   className?: string;
   code?: number;
-  children: ReactNode;
+  children?: ReactNode;
 }
 
-function LedgerGuideBase({ className, code, children }: LedgerGuideProps) {
+function Component({ className, code, children }: LedgerGuideProps) {
   if (typeof code !== 'number') {
     return <div className={className}>{children}</div>;
   }
@@ -17,24 +18,29 @@ function LedgerGuideBase({ className, code, children }: LedgerGuideProps) {
   if (!!ledgerErrorGuides[code]) {
     return (
       <div className={className}>
-        <h3>Ledger Error Code: {code}</h3>
-        <div dangerouslySetInnerHTML={{ __html: ledgerErrorGuides[code] }} />
-        <div className="origin-message">
-          <b>Original message:</b> {children}
+        <h3>Error code: {code}</h3>
+        <div>
+          <Markdown children={ledgerErrorGuides[code]} />
         </div>
+        {children && (
+          <div className="origin-message">
+            <b>Original message:</b> {children}
+          </div>
+        )}
       </div>
     );
   }
 
+  // fallback codes
   return (
     <div className={className}>
-      <h3>{code}</h3>
+      <h3>Error code: {code}</h3>
       {children}
     </div>
   );
 }
 
-export const StyledLedgerGuide = styled(LedgerGuideBase)`
+const StyledComponent = styled(Component)`
   background-color: var(--color-ledger-guide-background);
   border: 1px solid var(--color-ledger-guide-border);
   border-radius: 8px;
@@ -61,4 +67,4 @@ export const StyledLedgerGuide = styled(LedgerGuideBase)`
   }
 `;
 
-export const LedgerGuide = fixHMR(StyledLedgerGuide);
+export const LedgerGuide = fixHMR(StyledComponent);

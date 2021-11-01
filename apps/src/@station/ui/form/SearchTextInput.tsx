@@ -1,6 +1,6 @@
 import { Input, InputProps, InputStylesNames } from '@mantine/core';
-import { createMantineStyles } from '@station/ui';
 import React from 'react';
+import { createMantineStyles } from '../mantine-utils/createMantineStyles';
 
 export const useSearchInputStyles = createMantineStyles<InputStylesNames>({
   input: {

@@ -18,6 +18,7 @@ export * from './icons/index';
 export * from './layouts/Step';
 export * from './mantine-utils/createMantineStyles';
 export * from './messages/Message';
+export * from './primitives/Markdown';
 export * from './primitives/SvgIcon';
 export * from './styles/menu';
 export * from './wallet-cards/EmptyWalletCard';
