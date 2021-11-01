@@ -1,9 +1,9 @@
 {
-  "author": "Name <id@mail.com>",
+  "author": "Ian Lee <ian@terra.money>",
   "license": "MIT",
-  "repository": "github:id/repo",
-  "bugs": "https://github.com/id/repo/issues",
-  "homepage": "https://github.com/id/repo/tree/master/source/src/{name}",
+  "repository": "github:terra-money/terra-web-extensions",
+  "bugs": "https://github.com/terra-money/terra-web-extensions/issues",
+  "homepage": "https://github.com/terra-money/terra-web-extensions/tree/main/source/src/{name}",
   "engines": {
     "node": ">=12"
   },
