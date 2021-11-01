@@ -1,5 +1,3 @@
-import { MantineProvider } from '@mantine/core';
-import { theme } from '@station/ui';
 import {
   WalletSelectProvider,
   WebConnectorProvider,
@@ -21,22 +19,20 @@ function App() {
   return (
     <WebConnectorProvider controller={controller}>
       <WalletSelectProvider>
-        <MantineProvider theme={theme}>
-          <AppLayout>
-            <Switch>
-              <Route exact path="/" component={Overview} />
-              <Route path="/apis/terra-connect/api">
-                <TerraConnectAPI />
-              </Route>
-              <Route path="/apis/terra-connect/example">
-                <TerraConnectExample />
-              </Route>
-              <Route path="/ui/preview">
-                <UIPreview />
-              </Route>
-            </Switch>
-          </AppLayout>
-        </MantineProvider>
+        <AppLayout>
+          <Switch>
+            <Route exact path="/" component={Overview} />
+            <Route path="/apis/terra-connect/api">
+              <TerraConnectAPI />
+            </Route>
+            <Route path="/apis/terra-connect/example">
+              <TerraConnectExample />
+            </Route>
+            <Route path="/ui/preview">
+              <UIPreview />
+            </Route>
+          </Switch>
+        </AppLayout>
       </WalletSelectProvider>
     </WebConnectorProvider>
   );
