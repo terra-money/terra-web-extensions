@@ -74,13 +74,17 @@ function DashboardBase({ className }: { className?: string }) {
   }, []);
 
   const updateSelectedIndex = useCallback(
-    async (nextSelectedIndex) => {
-      const nextWallet = wallets[nextSelectedIndex];
+    async (nextSelectedIndex: number) => {
+      const nextIndex = Math.max(
+        0,
+        Math.min(wallets.length, nextSelectedIndex),
+      );
+      const nextWallet = wallets[nextIndex];
       if (nextWallet) {
         await focusWallet(nextWallet.terraAddress);
-        setSelectedCardIndex(nextSelectedIndex);
+        setSelectedCardIndex(nextIndex);
       } else {
-        setSelectedCardIndex(nextSelectedIndex);
+        setSelectedCardIndex(nextIndex);
       }
     },
     [wallets],
@@ -89,6 +93,25 @@ function DashboardBase({ className }: { className?: string }) {
   useEffect(() => {
     setSelectedCardIndex(focusedWalletIndex >= 0 ? focusedWalletIndex : 0);
   }, [focusedWalletIndex]);
+
+  useEffect(() => {
+    function handler(event: KeyboardEvent) {
+      switch (event.key.toLowerCase()) {
+        case 'arrowleft':
+          updateSelectedIndex(selectedCardIndex - 1);
+          break;
+        case 'arrowright':
+          updateSelectedIndex(selectedCardIndex + 1);
+          break;
+      }
+    }
+
+    window.addEventListener('keydown', handler);
+
+    return () => {
+      window.removeEventListener('keydown', handler);
+    };
+  }, [selectedCardIndex, updateSelectedIndex]);
 
   const showTokenList = useMemo(() => {
     return selectedCardIndex === focusedWalletIndex;
