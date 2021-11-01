@@ -48,7 +48,7 @@ import { useTerraAddressQrDialog } from '../../dialogs/useTerraAddressQrDialog';
 import { extensionPath } from 'webextension/logics/extensionPath';
 import { useTokenList } from 'webextension/queries/useTokenList';
 
-const INDEX = extensionPath('index.html');
+const INDEX = extensionPath('app.html');
 
 function navItemRenderer(length: number, itemIndex: number) {
   return itemIndex >= length - 1 ? <MdAddCircle /> : <MdCallToAction />;
@@ -293,7 +293,7 @@ function DashboardBase({ className }: { className?: string }) {
               {isLedgerSupport && (
                 <ToolListItem>
                   <a
-                    href="/connect-ledger.html"
+                    href="/app.html#/connect-ledger"
                     target="_blank"
                     rel="noreferrer"
                   >
