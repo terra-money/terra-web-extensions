@@ -20,9 +20,7 @@ import {
   Wallet,
 } from '@terra-dev/web-extension-backend';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { render } from 'react-dom';
-import { IntlProvider } from 'react-intl';
-import styled from 'styled-components';
+import { useLocation } from 'react-router-dom';
 import { browser } from 'webextension-polyfill-ts';
 import { ApproveHostname } from 'webextension/components/views/ApproveHostname';
 import { CanNotFindTx } from 'webextension/components/views/CanNotFindTx';
@@ -30,21 +28,17 @@ import { CanNotFindWallet } from 'webextension/components/views/CanNotFindWallet
 import { SignTxWithEncryptedWallet } from 'webextension/components/views/SignTxWithEncryptedWallet';
 import { SignTxWithLedgerWallet } from 'webextension/components/views/SignTxWithLedgerWallet';
 import { UnknownCase } from 'webextension/components/views/UnknownCase';
-import { ErrorBoundary } from '../../components/common/ErrorBoundary';
-import { LocalesProvider, useIntlProps } from '../../contexts/locales';
-import { txPortPrefix } from '../../env';
+import { txPortPrefix } from 'webextension/env';
 
-export interface AppProps {
-  className?: string;
-}
-
-function Component({ className }: AppProps) {
+export function TxPopup() {
   // ---------------------------------------------
   // read hash urls
   // ---------------------------------------------
+  const { search } = useLocation();
+
   const txRequest = useMemo(() => {
-    return fromURLSearchParams(window.location.search);
-  }, []);
+    return fromURLSearchParams(search);
+  }, [search]);
 
   // ---------------------------------------------
   // states
@@ -132,13 +126,12 @@ function Component({ className }: AppProps) {
   // presentation
   // ---------------------------------------------
   if (!txRequest) {
-    return <CanNotFindTx className={className} />;
+    return <CanNotFindTx />;
   }
 
   if (!wallet) {
     return (
       <CanNotFindWallet
-        className={className}
         chainID={txRequest.network.chainID}
         terraAddress={txRequest.terraAddress}
         onConfirm={cantFindWallet}
@@ -149,7 +142,6 @@ function Component({ className }: AppProps) {
   if (needApproveHostname) {
     return (
       <ApproveHostname
-        className={className}
         hostname={txRequest.hostname}
         onCancel={deny}
         onConfirm={approveHostname}
@@ -159,19 +151,13 @@ function Component({ className }: AppProps) {
 
   if ('usbDevice' in wallet) {
     return (
-      <LedgerWalletTxForm
-        className={className}
-        txRequest={txRequest}
-        wallet={wallet}
-        onDeny={deny}
-      />
+      <LedgerWalletTxForm txRequest={txRequest} wallet={wallet} onDeny={deny} />
     );
   }
 
   if ('encryptedWallet' in wallet) {
     return (
       <EncryptedWalletTxForm
-        className={className}
         txRequest={txRequest}
         wallet={wallet}
         onDeny={deny}
@@ -337,26 +323,3 @@ function EncryptedWalletTxForm({
     />
   );
 }
-
-const App = styled(Component)`
-  width: 100vw;
-`;
-
-function Main() {
-  const { locale, messages } = useIntlProps();
-
-  return (
-    <IntlProvider locale={locale} messages={messages}>
-      <App />
-    </IntlProvider>
-  );
-}
-
-render(
-  <ErrorBoundary>
-    <LocalesProvider>
-      <Main />
-    </LocalesProvider>
-  </ErrorBoundary>,
-  document.querySelector('#app'),
-);

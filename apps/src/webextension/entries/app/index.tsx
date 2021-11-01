@@ -14,6 +14,9 @@ import styled from 'styled-components';
 import { ErrorBoundary } from 'webextension/components/common/ErrorBoundary';
 import { LocalesProvider, useIntlProps } from 'webextension/contexts/locales';
 import { StoreProvider } from 'webextension/contexts/store';
+import { AddNetworkPopup } from 'webextension/entries/app/popups/add-network';
+import { ConnectPopup } from 'webextension/entries/app/popups/connect';
+import { TxPopup } from 'webextension/entries/app/popups/tx';
 import {
   STATION_CONSTANTS,
   STATION_CONTRACT_ADDRESS,
@@ -29,6 +32,8 @@ import { WalletExport } from './pages/wallets/export';
 import { WalletsRecover } from './pages/wallets/recover';
 import { WalletSend } from './pages/wallets/send';
 import { WalletUpdate } from './pages/wallets/update';
+import { AddCw20TokenPopup } from './popups/add-cw20-token';
+import { ConnectLedgerPopup } from './popups/connect-ledger';
 
 const queryClient = new QueryClient();
 
@@ -87,6 +92,20 @@ function Component({ className }: { className?: string }) {
                   exact
                   path="/networks/create"
                   component={NetworksCreate}
+                />
+                {/* popups */}
+                <Route
+                  exact
+                  path="/connect-ledger"
+                  component={ConnectLedgerPopup}
+                />
+                <Route exact path="/connect" component={ConnectPopup} />
+                <Route exact path="/tx" component={TxPopup} />
+                <Route exact path="/add-network" component={AddNetworkPopup} />
+                <Route
+                  exact
+                  path="/add-cw20-token"
+                  component={AddCw20TokenPopup}
                 />
                 <Redirect to="/" />
               </Switch>

@@ -41,10 +41,10 @@ import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { ConfigSelector } from 'webextension/components/header/ConfigSelector';
 import { useStore } from 'webextension/contexts/store';
-import { useAddCW20TokensDialog } from 'webextension/entries/popup/dialogs/useAddCW20TokensDialog';
-import { useDeleteWalletDialog } from 'webextension/entries/popup/dialogs/useDeleteWalletDialog';
-import { useManageCW20TokensDialog } from 'webextension/entries/popup/dialogs/useManageCW20TokensDialog';
-import { useTerraAddressQrDialog } from 'webextension/entries/popup/dialogs/useTerraAddressQrDialog';
+import { useAddCW20TokensDialog } from '../../dialogs/useAddCW20TokensDialog';
+import { useDeleteWalletDialog } from '../../dialogs/useDeleteWalletDialog';
+import { useManageCW20TokensDialog } from '../../dialogs/useManageCW20TokensDialog';
+import { useTerraAddressQrDialog } from '../../dialogs/useTerraAddressQrDialog';
 import { extensionPath } from 'webextension/logics/extensionPath';
 import { useTokenList } from 'webextension/queries/useTokenList';
 

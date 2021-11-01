@@ -1,35 +1,18 @@
-import { AppProvider } from '@libs/app-provider';
 import {
   addNetwork,
   findSimilarNetwork,
 } from '@terra-dev/web-extension-backend';
-import { fixHMR } from 'fix-hmr';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { render } from 'react-dom';
-import { IntlProvider } from 'react-intl';
-import { QueryClient, QueryClientProvider } from 'react-query';
-import styled from 'styled-components';
+import { useLocation } from 'react-router-dom';
 import { browser } from 'webextension-polyfill-ts';
-import { ErrorBoundary } from 'webextension/components/common/ErrorBoundary';
-import { LocalesProvider, useIntlProps } from 'webextension/contexts/locales';
-import { StoreProvider } from 'webextension/contexts/store';
-import {
-  STATION_CONSTANTS,
-  STATION_CONTRACT_ADDRESS,
-  STATION_TX_REFETCH_MAP,
-  txPortPrefix,
-} from 'webextension/env';
+import { txPortPrefix } from 'webextension/env';
 import { getDefaultNetworks } from 'webextension/queries/useDefaultNetworks';
 
-export interface AppProps {
-  className?: string;
-}
+export function AddNetworkPopup() {
+  const { search } = useLocation();
 
-function Component({ className }: AppProps) {
   const addNetworkQuery = useMemo(() => {
-    const queries = window.location.search;
-
-    const params = new URLSearchParams(queries);
+    const params = new URLSearchParams(search);
 
     const id = params.get('id');
     const name = params.get('name');
@@ -46,7 +29,7 @@ function Component({ className }: AppProps) {
       chainID,
       lcd,
     };
-  }, []);
+  }, [search]);
 
   const [similarNetworkExists, setSimilarNetworkExists] =
     useState<boolean>(false);
@@ -104,7 +87,7 @@ function Component({ className }: AppProps) {
   }
 
   return (
-    <div className={className}>
+    <div>
       <input
         type="text"
         value={name}
@@ -123,41 +106,3 @@ function Component({ className }: AppProps) {
     </div>
   );
 }
-
-const StyledComponent = styled(Component)`
-  // TODO
-`;
-
-export const App = fixHMR(StyledComponent);
-
-const queryClient = new QueryClient();
-
-function Main() {
-  const { locale, messages } = useIntlProps();
-
-  return (
-    <QueryClientProvider client={queryClient}>
-      <StoreProvider>
-        <AppProvider
-          defaultQueryClient="lcd"
-          contractAddress={STATION_CONTRACT_ADDRESS}
-          constants={STATION_CONSTANTS}
-          refetchMap={STATION_TX_REFETCH_MAP}
-        >
-          <IntlProvider locale={locale} messages={messages}>
-            <App />
-          </IntlProvider>
-        </AppProvider>
-      </StoreProvider>
-    </QueryClientProvider>
-  );
-}
-
-render(
-  <ErrorBoundary>
-    <LocalesProvider>
-      <Main />
-    </LocalesProvider>
-  </ErrorBoundary>,
-  document.querySelector('#app'),
-);

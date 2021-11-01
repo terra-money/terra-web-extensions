@@ -7,10 +7,25 @@ import { cwd, env, webpackConfigs } from '../scripts/webpackConfigs';
 export function createConfig(
   out: string,
   config: Configuration,
+  optimization: boolean = false,
 ): Configuration[] {
   const app = path.resolve(cwd, 'src/webextension');
+  const analyzer = (name: string) => {
+    return config.mode === 'production'
+      ? {
+          analyzerMode: 'static',
+          openAnalyzer: false,
+          reportFilename: path.resolve(
+            out,
+            `../webextension--${name}.report.html`,
+          ),
+        }
+      : undefined;
+  };
 
-  const baseConfig = merge(config, webpackConfigs);
+  const baseConfig = merge(config, webpackConfigs, {
+    devtool: 'inline-source-map',
+  });
 
   return [
     // background
@@ -19,6 +34,9 @@ export function createConfig(
       createEntry({
         outDir: out,
         env,
+        optimization: optimization ? 'minify' : false,
+        filename: `[name].js`,
+        analyzerOptions: analyzer('background.report.html'),
         entry: [
           {
             name: 'background',
@@ -33,6 +51,9 @@ export function createConfig(
       createEntry({
         outDir: out,
         env,
+        optimization: optimization ? 'minify' : false,
+        filename: `[name].js`,
+        analyzerOptions: analyzer('content.report.html'),
         entry: [
           {
             name: 'content',
@@ -47,6 +68,9 @@ export function createConfig(
       createEntry({
         outDir: out,
         env,
+        optimization: optimization ? 'minify' : false,
+        filename: `[name].js`,
+        analyzerOptions: analyzer('inpage.report.html'),
         entry: [
           {
             name: 'inpage',
@@ -61,41 +85,14 @@ export function createConfig(
       createEntry({
         outDir: out,
         env,
+        optimization: optimization ? 'minify' : false,
+        filename: `[name].js`,
+        analyzerOptions: analyzer('app.report.html'),
         entry: [
           {
-            name: 'index',
-            script: path.resolve(app, 'entries/index/index.tsx'),
-            html: path.resolve(app, 'entries/index/index.html'),
-          },
-          {
-            name: 'connect',
-            script: path.resolve(app, 'entries/connect/index.tsx'),
-            html: path.resolve(app, 'entries/connect/index.html'),
-          },
-          {
-            name: 'popup',
-            script: path.resolve(app, 'entries/popup/index.tsx'),
-            html: path.resolve(app, 'entries/popup/index.html'),
-          },
-          {
-            name: 'tx',
-            script: path.resolve(app, 'entries/tx/index.tsx'),
-            html: path.resolve(app, 'entries/tx/index.html'),
-          },
-          {
-            name: 'connect-ledger',
-            script: path.resolve(app, 'entries/connect-ledger/index.tsx'),
-            html: path.resolve(app, 'entries/connect-ledger/index.html'),
-          },
-          {
-            name: 'add-cw20-token',
-            script: path.resolve(app, 'entries/add-cw20-token/index.tsx'),
-            html: path.resolve(app, 'entries/add-cw20-token/index.html'),
-          },
-          {
-            name: 'add-network',
-            script: path.resolve(app, 'entries/add-network/index.tsx'),
-            html: path.resolve(app, 'entries/add-network/index.html'),
+            name: 'app',
+            script: path.resolve(app, 'entries/app/index.tsx'),
+            html: path.resolve(app, 'entries/app/index.html'),
           },
         ],
       }),

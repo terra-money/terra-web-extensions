@@ -66,7 +66,7 @@ export function startTx(
         // ---------------------------------------------
         // create and append modal
         // ---------------------------------------------
-        const txHtml = browser.runtime.getURL('tx.html');
+        const txHtml = browser.runtime.getURL('app.html');
 
         const txRequest: TxRequest = {
           id,
@@ -78,12 +78,12 @@ export function startTx(
           closeWindowAfterTx: isPopup,
         };
 
-        const src = `${txHtml}?${toURLSearchParams(txRequest)}`;
+        const src = `${txHtml}#/tx?${toURLSearchParams(txRequest)}`;
 
         if (modalContainer) {
           const modal = createElement(IFramePoppingModal, {
             logo: LOGO,
-            src: `${txHtml}?${toURLSearchParams(txRequest)}`,
+            src,
             onClose: () => {
               subscriber.next({
                 status: WebConnectorTxStatus.DENIED,

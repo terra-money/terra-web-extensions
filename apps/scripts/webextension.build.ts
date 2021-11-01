@@ -11,12 +11,9 @@ process.env.NODE_ENV = 'production';
 
 const out = path.resolve(cwd, 'out/webextension');
 
-const compiler = webpack(createConfig(out, BUILD_CONFIG));
+const compiler = webpack(createConfig(out, BUILD_CONFIG, true));
 
-const zip = path.resolve(
-  __dirname,
-  '../public/webextension-test-app/webextension.zip',
-);
+const zip = path.resolve(__dirname, '../out/webextension.zip');
 
 (async () => {
   // clean

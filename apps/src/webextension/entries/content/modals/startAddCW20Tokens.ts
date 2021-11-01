@@ -25,11 +25,11 @@ export function startAddCW20Tokens(
       port.disconnect();
     };
 
-    const html = browser.runtime.getURL('add-cw20-token.html');
+    const html = browser.runtime.getURL('app.html');
 
     const modal = createElement(IFramePoppingModal, {
       logo: LOGO,
-      src: `${html}?id=${id}&chain-id=${chainID}&token-addrs=${tokenAddrs.join(
+      src: `${html}#/add-cw20-token?id=${id}&chain-id=${chainID}&token-addrs=${tokenAddrs.join(
         ',',
       )}`,
       title: 'Add tokens',

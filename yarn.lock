@@ -2956,6 +2956,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@polka/url@npm:^1.0.0-next.20":
+  version: 1.0.0-next.21
+  resolution: "@polka/url@npm:1.0.0-next.21"
+  checksum: c7654046d38984257dd639eab3dc770d1b0340916097b2fac03ce5d23506ada684e05574a69b255c32ea6a144a957c8cd84264159b545fca031c772289d88788
+  languageName: node
+  linkType: hard
+
 "@popperjs/core@npm:^2.5.4, @popperjs/core@npm:^2.6.0, @popperjs/core@npm:^2.9.3":
   version: 2.10.2
   resolution: "@popperjs/core@npm:2.10.2"
@@ -3051,9 +3058,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rocket-scripts/react-preset@npm:^4.0.0-alpha.4":
-  version: 4.0.0-alpha.4
-  resolution: "@rocket-scripts/react-preset@npm:4.0.0-alpha.4"
+"@rocket-scripts/react-preset@npm:^4.0.0-alpha.7":
+  version: 4.0.0-alpha.7
+  resolution: "@rocket-scripts/react-preset@npm:4.0.0-alpha.7"
   dependencies:
     "@mdx-js/loader": ^1.6.22
     "@ssen/jest-transform": ^3.0.0
@@ -3081,28 +3088,29 @@ __metadata:
     webpack: ^5.51.1
     worker-loader: ^3.0.8
     yaml-loader: ^0.6.0
-  checksum: fb797c45b392dcfec117c4f8c0bee8b6f6db5cfa90d6d41a2c43f17a5d717886bf0140bb35247b8cc3413ef3a8126fac1b96d705aa5279c802ef2589c4243d9a
+  checksum: 2a299bf37f5088385609a1a98f65f6f4fe8bb352ebf4858fed71194502f98d16a03f5ea0b3d7318ec90cbbb1d23e58cb2c289c249fbd3fa24eaaafbbb35352ae
   languageName: node
   linkType: hard
 
-"@rocket-scripts/read-package-alias@npm:^4.0.0-alpha.1":
-  version: 4.0.0-alpha.4
-  resolution: "@rocket-scripts/read-package-alias@npm:4.0.0-alpha.4"
+"@rocket-scripts/read-package-alias@npm:^4.0.0-alpha.7":
+  version: 4.0.0-alpha.7
+  resolution: "@rocket-scripts/read-package-alias@npm:4.0.0-alpha.7"
   dependencies:
     fs-extra: ^10.0.0
-  checksum: 42e10909ef2e2e8504075f7e51398562f55ac267bc40c798ba7cad8acae2226e1b355b0b5e9360390e27b10b42029d785d546a34d587e8601991bfe63015cbe8
+  checksum: 0657868f63622f3a3cec55b30d0bdb12304882cd19bd452867a69eb1b5cfe1302b343faedc77a0045914b11e0318cf0a4e4557ec28fbfdc193722f663ccbaff5
   languageName: node
   linkType: hard
 
-"@rocket-scripts/webpack-fns@npm:^4.0.0-alpha.1":
-  version: 4.0.0-alpha.4
-  resolution: "@rocket-scripts/webpack-fns@npm:4.0.0-alpha.4"
+"@rocket-scripts/webpack-fns@npm:^4.0.0-alpha.7":
+  version: 4.0.0-alpha.7
+  resolution: "@rocket-scripts/webpack-fns@npm:4.0.0-alpha.7"
   dependencies:
     esbuild-loader: ^2.15.1
     html-webpack-plugin: "github:iamssen/html-webpack-plugin#5.3.1-fixed"
     react-dev-utils: ^11.0.4
     webpack: ^5.51.1
-  checksum: cf4e55186354bddee4970cbaa96c196c980f0b3678a467cc37b464d43cfc26b0901b372d86f8733bc8b3fd57887d1caac12fe66c3e7bb3c9ef2fb86687b6b276
+    webpack-bundle-analyzer: ^4.5.0
+  checksum: 15538df44878e5ea425b811ca6997a49746be98dea31925c702b5d43533f57bf365fa226dd734c7838fc5af0c125d38a882af163bfd7ab80d6d5a726ee43dc44
   languageName: node
   linkType: hard
 
@@ -6220,6 +6228,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"acorn-walk@npm:^8.0.0":
+  version: 8.2.0
+  resolution: "acorn-walk@npm:8.2.0"
+  checksum: 1715e76c01dd7b2d4ca472f9c58968516a4899378a63ad5b6c2d668bba8da21a71976c14ec5f5b75f887b6317c4ae0b897ab141c831d741dc76024d8745f1ad1
+  languageName: node
+  linkType: hard
+
 "acorn-walk@npm:^8.1.1":
   version: 8.1.1
   resolution: "acorn-walk@npm:8.1.1"
@@ -6242,6 +6257,15 @@ __metadata:
   bin:
     acorn: bin/acorn
   checksum: 1860f23c2107c910c6177b7b7be71be350db9e1080d814493fae143ae37605189504152d1ba8743ba3178d0b37269ce1ffc42b101547fdc1827078f82671e407
+  languageName: node
+  linkType: hard
+
+"acorn@npm:^8.0.4":
+  version: 8.5.0
+  resolution: "acorn@npm:8.5.0"
+  bin:
+    acorn: bin/acorn
+  checksum: 2e4c1dbed3da327684863debf31d341bf8882c6893c506653872c00977eee45675feb9129255d6c74c88424d2b20d889ca6de5b39776e5e3cccfc756b3ca1da8
   languageName: node
   linkType: hard
 
@@ -6502,9 +6526,9 @@ __metadata:
     "@material-ui/core": ^4.12.3
     "@mdx-js/mdx": ^1.6.22
     "@mdx-js/react": ^1.6.22
-    "@rocket-scripts/react-preset": ^4.0.0-alpha.4
-    "@rocket-scripts/read-package-alias": ^4.0.0-alpha.1
-    "@rocket-scripts/webpack-fns": ^4.0.0-alpha.1
+    "@rocket-scripts/react-preset": ^4.0.0-alpha.7
+    "@rocket-scripts/read-package-alias": ^4.0.0-alpha.7
+    "@rocket-scripts/webpack-fns": ^4.0.0-alpha.7
     "@rx-stream/animation": ^0.7.1
     "@rx-stream/pipe": ^0.7.1
     "@rx-stream/react": ^0.7.1
@@ -8586,6 +8610,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"commander@npm:^7.2.0":
+  version: 7.2.0
+  resolution: "commander@npm:7.2.0"
+  checksum: 53501cbeee61d5157546c0bef0fedb6cdfc763a882136284bed9a07225f09a14b82d2a84e7637edfd1a679fb35ed9502fd58ef1d091e6287f60d790147f68ddc
+  languageName: node
+  linkType: hard
+
 "commander@npm:^8.2.0":
   version: 8.2.0
   resolution: "commander@npm:8.2.0"
@@ -10046,7 +10077,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"duplexer@npm:^0.1.1":
+"duplexer@npm:^0.1.1, duplexer@npm:^0.1.2":
   version: 0.1.2
   resolution: "duplexer@npm:0.1.2"
   checksum: 62ba61a830c56801db28ff6305c7d289b6dc9f859054e8c982abd8ee0b0a14d2e9a8e7d086ffee12e868d43e2bbe8a964be55ddbd8c8957714c87373c7a4f9b0
@@ -12336,6 +12367,15 @@ fsevents@^1.2.7:
     duplexer: ^0.1.1
     pify: ^4.0.1
   checksum: 6451ba2210877368f6d9ee9b4dc0d14501671472801323bf81fbd38bdeb8525f40a78be45a59d0182895d51e6b60c6314b7d02bd6ed40e7225a01e8d038aac1b
+  languageName: node
+  linkType: hard
+
+"gzip-size@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "gzip-size@npm:6.0.0"
+  dependencies:
+    duplexer: ^0.1.2
+  checksum: 2df97f359696ad154fc171dcb55bc883fe6e833bca7a65e457b9358f3cb6312405ed70a8da24a77c1baac0639906cd52358dc0ce2ec1a937eaa631b934c94194
   languageName: node
   linkType: hard
 
@@ -15818,7 +15858,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"mime@npm:^2.4.4":
+"mime@npm:^2.3.1, mime@npm:^2.4.4":
   version: 2.5.2
   resolution: "mime@npm:2.5.2"
   bin:
@@ -16712,6 +16752,15 @@ fsevents@^1.2.7:
     is-docker: ^2.0.0
     is-wsl: ^2.1.1
   checksum: 3333900ec0e420d64c23b831bc3467e57031461d843c801f569b2204a1acc3cd7b3ec3c7897afc9dde86491dfa289708eb92bba164093d8bd88fb2c231843c91
+  languageName: node
+  linkType: hard
+
+"opener@npm:^1.5.2":
+  version: 1.5.2
+  resolution: "opener@npm:1.5.2"
+  bin:
+    opener: bin/opener-bin.js
+  checksum: 33b620c0d53d5b883f2abc6687dd1c5fd394d270dbe33a6356f2d71e0a2ec85b100d5bac94694198ccf5c30d592da863b2292c5539009c715a9c80c697b4f6cc
   languageName: node
   linkType: hard
 
@@ -20867,6 +20916,17 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
+"sirv@npm:^1.0.7":
+  version: 1.0.18
+  resolution: "sirv@npm:1.0.18"
+  dependencies:
+    "@polka/url": ^1.0.0-next.20
+    mime: ^2.3.1
+    totalist: ^1.0.0
+  checksum: 0839036255d121a6396f9496fb7d285628e4986f3c1febca7b7c6d675fc15305050e3278ab249213c5af332be6178f992aaf42573d9d583ef3ae203b6d1fff2a
+  languageName: node
+  linkType: hard
+
 "sisteransi@npm:^1.0.5":
   version: 1.0.5
   resolution: "sisteransi@npm:1.0.5"
@@ -22192,6 +22252,13 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
+"totalist@npm:^1.0.0":
+  version: 1.1.0
+  resolution: "totalist@npm:1.1.0"
+  checksum: dfab80c7104a1d170adc8c18782d6c04b7df08352dec452191208c66395f7ef2af7537ddfa2cf1decbdcfab1a47afbbf0dec6543ea191da98c1c6e1599f86adc
+  languageName: node
+  linkType: hard
+
 "tough-cookie@npm:^2.3.3, tough-cookie@npm:~2.5.0":
   version: 2.5.0
   resolution: "tough-cookie@npm:2.5.0"
@@ -23366,6 +23433,25 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
+"webpack-bundle-analyzer@npm:^4.5.0":
+  version: 4.5.0
+  resolution: "webpack-bundle-analyzer@npm:4.5.0"
+  dependencies:
+    acorn: ^8.0.4
+    acorn-walk: ^8.0.0
+    chalk: ^4.1.0
+    commander: ^7.2.0
+    gzip-size: ^6.0.0
+    lodash: ^4.17.20
+    opener: ^1.5.2
+    sirv: ^1.0.7
+    ws: ^7.3.1
+  bin:
+    webpack-bundle-analyzer: lib/bin/analyzer.js
+  checksum: 158e96810ec213d5665ca1c0b257097db44e1f11c4befefab8352b9e5b10890fcb3e3fc1f7bb400dd58762a8edce5621c92afeca86eb4687d2eb64e93186bfcb
+  languageName: node
+  linkType: hard
+
 "webpack-dev-middleware@npm:^3.7.2, webpack-dev-middleware@npm:^3.7.3":
   version: 3.7.3
   resolution: "webpack-dev-middleware@npm:3.7.3"
@@ -24058,6 +24144,21 @@ resolve@^2.0.0-next.3:
   dependencies:
     async-limiter: ~1.0.0
   checksum: aec3154ec51477c094ac2cb5946a156e17561a581fa27005cbf22c53ac57f8d4e5f791dd4bbba6a488602cb28778c8ab7df06251d590507c3c550fd8ebeee949
+  languageName: node
+  linkType: hard
+
+"ws@npm:^7.3.1":
+  version: 7.5.5
+  resolution: "ws@npm:7.5.5"
+  peerDependencies:
+    bufferutil: ^4.0.1
+    utf-8-validate: ^5.0.2
+  peerDependenciesMeta:
+    bufferutil:
+      optional: true
+    utf-8-validate:
+      optional: true
+  checksum: bd2b437256012af526c69c03d6670a132e7ab0fe5853f3b7092826acea4203fad4ee2a8d0d9bd44834b2b968e747bf34f753ab535f4a3edf40d262da4b1d0805
   languageName: node
   linkType: hard
 

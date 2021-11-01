@@ -5,19 +5,10 @@ import {
   findWallet,
 } from '@terra-dev/web-extension-backend';
 import React, { useCallback } from 'react';
-import { render } from 'react-dom';
-import { IntlProvider } from 'react-intl';
-import styled from 'styled-components';
-import { ErrorBoundary } from 'webextension/components/common/ErrorBoundary';
 import { ConnectLedger } from 'webextension/components/views/ConnectLedger';
-import { LocalesProvider, useIntlProps } from 'webextension/contexts/locales';
-import { StoreProvider, useStore } from 'webextension/contexts/store';
+import { useStore } from 'webextension/contexts/store';
 
-export interface AppProps {
-  className?: string;
-}
-
-function Component({ className }: AppProps) {
+export function ConnectLedgerPopup() {
   const { wallets } = useStore();
 
   // ---------------------------------------------
@@ -53,36 +44,6 @@ function Component({ className }: AppProps) {
   }, []);
 
   return (
-    <ConnectLedger
-      className={className}
-      wallets={wallets}
-      onConnect={connect}
-      onCancel={cancel}
-    />
+    <ConnectLedger wallets={wallets} onConnect={connect} onCancel={cancel} />
   );
 }
-
-const App = styled(Component)`
-  width: 100vw;
-`;
-
-function Main() {
-  const { locale, messages } = useIntlProps();
-
-  return (
-    <StoreProvider>
-      <IntlProvider locale={locale} messages={messages}>
-        <App />
-      </IntlProvider>
-    </StoreProvider>
-  );
-}
-
-render(
-  <ErrorBoundary>
-    <LocalesProvider>
-      <Main />
-    </LocalesProvider>
-  </ErrorBoundary>,
-  document.querySelector('#app'),
-);

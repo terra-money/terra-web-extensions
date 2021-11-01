@@ -1,41 +1,25 @@
-import { AppProvider } from '@libs/app-provider';
 import {
   addCW20Tokens,
   hasCW20Tokens,
   removeCW20Tokens,
 } from '@terra-dev/web-extension-backend';
-import { fixHMR } from 'fix-hmr';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { render } from 'react-dom';
-import { IntlProvider } from 'react-intl';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { browser } from 'webextension-polyfill-ts';
-import { ErrorBoundary } from 'webextension/components/common/ErrorBoundary';
 import { AlreadyCW20TokensExists } from 'webextension/components/views/AlreadyCW20TokensExists';
 import { ManageCW20Tokens } from 'webextension/components/views/ManageCW20Tokens';
-import { LocalesProvider, useIntlProps } from 'webextension/contexts/locales';
-import { StoreProvider } from 'webextension/contexts/store';
-import {
-  STATION_CONSTANTS,
-  STATION_CONTRACT_ADDRESS,
-  STATION_TX_REFETCH_MAP,
-  txPortPrefix,
-} from 'webextension/env';
+import { txPortPrefix } from 'webextension/env';
 import { useCW20Tokens } from 'webextension/queries/useCW20Tokens';
 
-export interface AppProps {
-  className?: string;
-}
-
-function Component({ className }: AppProps) {
+export function AddCw20TokenPopup() {
   // ---------------------------------------------
   // read hash urls
   // ---------------------------------------------
-  const addTokenQuery = useMemo(() => {
-    const queries = window.location.search;
+  const { search } = useLocation();
 
-    const params = new URLSearchParams(queries);
+  const addTokenQuery = useMemo(() => {
+    const params = new URLSearchParams(search);
 
     const id = params.get('id');
     const chainID = params.get('chain-id');
@@ -50,7 +34,7 @@ function Component({ className }: AppProps) {
       chainID,
       tokenAddrs,
     };
-  }, []);
+  }, [search]);
 
   const [tokensExists, setTokensExists] = useState<boolean>(false);
 
@@ -123,55 +107,33 @@ function Component({ className }: AppProps) {
   // presentation
   // ---------------------------------------------
   if (tokensExists) {
-    return <AlreadyCW20TokensExists onConfirm={close} />;
+    return (
+      <Center>
+        <AlreadyCW20TokensExists onConfirm={close} />
+      </Center>
+    );
   }
 
   return (
-    <ManageCW20Tokens
-      initialTokens={initialTokens}
-      existsTokens={existsTokens}
-      onRemove={remove}
-      onAdd={add}
-      onAddAll={addAll}
-      onClose={close}
-    />
+    <Padding>
+      <ManageCW20Tokens
+        initialTokens={initialTokens}
+        existsTokens={existsTokens}
+        onRemove={remove}
+        onAdd={add}
+        onAddAll={addAll}
+        onClose={close}
+      />
+    </Padding>
   );
 }
 
-export const StyledComponent = styled(Component)`
-  // TODO
+const Center = styled.div`
+  .content {
+    height: 100vh;
+  }
 `;
 
-const App = fixHMR(StyledComponent);
-
-const queryClient = new QueryClient();
-
-function Main() {
-  const { locale, messages } = useIntlProps();
-
-  return (
-    <QueryClientProvider client={queryClient}>
-      <StoreProvider>
-        <AppProvider
-          defaultQueryClient="lcd"
-          contractAddress={STATION_CONTRACT_ADDRESS}
-          constants={STATION_CONSTANTS}
-          refetchMap={STATION_TX_REFETCH_MAP}
-        >
-          <IntlProvider locale={locale} messages={messages}>
-            <App />
-          </IntlProvider>
-        </AppProvider>
-      </StoreProvider>
-    </QueryClientProvider>
-  );
-}
-
-render(
-  <ErrorBoundary>
-    <LocalesProvider>
-      <Main />
-    </LocalesProvider>
-  </ErrorBoundary>,
-  document.querySelector('#app'),
-);
+const Padding = styled.div`
+  padding: 20px;
+`;

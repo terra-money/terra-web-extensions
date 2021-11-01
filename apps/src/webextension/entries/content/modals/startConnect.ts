@@ -18,11 +18,11 @@ export function startConnect(id: string, hostname: string): Promise<boolean> {
       port.disconnect();
     };
 
-    const html = browser.runtime.getURL('connect.html');
+    const html = browser.runtime.getURL('app.html');
 
     const modal = createElement(IFramePoppingModal, {
       logo: LOGO,
-      src: `${html}?id=${id}&hostname=${hostname}`,
+      src: `${html}#/connect?id=${id}&hostname=${hostname}`,
       title: 'Approve site',
       onClose: () => {
         resolve(false);

@@ -24,11 +24,11 @@ export function startAddNetwork(
       port.disconnect();
     };
 
-    const html = browser.runtime.getURL('add-network.html');
+    const html = browser.runtime.getURL('app.html');
 
     const modal = createElement(IFramePoppingModal, {
       logo: LOGO,
-      src: `${html}?id=${id}&name=${network.name}&chain-id=${network.chainID}&lcd=${network.lcd}`,
+      src: `${html}#/add-network?id=${id}&name=${network.name}&chain-id=${network.chainID}&lcd=${network.lcd}`,
       title: 'Add network',
       onClose: () => {
         resolve(false);

@@ -4,29 +4,22 @@ import {
   readWalletsStorage,
 } from '@terra-dev/web-extension-backend';
 import React, { useCallback, useMemo, useState } from 'react';
-import { render } from 'react-dom';
 import { MdDomainVerification } from 'react-icons/md';
-import { IntlProvider } from 'react-intl';
+import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { browser } from 'webextension-polyfill-ts';
 import { ApproveHostname } from 'webextension/components/views/ApproveHostname';
 import { ViewCenterLayout } from 'webextension/components/views/components/ViewCenterLayout';
-import { ErrorBoundary } from '../../components/common/ErrorBoundary';
-import { LocalesProvider, useIntlProps } from '../../contexts/locales';
-import { txPortPrefix } from '../../env';
+import { txPortPrefix } from 'webextension/env';
 
-export interface AppProps {
-  className?: string;
-}
-
-function Component({ className }: AppProps) {
+export function ConnectPopup() {
   // ---------------------------------------------
   // read hash urls
   // ---------------------------------------------
-  const connectInfo = useMemo(() => {
-    const queries = window.location.search;
+  const { search } = useLocation();
 
-    const params = new URLSearchParams(queries);
+  const connectInfo = useMemo(() => {
+    const params = new URLSearchParams(search);
 
     const id = params.get('id');
     const hostname = params.get('hostname');
@@ -39,7 +32,7 @@ function Component({ className }: AppProps) {
       id,
       hostname,
     };
-  }, []);
+  }, [search]);
 
   // ---------------------------------------------
   // states
@@ -86,7 +79,7 @@ function Component({ className }: AppProps) {
   // ---------------------------------------------
   if (noWallets) {
     return (
-      <div className={className}>
+      <Center>
         <ViewCenterLayout
           className="content"
           icon={<MdDomainVerification />}
@@ -99,45 +92,24 @@ function Component({ className }: AppProps) {
         >
           <p>Please make any wallets first!</p>
         </ViewCenterLayout>
-      </div>
+      </Center>
     );
   }
 
   return (
-    <div className={className}>
+    <Center>
       <ApproveHostname
         className="content"
         hostname={connectInfo.hostname}
         onCancel={deny}
         onConfirm={approveConnect}
       />
-    </div>
+    </Center>
   );
 }
 
-export const App = styled(Component)`
-  min-height: 100vh;
-
+const Center = styled.div`
   .content {
-    min-height: 100vh;
+    height: 100vh;
   }
 `;
-
-function Main() {
-  const { locale, messages } = useIntlProps();
-
-  return (
-    <IntlProvider locale={locale} messages={messages}>
-      <App />
-    </IntlProvider>
-  );
-}
-
-render(
-  <ErrorBoundary>
-    <LocalesProvider>
-      <Main />
-    </LocalesProvider>
-  </ErrorBoundary>,
-  document.querySelector('#app'),
-);
