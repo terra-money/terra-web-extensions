@@ -12,7 +12,7 @@ import {
   WalletMoreMenus,
   TerraIcon,
   LedgerIcon,
-} from '@station/ui2';
+} from '@station/ui';
 import {
   EncryptedWallet,
   focusWallet,

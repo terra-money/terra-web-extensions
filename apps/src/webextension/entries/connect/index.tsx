@@ -1,4 +1,4 @@
-import { Button } from '@station/ui2';
+import { Button } from '@station/ui';
 import {
   approveHostnames,
   readWalletsStorage,

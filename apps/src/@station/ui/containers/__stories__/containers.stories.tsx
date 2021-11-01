@@ -6,7 +6,7 @@ import {
   Modal,
   PoppingModal,
   SvgIcon,
-} from '@station/ui2';
+} from '@station/ui';
 import { Meta } from '@storybook/react';
 import React, { useState } from 'react';
 import { MdSportsSoccer } from 'react-icons/md';

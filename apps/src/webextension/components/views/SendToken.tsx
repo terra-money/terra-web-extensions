@@ -3,7 +3,7 @@ import { useSendForm, useSendTx, useTerraTokenInfo } from '@libs/app-provider';
 import { formatUInput, formatUToken, microfy } from '@libs/formatter';
 import { cw20, HumanAddr, terraswap, Token, u, UST } from '@libs/types';
 import { EmptyNumberInput } from '@libs/ui';
-import { Button, FormSuggest, SingleLineFormContainer } from '@station/ui2';
+import { Button, FormSuggest, SingleLineFormContainer } from '@station/ui';
 import { useConnectedWallet } from '@terra-dev/use-wallet';
 import big, { BigSource } from 'big.js';
 import React, { ChangeEvent, ReactNode, useCallback, useMemo } from 'react';

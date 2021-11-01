@@ -1,5 +1,5 @@
 import { vibrate } from '@libs/ui';
-import { Button, SingleLineFormContainer, WalletCard } from '@station/ui2';
+import { Button, SingleLineFormContainer, WalletCard } from '@station/ui';
 import { WebConnectorNetworkInfo } from '@terra-dev/web-connector-interface';
 import {
   decryptWallet,

@@ -1,4 +1,4 @@
-import { IFramePoppingModal } from '@station/ui2';
+import { IFramePoppingModal } from '@station/ui';
 import { createElement } from 'react';
 import { render } from 'react-dom';
 import { browser } from 'webextension-polyfill-ts';

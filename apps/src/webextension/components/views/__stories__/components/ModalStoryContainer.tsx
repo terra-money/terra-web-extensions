@@ -1,4 +1,4 @@
-import { Modal } from '@station/ui2';
+import { Modal } from '@station/ui';
 import { fixHMR } from 'fix-hmr';
 import React, { ReactNode } from 'react';
 import styled from 'styled-components';

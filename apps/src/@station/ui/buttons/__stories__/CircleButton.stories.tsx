@@ -1,4 +1,4 @@
-import { CircleButton } from '@station/ui2/buttons/CircleButton';
+import { CircleButton } from '@station/ui';
 import { Meta } from '@storybook/react';
 import React from 'react';
 import { MdDone, MdPlusOne, MdSearch } from 'react-icons/md';

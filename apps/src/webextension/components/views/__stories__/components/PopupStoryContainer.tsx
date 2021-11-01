@@ -1,4 +1,4 @@
-import { PoppingModal } from '@station/ui2';
+import { PoppingModal } from '@station/ui';
 import React, { ReactNode } from 'react';
 import { LOGO } from 'webextension/entries/content/env';
 

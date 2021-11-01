@@ -1,4 +1,4 @@
-import { Button } from '@station/ui2';
+import { Button } from '@station/ui';
 import React from 'react';
 import { MdMood } from 'react-icons/md';
 import { ViewCenterLayout } from './components/ViewCenterLayout';

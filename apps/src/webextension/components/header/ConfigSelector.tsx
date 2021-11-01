@@ -1,5 +1,5 @@
 import { Divider, Menu } from '@mantine/core';
-import { useMenuStyles } from '@station/ui2';
+import { useMenuStyles } from '@station/ui';
 import { selectNetwork } from '@terra-dev/web-extension-backend';
 import React, { useCallback } from 'react';
 import { MdLanguage, MdPodcasts, MdSettings } from 'react-icons/md';

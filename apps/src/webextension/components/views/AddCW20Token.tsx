@@ -2,7 +2,7 @@ import { CW20TokenDisplayInfo, cw20TokenInfoQuery } from '@libs/app-fns';
 import { useApp, useCW20TokenDisplayInfosQuery } from '@libs/app-provider';
 import { truncate } from '@libs/formatter';
 import { CW20Addr } from '@libs/types';
-import { CircleButton, SearchTextInput } from '@station/ui2';
+import { CircleButton, SearchTextInput } from '@station/ui';
 import { useWallet } from '@terra-dev/use-wallet';
 import { AccAddress } from '@terra-money/terra.js';
 import React, { ChangeEvent, useEffect, useState } from 'react';

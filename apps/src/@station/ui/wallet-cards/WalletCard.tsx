@@ -1,6 +1,6 @@
 import { truncate } from '@libs/formatter';
 import { Tooltip, TooltipStylesNames } from '@mantine/core';
-import { WalletIcon } from '@station/ui2/wallet-cards/WalletIcon';
+import { WalletIcon } from '@station/ui';
 import { fixHMR } from 'fix-hmr';
 import React, {
   CSSProperties,

@@ -1,4 +1,4 @@
-import { Button, ListBox, SvgButton } from '@station/ui2';
+import { Button, ListBox, SvgButton } from '@station/ui';
 import {
   disapproveHostname,
   observeHostnamesStorage,

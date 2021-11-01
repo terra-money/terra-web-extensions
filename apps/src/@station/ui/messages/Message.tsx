@@ -1,4 +1,4 @@
-import { SvgIcon } from '@station/ui2';
+import { SvgIcon } from '@station/ui';
 import { fixHMR } from 'fix-hmr';
 import React, { DetailedHTMLProps, HTMLAttributes, ReactNode } from 'react';
 import { MdCheckCircle, MdError } from 'react-icons/md';

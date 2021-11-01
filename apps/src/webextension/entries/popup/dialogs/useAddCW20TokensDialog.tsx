@@ -1,5 +1,5 @@
 import { DialogProps, OpenDialog, useDialog } from '@libs/use-dialog';
-import { Modal } from '@station/ui2';
+import { Modal } from '@station/ui';
 import { useWallet } from '@terra-dev/use-wallet';
 import {
   addCW20Tokens,

@@ -1,5 +1,5 @@
 import { Menu, MenuProps } from '@mantine/core';
-import { SvgButton } from '@station/ui2';
+import { SvgButton } from '@station/ui';
 import React from 'react';
 import { useMenuStyles } from '../styles/menu';
 import { ReactComponent as MoreIcon } from './assets/icons/more.svg';

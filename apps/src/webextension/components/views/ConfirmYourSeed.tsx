@@ -1,5 +1,5 @@
 import { vibrate } from '@libs/ui';
-import { Button, SingleLineFormContainer } from '@station/ui2';
+import { Button, SingleLineFormContainer } from '@station/ui';
 import { MnemonicKey } from '@terra-money/terra.js';
 import React, {
   ChangeEvent,

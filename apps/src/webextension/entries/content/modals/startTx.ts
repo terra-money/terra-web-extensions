@@ -1,4 +1,4 @@
-import { IFramePoppingModal } from '@station/ui2';
+import { IFramePoppingModal } from '@station/ui';
 import {
   SerializedCreateTxOptions,
   WebConnectorTxDenied,

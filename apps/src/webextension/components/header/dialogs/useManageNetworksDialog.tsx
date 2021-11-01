@@ -1,5 +1,5 @@
 import { DialogProps, OpenDialog, useDialog } from '@libs/use-dialog';
-import { Modal, SvgButton } from '@station/ui2';
+import { Modal, SvgButton } from '@station/ui';
 import { WebConnectorNetworkInfo } from '@terra-dev/web-connector-interface';
 import { removeNetwork } from '@terra-dev/web-extension-backend';
 import React, { ReactNode, useCallback } from 'react';

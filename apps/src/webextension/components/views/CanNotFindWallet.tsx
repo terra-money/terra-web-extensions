@@ -1,5 +1,5 @@
 import { FinderAddressLink } from '@libs/ui';
-import { Button } from '@station/ui2';
+import { Button } from '@station/ui';
 import React from 'react';
 import { MdMoodBad } from 'react-icons/md';
 import { ViewCenterLayout } from './components/ViewCenterLayout';

@@ -1,4 +1,4 @@
-import { DonutIcon } from '@station/ui2';
+import { DonutIcon } from '@station/ui';
 import {
   addWallet,
   createMnemonicKey,

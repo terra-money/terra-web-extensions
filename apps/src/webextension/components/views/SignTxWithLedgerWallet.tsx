@@ -1,5 +1,5 @@
 import { vibrate } from '@libs/ui';
-import { Button, WalletCard } from '@station/ui2';
+import { Button, WalletCard } from '@station/ui';
 import {
   WebConnectorLedgerError,
   WebConnectorNetworkInfo,

@@ -1,4 +1,4 @@
-import { SvgButton } from '@station/ui2';
+import { SvgButton } from '@station/ui';
 import { fixHMR } from 'fix-hmr';
 import React, { DetailedHTMLProps, HTMLAttributes, ReactNode } from 'react';
 import { MdClose } from 'react-icons/md';

@@ -1,4 +1,4 @@
-import { Button, SingleLineFormContainer } from '@station/ui2';
+import { Button, SingleLineFormContainer } from '@station/ui';
 import { WebConnectorNetworkInfo } from '@terra-dev/web-connector-interface';
 import {
   validateNetworkLcdURL,

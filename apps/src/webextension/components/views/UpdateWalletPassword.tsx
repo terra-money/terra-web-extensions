@@ -1,5 +1,5 @@
 import { vibrate } from '@libs/ui';
-import { Button, Message, SingleLineFormContainer } from '@station/ui2';
+import { Button, Message, SingleLineFormContainer } from '@station/ui';
 import {
   decryptWallet,
   EncryptedWallet,

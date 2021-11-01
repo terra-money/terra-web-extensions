@@ -1,4 +1,4 @@
-import { Message } from '@station/ui2/messages/Message';
+import { Message } from '@station/ui';
 import { Meta } from '@storybook/react';
 import React from 'react';
 

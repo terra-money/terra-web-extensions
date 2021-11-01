@@ -1,4 +1,4 @@
-import { IFramePoppingModal } from '@station/ui2';
+import { IFramePoppingModal } from '@station/ui';
 import { hasCW20Tokens } from '@terra-dev/web-extension-backend';
 import { createElement } from 'react';
 import { render } from 'react-dom';

@@ -1,5 +1,5 @@
 import { DialogProps, OpenDialog, useDialog } from '@libs/use-dialog';
-import { Button, Modal, SvgIcon } from '@station/ui2';
+import { Button, Modal, SvgIcon } from '@station/ui';
 import {
   EncryptedWallet,
   LedgerWallet,

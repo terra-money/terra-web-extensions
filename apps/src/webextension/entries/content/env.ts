@@ -1,4 +1,4 @@
-import { SvgIcon, TerraIcon } from '@station/ui2';
+import { SvgIcon, TerraIcon } from '@station/ui';
 import { createElement } from 'react';
 
 export const LOGO = createElement(SvgIcon, {

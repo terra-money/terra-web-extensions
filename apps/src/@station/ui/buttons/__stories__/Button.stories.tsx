@@ -1,4 +1,4 @@
-import { Button } from '@station/ui2';
+import { Button } from '@station/ui';
 import { Meta } from '@storybook/react';
 import React from 'react';
 import {

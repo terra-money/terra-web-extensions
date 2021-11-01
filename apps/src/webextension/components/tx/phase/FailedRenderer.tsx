@@ -1,5 +1,5 @@
 import { TxErrorRendering, TxReceipt } from '@libs/app-fns';
-import { Button } from '@station/ui2';
+import { Button } from '@station/ui';
 import {
   CreateTxFailed,
   Timeout,

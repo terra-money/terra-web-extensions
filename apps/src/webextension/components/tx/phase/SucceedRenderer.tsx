@@ -1,5 +1,5 @@
 import { TxReceipt } from '@libs/app-fns';
-import { Button } from '@station/ui2';
+import { Button } from '@station/ui';
 import { fixHMR } from 'fix-hmr';
 import React from 'react';
 import { MdDoneAll } from 'react-icons/md';

@@ -1,4 +1,4 @@
-import { Step } from '@station/ui2/layouts/Step';
+import { Step } from '@station/ui';
 import { Meta } from '@storybook/react';
 import React, { useState } from 'react';
 import { SubLayout } from 'webextension/components/layouts/SubLayout';

@@ -9,7 +9,7 @@ import {
   createMantineStyles,
   Message,
   SingleLineFormContainer,
-} from '@station/ui2';
+} from '@station/ui';
 import { MnemonicKey } from '@terra-money/terra.js';
 import React, { useState } from 'react';
 import { MdOutlineFilterNone } from 'react-icons/md';

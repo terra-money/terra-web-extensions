@@ -1,4 +1,4 @@
-import { DonutIcon, LedgerIcon, TerraIcon } from '@station/ui2';
+import { DonutIcon, LedgerIcon, TerraIcon } from '@station/ui';
 import { Meta } from '@storybook/react';
 import React from 'react';
 import styled from 'styled-components';

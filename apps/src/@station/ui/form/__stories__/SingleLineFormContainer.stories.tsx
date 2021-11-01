@@ -5,7 +5,7 @@ import {
   FormSelect,
   FormSuggest,
   SingleLineFormContainer,
-} from '@station/ui2';
+} from '@station/ui';
 import { Meta } from '@storybook/react';
 import React, { useState } from 'react';
 import { MdOutlineFilterNone } from 'react-icons/md';

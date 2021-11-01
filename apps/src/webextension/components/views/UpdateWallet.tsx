@@ -3,7 +3,7 @@ import {
   SingleLineFormContainer,
   WalletCard,
   WalletCardSelector,
-} from '@station/ui2';
+} from '@station/ui';
 import { WebConnectorWalletInfo } from '@terra-dev/web-connector-interface';
 import {
   validateWalletName,

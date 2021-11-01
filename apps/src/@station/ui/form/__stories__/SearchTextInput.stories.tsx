@@ -1,4 +1,4 @@
-import { SearchTextInput } from '@station/ui2/form/SearchTextInput';
+import { SearchTextInput } from '@station/ui';
 import { Meta } from '@storybook/react';
 import React, { useState } from 'react';
 import { MdSearch } from 'react-icons/md';

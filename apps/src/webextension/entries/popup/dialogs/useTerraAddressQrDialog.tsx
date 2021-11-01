@@ -1,5 +1,5 @@
 import { DialogProps, OpenDialog, useDialog } from '@libs/use-dialog';
-import { Modal } from '@station/ui2';
+import { Modal } from '@station/ui';
 import QRCode from 'qrcode.react';
 import React, { ReactNode } from 'react';
 import styled from 'styled-components';

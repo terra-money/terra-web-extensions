@@ -1,5 +1,5 @@
 import { MantineProvider } from '@mantine/core';
-import { theme } from '@station/ui2';
+import { theme } from '@station/ui';
 import {
   WalletSelectProvider,
   WebConnectorProvider,

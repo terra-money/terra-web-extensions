@@ -1,4 +1,4 @@
-import { IFramePoppingModal } from '@station/ui2';
+import { IFramePoppingModal } from '@station/ui';
 import { WebConnectorNetworkInfo } from '@terra-dev/web-connector-interface';
 import { createElement } from 'react';
 import { render } from 'react-dom';
