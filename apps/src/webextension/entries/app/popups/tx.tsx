@@ -21,10 +21,12 @@ import {
 } from '@terra-dev/web-extension-backend';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import styled from 'styled-components';
 import { browser } from 'webextension-polyfill-ts';
 import { ApproveHostname } from 'webextension/components/views/ApproveHostname';
 import { CanNotFindTx } from 'webextension/components/views/CanNotFindTx';
 import { CanNotFindWallet } from 'webextension/components/views/CanNotFindWallet';
+import { InProgress } from 'webextension/components/views/InProgress';
 import { SignTxWithEncryptedWallet } from 'webextension/components/views/SignTxWithEncryptedWallet';
 import { SignTxWithLedgerWallet } from 'webextension/components/views/SignTxWithLedgerWallet';
 import { UnknownCase } from 'webextension/components/views/UnknownCase';
@@ -122,30 +124,50 @@ export function TxPopup() {
     });
   }, [txRequest]);
 
+  useEffect(() => {
+    window.addEventListener('beforeunload', deny);
+  }, [deny]);
+
   // ---------------------------------------------
   // presentation
   // ---------------------------------------------
   if (!txRequest) {
-    return <CanNotFindTx />;
+    return (
+      <Center>
+        <CanNotFindTx className="content" />
+      </Center>
+    );
   }
 
-  if (!wallet) {
+  if (wallet === undefined) {
     return (
-      <CanNotFindWallet
-        chainID={txRequest.network.chainID}
-        terraAddress={txRequest.terraAddress}
-        onConfirm={cantFindWallet}
-      />
+      <Center>
+        <CanNotFindWallet
+          className="content"
+          chainID={txRequest.network.chainID}
+          terraAddress={txRequest.terraAddress}
+          onConfirm={cantFindWallet}
+        />
+      </Center>
+    );
+  } else if (wallet === null) {
+    return (
+      <Center>
+        <InProgress className="content" title="Finding wallet" />
+      </Center>
     );
   }
 
   if (needApproveHostname) {
     return (
-      <ApproveHostname
-        hostname={txRequest.hostname}
-        onCancel={deny}
-        onConfirm={approveHostname}
-      />
+      <Center>
+        <ApproveHostname
+          className="content"
+          hostname={txRequest.hostname}
+          onCancel={deny}
+          onConfirm={approveHostname}
+        />
+      </Center>
     );
   }
 
@@ -167,6 +189,13 @@ export function TxPopup() {
 
   return <UnknownCase detail={JSON.stringify(txRequest)} onConfirm={deny} />;
 }
+
+const Center = styled.div`
+  .content {
+    height: 100vh;
+    max-height: 600px;
+  }
+`;
 
 function LedgerWalletTxForm({
   className,
