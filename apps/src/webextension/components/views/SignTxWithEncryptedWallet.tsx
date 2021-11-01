@@ -115,7 +115,7 @@ export function SignTxWithEncryptedWallet({
   );
 }
 
-export const Container = styled.section`
+const Container = styled.section`
   > header {
     height: 168px;
     display: flex;

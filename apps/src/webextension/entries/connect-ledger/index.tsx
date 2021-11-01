@@ -1,116 +1,88 @@
+import { WebConnectorLedgerError } from '@terra-dev/web-connector-interface';
 import {
   addWallet,
   connectLedger,
   findWallet,
-  LedgerWallet,
-  observeConnectedLedgerList,
-  observeWalletsStorage,
-  subtractUSBDevices,
 } from '@terra-dev/web-extension-backend';
-import { fixHMR } from 'fix-hmr';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback } from 'react';
 import { render } from 'react-dom';
 import { IntlProvider } from 'react-intl';
-import { HashRouter } from 'react-router-dom';
-import { combineLatest } from 'rxjs';
-import { map } from 'rxjs/operators';
 import styled from 'styled-components';
 import { ErrorBoundary } from 'webextension/components/common/ErrorBoundary';
+import { ConnectLedger } from 'webextension/components/views/ConnectLedger';
 import { LocalesProvider, useIntlProps } from 'webextension/contexts/locales';
+import { StoreProvider, useStore } from 'webextension/contexts/store';
 
-export interface ConnectLedgerProps {
+export interface AppProps {
   className?: string;
 }
 
-function ConnectLedgerBase({ className }: ConnectLedgerProps) {
-  const { locale, messages } = useIntlProps();
+function Component({ className }: AppProps) {
+  const { wallets } = useStore();
 
-  const [usbDevices, setUsbDevices] = useState<USBDevice[]>(() => []);
-  const [error, setError] = useState<string | null>(null);
+  // ---------------------------------------------
+  // callbacks
+  // ---------------------------------------------
+  const connect = useCallback(async (name: string, design: string) => {
+    const ledgerWallet = await connectLedger();
 
-  useEffect(() => {
-    const subscription = combineLatest([
-      observeConnectedLedgerList(),
-      observeWalletsStorage().pipe(
-        map(({ wallets }) =>
-          wallets.filter(
-            (wallet): wallet is LedgerWallet => 'usbDevice' in wallet,
-          ),
-        ),
-      ),
-    ])
-      .pipe(
-        map(([devices, ledgerWallets]) => {
-          return subtractUSBDevices(
-            devices,
-            ledgerWallets.map(({ usbDevice }) => usbDevice),
-          );
-        }),
-      )
-      .subscribe({
-        next: (devices) => {
-          setUsbDevices(devices);
-        },
-      });
+    if (ledgerWallet) {
+      const existsWallet = await findWallet(ledgerWallet.terraAddress);
 
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, []);
+      if (!existsWallet) {
+        const wallet = {
+          ...ledgerWallet,
+          name,
+          design,
+        };
 
-  const connect = useCallback(async () => {
-    try {
-      const ledgerWallet = await connectLedger();
+        await addWallet(wallet);
 
-      if (ledgerWallet) {
-        const existsWallet = await findWallet(ledgerWallet.terraAddress);
-
-        if (!existsWallet) {
-          await addWallet(ledgerWallet);
-        } else {
-          setError(`Already added this wallet ${ledgerWallet.terraAddress}`);
-        }
+        window.close();
+      } else {
+        throw new WebConnectorLedgerError(
+          99999,
+          `${ledgerWallet.terraAddress}는 이미 추가된 Wallet 입니다.`,
+        );
       }
-    } catch (e) {
-      setError(String(e));
     }
   }, []);
 
+  const cancel = useCallback(() => {
+    window.close();
+  }, []);
+
   return (
-    <IntlProvider locale={locale} messages={messages}>
-      <div className={className}>
-        <h3>Can add this devices</h3>
-        <ul>
-          {usbDevices.map(({ serialNumber, productName }, i) => (
-            <li key={'device' + (serialNumber ?? i)}>
-              {productName} ({serialNumber})
-            </li>
-          ))}
-        </ul>
-
-        <h3>Errors</h3>
-        <pre>{error}</pre>
-
-        <h3>Actions</h3>
-        <button onClick={connect}>Connect Ledger</button>
-      </div>
-    </IntlProvider>
+    <ConnectLedger
+      className={className}
+      wallets={wallets}
+      onConnect={connect}
+      onCancel={cancel}
+    />
   );
 }
 
-export const StyledConnectLedger = styled(ConnectLedgerBase)`
-  // TODO
+const App = styled(Component)`
+  width: 100vw;
 `;
 
-const ConnectLedger = fixHMR(StyledConnectLedger);
+function Main() {
+  const { locale, messages } = useIntlProps();
+
+  return (
+    <StoreProvider>
+      <IntlProvider locale={locale} messages={messages}>
+        <App />
+      </IntlProvider>
+    </StoreProvider>
+  );
+}
 
 render(
-  <HashRouter>
-    <ErrorBoundary>
-      <LocalesProvider>
-        <ConnectLedger />
-      </LocalesProvider>
-    </ErrorBoundary>
-  </HashRouter>,
+  <ErrorBoundary>
+    <LocalesProvider>
+      <Main />
+    </LocalesProvider>
+  </ErrorBoundary>,
   document.querySelector('#app'),
 );
