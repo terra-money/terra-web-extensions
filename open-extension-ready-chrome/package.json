@@ -1,13 +1,10 @@
 {
   "name": "open-extension-ready-chrome",
-  "version": "0.7.1",
+  "version": "0.8.1",
   "description": "",
   "main": "index.js",
-  "author": "SSen",
+  "author": "Ian Lee <i@ssen.name>",
   "license": "MIT",
-  "scripts": {
-    "prepublishOnly": "sh ./update.sh"
-  },
   "files": [
     "webextension",
     "index.js"
