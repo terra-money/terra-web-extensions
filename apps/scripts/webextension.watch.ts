@@ -6,6 +6,7 @@ import webpack from 'webpack';
 import { createConfig } from './webextension.config';
 import { cwd } from './webpackConfigs';
 
+//@ts-ignore
 process.env.NODE_ENV = 'development';
 
 const out = path.resolve(cwd, 'dev/webextension');

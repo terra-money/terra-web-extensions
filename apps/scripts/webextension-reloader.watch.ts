@@ -6,6 +6,7 @@ import webpack from 'webpack';
 import { merge } from 'webpack-merge';
 import { cwd, env, webpackConfigs } from './webpackConfigs';
 
+//@ts-ignore
 process.env.NODE_ENV = 'development';
 
 const app = path.resolve(cwd, 'src/webextension-reloader');
