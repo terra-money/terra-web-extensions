@@ -14,6 +14,7 @@ import styled from 'styled-components';
 import { ErrorBoundary } from 'webextension/components/common/ErrorBoundary';
 import { LocalesProvider, useIntlProps } from 'webextension/contexts/locales';
 import { StoreProvider } from 'webextension/contexts/store';
+import { WalletToken } from 'webextension/entries/app/pages/wallets/token';
 import { AddNetworkPopup } from 'webextension/entries/app/popups/add-network';
 import { ConnectPopup } from 'webextension/entries/app/popups/connect';
 import { TxPopup } from 'webextension/entries/app/popups/tx';
@@ -81,6 +82,10 @@ function Component({ className }: { className?: string }) {
                 <Route
                   path="/wallet/:terraAddress/export"
                   component={WalletExport}
+                />
+                <Route
+                  path="/wallet/:terraAddress/token/:token"
+                  component={WalletToken}
                 />
                 <Route
                   path="/wallet/:terraAddress/send/:token"

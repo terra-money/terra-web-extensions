@@ -5,13 +5,13 @@ import {
   Box,
   Button,
   EmptyWalletCard,
+  LedgerIcon,
   ListBox,
   SvgIcon,
+  TerraIcon,
   WalletCard,
   WalletCardSelector,
   WalletMoreMenus,
-  TerraIcon,
-  LedgerIcon,
 } from '@station/ui';
 import {
   EncryptedWallet,
@@ -41,12 +41,12 @@ import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { ConfigSelector } from 'webextension/components/header/ConfigSelector';
 import { useStore } from 'webextension/contexts/store';
+import { extensionPath } from 'webextension/logics/extensionPath';
+import { useTokenList } from 'webextension/queries/useTokenList';
 import { useAddCW20TokensDialog } from '../../dialogs/useAddCW20TokensDialog';
 import { useDeleteWalletDialog } from '../../dialogs/useDeleteWalletDialog';
 import { useManageCW20TokensDialog } from '../../dialogs/useManageCW20TokensDialog';
 import { useTerraAddressQrDialog } from '../../dialogs/useTerraAddressQrDialog';
-import { extensionPath } from 'webextension/logics/extensionPath';
-import { useTokenList } from 'webextension/queries/useTokenList';
 
 const INDEX = extensionPath('app.html');
 
@@ -223,7 +223,7 @@ function DashboardBase({ className }: { className?: string }) {
                 {tokens.map(({ asset, balance, info, icon }, i) => (
                   <li key={'token' + i}>
                     <TokenItem
-                      to={`/wallet/${focusedWallet.terraAddress}/send/${
+                      to={`/wallet/${focusedWallet.terraAddress}/token/${
                         'native_token' in asset
                           ? asset.native_token.denom
                           : asset.token.contract_addr
@@ -283,6 +283,27 @@ function DashboardBase({ className }: { className?: string }) {
                   </Button>
                 )}
               </footer>
+            )}
+
+            {focusedWallet && (
+              <ListBox
+                enableItemInteraction
+                disableItemPadding
+                style={{ marginTop: 40 }}
+              >
+                <ToolListItem>
+                  <a
+                    href="https://station.terra.money/history"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <span>History</span>
+                    <SvgIcon width={15} height={15}>
+                      <MdChevronRight />
+                    </SvgIcon>
+                  </a>
+                </ToolListItem>
+              </ListBox>
             )}
           </>
         )}

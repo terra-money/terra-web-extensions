@@ -69,6 +69,10 @@ const StyledComponent = styled(Component)`
     flex: 1;
 
     overflow-y: auto;
+
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
   }
 `;
 
