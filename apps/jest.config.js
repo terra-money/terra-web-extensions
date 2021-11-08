@@ -4,4 +4,8 @@ module.exports = {
   ...jestPreset,
 
   // config
+  setupFilesAfterEnv: [
+    ...jestPreset.setupFilesAfterEnv,
+    './jest.setup.js',
+  ],
 };

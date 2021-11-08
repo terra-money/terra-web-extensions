@@ -21,10 +21,7 @@ export interface WalletsStorageData {
 // ---------------------------------------------
 export async function readWalletsStorage(): Promise<WalletsStorageData> {
   const values = await browser.storage.local.get(storageKey);
-  return (
-    values[storageKey] ??
-    ({ wallets: [], approvedHostnames: [] } as WalletsStorageData)
-  );
+  return values[storageKey] ?? ({ wallets: [] } as WalletsStorageData);
 }
 
 export async function writeWalletsStorage(
@@ -124,10 +121,7 @@ export function observeWalletsStorage(): Observable<WalletsStorageData> {
     ) {
       if (areaName === 'local' && changes[storageKey]) {
         const { newValue } = changes[storageKey];
-        subscriber.next(
-          newValue ??
-            ({ wallets: [], approvedHostnames: [] } as WalletsStorageData),
-        );
+        subscriber.next(newValue ?? ({ wallets: [] } as WalletsStorageData));
       }
     }
 
@@ -137,10 +131,7 @@ export function observeWalletsStorage(): Observable<WalletsStorageData> {
       safariWebExtensionStorageChangeListener<WalletsStorageData>(
         storageKey,
       ).subscribe((nextValue) => {
-        subscriber.next(
-          nextValue ??
-            ({ wallets: [], approvedHostnames: [] } as WalletsStorageData),
-        );
+        subscriber.next(nextValue ?? ({ wallets: [] } as WalletsStorageData));
       });
 
     readWalletsStorage().then((data) => {

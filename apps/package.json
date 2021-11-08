@@ -90,6 +90,7 @@
   "devDependencies": {
     "@mdx-js/mdx": "^1.6.22",
     "@mdx-js/react": "^1.6.22",
+    "@peculiar/webcrypto": "^1.2.0",
     "@rocket-scripts/react-preset": "^4.0.0-alpha.7",
     "@rocket-scripts/read-package-alias": "^4.0.0-alpha.7",
     "@rocket-scripts/webpack-fns": "^4.0.0-alpha.7",
@@ -104,6 +105,7 @@
     "@storybook/addons": "^6.3.12",
     "@storybook/preset-create-react-app": "^3.2.0",
     "@storybook/react": "^6.3.12",
+    "@testing-library/jest-dom": "^5.15.0",
     "@testing-library/react-hooks": "^7.0.2",
     "@types/big.js": "^6.1.2",
     "@types/chrome": "^0.0.159",
