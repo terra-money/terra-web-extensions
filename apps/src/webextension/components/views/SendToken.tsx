@@ -1,13 +1,18 @@
 import { SendTokenInfo, TxResultRendering } from '@libs/app-fns';
-import { useSendForm, useSendTx, useTerraTokenInfo } from '@libs/app-provider';
+import { useSendForm, useSendTx } from '@libs/app-provider';
 import { formatUInput, formatUToken, microfy } from '@libs/formatter';
 import { cw20, HumanAddr, terraswap, Token, u, UST } from '@libs/types';
 import { EmptyNumberInput } from '@libs/ui';
-import { Button, FormSuggest, SingleLineFormContainer } from '@station/ui';
+import {
+  Button,
+  FormRightSectionLabel,
+  FormSuggest,
+  Message,
+  SingleLineFormContainer,
+} from '@station/ui';
 import { useConnectedWallet } from '@terra-dev/use-wallet';
 import big, { BigSource } from 'big.js';
-import React, { ChangeEvent, ReactNode, useCallback, useMemo } from 'react';
-import { MdWarning } from 'react-icons/md';
+import React, { ChangeEvent, useCallback, useMemo } from 'react';
 import { Observable } from 'rxjs';
 import { FormFooter } from '../layouts/FormFooter';
 import { FormMain } from '../layouts/FormMain';
@@ -15,20 +20,18 @@ import { FormMain } from '../layouts/FormMain';
 export interface SendTokenProps {
   className?: string;
   asset: terraswap.AssetInfo;
+  tokenInfo: cw20.TokenInfoResponse<Token> | undefined;
   onCancel: () => void;
   onProceed: (stream: Observable<TxResultRendering>) => void;
-  children?: (tokenInfo: cw20.TokenInfoResponse<Token>) => ReactNode;
 }
 
 export function SendToken({
   className,
   asset,
+  tokenInfo,
   onCancel,
   onProceed,
-  children,
 }: SendTokenProps) {
-  const { data: tokenInfo } = useTerraTokenInfo(asset);
-
   return asset && tokenInfo ? (
     <Form
       className={className}
@@ -36,7 +39,6 @@ export function SendToken({
       tokenInfo={tokenInfo}
       onCancel={onCancel}
       onProceed={onProceed}
-      children={children?.(tokenInfo)}
     />
   ) : null;
 }
@@ -47,12 +49,10 @@ function Form({
   onProceed,
   assetInfo,
   tokenInfo,
-  children,
 }: SendTokenInfo & {
   className?: string;
   onCancel: () => void;
   onProceed: (stream: Observable<TxResultRendering>) => void;
-  children: ReactNode;
 }) {
   const sendParams = useMemo(
     () => ({
@@ -123,17 +123,19 @@ function Form({
 
   return (
     <div className={className}>
-      {children}
-
-      <div style={{ marginBottom: 10 }}>
-        <MdWarning /> Use{' '}
-        <a href="https://bridge.terra.money/" target="_blank" rel="noreferrer">
-          Terra Bridge
-        </a>{' '}
-        for cross-chain transfers
-      </div>
-
       <FormMain>
+        <Message variant="danger" style={{ marginBottom: 10 }}>
+          Use{' '}
+          <a
+            href="https://bridge.terra.money/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Terra Bridge
+          </a>{' '}
+          for cross-chain transfers
+        </Message>
+
         <SingleLineFormContainer
           label="To address"
           invalid={states.invalidToAddr}
@@ -158,7 +160,9 @@ function Form({
               }
             />
           }
-          rightSection={tokenInfo.symbol}
+          rightSection={
+            <FormRightSectionLabel>{tokenInfo.symbol}</FormRightSectionLabel>
+          }
           invalid={states.invalidAmount}
         >
           <EmptyNumberInput<Token>
@@ -183,9 +187,15 @@ function Form({
             }
           />
         </SingleLineFormContainer>
-      </FormMain>
 
-      <p>{states.warningEmptyMemo ?? states.warningNextTxFee}</p>
+        {states.warningEmptyMemo && (
+          <Message variant="danger">{states.warningEmptyMemo}</Message>
+        )}
+
+        {states.warningNextTxFee && (
+          <Message variant="warning">{states.warningNextTxFee}</Message>
+        )}
+      </FormMain>
 
       <FormFooter>
         <Button variant="danger" size="large" onClick={onCancel}>

@@ -44,6 +44,10 @@ const StyledComponent = styled(Component)`
   border-radius: 5px;
 
   vertical-align: middle;
+
+  a {
+    color: inherit;
+  }
 `;
 
 export const Message = fixHMR(StyledComponent);

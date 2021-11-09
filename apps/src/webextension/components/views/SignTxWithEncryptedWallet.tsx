@@ -19,7 +19,7 @@ export interface SignTxWithEncryptedWalletProps {
   wallet: EncryptedWallet;
   network: WebConnectorNetworkInfo;
   tx: CreateTxOptions;
-  hostname: string;
+  hostname?: string;
   date: Date;
   onDeny: () => void;
   onProceed: (wallet: Wallet) => void;

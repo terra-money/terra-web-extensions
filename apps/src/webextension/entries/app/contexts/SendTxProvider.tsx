@@ -1,3 +1,4 @@
+import { cw20, Token } from '@libs/types';
 import {
   ConnectType,
   Wallet,
@@ -29,16 +30,23 @@ import {
 import { CreateTxOptions } from '@terra-money/terra.js';
 import React, { ReactNode, useMemo, useState } from 'react';
 import styled from 'styled-components';
+import { SubLayout } from 'webextension/components/layouts/SubLayout';
 import { SignTxWithEncryptedWallet } from 'webextension/components/views/SignTxWithEncryptedWallet';
 import { SignTxWithLedgerWallet } from 'webextension/components/views/SignTxWithLedgerWallet';
 
-export interface TxProviderProps {
+export interface SendTxProviderProps {
   children: ReactNode;
   wallet: EncryptedWallet | LedgerWallet;
   network: WebConnectorNetworkInfo;
+  tokenInfo: cw20.TokenInfoResponse<Token>;
 }
 
-export function TxProvider({ children, wallet, network }: TxProviderProps) {
+export function SendTxProvider({
+  children,
+  wallet,
+  network,
+  tokenInfo,
+}: SendTxProviderProps) {
   const [resolver, setResolver] = useState<ReactNode>(null);
 
   const states = useMemo<Wallet>(() => {
@@ -74,6 +82,7 @@ export function TxProvider({ children, wallet, network }: TxProviderProps) {
           setResolver(
             <Layer>
               <PostResolver
+                tokenInfo={tokenInfo}
                 tx={tx}
                 wallet={wallet}
                 network={network}
@@ -100,7 +109,7 @@ export function TxProvider({ children, wallet, network }: TxProviderProps) {
         throw new Error('not implemented!');
       },
     };
-  }, [network, wallet]);
+  }, [network, tokenInfo, wallet]);
 
   return (
     <WalletContext.Provider value={states}>
@@ -111,6 +120,7 @@ export function TxProvider({ children, wallet, network }: TxProviderProps) {
 }
 
 function PostResolver({
+  tokenInfo,
   tx,
   network,
   wallet,
@@ -118,6 +128,7 @@ function PostResolver({
   onReject,
   onComplete,
 }: {
+  tokenInfo: cw20.TokenInfoResponse<Token>;
   tx: CreateTxOptions;
   wallet: EncryptedWallet | LedgerWallet;
   network: WebConnectorNetworkInfo;
@@ -127,74 +138,76 @@ function PostResolver({
 }) {
   if ('usbDevice' in wallet) {
     return (
-      <SignTxWithLedgerWallet
-        wallet={wallet}
-        network={network}
-        tx={tx}
-        hostname={'foo-network'}
-        date={new Date()}
-        createLedgerKey={createLedgerKey}
-        onDeny={() => onReject(new UserDenied())}
-        onProceed={({ key, close }) => {
-          executeTxWithLedgerWallet(wallet, network, tx, key).subscribe({
-            next: (result) => {
-              if (result.status === WebConnectorTxStatus.SUCCEED) {
-                onResolve({
-                  ...tx,
-                  result: result.payload,
-                  success: true,
-                });
+      <SubLayout title={`Send ${tokenInfo.symbol}`}>
+        <SignTxWithLedgerWallet
+          wallet={wallet}
+          network={network}
+          tx={tx}
+          date={new Date()}
+          createLedgerKey={createLedgerKey}
+          onDeny={() => onReject(new UserDenied())}
+          onProceed={({ key, close }) => {
+            executeTxWithLedgerWallet(wallet, network, tx, key).subscribe({
+              next: (result) => {
+                if (result.status === WebConnectorTxStatus.SUCCEED) {
+                  onResolve({
+                    ...tx,
+                    result: result.payload,
+                    success: true,
+                  });
+                  close();
+                } else if (result.status === WebConnectorTxStatus.DENIED) {
+                  onReject(new UserDenied());
+                  close();
+                } else if (result.status === WebConnectorTxStatus.FAIL) {
+                  onReject(toWalletError(tx, result.error));
+                  close();
+                }
+              },
+              error: (error) => {
+                onReject(toWalletError(tx, error));
                 close();
-              } else if (result.status === WebConnectorTxStatus.DENIED) {
-                onReject(new UserDenied());
-                close();
-              } else if (result.status === WebConnectorTxStatus.FAIL) {
-                onReject(toWalletError(tx, result.error));
-                close();
-              }
-            },
-            error: (error) => {
-              onReject(toWalletError(tx, error));
-              close();
-            },
-            complete: onComplete,
-          });
-        }}
-      />
+              },
+              complete: onComplete,
+            });
+          }}
+        />
+      </SubLayout>
     );
   }
 
   if ('encryptedWallet' in wallet) {
     return (
-      <SignTxWithEncryptedWallet
-        wallet={wallet}
-        network={network}
-        tx={tx}
-        hostname={'foo-network'}
-        date={new Date()}
-        onDeny={() => onReject(new UserDenied())}
-        onProceed={(w) => {
-          executeTxWithInternalWallet(w, network, tx).subscribe({
-            next: (result) => {
-              if (result.status === WebConnectorTxStatus.SUCCEED) {
-                onResolve({
-                  ...tx,
-                  result: result.payload,
-                  success: true,
-                });
-              } else if (result.status === WebConnectorTxStatus.DENIED) {
-                onReject(new UserDenied());
-              } else if (result.status === WebConnectorTxStatus.FAIL) {
-                onReject(toWalletError(tx, result.error));
-              }
-            },
-            error: (error) => {
-              onReject(toWalletError(tx, error));
-            },
-            complete: onComplete,
-          });
-        }}
-      />
+      <SubLayout title={`Send ${tokenInfo.symbol}`}>
+        <SignTxWithEncryptedWallet
+          wallet={wallet}
+          network={network}
+          tx={tx}
+          date={new Date()}
+          onDeny={() => onReject(new UserDenied())}
+          onProceed={(w) => {
+            executeTxWithInternalWallet(w, network, tx).subscribe({
+              next: (result) => {
+                if (result.status === WebConnectorTxStatus.SUCCEED) {
+                  onResolve({
+                    ...tx,
+                    result: result.payload,
+                    success: true,
+                  });
+                } else if (result.status === WebConnectorTxStatus.DENIED) {
+                  onReject(new UserDenied());
+                } else if (result.status === WebConnectorTxStatus.FAIL) {
+                  onReject(toWalletError(tx, result.error));
+                }
+              },
+              error: (error) => {
+                onReject(toWalletError(tx, error));
+              },
+              complete: onComplete,
+            });
+          }}
+        />
+      </SubLayout>
     );
   }
 
@@ -222,10 +235,11 @@ function toWalletError(tx: CreateTxOptions, error: unknown) {
 const Layer = styled.div`
   background-color: #ffffff;
 
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
-  right: 0;
+  width: 100vw;
+  height: 100vh;
 
-  padding: 20px;
+  overflow-y: auto;
 `;

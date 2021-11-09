@@ -9,6 +9,7 @@ export * from './containers/IFramePoppingModal';
 export * from './containers/ListBox';
 export * from './containers/Modal';
 export * from './containers/PoppingModal';
+export * from './form/FormRightSectionLabel';
 export * from './form/FormSelect';
 export * from './form/FormSuggest';
 export * from './form/SearchTextInput';

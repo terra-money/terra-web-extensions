@@ -8,7 +8,7 @@ export interface PrintTxRequestProps {
   className?: string;
   network: WebConnectorNetworkInfo;
   tx: CreateTxOptions;
-  hostname: string;
+  hostname?: string;
   date: Date;
 }
 
@@ -27,10 +27,12 @@ function Component({
           {network.name} ({network.chainID})
         </span>
       </li>
-      <li>
-        <b>Origin</b>
-        <span>{hostname}</span>
-      </li>
+      {hostname && (
+        <li>
+          <b>Origin</b>
+          <span>{hostname}</span>
+        </li>
+      )}
       <li>
         <b>Timestamp</b>
         <span>{date.toLocaleString()}</span>

@@ -10,7 +10,7 @@ export interface SubLayoutProps
     'title'
   > {
   title: ReactNode;
-  onBack: () => void;
+  onBack?: () => void;
   rightSection?: ReactNode;
 }
 
@@ -24,9 +24,11 @@ function Component({
   return (
     <div {...divProps}>
       <header>
-        <SvgButton width={24} height={24} onClick={onBack}>
-          <BackIcon />
-        </SvgButton>
+        {onBack && (
+          <SvgButton width={24} height={24} onClick={onBack}>
+            <BackIcon />
+          </SvgButton>
+        )}
 
         <h1>{title}</h1>
 

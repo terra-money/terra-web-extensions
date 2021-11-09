@@ -1,13 +1,14 @@
 import { TxResultRendering } from '@libs/app-fns';
-import { useTax } from '@libs/app-provider';
-import { CW20Addr, NativeDenom, terraswap, UST } from '@libs/types';
+import { useTerraTokenInfo } from '@libs/app-provider';
+import { cw20, CW20Addr, NativeDenom, terraswap, Token } from '@libs/types';
 import React, { useCallback, useMemo, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { Observable } from 'rxjs';
+import { SubLayout } from 'webextension/components/layouts/SubLayout';
 import { RenderTx } from 'webextension/components/views/RenderTx';
 import { SendToken } from 'webextension/components/views/SendToken';
 import { useStore } from 'webextension/contexts/store';
-import { TxProvider } from 'webextension/contexts/tx';
+import { SendTxProvider } from 'webextension/entries/app/contexts/SendTxProvider';
 import {
   FindWalletStatus,
   useFindWallet,
@@ -37,9 +38,17 @@ export function WalletSend({
         };
   }, [match.params.token]);
 
+  const { data: tokenInfo } = useTerraTokenInfo(asset);
+
   const cancel = useCallback(() => {
-    history.push('/');
+    history.push(`/`);
   }, [history]);
+
+  const complete = useCallback(() => {
+    history.push(
+      `/wallet/${match.params.terraAddress}/token/${match.params.token}`,
+    );
+  }, [history, match.params.terraAddress, match.params.token]);
 
   if (
     wallet === FindWalletStatus.IN_PROGRESS ||
@@ -49,47 +58,63 @@ export function WalletSend({
     return null;
   }
 
+  if (!tokenInfo) {
+    return null;
+  }
+
   return (
-    <TxProvider wallet={wallet} network={selectedNetwork}>
-      <Component asset={asset} onBack={cancel} />
-    </TxProvider>
+    <SendTxProvider
+      tokenInfo={tokenInfo}
+      wallet={wallet}
+      network={selectedNetwork}
+    >
+      <Component
+        tokenInfo={tokenInfo}
+        asset={asset}
+        onBack={cancel}
+        onComplete={complete}
+      />
+    </SendTxProvider>
   );
 }
 
 function Component({
   asset,
+  tokenInfo,
   onBack,
+  onComplete,
 }: {
   asset: terraswap.AssetInfo;
+  tokenInfo: cw20.TokenInfoResponse<Token>;
   onBack: () => void;
+  onComplete: () => void;
 }) {
-  const { taxRate, maxTax } = useTax<UST>('uusd');
-
-  console.log('send.tsx..Component()', taxRate, maxTax);
-
   const [stream, setStream] = useState<Observable<TxResultRendering> | null>(
     null,
   );
 
   if (stream) {
     return (
-      <RenderTx
-        stream={stream}
-        onComplete={() => {
-          setStream(null);
-          onBack();
-        }}
-      />
+      <SubLayout title={`Send ${tokenInfo?.symbol}`}>
+        <RenderTx
+          stream={stream}
+          onComplete={() => {
+            setStream(null);
+            onComplete();
+          }}
+        />
+      </SubLayout>
     );
   }
 
   return (
-    <SendToken asset={asset} onCancel={onBack} onProceed={setStream}>
-      {(tokenInfo) => (
-        <header>
-          <h1>Send {tokenInfo.name}</h1>
-        </header>
-      )}
-    </SendToken>
+    <SubLayout title={`Send ${tokenInfo?.symbol}`} onBack={onBack}>
+      <SendToken
+        asset={asset}
+        tokenInfo={tokenInfo}
+        onCancel={onBack}
+        onProceed={setStream}
+      />
+    </SubLayout>
   );
 }

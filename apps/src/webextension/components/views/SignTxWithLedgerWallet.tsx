@@ -22,7 +22,7 @@ export interface SignTxWithLedgerWalletProps {
   wallet: LedgerWallet;
   network: WebConnectorNetworkInfo;
   tx: CreateTxOptions;
-  hostname: string;
+  hostname?: string;
   date: Date;
   createLedgerKey: () => Promise<LedgerKeyResponse>;
   onDeny: () => void;
