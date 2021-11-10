@@ -36,7 +36,7 @@ export function createConfig(
         env,
         optimization: optimization ? 'minify' : false,
         filename: `[name].js`,
-        analyzerOptions: analyzer('background.report.html'),
+        analyzerOptions: analyzer('background'),
         entry: [
           {
             name: 'background',
@@ -53,7 +53,7 @@ export function createConfig(
         env,
         optimization: optimization ? 'minify' : false,
         filename: `[name].js`,
-        analyzerOptions: analyzer('content.report.html'),
+        analyzerOptions: analyzer('content'),
         entry: [
           {
             name: 'content',
@@ -70,7 +70,7 @@ export function createConfig(
         env,
         optimization: optimization ? 'minify' : false,
         filename: `[name].js`,
-        analyzerOptions: analyzer('inpage.report.html'),
+        analyzerOptions: analyzer('inpage'),
         entry: [
           {
             name: 'inpage',
@@ -87,7 +87,7 @@ export function createConfig(
         env,
         optimization: optimization ? 'minify' : false,
         filename: `[name].js`,
-        analyzerOptions: analyzer('app.report.html'),
+        analyzerOptions: analyzer('app'),
         entry: [
           {
             name: 'app',
@@ -97,5 +97,30 @@ export function createConfig(
         ],
       }),
     ),
+    // devtool
+    ...(() => {
+      if (config.mode === 'development') {
+        return [
+          merge(
+            baseConfig,
+            createEntry({
+              outDir: out,
+              env,
+              optimization: false,
+              filename: `[name].js`,
+              entry: [
+                {
+                  name: 'devtools',
+                  script: path.resolve(app, 'entries/devtools/index.tsx'),
+                  html: path.resolve(app, 'entries/devtools/index.html'),
+                },
+              ],
+            }),
+          ),
+        ];
+      }
+
+      return [];
+    })(),
   ];
 }
