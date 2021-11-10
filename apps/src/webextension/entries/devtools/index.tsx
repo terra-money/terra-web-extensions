@@ -12,7 +12,17 @@ import {
 } from '@terra-dev/web-extension-backend';
 import React, { useEffect, useState } from 'react';
 import { render } from 'react-dom';
+import JsonView, { ReactJsonViewProps } from 'react-json-view';
 import styled from 'styled-components';
+
+const jsonViewOptions: Omit<ReactJsonViewProps, 'src'> = {
+  iconStyle: 'triangle',
+  theme: 'monokai',
+  displayDataTypes: false,
+  enableClipboard: false,
+  collapseStringsAfterLength: 50,
+  collapsed: 3,
+};
 
 function Component({ className }: { className?: string }) {
   const [walletStorage, setWalletStorage] = useState<WalletsStorageData | null>(
@@ -37,28 +47,34 @@ function Component({ className }: { className?: string }) {
   return (
     <main className={className}>
       <section>
+        <h1>Wallets</h1>
+        {walletStorage && <JsonView src={walletStorage} {...jsonViewOptions} />}
+      </section>
+
+      <section>
         <h1>Networks</h1>
-        <pre>{JSON.stringify(networkStorage, null, 2)}</pre>
+        {networkStorage && (
+          <JsonView src={networkStorage} {...jsonViewOptions} />
+        )}
       </section>
 
       <section>
         <h1>Hostnames</h1>
-        <pre>{JSON.stringify(hostnamesStorage, null, 2)}</pre>
+        {hostnamesStorage && (
+          <JsonView src={hostnamesStorage} {...jsonViewOptions} />
+        )}
       </section>
 
       <section>
         <h1>CW20</h1>
-        <pre>{JSON.stringify(cw20Storage, null, 2)}</pre>
+        {cw20Storage && <JsonView src={cw20Storage} {...jsonViewOptions} />}
       </section>
 
       <section>
         <h1>Security</h1>
-        <pre>{JSON.stringify(securityStorage, null, 2)}</pre>
-      </section>
-
-      <section>
-        <h1>Wallets</h1>
-        <pre>{JSON.stringify(walletStorage, null, 2)}</pre>
+        {securityStorage && (
+          <JsonView src={securityStorage} {...jsonViewOptions} />
+        )}
       </section>
     </main>
   );
@@ -77,16 +93,23 @@ const Main = styled(Component)`
       margin-bottom: 10px;
     }
 
-    pre {
-      word-break: break-word;
-      white-space: break-spaces;
-
-      line-height: 1.5;
+    .react-json-view {
+      font-size: 14px;
 
       padding: 20px;
-
-      background-color: #eeeeee;
       border-radius: 10px;
+
+      max-height: 400px;
+      overflow-y: auto;
+
+      .string-value {
+        word-break: break-word;
+        white-space: break-spaces;
+      }
+    }
+
+    &:first-child {
+      grid-column: 1/3;
     }
   }
 `;
