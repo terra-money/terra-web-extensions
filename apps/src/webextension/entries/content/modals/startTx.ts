@@ -18,6 +18,10 @@ import { createElement } from 'react';
 import { render } from 'react-dom';
 import { Observable } from 'rxjs';
 import { browser } from 'webextension-polyfill-ts';
+import {
+  deregisterAllowCommandId,
+  registerAllowCommandId,
+} from '@terra-dev/web-extension-backend';
 import { contentScriptPortPrefix } from 'webextension/env';
 import { getDefaultNetworks } from 'webextension/queries/useDefaultNetworks';
 import { LOGO, MODAL_WIDTH } from '../env';
@@ -27,6 +31,8 @@ export function startTx(
   terraAddress: string,
   tx: SerializedCreateTxOptions,
 ): Observable<WebConnectorTxResult> {
+  registerAllowCommandId(id);
+
   return new Observable<WebConnectorTxResult>((subscriber) => {
     getDefaultNetworks()
       .then((defaultNetworks) => {
@@ -61,6 +67,7 @@ export function startTx(
           }
           port.disconnect();
           subscriber.unsubscribe();
+          deregisterAllowCommandId(id);
         };
 
         // ---------------------------------------------

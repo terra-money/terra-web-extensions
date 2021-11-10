@@ -1,4 +1,8 @@
 import { IFramePoppingModal } from '@station/ui';
+import {
+  deregisterAllowCommandId,
+  registerAllowCommandId,
+} from '@terra-dev/web-extension-backend';
 import { createElement } from 'react';
 import { render } from 'react-dom';
 import { browser } from 'webextension-polyfill-ts';
@@ -6,6 +10,8 @@ import { contentScriptPortPrefix } from 'webextension/env';
 import { LOGO, MODAL_WIDTH } from '../env';
 
 export function startConnect(id: string, hostname: string): Promise<boolean> {
+  registerAllowCommandId(id);
+
   return new Promise<boolean>((resolve) => {
     const modalContainer = window.document.createElement('div');
 
@@ -14,8 +20,11 @@ export function startConnect(id: string, hostname: string): Promise<boolean> {
     });
 
     const endConnect = () => {
-      window.document.querySelector('body')?.removeChild(modalContainer);
+      try {
+        window.document.querySelector('body')?.removeChild(modalContainer);
+      } catch {}
       port.disconnect();
+      deregisterAllowCommandId(id);
     };
 
     const html = browser.runtime.getURL('app.html');

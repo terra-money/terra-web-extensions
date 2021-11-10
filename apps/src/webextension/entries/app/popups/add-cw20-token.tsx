@@ -9,6 +9,7 @@ import styled from 'styled-components';
 import { browser } from 'webextension-polyfill-ts';
 import { AlreadyCW20TokensExists } from 'webextension/components/views/AlreadyCW20TokensExists';
 import { ManageCW20Tokens } from 'webextension/components/views/ManageCW20Tokens';
+import { useAllowedCommandId } from 'webextension/contexts/commands';
 import { txPortPrefix } from 'webextension/env';
 import { useCW20Tokens } from 'webextension/queries/useCW20Tokens';
 
@@ -35,6 +36,8 @@ export function AddCw20TokenPopup() {
       tokenAddrs,
     };
   }, [search]);
+
+  useAllowedCommandId(addTokenQuery.id, '/error/abnormal-approach');
 
   const [tokensExists, setTokensExists] = useState<boolean>(false);
 

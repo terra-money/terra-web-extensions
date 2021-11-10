@@ -78,8 +78,8 @@ export function TxFeeGasEditor({
           originDenomGasPrice,
         ) as u<Token<Big>>;
 
-        //@ts-ignore
         const nextDenomGasPrice =
+          //@ts-ignore TODO remove hard coding
           nextDenom === 'ujpy' ? 16.37 : gasPrice[nextDenom];
         const nextGasInNextDenom = big(originFee.gas_limit).mul(
           nextDenomGasPrice,

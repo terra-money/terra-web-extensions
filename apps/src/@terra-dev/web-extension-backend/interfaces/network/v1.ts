@@ -2,7 +2,7 @@ import { WebConnectorNetworkInfo } from '@terra-dev/web-connector-interface';
 import { Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { browser, Storage } from 'webextension-polyfill-ts';
-import { safariWebExtensionStorageChangeListener } from '../../../utils/safariWebExtensionStorageChangeListener';
+import { safariWebExtensionStorageChangeListener } from '../../utils/safariWebExtensionStorageChangeListener';
 
 const storageKey = 'terra_network_storage_v1';
 

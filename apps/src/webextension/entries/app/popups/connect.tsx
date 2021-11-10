@@ -10,6 +10,7 @@ import styled from 'styled-components';
 import { browser } from 'webextension-polyfill-ts';
 import { ApproveHostname } from 'webextension/components/views/ApproveHostname';
 import { ViewCenterLayout } from 'webextension/components/views/components/ViewCenterLayout';
+import { useAllowedCommandId } from 'webextension/contexts/commands';
 import { txPortPrefix } from 'webextension/env';
 
 export function ConnectPopup() {
@@ -33,6 +34,8 @@ export function ConnectPopup() {
       hostname,
     };
   }, [search]);
+
+  useAllowedCommandId(connectInfo.id, '/error/abnormal-approach');
 
   // ---------------------------------------------
   // states

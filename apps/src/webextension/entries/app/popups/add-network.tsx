@@ -5,6 +5,7 @@ import {
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { browser } from 'webextension-polyfill-ts';
+import { useAllowedCommandId } from 'webextension/contexts/commands';
 import { txPortPrefix } from 'webextension/env';
 import { getDefaultNetworks } from 'webextension/queries/useDefaultNetworks';
 
@@ -30,6 +31,8 @@ export function AddNetworkPopup() {
       lcd,
     };
   }, [search]);
+
+  useAllowedCommandId(addNetworkQuery.id, '/error/abnormal-approach');
 
   const [similarNetworkExists, setSimilarNetworkExists] =
     useState<boolean>(false);

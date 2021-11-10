@@ -25,6 +25,7 @@ import {
 } from 'webextension/env';
 import { DApps } from './pages/dapps';
 import { Dashboard } from './pages/dashboard';
+import { AbnormalApproach } from './pages/errors/abnormal-approach';
 import { LedgerVerify } from './pages/ledger/verify';
 import { NetworksCreate } from './pages/networks/create';
 import { WalletChangePassword } from './pages/wallets/change-password';
@@ -111,6 +112,11 @@ function Component({ className }: { className?: string }) {
                   exact
                   path="/add-cw20-token"
                   component={AddCw20TokenPopup}
+                />
+                <Route
+                  exact
+                  path="/error/abnormal-approach"
+                  component={AbnormalApproach}
                 />
                 <Redirect to="/" />
               </Switch>

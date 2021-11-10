@@ -1,6 +1,6 @@
 import { Observable, Subscription } from 'rxjs';
 import { browser, Storage } from 'webextension-polyfill-ts';
-import { safariWebExtensionStorageChangeListener } from '../../../utils/safariWebExtensionStorageChangeListener';
+import { safariWebExtensionStorageChangeListener } from '../../utils/safariWebExtensionStorageChangeListener';
 
 const storageKey = 'terra_cw20_storage_v1';
 

@@ -1,9 +1,9 @@
 import { Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { browser, Storage } from 'webextension-polyfill-ts';
-import { EncryptedWallet } from '../../../models/InternalWallet';
-import { LedgerWallet } from '../../../models/LedgerWallet';
-import { safariWebExtensionStorageChangeListener } from '../../../utils/safariWebExtensionStorageChangeListener';
+import { EncryptedWallet } from '../../models/InternalWallet';
+import { LedgerWallet } from '../../models/LedgerWallet';
+import { safariWebExtensionStorageChangeListener } from '../../utils/safariWebExtensionStorageChangeListener';
 
 const storageKey = 'terra_wallet_storage_v1-alpha.3';
 

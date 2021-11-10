@@ -31,6 +31,7 @@ import { InProgress } from 'webextension/components/views/InProgress';
 import { SignTxWithEncryptedWallet } from 'webextension/components/views/SignTxWithEncryptedWallet';
 import { SignTxWithLedgerWallet } from 'webextension/components/views/SignTxWithLedgerWallet';
 import { UnknownCase } from 'webextension/components/views/UnknownCase';
+import { useAllowedCommandId } from 'webextension/contexts/commands';
 import { txPortPrefix } from 'webextension/env';
 
 export function TxPopup() {
@@ -42,6 +43,8 @@ export function TxPopup() {
   const txRequest = useMemo(() => {
     return fromURLSearchParams(search);
   }, [search]);
+
+  useAllowedCommandId(txRequest?.id, '/error/abnormal-approach');
 
   // ---------------------------------------------
   // states

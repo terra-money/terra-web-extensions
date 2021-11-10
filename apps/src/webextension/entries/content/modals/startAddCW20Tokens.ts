@@ -1,5 +1,9 @@
 import { IFramePoppingModal } from '@station/ui';
-import { hasCW20Tokens } from '@terra-dev/web-extension-backend';
+import {
+  deregisterAllowCommandId,
+  hasCW20Tokens,
+  registerAllowCommandId,
+} from '@terra-dev/web-extension-backend';
 import { createElement } from 'react';
 import { render } from 'react-dom';
 import { browser } from 'webextension-polyfill-ts';
@@ -11,6 +15,8 @@ export function startAddCW20Tokens(
   chainID: string,
   ...tokenAddrs: string[]
 ): Promise<{ [tokenAddr: string]: boolean }> {
+  registerAllowCommandId(id);
+
   return new Promise<{ [tokenAddr: string]: boolean }>((resolve) => {
     const modalContainer = window.document.createElement('div');
 
@@ -23,6 +29,7 @@ export function startAddCW20Tokens(
         window.document.querySelector('body')?.removeChild(modalContainer);
       } catch {}
       port.disconnect();
+      deregisterAllowCommandId(id);
     };
 
     const html = browser.runtime.getURL('app.html');
@@ -36,9 +43,6 @@ export function startAddCW20Tokens(
       onClose: () => {
         hasCW20Tokens(chainID, tokenAddrs).then((hasTokens) => {
           resolve(hasTokens);
-          try {
-            window.document.querySelector('body')?.removeChild(modalContainer);
-          } catch {}
           endConnect();
         });
       },

@@ -3,6 +3,10 @@ import { WebConnectorNetworkInfo } from '@terra-dev/web-connector-interface';
 import { createElement } from 'react';
 import { render } from 'react-dom';
 import { browser } from 'webextension-polyfill-ts';
+import {
+  deregisterAllowCommandId,
+  registerAllowCommandId,
+} from '@terra-dev/web-extension-backend';
 import { contentScriptPortPrefix } from 'webextension/env';
 import { LOGO, MODAL_WIDTH } from '../env';
 
@@ -10,6 +14,8 @@ export function startAddNetwork(
   id: string,
   network: WebConnectorNetworkInfo,
 ): Promise<boolean> {
+  registerAllowCommandId(id);
+
   return new Promise<boolean>((resolve) => {
     const modalContainer = window.document.createElement('div');
 
@@ -22,6 +28,7 @@ export function startAddNetwork(
         window.document.querySelector('body')?.removeChild(modalContainer);
       } catch {}
       port.disconnect();
+      deregisterAllowCommandId(id);
     };
 
     const html = browser.runtime.getURL('app.html');
@@ -32,9 +39,6 @@ export function startAddNetwork(
       title: 'Add network',
       onClose: () => {
         resolve(false);
-        try {
-          window.document.querySelector('body')?.removeChild(modalContainer);
-        } catch {}
         endConnect();
       },
       width: `${MODAL_WIDTH}px`,
