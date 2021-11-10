@@ -4,7 +4,7 @@ export function nativeTokenInfoQuery<T extends Token>(
   denom: NativeDenom,
 ): cw20.TokenInfoResponse<T> | undefined {
   switch (denom) {
-    case 'uust':
+    //case 'uust':
     case 'uusd':
       return {
         decimals: 6,
@@ -100,8 +100,8 @@ export function nativeTokenInfoQuery<T extends Token>(
     case 'ujpy':
       return {
         decimals: 6,
-        name: 'JPY',
-        symbol: 'JPY',
+        name: 'JPT',
+        symbol: 'JPT',
         total_supply: '0' as u<T>,
       };
     case 'umnt':

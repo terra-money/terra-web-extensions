@@ -1,3 +1,4 @@
+import { HumanAddr } from '@libs/types';
 import { vibrate } from '@libs/ui';
 import { Button, WalletCard } from '@station/ui';
 import {
@@ -16,6 +17,7 @@ import { FormMain } from 'webextension/components/layouts/FormMain';
 import { LedgerGuide } from 'webextension/components/tx/LedgerGuide';
 import { PrintCreateTxOptions } from 'webextension/components/tx/PrintCreateTxOptions';
 import { PrintTxRequest } from 'webextension/components/tx/PrintTxRequest';
+import { TxFee } from 'webextension/components/views/SignTxWithEncryptedWallet';
 
 export interface SignTxWithLedgerWalletProps {
   className?: string;
@@ -26,14 +28,17 @@ export interface SignTxWithLedgerWalletProps {
   date: Date;
   createLedgerKey: () => Promise<LedgerKeyResponse>;
   onDeny: () => void;
-  onProceed: (ledgerKey: LedgerKeyResponse) => void;
+  onProceed: (
+    ledgerKey: LedgerKeyResponse,
+    resolvedTx: CreateTxOptions,
+  ) => void;
 }
 
 export function SignTxWithLedgerWallet({
   className,
   wallet,
   network,
-  tx,
+  tx: _originTx,
   hostname,
   date,
   onDeny,
@@ -41,6 +46,8 @@ export function SignTxWithLedgerWallet({
   createLedgerKey,
 }: SignTxWithLedgerWalletProps) {
   const containerRef = useRef<HTMLElement>(null);
+
+  const [tx, setTx] = useState<CreateTxOptions>(_originTx);
 
   const [ledgerSignStarted, setLedgerSignStarted] = useState<boolean>(false);
 
@@ -59,7 +66,7 @@ export function SignTxWithLedgerWallet({
     try {
       const ledgerKeyResponse = await createLedgerKey();
 
-      onProceed(ledgerKeyResponse);
+      onProceed(ledgerKeyResponse, tx);
 
       setGuide(
         <LedgerGuide>
@@ -83,7 +90,7 @@ export function SignTxWithLedgerWallet({
         );
       }
     }
-  }, [createLedgerKey, onProceed]);
+  }, [createLedgerKey, onProceed, tx]);
 
   return (
     <Container ref={containerRef} className={className}>
@@ -101,12 +108,19 @@ export function SignTxWithLedgerWallet({
         <PrintTxRequest
           className="wallets-actions"
           network={network}
-          tx={tx}
+          tx={_originTx}
           hostname={hostname}
           date={date}
         />
 
-        <PrintCreateTxOptions className="tx" tx={tx} />
+        <PrintCreateTxOptions className="tx" tx={_originTx} />
+
+        <TxFee
+          terraAddress={wallet.terraAddress as HumanAddr}
+          originTx={_originTx}
+          tx={tx}
+          onChange={setTx}
+        />
 
         {guide}
       </FormMain>

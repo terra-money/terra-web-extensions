@@ -138,7 +138,7 @@ function PostResolver({
 }) {
   if ('usbDevice' in wallet) {
     return (
-      <SubLayout title={`Send ${tokenInfo.symbol}`}>
+      <SubLayout title={`Send ${tokenInfo.symbol}`} disableMaxWidth>
         <SignTxWithLedgerWallet
           wallet={wallet}
           network={network}
@@ -146,12 +146,17 @@ function PostResolver({
           date={new Date()}
           createLedgerKey={createLedgerKey}
           onDeny={() => onReject(new UserDenied())}
-          onProceed={({ key, close }) => {
-            executeTxWithLedgerWallet(wallet, network, tx, key).subscribe({
+          onProceed={({ key, close }, resolvedTx) => {
+            executeTxWithLedgerWallet(
+              wallet,
+              network,
+              resolvedTx,
+              key,
+            ).subscribe({
               next: (result) => {
                 if (result.status === WebConnectorTxStatus.SUCCEED) {
                   onResolve({
-                    ...tx,
+                    ...resolvedTx,
                     result: result.payload,
                     success: true,
                   });
@@ -160,12 +165,12 @@ function PostResolver({
                   onReject(new UserDenied());
                   close();
                 } else if (result.status === WebConnectorTxStatus.FAIL) {
-                  onReject(toWalletError(tx, result.error));
+                  onReject(toWalletError(resolvedTx, result.error));
                   close();
                 }
               },
               error: (error) => {
-                onReject(toWalletError(tx, error));
+                onReject(toWalletError(resolvedTx, error));
                 close();
               },
               complete: onComplete,
@@ -178,30 +183,34 @@ function PostResolver({
 
   if ('encryptedWallet' in wallet) {
     return (
-      <SubLayout title={`Send ${tokenInfo.symbol}`}>
+      <SubLayout title={`Send ${tokenInfo.symbol}`} disableMaxWidth>
         <SignTxWithEncryptedWallet
           wallet={wallet}
           network={network}
           tx={tx}
           date={new Date()}
           onDeny={() => onReject(new UserDenied())}
-          onProceed={(w) => {
-            executeTxWithInternalWallet(w, network, tx).subscribe({
+          onProceed={(decryptedWallet, resolvedTx) => {
+            executeTxWithInternalWallet(
+              decryptedWallet,
+              network,
+              resolvedTx,
+            ).subscribe({
               next: (result) => {
                 if (result.status === WebConnectorTxStatus.SUCCEED) {
                   onResolve({
-                    ...tx,
+                    ...resolvedTx,
                     result: result.payload,
                     success: true,
                   });
                 } else if (result.status === WebConnectorTxStatus.DENIED) {
                   onReject(new UserDenied());
                 } else if (result.status === WebConnectorTxStatus.FAIL) {
-                  onReject(toWalletError(tx, result.error));
+                  onReject(toWalletError(resolvedTx, result.error));
                 }
               },
               error: (error) => {
-                onReject(toWalletError(tx, error));
+                onReject(toWalletError(resolvedTx, error));
               },
               complete: onComplete,
             });

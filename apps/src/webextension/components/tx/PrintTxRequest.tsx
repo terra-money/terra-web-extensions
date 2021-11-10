@@ -1,3 +1,5 @@
+import { formatUToken } from '@libs/formatter';
+import { Token, u } from '@libs/types';
 import { WebConnectorNetworkInfo } from '@terra-dev/web-connector-interface';
 import { CreateTxOptions } from '@terra-money/terra.js';
 import { fixHMR } from 'fix-hmr';
@@ -43,12 +45,13 @@ function Component({
           {tx.fee &&
             tx.fee.amount
               .toArray()
-              .map(
-                (coin) =>
-                  coin.amount.div(1000000).toString() +
-                  coin.denom.substr(1).toUpperCase(),
-              )
-              .join(', ')}
+              .map((coin) => {
+                return (
+                  formatUToken(coin.amount.toString() as u<Token>) +
+                  coin.denom.substr(1).toUpperCase()
+                );
+              })
+              .join(' + ')}
         </span>
       </li>
     </ul>

@@ -19,6 +19,7 @@ import {
   TxRequest,
   Wallet,
 } from '@terra-dev/web-extension-backend';
+import { CreateTxOptions } from '@terra-money/terra.js';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
@@ -220,12 +221,17 @@ function LedgerWalletTxForm({
   }, [onDeny, txRequest]);
 
   const proceed = useCallback(
-    async ({ key, close }: LedgerKeyResponse) => {
+    async ({ key, close }: LedgerKeyResponse, resolvedTx: CreateTxOptions) => {
       const port = browser.runtime.connect(undefined, {
         name: txPortPrefix + txRequest.id,
       });
 
-      executeTxWithLedgerWallet(wallet, txRequest.network, tx, key).subscribe({
+      executeTxWithLedgerWallet(
+        wallet,
+        txRequest.network,
+        resolvedTx,
+        key,
+      ).subscribe({
         next: (result) => {
           if (result.status === WebConnectorTxStatus.SUCCEED) {
             port.postMessage(result);
@@ -259,7 +265,7 @@ function LedgerWalletTxForm({
         },
       });
     },
-    [tx, txRequest.closeWindowAfterTx, txRequest.id, txRequest.network, wallet],
+    [txRequest.closeWindowAfterTx, txRequest.id, txRequest.network, wallet],
   );
 
   return (
@@ -297,7 +303,7 @@ function EncryptedWalletTxForm({
   }, [onDeny, txRequest]);
 
   const proceed = useCallback(
-    async (decryptedWallet: Wallet) => {
+    async (decryptedWallet: Wallet, resolvedTx: CreateTxOptions) => {
       const port = browser.runtime.connect(undefined, {
         name: txPortPrefix + txRequest.id,
       });
@@ -305,7 +311,7 @@ function EncryptedWalletTxForm({
       executeTxWithInternalWallet(
         decryptedWallet,
         txRequest.network,
-        tx,
+        resolvedTx,
       ).subscribe({
         next: (result) => {
           if (result.status === WebConnectorTxStatus.SUCCEED) {
@@ -336,7 +342,7 @@ function EncryptedWalletTxForm({
         },
       });
     },
-    [tx, txRequest.closeWindowAfterTx, txRequest.id, txRequest.network],
+    [txRequest.closeWindowAfterTx, txRequest.id, txRequest.network],
   );
 
   return (

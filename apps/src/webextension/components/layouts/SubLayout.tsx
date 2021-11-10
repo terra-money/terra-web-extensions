@@ -12,6 +12,7 @@ export interface SubLayoutProps
   title: ReactNode;
   onBack?: () => void;
   rightSection?: ReactNode;
+  disableMaxWidth?: boolean;
 }
 
 function Component({
@@ -19,6 +20,7 @@ function Component({
   onBack,
   rightSection,
   children,
+  disableMaxWidth,
   ...divProps
 }: SubLayoutProps) {
   return (
@@ -73,7 +75,8 @@ const StyledComponent = styled(Component)`
     overflow-y: auto;
 
     width: 100%;
-    max-width: 800px;
+    ${({ disableMaxWidth = false }) =>
+      disableMaxWidth ? '' : 'max-width: 800px'};
     margin: 0 auto;
   }
 `;

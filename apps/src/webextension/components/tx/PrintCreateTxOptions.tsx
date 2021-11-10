@@ -1,3 +1,5 @@
+import { formatUToken } from '@libs/formatter';
+import { Token, u } from '@libs/types';
 import {
   CreateTxOptions,
   Msg,
@@ -48,7 +50,17 @@ function MsgBlock({ msg }: { msg: Msg }) {
             </li>
             <li>
               <h4>Coins</h4>
-              <p>{msg.coins.toJSON()}</p>
+              <p>
+                {msg.coins
+                  .toArray()
+                  .map((coin) => {
+                    return (
+                      formatUToken(coin.amount.toString() as u<Token>) +
+                      coin.denom.substr(1).toUpperCase()
+                    );
+                  })
+                  .join(' + ')}
+              </p>
             </li>
           </ul>
         )}

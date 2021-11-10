@@ -1,3 +1,5 @@
+import { useApp } from '@libs/app-provider';
+import { HumanAddr } from '@libs/types';
 import { vibrate } from '@libs/ui';
 import { Button, SingleLineFormContainer, WalletCard } from '@station/ui';
 import { WebConnectorNetworkInfo } from '@terra-dev/web-connector-interface';
@@ -7,11 +9,18 @@ import {
   Wallet,
 } from '@terra-dev/web-extension-backend';
 import { CreateTxOptions } from '@terra-money/terra.js';
-import React, { ChangeEvent, useCallback, useRef, useState } from 'react';
+import React, {
+  ChangeEvent,
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import styled from 'styled-components';
 import { FormMain } from 'webextension/components/layouts/FormMain';
 import { PrintCreateTxOptions } from 'webextension/components/tx/PrintCreateTxOptions';
 import { PrintTxRequest } from 'webextension/components/tx/PrintTxRequest';
+import { TxFeeGasEditor } from 'webextension/components/tx/TxFeeGasEditor';
 import { FormFooter } from '../layouts/FormFooter';
 
 export interface SignTxWithEncryptedWalletProps {
@@ -22,13 +31,54 @@ export interface SignTxWithEncryptedWalletProps {
   hostname?: string;
   date: Date;
   onDeny: () => void;
-  onProceed: (wallet: Wallet) => void;
+  onProceed: (wallet: Wallet, resolvedTx: CreateTxOptions) => void;
+}
+
+export function TxFee({
+  terraAddress,
+  originTx,
+  tx,
+  onChange,
+}: {
+  terraAddress: HumanAddr;
+  originTx: CreateTxOptions;
+  tx: CreateTxOptions;
+  onChange: (nextTx: CreateTxOptions) => void;
+}) {
+  const { gasPrice } = useApp();
+
+  const viewType = useMemo(() => {
+    if (originTx.fee && originTx.fee.amount.toArray().length === 1) {
+      return 'write';
+    } else {
+      return 'read';
+    }
+  }, [originTx.fee]);
+
+  if (viewType === 'read') {
+    return (
+      <ul>
+        <li>TODO now only implemented single fee</li>
+        <li>type: readonly</li>
+      </ul>
+    );
+  }
+
+  return (
+    <TxFeeGasEditor
+      gasPrice={gasPrice}
+      terraAddress={terraAddress}
+      originTx={originTx}
+      tx={tx}
+      onChange={onChange}
+    />
+  );
 }
 
 export function SignTxWithEncryptedWallet({
   className,
   wallet,
-  tx,
+  tx: _originTx,
   network,
   hostname,
   date,
@@ -36,6 +86,8 @@ export function SignTxWithEncryptedWallet({
   onProceed,
 }: SignTxWithEncryptedWalletProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const [tx, setTx] = useState<CreateTxOptions>(_originTx);
 
   // ---------------------------------------------
   // states
@@ -50,7 +102,7 @@ export function SignTxWithEncryptedWallet({
   const proceed = useCallback(() => {
     try {
       const w = decryptWallet(wallet.encryptedWallet, password);
-      onProceed(w);
+      onProceed(w, tx);
     } catch (error) {
       containerRef.current?.animate(vibrate, { duration: 100 });
 
@@ -60,7 +112,7 @@ export function SignTxWithEncryptedWallet({
         setInvalidPassword(String(error));
       }
     }
-  }, [onProceed, password, wallet.encryptedWallet]);
+  }, [onProceed, password, tx, wallet.encryptedWallet]);
 
   return (
     <Container ref={containerRef} className={className}>
@@ -77,12 +129,19 @@ export function SignTxWithEncryptedWallet({
         <PrintTxRequest
           className="wallets-actions"
           network={network}
-          tx={tx}
+          tx={_originTx}
           hostname={hostname}
           date={date}
         />
 
-        <PrintCreateTxOptions className="tx" tx={tx} />
+        <PrintCreateTxOptions className="tx" tx={_originTx} />
+
+        <TxFee
+          terraAddress={wallet.terraAddress as HumanAddr}
+          originTx={_originTx}
+          tx={tx}
+          onChange={setTx}
+        />
 
         <SingleLineFormContainer invalid={invalidPassword}>
           <input

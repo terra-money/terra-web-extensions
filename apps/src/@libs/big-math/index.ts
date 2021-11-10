@@ -45,6 +45,14 @@ export function floor(number: BigSource): Big {
   return integer.length > 0 ? big(integer) : big('0');
 }
 
+export function ceil(number: BigSource): Big {
+  const fixed = big(number).toFixed();
+  const [integer, decimal] = fixed.split('.');
+  return integer.length > 0
+    ? big(integer).plus(decimal && decimal.length > 0 ? 1 : 0)
+    : big('0');
+}
+
 export function vectorizeAB(
   a: BigSource[] | BigSource,
   b: BigSource[] | BigSource,

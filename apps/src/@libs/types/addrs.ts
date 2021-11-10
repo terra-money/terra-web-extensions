@@ -7,7 +7,7 @@ export type LPAddr = string & NominalType<'LPAddr'>;
 
 export type NativeDenom =
   | 'uusd'
-  | 'uust' // some nebula contract uses denom by uust
+  // | 'uust' FIXME remove, some nebula contract uses denom by uust
   | 'uluna'
   | 'uaud'
   | 'ucad'

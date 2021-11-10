@@ -12,6 +12,7 @@ export * from './containers/PoppingModal';
 export * from './form/FormRightSectionLabel';
 export * from './form/FormSelect';
 export * from './form/FormSuggest';
+export * from './form/FormText';
 export * from './form/SearchTextInput';
 export * from './form/SingleLineFormContainer';
 export * from './icons/DonutIcon';
