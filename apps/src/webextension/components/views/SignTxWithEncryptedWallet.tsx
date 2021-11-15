@@ -18,7 +18,7 @@ import React, {
 } from 'react';
 import styled from 'styled-components';
 import { FormMain } from 'webextension/components/layouts/FormMain';
-import { PrintCreateTxOptions } from 'webextension/components/tx/PrintCreateTxOptions';
+import { MsgsPrint } from 'webextension/components/tx/MsgsPrint';
 import { PrintTxRequest } from 'webextension/components/tx/PrintTxRequest';
 import { TxFeeGasEditor } from 'webextension/components/tx/TxFeeGasEditor';
 import { FormFooter } from '../layouts/FormFooter';
@@ -66,6 +66,7 @@ export function TxFee({
 
   return (
     <TxFeeGasEditor
+      label="Fees"
       gasPrice={gasPrice}
       terraAddress={terraAddress}
       originTx={originTx}
@@ -134,7 +135,12 @@ export function SignTxWithEncryptedWallet({
           date={date}
         />
 
-        <PrintCreateTxOptions className="tx" tx={_originTx} />
+        <MsgsPrint
+          className="tx"
+          msgs={_originTx.msgs}
+          walletAddress={wallet.terraAddress}
+          network={network}
+        />
 
         <TxFee
           terraAddress={wallet.terraAddress as HumanAddr}

@@ -54,6 +54,7 @@
     "@terra-money/key-utils": "^1.0.2",
     "@terra-money/ledger-terra-js": "^1.1.0",
     "@terra-money/msg-reader": "^2.1.2",
+    "@terra-money/react-base-components": "^1.0.0",
     "@terra-money/terra.js": "^2.1.19",
     "big.js": "^6.1.1",
     "bowser": "^2.11.0",

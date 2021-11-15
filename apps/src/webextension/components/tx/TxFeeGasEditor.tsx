@@ -13,12 +13,14 @@ export function TxFeeGasEditor({
   originTx,
   tx,
   onChange,
+  label,
 }: {
   gasPrice: GasPrice;
   terraAddress: HumanAddr;
   originTx: CreateTxOptions;
   tx: CreateTxOptions;
   onChange: (nextTx: CreateTxOptions) => void;
+  label?: string;
 }) {
   const balances = useTerraNativeBalancesWithAssetInfo(terraAddress);
 
@@ -136,6 +138,7 @@ export function TxFeeGasEditor({
 
   return (
     <SingleLineFormContainer
+      label={label}
       leftSection={
         <FormSelect
           data={selectDenoms}

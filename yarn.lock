@@ -4827,6 +4827,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@terra-money/react-base-components@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@terra-money/react-base-components@npm:1.0.0"
+  dependencies:
+    "@terra-money/terra.js": ^2.1.22
+    react-query: ^3.32.1
+    terra-utils: ^1.1.2
+  peerDependencies:
+    react: ">=16"
+    react-query: ^3.32.1
+  checksum: 30502bd95fa659beff94a43c1a5cc57f44c80f3f6b32ec7daecc4591fec553062310077ec7277d8230824e733abd79dd0c4a0f0134ae34565ebfd65ec3cf236b
+  languageName: node
+  linkType: hard
+
 "@terra-money/terra.js@npm:2.1.19":
   version: 2.1.19
   resolution: "@terra-money/terra.js@npm:2.1.19"
@@ -5458,6 +5472,15 @@ __metadata:
   version: 6.9.6
   resolution: "@types/qs@npm:6.9.6"
   checksum: 01871b1cf7062717ec76fcb9b29ddae1e04fcfadc1c76d86ec2571e72f27bf09ff31b094b295be8d4ca664aeec9b8965563680b31fcab7aba1ed93afac5181cd
+  languageName: node
+  linkType: hard
+
+"@types/ramda@npm:^0.27.45":
+  version: 0.27.49
+  resolution: "@types/ramda@npm:0.27.49"
+  dependencies:
+    ts-toolbelt: ^6.15.1
+  checksum: 6e894debac3295a327e526a1a8aa4545a38c583eb8c96493a2ef4c1cde2e3ce932dfe0f9131cc84837df060c4cbf317789fcd0c5568dfc47bffb735aa1ae2fc4
   languageName: node
   linkType: hard
 
@@ -6666,6 +6689,7 @@ __metadata:
     "@terra-money/key-utils": ^1.0.2
     "@terra-money/ledger-terra-js": ^1.1.0
     "@terra-money/msg-reader": ^2.1.2
+    "@terra-money/react-base-components": ^1.0.0
     "@terra-money/terra.js": ^2.1.19
     "@testing-library/jest-dom": ^5.15.0
     "@testing-library/react-hooks": ^7.0.2
@@ -7615,6 +7639,13 @@ __metadata:
   version: 6.1.1
   resolution: "big.js@npm:6.1.1"
   checksum: ba5db278e7d6700d7f92b7421e851bb65b6336d90b882869696c50574623c6be31f81500c3195fb1b391045163ffe62745e1c2bc30b35cb15e1b3e3ed135266b
+  languageName: node
+  linkType: hard
+
+"bignumber.js@npm:^9.0.1":
+  version: 9.0.1
+  resolution: "bignumber.js@npm:9.0.1"
+  checksum: 6e72f6069d9db32fc8d27561164de9f811b15f9144be61f323d8b36150a239eea50c92e20ba38af2ba5e717af10b8ef12db8f9948fe2ff02bf17ede5239d15d3
   languageName: node
   linkType: hard
 
@@ -19180,6 +19211,13 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"ramda@npm:^0.27.1":
+  version: 0.27.1
+  resolution: "ramda@npm:0.27.1"
+  checksum: 31a0c0ef739b2525d7615f84cbb5d3cb89ee0c795469b711f729ea1d8df0dccc3cd75d3717a1e9742d42315ce86435680b7c87743eb7618111c60c144a5b8059
+  languageName: node
+  linkType: hard
+
 "randombytes@npm:^2.0.0, randombytes@npm:^2.0.1, randombytes@npm:^2.0.5, randombytes@npm:^2.1.0":
   version: 2.1.0
   resolution: "randombytes@npm:2.1.0"
@@ -19589,6 +19627,24 @@ fsevents@^1.2.7:
     react-native:
       optional: true
   checksum: a6be975ff938fb464067e56557a6f1b4e39389033aae7feb48906736d14615b3a8faa05d7681a3e8504202c21f940c5998c50750ac8abee4508178a2c87b915a
+  languageName: node
+  linkType: hard
+
+"react-query@npm:^3.32.1":
+  version: 3.32.3
+  resolution: "react-query@npm:3.32.3"
+  dependencies:
+    "@babel/runtime": ^7.5.5
+    broadcast-channel: ^3.4.1
+    match-sorter: ^6.0.2
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0
+  peerDependenciesMeta:
+    react-dom:
+      optional: true
+    react-native:
+      optional: true
+  checksum: 6939d220e5bc5e670656451bf8b391c9b11fb3a79c81cf5a9ed400f00c2684f43ec052f8bb3b141b79d690eb708049e99670e471ce98c8d833d2192b725eaec8
   languageName: node
   linkType: hard
 
@@ -22335,6 +22391,19 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
+"terra-utils@npm:^1.1.2":
+  version: 1.1.2
+  resolution: "terra-utils@npm:1.1.2"
+  dependencies:
+    "@types/numeral": ^2.0.2
+    "@types/ramda": ^0.27.45
+    bignumber.js: ^9.0.1
+    numeral: ^2.0.6
+    ramda: ^0.27.1
+  checksum: 4bd1a0c906872d255f686eeae242c1a7b0d9ba6dfebb6d82af28f1d5a96485aa8a44d3b5aabd91067fa74d99669147c775b3677ed4c56305fc791f13ef52c364
+  languageName: node
+  linkType: hard
+
 "terser-webpack-plugin@npm:4.2.3, terser-webpack-plugin@npm:^4.2.3":
   version: 4.2.3
   resolution: "terser-webpack-plugin@npm:4.2.3"
@@ -22765,6 +22834,13 @@ resolve@^2.0.0-next.3:
     typescript:
       optional: true
   checksum: c2a698b85d521298fe6f2435fbf2d3dc5834b423ea25abd321805ead3f399dbeedce7ca09492d7eb005b9d2c009c6b9587055bc3ab273dc6b9e40eefd7edb5b2
+  languageName: node
+  linkType: hard
+
+"ts-toolbelt@npm:^6.15.1":
+  version: 6.15.5
+  resolution: "ts-toolbelt@npm:6.15.5"
+  checksum: 24ad00cfd9ce735c76c873a9b1347eac475b94e39ebbdf100c9019dce88dd5f4babed52884cf82bb456a38c28edd0099ab6f704b84b2e5e034852b618472c1f3
   languageName: node
   linkType: hard
 

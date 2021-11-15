@@ -15,7 +15,7 @@ import styled from 'styled-components';
 import { FormFooter } from 'webextension/components/layouts/FormFooter';
 import { FormMain } from 'webextension/components/layouts/FormMain';
 import { LedgerGuide } from 'webextension/components/tx/LedgerGuide';
-import { PrintCreateTxOptions } from 'webextension/components/tx/PrintCreateTxOptions';
+import { MsgsPrint } from 'webextension/components/tx/MsgsPrint';
 import { PrintTxRequest } from 'webextension/components/tx/PrintTxRequest';
 import { TxFee } from 'webextension/components/views/SignTxWithEncryptedWallet';
 
@@ -113,7 +113,12 @@ export function SignTxWithLedgerWallet({
           date={date}
         />
 
-        <PrintCreateTxOptions className="tx" tx={_originTx} />
+        <MsgsPrint
+          className="tx"
+          msgs={_originTx.msgs}
+          walletAddress={wallet.terraAddress}
+          network={network}
+        />
 
         <TxFee
           terraAddress={wallet.terraAddress as HumanAddr}
