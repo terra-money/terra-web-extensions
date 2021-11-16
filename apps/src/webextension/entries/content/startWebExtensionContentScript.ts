@@ -18,6 +18,7 @@ import LocalMessageDuplexStream from 'post-message-stream';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { browser } from 'webextension-polyfill-ts';
+import { WHITELIST_HOSTNAMES } from 'webextension/env';
 import {
   FromContentScriptToWebMessage,
   FromWebToContentScriptMessage,
@@ -114,7 +115,8 @@ export function startWebExtensionContentScript({
     map(([{ approvedHostnames }, { wallets, focusedWalletAddress }]) => {
       const hostname: string = window.location.hostname;
 
-      return approvedHostnames.includes(hostname)
+      return approvedHostnames.includes(hostname) ||
+        WHITELIST_HOSTNAMES.includes(hostname)
         ? {
             // remove sensitive information (e.g. encryptedWallet)
             wallets: wallets.map(({ name, terraAddress, design }) => ({
@@ -354,6 +356,7 @@ export function startWebExtensionContentScript({
           break;
         // ---------------------------------------------
         // TODO implement sign command
+        // TODO implement signBytes command
         // ---------------------------------------------
         default:
           console.log('initContentScriptAndWebappConnection.ts..()', data);

@@ -8,6 +8,11 @@ import { Gas, HumanAddr, Rate } from '@libs/types';
 import { NetworkInfo } from '@terra-dev/wallet-types';
 import { WebConnectorNetworkInfo } from '@terra-dev/web-connector-interface';
 
+export const WHITELIST_HOSTNAMES = [
+  'station.terra.money',
+  'app.anchorprotocol.com',
+];
+
 export function STATION_CONTRACT_ADDRESS(
   network: NetworkInfo,
 ): AppContractAddress {
