@@ -1,9 +1,9 @@
 {
-  "short_name": "Anchor",
-  "name": "Anchor",
+  "short_name": "Test",
+  "name": "Extension Test App",
   "icons": [
     {
-      "src": "logo.png",
+      "src": "favicon.ico",
       "type": "image/png",
       "sizes": "64x64 32x32 24x24 16x16 192x192 512x512"
     }
