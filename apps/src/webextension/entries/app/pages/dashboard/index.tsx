@@ -1,6 +1,7 @@
 import { formatUTokenWithPostfixUnits } from '@libs/formatter';
 import { AnimateNumber } from '@libs/ui';
-import { Menu } from '@mantine/core';
+import { Menu, Switch } from '@mantine/core';
+import { useLocalStorageValue } from '@mantine/hooks';
 import {
   Box,
   Button,
@@ -21,6 +22,7 @@ import {
   LedgerWallet,
   removeWallet,
 } from '@terra-dev/web-extension-backend';
+import big from 'big.js';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   MdAdd,
@@ -64,6 +66,10 @@ function DashboardBase({ className }: { className?: string }) {
   const [openTerraAddressQr, terraAddressQrElement] = useTerraAddressQrDialog();
 
   const { wallets, focusedWallet, focusedWalletIndex } = useStore();
+
+  const [hideSmallBalances, setHideSmallBalances] = useLocalStorageValue<
+    'on' | 'off'
+  >({ key: '__station_ui_hide_small_balances__', defaultValue: 'off' });
 
   const [selectedCardIndex, setSelectedCardIndex] = useState<number>(() =>
     wallets.length > 0 ? focusedWalletIndex : 0,
@@ -129,6 +135,16 @@ function DashboardBase({ className }: { className?: string }) {
   );
 
   const tokens = useTokenList();
+
+  const filteredTokens = useMemo(() => {
+    if (hideSmallBalances === 'off') {
+      return tokens;
+    }
+
+    return tokens?.filter((token) => {
+      return 'token' in token.asset || big(token.balance).gte(1000000);
+    });
+  }, [hideSmallBalances, tokens]);
 
   return (
     <section className={className}>
@@ -216,12 +232,30 @@ function DashboardBase({ className }: { className?: string }) {
       </header>
 
       <main>
+        <div className="hide-small-balances-container">
+          <Switch
+            label="Hide small balances"
+            size="xs"
+            checked={hideSmallBalances === 'on'}
+            onChange={({ currentTarget }) =>
+              setHideSmallBalances(currentTarget.checked ? 'on' : 'off')
+            }
+          />
+        </div>
+
         {showTokenList && (
           <>
-            {focusedWallet && tokens && tokens.length > 0 ? (
+            {focusedWallet && filteredTokens && filteredTokens.length > 0 ? (
               <ListBox enableItemInteraction disableItemPadding>
-                {tokens.map(({ asset, balance, info, icon }, i) => (
-                  <li key={'token' + i}>
+                {filteredTokens.map(({ asset, balance, info, icon }) => (
+                  <li
+                    key={
+                      'token' +
+                      ('native_token' in asset
+                        ? asset.native_token.denom
+                        : asset.token.contract_addr)
+                    }
+                  >
                     <TokenItem
                       to={`/wallet/${focusedWallet.terraAddress}/token/${
                         'native_token' in asset
@@ -471,6 +505,13 @@ export const Dashboard = styled(DashboardBase)`
 
     max-width: 800px;
     margin: 0 auto;
+
+    .hide-small-balances-container {
+      height: 30px;
+      display: flex;
+      justify-content: flex-end;
+      padding-right: 4px;
+    }
 
     .token-actions {
       margin-top: 20px;
