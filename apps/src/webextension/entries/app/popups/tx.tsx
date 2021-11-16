@@ -32,7 +32,7 @@ import { SignTxWithEncryptedWallet } from 'webextension/components/views/SignTxW
 import { SignTxWithLedgerWallet } from 'webextension/components/views/SignTxWithLedgerWallet';
 import { UnknownCase } from 'webextension/components/views/UnknownCase';
 import { useAllowedCommandId } from 'webextension/contexts/commands';
-import { txPortPrefix } from 'webextension/env';
+import { txPortPrefix, WHITELIST_HOSTNAMES } from 'webextension/env';
 
 export function TxPopup() {
   // ---------------------------------------------
@@ -117,15 +117,19 @@ export function TxPopup() {
       setWallet(nextWallet),
     );
 
-    readHostnamesStorage().then(({ approvedHostnames }) => {
-      if (
-        !approvedHostnames.some(
-          (itemHostname) => itemHostname === txRequest.hostname,
-        )
-      ) {
-        setNeedApproveHostname(true);
-      }
-    });
+    if (WHITELIST_HOSTNAMES.includes(txRequest.hostname)) {
+      setNeedApproveHostname(false);
+    } else {
+      readHostnamesStorage().then(({ approvedHostnames }) => {
+        if (
+          !approvedHostnames.some(
+            (itemHostname) => itemHostname === txRequest.hostname,
+          )
+        ) {
+          setNeedApproveHostname(true);
+        }
+      });
+    }
   }, [txRequest]);
 
   useEffect(() => {
