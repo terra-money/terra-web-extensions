@@ -232,16 +232,19 @@ function DashboardBase({ className }: { className?: string }) {
       </header>
 
       <main>
-        <div className="hide-small-balances-container">
-          <Switch
-            label="Hide small balances"
-            size="xs"
-            checked={hideSmallBalances === 'on'}
-            onChange={({ currentTarget }) =>
-              setHideSmallBalances(currentTarget.checked ? 'on' : 'off')
-            }
-          />
-        </div>
+        {tokens &&
+          tokens.filter(({ asset }) => 'native_token' in asset).length > 0 && (
+            <div className="hide-small-balances-container">
+              <Switch
+                label="Hide small balances"
+                size="xs"
+                checked={hideSmallBalances === 'on'}
+                onChange={({ currentTarget }) =>
+                  setHideSmallBalances(currentTarget.checked ? 'on' : 'off')
+                }
+              />
+            </div>
+          )}
 
         {showTokenList && (
           <>
