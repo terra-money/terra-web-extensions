@@ -9,6 +9,7 @@ import {
   ListBox,
   SvgIcon,
   TerraIcon,
+  TokenSymbolIcon,
   WalletCard,
   WalletCardSelector,
   WalletMoreMenus,
@@ -230,11 +231,12 @@ function DashboardBase({ className }: { className?: string }) {
                       }`}
                     >
                       <div>
-                        {'token' in asset ? (
-                          <img src={icon} alt={info?.name} />
-                        ) : (
-                          <img src={icon} alt={info?.name} />
-                        )}
+                        <TokenSymbolIcon
+                          className="symbol-icon"
+                          src={icon}
+                          name={info?.symbol ?? ''}
+                          size={16}
+                        />
                         <span>{info?.symbol}</span>
                       </div>
 
@@ -405,10 +407,7 @@ const TokenItem = styled(Link)`
     font-size: 14px;
     font-weight: 700;
 
-    img {
-      width: 16px;
-      height: 16px;
-
+    .symbol-icon {
       margin-right: 8px;
     }
   }

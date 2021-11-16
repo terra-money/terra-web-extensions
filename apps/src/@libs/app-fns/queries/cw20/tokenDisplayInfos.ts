@@ -4,7 +4,7 @@ export type CW20TokenDisplayInfo = {
   protocol: string;
   symbol: string;
   token: CW20Addr;
-  icon: string;
+  icon: string | undefined;
 };
 
 export type CW20TokenDisplayInfos = {

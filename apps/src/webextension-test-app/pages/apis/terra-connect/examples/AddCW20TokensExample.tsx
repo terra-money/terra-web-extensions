@@ -16,6 +16,11 @@ const bethAddr = {
   testnet: 'terra19mkj9nec6e3y5754tlnuz4vem7lzh4n0lc2s3l',
 };
 
+const nebAddr = {
+  mainnet: 'terra1nknarneeatpm7amzw4rhxhcaqyt3ecx6y7k5yq',
+  testnet: 'terra1nknarneeatpm7amzw4rhxhcaqyt3ecx6y7k5yq',
+};
+
 export function AddCW20TokensExample() {
   const { states, hasCW20Tokens, addCW20Tokens } = useWebConnector();
 
@@ -34,6 +39,7 @@ export function AddCW20TokensExample() {
         ancAddr[network],
         blunaAddr[network],
         bethAddr[network],
+        nebAddr[network],
       );
       setAddedStates(result);
     }
@@ -70,7 +76,12 @@ export function AddCW20TokensExample() {
         <>
           <button
             onClick={() =>
-              add([ancAddr[network], blunaAddr[network], bethAddr[network]])
+              add([
+                ancAddr[network],
+                blunaAddr[network],
+                bethAddr[network],
+                nebAddr[network],
+              ])
             }
           >
             Add Tokens

@@ -4,5 +4,5 @@ export interface TokenDisplayInfo {
   protocol: string;
   symbol: string;
   asset: terraswap.AssetInfo;
-  icon: string;
+  icon: string | undefined;
 }

@@ -2,7 +2,7 @@ import { CW20TokenDisplayInfo, cw20TokenInfoQuery } from '@libs/app-fns';
 import { useApp, useCW20TokenDisplayInfosQuery } from '@libs/app-provider';
 import { truncate } from '@libs/formatter';
 import { CW20Addr } from '@libs/types';
-import { CircleButton, SearchTextInput } from '@station/ui';
+import { CircleButton, SearchTextInput, TokenSymbolIcon } from '@station/ui';
 import { useWallet } from '@terra-dev/use-wallet';
 import { AccAddress } from '@terra-money/terra.js';
 import React, { ChangeEvent, useEffect, useState } from 'react';
@@ -89,18 +89,16 @@ export function TokenRow({
   onChange,
 }: {
   added: boolean;
-  icon: string;
+  icon: string | undefined;
   name: string;
   addr: string;
   link: string;
   onChange: (added: boolean) => void;
 }) {
-  const [hide, setHide] = useState<boolean>(false);
-
-  return hide ? null : (
+  return (
     <li>
       <div className="icon-wrapper">
-        <img src={icon} alt={name} onError={() => setHide(true)} />
+        <TokenSymbolIcon src={icon} name={name} size={24} />
       </div>
       <div className="label-wrapper">
         <div>{name}</div>
@@ -143,10 +141,6 @@ export const TokenList = styled.ul`
 
     .icon-wrapper {
       padding-right: 12px;
-
-      img {
-        width: 24px;
-      }
     }
 
     .label-wrapper {

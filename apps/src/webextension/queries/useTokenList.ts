@@ -9,7 +9,7 @@ import { useCW20Tokens } from './useCW20Tokens';
 export function useTokenList():
   | Array<
       TerraBalancesWithTokenInfo['tokens'][number] & {
-        icon: string;
+        icon: string | undefined;
         isCW20Token: boolean;
       }
     >
@@ -52,7 +52,7 @@ export function useTokenList():
     return tokens
       .filter(({ balance, asset }) => 'token' in asset || big(balance).gt(0))
       .map(({ balance, asset, info }) => {
-        const icon: string = getTokenIcon(asset, info);
+        const icon: string | undefined = getTokenIcon(asset, info);
 
         return {
           balance,

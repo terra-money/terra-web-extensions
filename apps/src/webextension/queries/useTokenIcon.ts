@@ -3,8 +3,6 @@ import { useCW20TokenDisplayInfosQuery } from '@libs/app-provider';
 import { cw20, terraswap, Token } from '@libs/types';
 import { useCallback, useMemo } from 'react';
 
-const FALLBACK_ICON = 'https://assets.terra.money/icon/60/UST.png';
-
 export function useTokenIcon() {
   const { data: cw20TokenDisplayInfos } = useCW20TokenDisplayInfosQuery();
 
@@ -30,7 +28,7 @@ export function useTokenIcon() {
       asset: terraswap.AssetInfo,
       info?: cw20.TokenInfoResponse<Token> | undefined,
     ) => {
-      let icon: string = FALLBACK_ICON;
+      let icon: string | undefined;
 
       if ('native_token' in asset && info) {
         icon =
