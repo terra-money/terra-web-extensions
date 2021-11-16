@@ -33,6 +33,10 @@ export function ConfigSelector() {
     history.push('/networks/create');
   }, [history]);
 
+  const onWhitelistDapps = useCallback(() => {
+    history.push('/dapps');
+  }, [history]);
+
   // ---------------------------------------------
   // presentation
   // ---------------------------------------------
@@ -90,6 +94,12 @@ export function ConfigSelector() {
             <FormattedMessage id={'locale.' + itemLocale} />
           </Menu.Item>
         ))}
+
+        <Divider />
+
+        <Menu.Item onClick={() => onWhitelistDapps()}>
+          Whitelist dApps
+        </Menu.Item>
       </Menu>
 
       {manageNetworksElement}

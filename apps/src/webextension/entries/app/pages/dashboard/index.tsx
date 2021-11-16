@@ -35,7 +35,6 @@ import {
   MdSettingsBackupRestore,
   MdUpload,
   MdVpnKey,
-  MdWeb,
 } from 'react-icons/md';
 import { FormattedMessage } from 'react-intl';
 import { Link, useHistory } from 'react-router-dom';
@@ -346,14 +345,6 @@ function DashboardBase({ className }: { className?: string }) {
                   </span>
                   <SvgIcon width={24} height={24}>
                     <MdSettingsBackupRestore />
-                  </SvgIcon>
-                </Link>
-              </ToolListItem>
-              <ToolListItem>
-                <Link to="/dapps">
-                  <span>Whitelist dApps</span>
-                  <SvgIcon width={24} height={24}>
-                    <MdWeb />
                   </SvgIcon>
                 </Link>
               </ToolListItem>
