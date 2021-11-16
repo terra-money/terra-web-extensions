@@ -112,5 +112,5 @@ export const NATIVE_TOKEN_ASSET_INFOS: terraswap.AssetInfo[] = [
   { native_token: { denom: 'usek' } },
   { native_token: { denom: 'usgd' } },
   { native_token: { denom: 'uthb' } },
-  { native_token: { denom: 'ukrt' } },
+  //{ native_token: { denom: 'ukrt' } },
 ];

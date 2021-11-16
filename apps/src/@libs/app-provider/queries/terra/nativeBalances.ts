@@ -138,10 +138,10 @@ export function useTerraNativeBalancesWithAssetInfo(
         amount: nativeBalances.uTHB,
         info: { native_token: { denom: 'uthb' } },
       },
-      {
-        amount: nativeBalances.uKRT,
-        info: { native_token: { denom: 'ukrt' } },
-      },
+      //{
+      //  amount: nativeBalances.uKRT,
+      //  info: { native_token: { denom: 'ukrt' } },
+      //},
     ];
   }, [
     nativeBalances.uAUD,
@@ -155,7 +155,6 @@ export function useTerraNativeBalancesWithAssetInfo(
     nativeBalances.uIDR,
     nativeBalances.uINR,
     nativeBalances.uJPY,
-    nativeBalances.uKRT,
     nativeBalances.uKRW,
     nativeBalances.uLuna,
     nativeBalances.uMNT,

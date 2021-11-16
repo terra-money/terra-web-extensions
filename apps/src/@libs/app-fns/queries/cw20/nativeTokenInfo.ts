@@ -19,8 +19,8 @@ export function nativeTokenInfoQuery<T extends Token>(
         symbol: 'LUNA',
         total_supply: '0' as u<T>,
       };
+    //case 'ukrt':
     case 'ukrw':
-    case 'ukrt':
       return {
         decimals: 6,
         name: 'KRT',
@@ -30,71 +30,71 @@ export function nativeTokenInfoQuery<T extends Token>(
     case 'uaud':
       return {
         decimals: 6,
-        name: 'AUD',
-        symbol: 'AUD',
+        name: 'AUT',
+        symbol: 'AUT',
         total_supply: '0' as u<T>,
       };
     case 'ucad':
       return {
         decimals: 6,
-        name: 'CAD',
-        symbol: 'CAD',
+        name: 'CAT',
+        symbol: 'CAT',
         total_supply: '0' as u<T>,
       };
     case 'uchf':
       return {
         decimals: 6,
-        name: 'CHF',
-        symbol: 'CHF',
+        name: 'CHT',
+        symbol: 'CHT',
         total_supply: '0' as u<T>,
       };
     case 'ucny':
       return {
         decimals: 6,
-        name: 'CNY',
-        symbol: 'CNY',
+        name: 'CNT',
+        symbol: 'CNT',
         total_supply: '0' as u<T>,
       };
     case 'udkk':
       return {
         decimals: 6,
-        name: 'DKK',
-        symbol: 'DKK',
+        name: 'DKT',
+        symbol: 'DKT',
         total_supply: '0' as u<T>,
       };
     case 'ueur':
       return {
         decimals: 6,
-        name: 'EUR',
-        symbol: 'EUR',
+        name: 'EUT',
+        symbol: 'EUT',
         total_supply: '0' as u<T>,
       };
     case 'ugbp':
       return {
         decimals: 6,
-        name: 'GBP',
-        symbol: 'GBP',
+        name: 'GBT',
+        symbol: 'GBT',
         total_supply: '0' as u<T>,
       };
     case 'uhkd':
       return {
         decimals: 6,
-        name: 'HKD',
-        symbol: 'HKD',
+        name: 'HKT',
+        symbol: 'HKT',
         total_supply: '0' as u<T>,
       };
     case 'uidr':
       return {
         decimals: 6,
-        name: 'IDR',
-        symbol: 'IDR',
+        name: 'IDT',
+        symbol: 'IDT',
         total_supply: '0' as u<T>,
       };
     case 'uinr':
       return {
         decimals: 6,
-        name: 'INR',
-        symbol: 'INR',
+        name: 'INT',
+        symbol: 'INT',
         total_supply: '0' as u<T>,
       };
     case 'ujpy':
@@ -114,43 +114,43 @@ export function nativeTokenInfoQuery<T extends Token>(
     case 'unok':
       return {
         decimals: 6,
-        name: 'NOK',
-        symbol: 'NOK',
+        name: 'NOT',
+        symbol: 'NOT',
         total_supply: '0' as u<T>,
       };
     case 'uphp':
       return {
         decimals: 6,
-        name: 'PHP',
-        symbol: 'PHP',
+        name: 'PHT',
+        symbol: 'PHT',
         total_supply: '0' as u<T>,
       };
     case 'usdr':
       return {
         decimals: 6,
-        name: 'SDR',
-        symbol: 'SDR',
+        name: 'SDT',
+        symbol: 'SDT',
         total_supply: '0' as u<T>,
       };
     case 'usek':
       return {
         decimals: 6,
-        name: 'SEK',
-        symbol: 'SEK',
+        name: 'SET',
+        symbol: 'SET',
         total_supply: '0' as u<T>,
       };
     case 'usgd':
       return {
         decimals: 6,
-        name: 'SGD',
-        symbol: 'SGD',
+        name: 'SGT',
+        symbol: 'SGT',
         total_supply: '0' as u<T>,
       };
     case 'uthb':
       return {
         decimals: 6,
-        name: 'THB',
-        symbol: 'THB',
+        name: 'THT',
+        symbol: 'THT',
         total_supply: '0' as u<T>,
       };
   }

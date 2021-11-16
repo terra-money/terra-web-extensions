@@ -27,8 +27,8 @@ export type NativeDenom =
   | 'usdr'
   | 'usek'
   | 'usgd'
-  | 'uthb'
-  | 'ukrt';
+  | 'uthb';
+//| 'ukrt';
 export type bAssetDenom = string & NominalType<'bAssetDenom'>;
 export type AssetDenom = string & NominalType<'AssetDenom'>;
 export type Denom = NativeDenom | bAssetDenom | AssetDenom;

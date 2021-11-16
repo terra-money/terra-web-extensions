@@ -212,9 +212,9 @@ export async function terraNativeBalancesQuery(
       case 'uthb':
         result.uTHB = amount as u<THB>;
         break;
-      case 'ukrt':
-        result.uKRT = amount as u<KRT>;
-        break;
+      //case 'ukrt':
+      //  result.uKRT = amount as u<KRT>;
+      //  break;
     }
   }
 
@@ -268,8 +268,8 @@ export function pickNativeBalance<T extends Token>(
       return balances.uSGD as u<T>;
     case 'uthb':
       return balances.uTHB as u<T>;
-    case 'ukrt':
-      return balances.uKRT as u<T>;
+    //case 'ukrt':
+    //  return balances.uKRT as u<T>;
     default:
       return '0' as u<T>;
   }

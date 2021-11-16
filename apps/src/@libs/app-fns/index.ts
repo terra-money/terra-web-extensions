@@ -24,6 +24,7 @@ export * from './queries/terra/balancesWithTokenInfo';
 export * from './queries/terra/nativeBalances';
 export * from './queries/terra/tokenDisplayInfos';
 export * from './queries/terra/tokenInfo';
+export * from './queries/terra/tokenUstValue';
 export * from './queries/terra/treasuryTaxCap';
 export * from './queries/terra/treasuryTaxRate';
 export * from './queries/terraswap/pair';

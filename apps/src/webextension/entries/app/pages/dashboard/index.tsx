@@ -1,3 +1,4 @@
+import { useTerraTokenUstValueQuery } from '@libs/app-provider';
 import { formatUTokenWithPostfixUnits } from '@libs/formatter';
 import { AnimateNumber } from '@libs/ui';
 import { Menu, Switch } from '@mantine/core';
@@ -44,7 +45,7 @@ import styled from 'styled-components';
 import { ConfigSelector } from 'webextension/components/header/ConfigSelector';
 import { useStore } from 'webextension/contexts/store';
 import { extensionPath } from 'webextension/logics/extensionPath';
-import { useTokenList } from 'webextension/queries/useTokenList';
+import { TokenListItem, useTokenList } from 'webextension/queries/useTokenList';
 import { useAddCW20TokensDialog } from '../../dialogs/useAddCW20TokensDialog';
 import { useDeleteWalletDialog } from '../../dialogs/useDeleteWalletDialog';
 import { useManageCW20TokensDialog } from '../../dialogs/useManageCW20TokensDialog';
@@ -135,16 +136,6 @@ function DashboardBase({ className }: { className?: string }) {
   );
 
   const tokens = useTokenList();
-
-  const filteredTokens = useMemo(() => {
-    if (hideSmallBalances === 'off') {
-      return tokens;
-    }
-
-    return tokens?.filter((token) => {
-      return 'token' in token.asset || big(token.balance).gte(1000000);
-    });
-  }, [hideSmallBalances, tokens]);
 
   return (
     <section className={className}>
@@ -248,46 +239,20 @@ function DashboardBase({ className }: { className?: string }) {
 
         {showTokenList && (
           <>
-            {focusedWallet && filteredTokens && filteredTokens.length > 0 ? (
+            {focusedWallet && tokens && tokens.length > 0 ? (
               <ListBox enableItemInteraction disableItemPadding>
-                {filteredTokens.map(({ asset, balance, info, icon }) => (
-                  <li
+                {tokens.map((token) => (
+                  <TokenRow
                     key={
                       'token' +
-                      ('native_token' in asset
-                        ? asset.native_token.denom
-                        : asset.token.contract_addr)
+                      ('native_token' in token.asset
+                        ? token.asset.native_token.denom
+                        : token.asset.token.contract_addr)
                     }
-                  >
-                    <TokenItem
-                      to={`/wallet/${focusedWallet.terraAddress}/token/${
-                        'native_token' in asset
-                          ? asset.native_token.denom
-                          : asset.token.contract_addr
-                      }`}
-                    >
-                      <div>
-                        <TokenSymbolIcon
-                          className="symbol-icon"
-                          src={icon}
-                          name={info?.symbol ?? ''}
-                          size={16}
-                        />
-                        <span>{info?.symbol}</span>
-                      </div>
-
-                      <div>
-                        <AnimateNumber
-                          format={formatUTokenWithPostfixUnits}
-                          decimalPointsFontSize="12px"
-                        >
-                          {balance}
-                        </AnimateNumber>
-
-                        <MdChevronRight />
-                      </div>
-                    </TokenItem>
-                  </li>
+                    token={token}
+                    focusedWallet={focusedWallet}
+                    hideSmallBalances={hideSmallBalances}
+                  />
                 ))}
               </ListBox>
             ) : (
@@ -397,6 +362,80 @@ function DashboardBase({ className }: { className?: string }) {
     </section>
   );
 }
+
+function TokenRow({
+  token: { asset, icon, info, balance },
+  focusedWallet,
+  hideSmallBalances,
+}: {
+  token: TokenListItem;
+  focusedWallet: EncryptedWallet | LedgerWallet;
+  hideSmallBalances: 'on' | 'off';
+}) {
+  const { data: ustValue } = useTerraTokenUstValueQuery(asset, balance);
+
+  if (hideSmallBalances === 'on' && ustValue && big(ustValue).lt(1000000)) {
+    return null;
+  }
+
+  return (
+    <li>
+      <TokenItem
+        to={`/wallet/${focusedWallet.terraAddress}/token/${
+          'native_token' in asset
+            ? asset.native_token.denom
+            : asset.token.contract_addr
+        }`}
+      >
+        <div>
+          <TokenSymbolIcon
+            className="symbol-icon"
+            src={icon}
+            name={info?.symbol ?? ''}
+            size={16}
+          />
+          <span>{info?.symbol}</span>
+        </div>
+
+        <div>
+          <Balances>
+            <AnimateNumber
+              format={formatUTokenWithPostfixUnits}
+              decimalPointsFontSize="12px"
+            >
+              {balance}
+            </AnimateNumber>
+            {ustValue &&
+              ('token' in asset || asset.native_token.denom !== 'uusd') && (
+                <sub>
+                  <AnimateNumber format={formatUTokenWithPostfixUnits}>
+                    {ustValue}
+                  </AnimateNumber>{' '}
+                  USD
+                </sub>
+              )}
+          </Balances>
+
+          <MdChevronRight />
+        </div>
+      </TokenItem>
+    </li>
+  );
+}
+
+const Balances = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+
+  > sub {
+    vertical-align: unset;
+    font-size: 11px;
+    font-weight: normal;
+    color: var(--desaturated-800);
+  }
+`;
 
 const ToolListItem = styled.li`
   a {

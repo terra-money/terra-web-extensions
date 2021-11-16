@@ -119,7 +119,7 @@ const NATIVE_TOKEN_DISPLAY_INFOS: TokenDisplayInfo[] = [
   {
     protocol: 'Terra',
     symbol: 'KRT',
-    asset: { native_token: { denom: 'ukrt' } },
+    asset: { native_token: { denom: 'ukrw' } },
     icon: 'https://assets.terra.money/icon/60/KRT.png',
   },
 ];
