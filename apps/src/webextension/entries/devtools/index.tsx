@@ -5,8 +5,10 @@ import {
   observeCW20Storage,
   observeHostnamesStorage,
   observeNetworkStorage,
+  observePasswordStorage,
   observeSecurityStorage,
   observeWalletsStorage,
+  PublicPasswordStorageData,
   SecurityStorageData,
   WalletsStorageData,
 } from '@terra-dev/web-extension-backend';
@@ -35,6 +37,8 @@ function Component({ className }: { className?: string }) {
   const [cw20Storage, setCW20Storage] = useState<CW20StorageData | null>(null);
   const [securityStorage, setSecurityStorage] =
     useState<SecurityStorageData | null>(null);
+  const [passwordStorage, setPasswordStorage] =
+    useState<PublicPasswordStorageData | null>(null);
 
   useEffect(() => {
     observeWalletsStorage().subscribe(setWalletStorage);
@@ -42,6 +46,7 @@ function Component({ className }: { className?: string }) {
     observeHostnamesStorage().subscribe(setHostnamesStorage);
     observeCW20Storage().subscribe(setCW20Storage);
     observeSecurityStorage().subscribe(setSecurityStorage);
+    observePasswordStorage().subscribe(setPasswordStorage);
   }, []);
 
   return (
@@ -74,6 +79,13 @@ function Component({ className }: { className?: string }) {
         <h1>Security</h1>
         {securityStorage && (
           <JsonView src={securityStorage} {...jsonViewOptions} />
+        )}
+      </section>
+
+      <section>
+        <h1>Passowrd</h1>
+        {passwordStorage && (
+          <JsonView src={passwordStorage} {...jsonViewOptions} />
         )}
       </section>
     </main>

@@ -9,6 +9,7 @@ import {
   EmptyWalletCard,
   LedgerIcon,
   ListBox,
+  SvgButton,
   SvgIcon,
   TerraIcon,
   TokenSymbolIcon,
@@ -21,6 +22,7 @@ import {
   focusWallet,
   isLedgerSupportBrowser,
   LedgerWallet,
+  removeSavedPassword,
   removeWallet,
 } from '@terra-dev/web-extension-backend';
 import big from 'big.js';
@@ -34,6 +36,7 @@ import {
   MdDelete,
   MdEdit,
   MdErrorOutline,
+  MdLockOpen,
   MdSettings,
   MdSettingsBackupRestore,
   MdUpload,
@@ -45,6 +48,7 @@ import styled from 'styled-components';
 import { ConfigSelector } from 'webextension/components/header/ConfigSelector';
 import { useStore } from 'webextension/contexts/store';
 import { extensionPath } from 'webextension/logics/extensionPath';
+import { usePasswordSavedAddresses } from 'webextension/queries/usePasswordSavedAddresses';
 import { TokenListItem, useTokenList } from 'webextension/queries/useTokenList';
 import { useAddCW20TokensDialog } from '../../dialogs/useAddCW20TokensDialog';
 import { useDeleteWalletDialog } from '../../dialogs/useDeleteWalletDialog';
@@ -67,6 +71,8 @@ function DashboardBase({ className }: { className?: string }) {
   const [openTerraAddressQr, terraAddressQrElement] = useTerraAddressQrDialog();
 
   const { wallets, focusedWallet, focusedWalletIndex } = useStore();
+
+  const passwordSavedAddresses = usePasswordSavedAddresses();
 
   const [hideSmallBalances, setHideSmallBalances] = useLocalStorageValue<
     'on' | 'off'
@@ -165,6 +171,24 @@ function DashboardBase({ className }: { className?: string }) {
                 openTerraAddressQr({ terraAddress: wallet.terraAddress })
               }
               design={wallet.design}
+              rightBottomSection={
+                passwordSavedAddresses.has(wallet.terraAddress) ? (
+                  <SvgButton
+                    onClick={() => {
+                      removeSavedPassword(wallet.terraAddress);
+                    }}
+                    width={16}
+                    height={16}
+                    style={{
+                      marginRight: 3,
+                      transform: 'translateY(1px)',
+                      opacity: 0.4,
+                    }}
+                  >
+                    <MdLockOpen />
+                  </SvgButton>
+                ) : undefined
+              }
             >
               <WalletMoreMenus>
                 <Menu.Item

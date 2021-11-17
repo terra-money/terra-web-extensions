@@ -1,3 +1,4 @@
+import { clearStalePasswords } from '@terra-dev/web-extension-backend';
 import { browser, Runtime } from 'webextension-polyfill-ts';
 import {
   getIdFromContentScriptPort,
@@ -38,3 +39,17 @@ browser.runtime.onConnect.addListener((port) => {
     port.onDisconnect.addListener(onDisconnect);
   }
 });
+
+const JOB_INTERVAL = 1000 * 30;
+
+async function job() {
+  try {
+    await clearStalePasswords();
+  } catch (error) {
+    console.error(error);
+  } finally {
+    setTimeout(job, JOB_INTERVAL);
+  }
+}
+
+job();

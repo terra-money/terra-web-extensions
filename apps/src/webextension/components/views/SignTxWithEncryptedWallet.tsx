@@ -1,6 +1,7 @@
 import { useApp } from '@libs/app-provider';
 import { HumanAddr } from '@libs/types';
 import { vibrate } from '@libs/ui';
+import { Switch } from '@mantine/core';
 import { Button, SingleLineFormContainer, WalletCard } from '@station/ui';
 import { WebConnectorNetworkInfo } from '@terra-dev/web-connector-interface';
 import {
@@ -12,6 +13,7 @@ import { CreateTxOptions } from '@terra-money/terra.js';
 import React, {
   ChangeEvent,
   useCallback,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -29,9 +31,14 @@ export interface SignTxWithEncryptedWalletProps {
   network: WebConnectorNetworkInfo;
   tx: CreateTxOptions;
   hostname?: string;
+  savedPassword?: string | undefined;
   date: Date;
   onDeny: () => void;
-  onProceed: (wallet: Wallet, resolvedTx: CreateTxOptions) => void;
+  onProceed: (
+    wallet: Wallet,
+    resolvedTx: CreateTxOptions,
+    password: string | null,
+  ) => void;
 }
 
 export function TxFee({
@@ -85,6 +92,7 @@ export function SignTxWithEncryptedWallet({
   date,
   onDeny,
   onProceed,
+  savedPassword,
 }: SignTxWithEncryptedWalletProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -93,9 +101,18 @@ export function SignTxWithEncryptedWallet({
   // ---------------------------------------------
   // states
   // ---------------------------------------------
+  const [savePassword, setSavePassword] = useState<boolean>(() => false);
+
   const [password, setPassword] = useState<string>('');
 
   const [invalidPassword, setInvalidPassword] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (savedPassword) {
+      setSavePassword(true);
+      setPassword(savedPassword);
+    }
+  }, [savedPassword]);
 
   // ---------------------------------------------
   // callbacks
@@ -103,7 +120,7 @@ export function SignTxWithEncryptedWallet({
   const proceed = useCallback(() => {
     try {
       const w = decryptWallet(wallet.encryptedWallet, password);
-      onProceed(w, tx);
+      onProceed(w, tx, savePassword ? password : null);
     } catch (error) {
       containerRef.current?.animate(vibrate, { duration: 100 });
 
@@ -113,7 +130,7 @@ export function SignTxWithEncryptedWallet({
         setInvalidPassword(String(error));
       }
     }
-  }, [onProceed, password, tx, wallet.encryptedWallet]);
+  }, [onProceed, password, savePassword, tx, wallet.encryptedWallet]);
 
   return (
     <Container ref={containerRef} className={className}>
@@ -160,6 +177,17 @@ export function SignTxWithEncryptedWallet({
             }}
           />
         </SingleLineFormContainer>
+
+        <div className="save-password-container">
+          <Switch
+            size="xs"
+            label="Save password for 24 hours"
+            checked={savePassword}
+            onChange={({ currentTarget }) =>
+              setSavePassword(currentTarget.checked)
+            }
+          />
+        </div>
       </FormMain>
 
       <FormFooter>
@@ -187,5 +215,10 @@ const Container = styled.section`
     justify-content: center;
 
     background-color: var(--color-header-background);
+  }
+
+  .save-password-container {
+    margin-top: -12px;
+    padding-left: 5px;
   }
 `;

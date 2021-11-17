@@ -4,3 +4,4 @@ export * from './hostnames';
 export * from './cw20';
 export * from './ledger';
 export * from './security';
+export * from './password';

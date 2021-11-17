@@ -1,8 +1,19 @@
 import { Menu } from '@mantine/core';
-import { EmptyWalletCard, WalletCard, WalletMoreMenus } from '@station/ui';
+import {
+  EmptyWalletCard,
+  SvgButton,
+  WalletCard,
+  WalletMoreMenus,
+} from '@station/ui';
 import { Meta } from '@storybook/react';
 import React from 'react';
-import { MdDelete, MdEdit, MdUpload, MdVpnKey } from 'react-icons/md';
+import {
+  MdDelete,
+  MdEdit,
+  MdLockOpen,
+  MdUpload,
+  MdVpnKey,
+} from 'react-icons/md';
 import styled from 'styled-components';
 
 export default {
@@ -13,6 +24,16 @@ export default {
     },
   },
 } as Meta;
+
+const unlock = (
+  <SvgButton
+    width={16}
+    height={16}
+    style={{ marginRight: 3, transform: 'translateY(1px)', opacity: 0.4 }}
+  >
+    <MdLockOpen />
+  </SvgButton>
+);
 
 const menus = (
   <WalletMoreMenus>
@@ -52,6 +73,7 @@ export const Cards = () => {
         showCopyTerraAddress
         onShowQRCode={console.log}
         design="mirror"
+        rightBottomSection={unlock}
       >
         {menus}
       </WalletCard>

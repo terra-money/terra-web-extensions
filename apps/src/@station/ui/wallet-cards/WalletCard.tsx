@@ -21,6 +21,7 @@ export interface WalletCardProps
   showCopyTerraAddress?: boolean;
   onShowQRCode?: (terraAddress: string) => void;
   design: 'terra' | 'anchor' | 'mirror' | string;
+  rightBottomSection?: ReactNode;
 }
 
 const useTooltipStyles = createMantineStyles<TooltipStylesNames>({
@@ -88,6 +89,7 @@ function Component({
   onShowQRCode,
   design,
   style: _style,
+  rightBottomSection,
   ...divProps
 }: WalletCardProps) {
   const { classes: tooltipClasses } = useTooltipStyles();
@@ -128,7 +130,11 @@ function Component({
         </footer>
       </div>
 
-      <div className="more">{children}</div>
+      <div className="right-top-section">{children}</div>
+
+      {rightBottomSection && (
+        <div className="right-bottom-section">{rightBottomSection}</div>
+      )}
     </div>
   );
 }
@@ -179,10 +185,16 @@ const StyledComponent = styled(Component)`
     }
   }
 
-  .more {
+  .right-top-section {
     position: absolute;
     right: 15px;
     top: 20px;
+  }
+
+  .right-bottom-section {
+    position: absolute;
+    right: 15px;
+    bottom: 20px;
   }
 `;
 

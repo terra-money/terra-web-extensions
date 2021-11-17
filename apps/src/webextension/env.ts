@@ -4,9 +4,9 @@ import {
   TERRA_QUERY_KEY,
   TERRA_TX_KEYS,
 } from '@libs/app-provider';
-import { Gas, HumanAddr, Rate } from '@libs/types';
-import { NetworkInfo } from '@terra-dev/wallet-types';
-import { WebConnectorNetworkInfo } from '@terra-dev/web-connector-interface';
+import type { Gas, HumanAddr, Rate } from '@libs/types';
+import type { NetworkInfo } from '@terra-dev/wallet-types';
+import type { WebConnectorNetworkInfo } from '@terra-dev/web-connector-interface';
 
 export const WHITELIST_HOSTNAMES = [
   'station.terra.money',

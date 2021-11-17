@@ -13,9 +13,12 @@ import {
   executeTxWithLedgerWallet,
   findWallet,
   fromURLSearchParams,
+  getSavedPassword,
   LedgerKeyResponse,
   LedgerWallet,
   readHostnamesStorage,
+  removeSavedPassword,
+  savePassword,
   TxRequest,
   Wallet,
 } from '@terra-dev/web-extension-backend';
@@ -290,6 +293,8 @@ function LedgerWalletTxForm({
   );
 }
 
+const DAY = 1000 * 60 * 60 * 24;
+
 function EncryptedWalletTxForm({
   className,
   txRequest,
@@ -309,11 +314,23 @@ function EncryptedWalletTxForm({
     onDeny(txRequest);
   }, [onDeny, txRequest]);
 
+  const [savedPassword, setSavedPassword] = useState<0 | string | undefined>(0);
+
+  useEffect(() => {
+    getSavedPassword(txRequest.terraAddress).then(setSavedPassword);
+  }, [txRequest.terraAddress]);
+
   const proceed = useCallback(
-    async (decryptedWallet: Wallet, resolvedTx: CreateTxOptions) => {
+    async (
+      decryptedWallet: Wallet,
+      resolvedTx: CreateTxOptions,
+      password: string | null,
+    ) => {
       const port = browser.runtime.connect(undefined, {
         name: txPortPrefix + txRequest.id,
       });
+
+      let wait: Promise<void>;
 
       executeTxWithInternalWallet(
         decryptedWallet,
@@ -323,6 +340,16 @@ function EncryptedWalletTxForm({
         next: (result) => {
           if (result.status === WebConnectorTxStatus.SUCCEED) {
             port.postMessage(result);
+
+            if (password) {
+              wait = savePassword(
+                txRequest.terraAddress,
+                password,
+                Date.now() + DAY,
+              );
+            } else {
+              wait = removeSavedPassword(txRequest.terraAddress);
+            }
           } else if (result.status === WebConnectorTxStatus.DENIED) {
             port.postMessage({
               ...result,
@@ -344,13 +371,24 @@ function EncryptedWalletTxForm({
         complete: () => {
           port.disconnect();
           if (txRequest.closeWindowAfterTx) {
-            window.close();
+            Promise.resolve(wait).then(() => {
+              window.close();
+            });
           }
         },
       });
     },
-    [txRequest.closeWindowAfterTx, txRequest.id, txRequest.network],
+    [
+      txRequest.closeWindowAfterTx,
+      txRequest.id,
+      txRequest.network,
+      txRequest.terraAddress,
+    ],
   );
+
+  if (savedPassword === 0) {
+    return null;
+  }
 
   return (
     <SignTxWithEncryptedWallet
@@ -360,6 +398,7 @@ function EncryptedWalletTxForm({
       tx={tx}
       hostname={txRequest.hostname}
       date={txRequest.date}
+      savedPassword={savedPassword}
       onDeny={deny}
       onProceed={proceed}
     />
