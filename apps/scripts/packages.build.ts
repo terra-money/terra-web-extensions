@@ -32,12 +32,18 @@ build({
     }
     
     if ('styled-components' in dependencies) {
-      dependencies['styled-components'] = '^5.0.0';
+      delete dependencies['styled-components'];
+      peerDependencies['styled-components'] = '^5.0.0';
     }
     
     if ('@terra-money/terra.js' in dependencies) {
       delete dependencies['@terra-money/terra.js'];
-      peerDependencies['@terra-money/terra.js'] = '^2.0.0';
+      peerDependencies['@terra-money/terra.js'] = '^3.0.0';
+    }
+    
+    if ('@terra-money/use-wallet' in dependencies) {
+      delete dependencies['@terra-money/use-wallet'];
+      peerDependencies['@terra-money/use-wallet'] = '>=3.0.0-alpha.1';
     }
 
     //switch (packageName) {
@@ -49,13 +55,13 @@ build({
     //    break;
     //}
 
-    switch (packageName) {
-      case '@terra-money/wallet-provider':
-        peerDependenciesMeta['react-router-dom'] = {
-          optional: true,
-        };
-        break;
-    }
+    //switch (packageName) {
+    //  case '@terra-money/wallet-provider':
+    //    peerDependenciesMeta['react-router-dom'] = {
+    //      optional: true,
+    //    };
+    //    break;
+    //}
 
     //[
     //  '@terra-money/wallet-provider',

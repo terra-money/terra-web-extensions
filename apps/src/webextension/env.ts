@@ -5,8 +5,8 @@ import {
   TERRA_TX_KEYS,
 } from '@libs/app-provider';
 import type { Gas, HumanAddr, Rate } from '@libs/types';
-import type { NetworkInfo } from '@terra-dev/wallet-types';
 import type { WebConnectorNetworkInfo } from '@terra-dev/web-connector-interface';
+import type { NetworkInfo } from '@terra-money/use-wallet';
 
 export const WHITELIST_HOSTNAMES = [
   'station.terra.money',
@@ -71,12 +71,14 @@ export const FALLBACK_NETWORKS: WebConnectorNetworkInfo[] = [
   },
 ];
 
-export const txPortPrefix = 'tx-';
-export const contentScriptPortPrefix = 'content-';
+export const TX_PORT_PREFIX = 'tx-';
+export const CONTENT_SCRIPT_PORT_PREFIX = 'content-';
+export const TX_INFO_PORT_PREFIX = 'txinfo-';
 
 export const isTxPort = (name: string) => /^tx-[0-9]+$/.test(name);
 export const isContentScriptPort = (name: string) =>
   /^content-[0-9]+$/.test(name);
+export const isTxInfoPort = (name: string) => /^txinfo-[0-9]+$/.test(name);
 
 export const getIdFromTxPort = (name: string) => name.substr(3);
 export const getIdFromContentScriptPort = (name: string) => name.substr(8);

@@ -8,8 +8,13 @@ import TerraLedgerApp, {
   AppInfoResponse,
   VersionResponse,
 } from '@terra-money/ledger-terra-js';
-import { LCDClient, MsgSend, Fee, Tx } from '@terra-money/terra.js';
-import { CreateTxOptions } from '@terra-money/terra.js';
+import {
+  CreateTxOptions,
+  Fee,
+  LCDClient,
+  MsgSend,
+  Tx,
+} from '@terra-money/terra.js';
 import { fixHMR } from 'fix-hmr';
 import React, { useCallback, useState } from 'react';
 import styled from 'styled-components';

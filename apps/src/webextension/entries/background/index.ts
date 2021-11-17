@@ -4,6 +4,7 @@ import {
   getIdFromContentScriptPort,
   getIdFromTxPort,
   isContentScriptPort,
+  isTxInfoPort,
   isTxPort,
 } from '../../env';
 
@@ -33,6 +34,20 @@ browser.runtime.onConnect.addListener((port) => {
         contentScriptPorts.delete(id);
         contentScriptPort.disconnect();
       }
+    };
+
+    port.onMessage.addListener(onMessage);
+    port.onDisconnect.addListener(onDisconnect);
+  } else if (isTxInfoPort(port.name)) {
+    console.log('index.ts..() ???', port.name);
+
+    const onMessage = (msg: unknown) => {
+      console.log('index.ts..onMessage()', msg);
+    };
+
+    const onDisconnect = () => {
+      port.onMessage.removeListener(onMessage);
+      port.onDisconnect.removeListener(onDisconnect);
     };
 
     port.onMessage.addListener(onMessage);

@@ -1,5 +1,6 @@
 import {
   deserializeTx,
+  serializeTx,
   WebConnectorTxFail,
   WebConnectorTxStatus,
   WebConnectorTxUnspecifiedError,
@@ -35,7 +36,11 @@ import { SignTxWithEncryptedWallet } from 'webextension/components/views/SignTxW
 import { SignTxWithLedgerWallet } from 'webextension/components/views/SignTxWithLedgerWallet';
 import { UnknownCase } from 'webextension/components/views/UnknownCase';
 import { useAllowedCommandId } from 'webextension/contexts/commands';
-import { txPortPrefix, WHITELIST_HOSTNAMES } from 'webextension/env';
+import {
+  TX_INFO_PORT_PREFIX,
+  TX_PORT_PREFIX,
+  WHITELIST_HOSTNAMES,
+} from 'webextension/env';
 
 export function TxPopup() {
   // ---------------------------------------------
@@ -70,7 +75,7 @@ export function TxPopup() {
     }
 
     const port = browser.runtime.connect(undefined, {
-      name: txPortPrefix + txRequest.id,
+      name: TX_PORT_PREFIX + txRequest.id,
     });
 
     port.postMessage({
@@ -86,7 +91,7 @@ export function TxPopup() {
     }
 
     const port = browser.runtime.connect(undefined, {
-      name: txPortPrefix + txRequest.id,
+      name: TX_PORT_PREFIX + txRequest.id,
     });
 
     port.postMessage({
@@ -233,7 +238,7 @@ function LedgerWalletTxForm({
   const proceed = useCallback(
     async ({ key, close }: LedgerKeyResponse, resolvedTx: CreateTxOptions) => {
       const port = browser.runtime.connect(undefined, {
-        name: txPortPrefix + txRequest.id,
+        name: TX_PORT_PREFIX + txRequest.id,
       });
 
       executeTxWithLedgerWallet(
@@ -246,6 +251,17 @@ function LedgerWalletTxForm({
           if (result.status === WebConnectorTxStatus.SUCCEED) {
             port.postMessage(result);
             close();
+
+            const txInfoPort = browser.runtime.connect(undefined, {
+              name: TX_INFO_PORT_PREFIX + txRequest.id,
+            });
+
+            txInfoPort.postMessage({
+              ...txRequest.network,
+              txhash: result.payload.txhash,
+            });
+
+            txInfoPort.disconnect();
           } else if (result.status === WebConnectorTxStatus.DENIED) {
             port.postMessage({
               ...result,
@@ -326,8 +342,13 @@ function EncryptedWalletTxForm({
       resolvedTx: CreateTxOptions,
       password: string | null,
     ) => {
+      console.log(
+        'tx.tsx..()',
+        JSON.stringify(serializeTx(resolvedTx), null, 2),
+      );
+
       const port = browser.runtime.connect(undefined, {
-        name: txPortPrefix + txRequest.id,
+        name: TX_PORT_PREFIX + txRequest.id,
       });
 
       let wait: Promise<void>;
@@ -350,6 +371,17 @@ function EncryptedWalletTxForm({
             } else {
               wait = removeSavedPassword(txRequest.terraAddress);
             }
+
+            const txInfoPort = browser.runtime.connect(undefined, {
+              name: TX_INFO_PORT_PREFIX + txRequest.id,
+            });
+
+            txInfoPort.postMessage({
+              ...txRequest.network,
+              txhash: result.payload.txhash,
+            });
+
+            txInfoPort.disconnect();
           } else if (result.status === WebConnectorTxStatus.DENIED) {
             port.postMessage({
               ...result,

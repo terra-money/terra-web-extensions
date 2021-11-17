@@ -1,8 +1,8 @@
-import { useWallet } from '@terra-dev/use-wallet';
 import {
   CW20StorageData,
   observeCW20Storage,
 } from '@terra-dev/web-extension-backend';
+import { useWallet } from '@terra-money/use-wallet';
 import { useEffect, useMemo, useState } from 'react';
 
 export function useCW20Tokens(): Set<string> {

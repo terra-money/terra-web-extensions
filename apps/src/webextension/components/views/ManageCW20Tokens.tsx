@@ -2,7 +2,7 @@ import { CW20TokenDisplayInfo, cw20TokenInfoQuery } from '@libs/app-fns';
 import { useApp } from '@libs/app-provider';
 import { CW20Addr } from '@libs/types';
 import { Button } from '@station/ui';
-import { useWallet } from '@terra-dev/use-wallet';
+import { useWallet } from '@terra-money/use-wallet';
 import React, { useEffect, useState } from 'react';
 import { useTokenIcon } from 'webextension/queries/useTokenIcon';
 import { FormFooter } from '../layouts/FormFooter';

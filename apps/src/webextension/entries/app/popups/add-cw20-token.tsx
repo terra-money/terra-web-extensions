@@ -10,7 +10,7 @@ import { browser } from 'webextension-polyfill-ts';
 import { AlreadyCW20TokensExists } from 'webextension/components/views/AlreadyCW20TokensExists';
 import { ManageCW20Tokens } from 'webextension/components/views/ManageCW20Tokens';
 import { useAllowedCommandId } from 'webextension/contexts/commands';
-import { txPortPrefix } from 'webextension/env';
+import { TX_PORT_PREFIX } from 'webextension/env';
 import { useCW20Tokens } from 'webextension/queries/useCW20Tokens';
 
 export function AddCw20TokenPopup() {
@@ -78,7 +78,7 @@ export function AddCw20TokenPopup() {
     await addCW20Tokens(addTokenQuery.chainID, addTokenQuery.tokenAddrs);
 
     const port = browser.runtime.connect(undefined, {
-      name: txPortPrefix + addTokenQuery.id,
+      name: TX_PORT_PREFIX + addTokenQuery.id,
     });
 
     port.postMessage(
@@ -93,7 +93,7 @@ export function AddCw20TokenPopup() {
 
   const close = useCallback(async () => {
     const port = browser.runtime.connect(undefined, {
-      name: txPortPrefix + addTokenQuery.id,
+      name: TX_PORT_PREFIX + addTokenQuery.id,
     });
 
     const result = await hasCW20Tokens(

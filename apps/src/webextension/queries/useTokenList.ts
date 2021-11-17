@@ -3,8 +3,8 @@ import { useTerraBalancesWithTokenInfoQuery } from '@libs/app-provider';
 import { CW20Addr, NATIVE_TOKEN_ASSET_INFOS, terraswap } from '@libs/types';
 import big from 'big.js';
 import { useMemo } from 'react';
-import { useTokenIcon } from './useTokenIcon';
 import { useCW20Tokens } from './useCW20Tokens';
+import { useTokenIcon } from './useTokenIcon';
 
 export type TokenListItem = TerraBalancesWithTokenInfo['tokens'][number] & {
   icon: string | undefined;

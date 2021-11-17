@@ -6,7 +6,7 @@ import {
 import { createElement } from 'react';
 import { render } from 'react-dom';
 import { browser } from 'webextension-polyfill-ts';
-import { contentScriptPortPrefix } from 'webextension/env';
+import { CONTENT_SCRIPT_PORT_PREFIX } from 'webextension/env';
 import { LOGO, MODAL_WIDTH } from '../env';
 
 export function startConnect(id: string, hostname: string): Promise<boolean> {
@@ -16,7 +16,7 @@ export function startConnect(id: string, hostname: string): Promise<boolean> {
     const modalContainer = window.document.createElement('div');
 
     const port = browser.runtime.connect(undefined, {
-      name: contentScriptPortPrefix + id,
+      name: CONTENT_SCRIPT_PORT_PREFIX + id,
     });
 
     const endConnect = () => {

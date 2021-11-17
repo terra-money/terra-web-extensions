@@ -6,7 +6,7 @@ import {
   TxFailed,
   TxUnspecifiedError,
   UserDenied,
-} from '@terra-dev/wallet-types';
+} from '@terra-money/use-wallet';
 import { fixHMR } from 'fix-hmr';
 import React, { ReactNode } from 'react';
 import { MdErrorOutline } from 'react-icons/md';

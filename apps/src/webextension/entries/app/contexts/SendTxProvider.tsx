@@ -1,18 +1,5 @@
 import { cw20, Token } from '@libs/types';
 import {
-  ConnectType,
-  Wallet,
-  WalletContext,
-  WalletStatus,
-} from '@terra-dev/use-wallet';
-import {
-  CreateTxFailed,
-  TxFailed,
-  TxResult,
-  TxUnspecifiedError,
-  UserDenied,
-} from '@terra-dev/wallet-types';
-import {
   WebConnectorCreateTxFailed,
   WebConnectorLedgerError,
   WebConnectorNetworkInfo,
@@ -28,6 +15,17 @@ import {
   LedgerWallet,
 } from '@terra-dev/web-extension-backend';
 import { CreateTxOptions } from '@terra-money/terra.js';
+import {
+  ConnectType,
+  CreateTxFailed,
+  TxFailed,
+  TxResult,
+  TxUnspecifiedError,
+  UserDenied,
+  Wallet,
+  WalletContext,
+  WalletStatus,
+} from '@terra-money/use-wallet';
 import React, { ReactNode, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { SubLayout } from 'webextension/components/layouts/SubLayout';
@@ -53,6 +51,9 @@ export function SendTxProvider({
     return {
       availableConnectTypes: [ConnectType.WEB_CONNECT],
       availableInstallTypes: [],
+      availableConnections: [
+        { type: ConnectType.WEB_CONNECT, name: 'extension-internal', icon: '' },
+      ],
       status: WalletStatus.WALLET_CONNECTED,
       network,
       wallets: [

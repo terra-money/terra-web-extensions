@@ -1,8 +1,8 @@
 import { cw20TokenInfoQuery, TokenDisplayInfo } from '@libs/app-fns';
 import { QueryClient } from '@libs/query-client';
 import { CW20Addr } from '@libs/types';
-import { NetworkInfo } from '@terra-dev/wallet-types';
 import { AccAddress } from '@terra-money/terra.js';
+import { NetworkInfo } from '@terra-money/use-wallet';
 import { useEffect, useState } from 'react';
 import { useTokenDisplayInfosQuery } from '../queries/terra/tokenDisplayInfos';
 

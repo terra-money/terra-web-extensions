@@ -1,6 +1,6 @@
 import { Meta } from '@storybook/react';
 import { WebConnectorLedgerError } from '@terra-dev/web-connector-interface';
-import { MsgExecuteContract, Fee } from '@terra-money/terra.js';
+import { Fee, MsgExecuteContract } from '@terra-money/terra.js';
 import React from 'react';
 import { SignTxWithLedgerWallet } from '../SignTxWithLedgerWallet';
 

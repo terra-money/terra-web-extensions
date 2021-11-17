@@ -1,13 +1,13 @@
 import { IFramePoppingModal } from '@station/ui';
 import { WebConnectorNetworkInfo } from '@terra-dev/web-connector-interface';
-import { createElement } from 'react';
-import { render } from 'react-dom';
-import { browser } from 'webextension-polyfill-ts';
 import {
   deregisterAllowCommandId,
   registerAllowCommandId,
 } from '@terra-dev/web-extension-backend';
-import { contentScriptPortPrefix } from 'webextension/env';
+import { createElement } from 'react';
+import { render } from 'react-dom';
+import { browser } from 'webextension-polyfill-ts';
+import { CONTENT_SCRIPT_PORT_PREFIX } from 'webextension/env';
 import { LOGO, MODAL_WIDTH } from '../env';
 
 export function startAddNetwork(
@@ -20,7 +20,7 @@ export function startAddNetwork(
     const modalContainer = window.document.createElement('div');
 
     const port = browser.runtime.connect(undefined, {
-      name: contentScriptPortPrefix + id,
+      name: CONTENT_SCRIPT_PORT_PREFIX + id,
     });
 
     const endConnect = () => {

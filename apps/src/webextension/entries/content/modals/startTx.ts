@@ -9,8 +9,10 @@ import {
   WebConnectorTxSucceed,
 } from '@terra-dev/web-connector-interface';
 import {
+  deregisterAllowCommandId,
   findWallet,
   readSelectedNetwork,
+  registerAllowCommandId,
   toURLSearchParams,
   TxRequest,
 } from '@terra-dev/web-extension-backend';
@@ -18,11 +20,7 @@ import { createElement } from 'react';
 import { render } from 'react-dom';
 import { Observable } from 'rxjs';
 import { browser } from 'webextension-polyfill-ts';
-import {
-  deregisterAllowCommandId,
-  registerAllowCommandId,
-} from '@terra-dev/web-extension-backend';
-import { contentScriptPortPrefix } from 'webextension/env';
+import { CONTENT_SCRIPT_PORT_PREFIX } from 'webextension/env';
 import { getDefaultNetworks } from 'webextension/queries/useDefaultNetworks';
 import { LOGO, MODAL_WIDTH } from '../env';
 
@@ -57,7 +55,7 @@ export function startTx(
           : null;
 
         const port = browser.runtime.connect(undefined, {
-          name: contentScriptPortPrefix + id,
+          name: CONTENT_SCRIPT_PORT_PREFIX + id,
         });
 
         // do not call before latest subscriber.next()

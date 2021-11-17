@@ -4,7 +4,7 @@ import {
   createWallet,
   encryptWallet,
 } from '@terra-dev/web-extension-backend';
-import { MsgExecuteContract, Fee } from '@terra-money/terra.js';
+import { Fee, MsgExecuteContract } from '@terra-money/terra.js';
 import React from 'react';
 import { SignTxWithEncryptedWallet } from '../SignTxWithEncryptedWallet';
 import { PopupStoryContainer } from './components/PopupStoryContainer';

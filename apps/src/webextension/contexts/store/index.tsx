@@ -1,12 +1,12 @@
+import { WebConnectorNetworkInfo } from '@terra-dev/web-connector-interface';
+import { NetworksData, WalletsData } from '@terra-dev/web-extension-backend';
+import { CreateTxOptions } from '@terra-money/terra.js';
 import {
   ConnectType,
   Wallet,
   WalletContext,
   WalletStatus,
-} from '@terra-dev/use-wallet';
-import { WebConnectorNetworkInfo } from '@terra-dev/web-connector-interface';
-import { NetworksData, WalletsData } from '@terra-dev/web-extension-backend';
-import { CreateTxOptions } from '@terra-money/terra.js';
+} from '@terra-money/use-wallet';
 import React, {
   Consumer,
   Context,
@@ -48,6 +48,9 @@ export function StoreProvider({ children }: StoreProviderProps) {
     return {
       availableConnectTypes: [ConnectType.WEB_CONNECT],
       availableInstallTypes: [],
+      availableConnections: [
+        { type: ConnectType.WEB_CONNECT, name: 'extension-internal', icon: '' },
+      ],
       status: !!walletsData.focusedWallet
         ? WalletStatus.WALLET_CONNECTED
         : WalletStatus.WALLET_NOT_CONNECTED,

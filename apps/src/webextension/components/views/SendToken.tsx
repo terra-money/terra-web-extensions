@@ -10,7 +10,7 @@ import {
   Message,
   SingleLineFormContainer,
 } from '@station/ui';
-import { useConnectedWallet } from '@terra-dev/use-wallet';
+import { useConnectedWallet } from '@terra-money/use-wallet';
 import big, { BigSource } from 'big.js';
 import React, { ChangeEvent, useCallback, useMemo } from 'react';
 import { Observable } from 'rxjs';

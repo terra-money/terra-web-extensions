@@ -1,6 +1,6 @@
 import { fixHMR } from 'fix-hmr';
-import styled from 'styled-components';
 import React, { DetailedHTMLProps, HTMLAttributes } from 'react';
+import styled from 'styled-components';
 
 export interface EmptyWalletCardProps
   extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> {}

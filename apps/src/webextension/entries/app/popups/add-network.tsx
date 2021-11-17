@@ -6,7 +6,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { browser } from 'webextension-polyfill-ts';
 import { useAllowedCommandId } from 'webextension/contexts/commands';
-import { txPortPrefix } from 'webextension/env';
+import { TX_PORT_PREFIX } from 'webextension/env';
 import { getDefaultNetworks } from 'webextension/queries/useDefaultNetworks';
 
 export function AddNetworkPopup() {
@@ -61,7 +61,7 @@ export function AddNetworkPopup() {
     });
 
     const port = browser.runtime.connect(undefined, {
-      name: txPortPrefix + addNetworkQuery.id,
+      name: TX_PORT_PREFIX + addNetworkQuery.id,
     });
 
     port.postMessage(true);
@@ -71,7 +71,7 @@ export function AddNetworkPopup() {
 
   const close = useCallback(async () => {
     const port = browser.runtime.connect(undefined, {
-      name: txPortPrefix + addNetworkQuery.id,
+      name: TX_PORT_PREFIX + addNetworkQuery.id,
     });
 
     port.postMessage(false);

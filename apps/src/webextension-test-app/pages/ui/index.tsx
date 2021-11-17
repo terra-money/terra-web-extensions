@@ -1,6 +1,6 @@
 import { fixHMR } from 'fix-hmr';
-import styled from 'styled-components';
 import React from 'react';
+import styled from 'styled-components';
 
 export interface UIPreviewProps {
   className?: string;

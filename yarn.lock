@@ -4776,27 +4776,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@terra-dev/use-wallet@npm:^2.4.0-alpha.3":
-  version: 2.4.0-alpha.3
-  resolution: "@terra-dev/use-wallet@npm:2.4.0-alpha.3"
-  dependencies:
-    "@terra-dev/wallet-types": ^2.4.0-alpha.3
-  peerDependencies:
-    "@terra-money/terra.js": ^2.1.19
-    react: ^17.0.0
-  checksum: e7fda29b1dd26226af41497fb4e3498f284f4fca5e641a978062a43f294c43291e579d3714ce1b2c694f35ffcd234c155b91915bc6b61055762255f34994f3ae
-  languageName: node
-  linkType: hard
-
-"@terra-dev/wallet-types@npm:^2.4.0-alpha.3":
-  version: 2.4.0-alpha.3
-  resolution: "@terra-dev/wallet-types@npm:2.4.0-alpha.3"
-  peerDependencies:
-    "@terra-money/terra.js": ^2.1.19
-  checksum: 6bb355dac3c6cc525bb1ea54e54587bcf5526fda6c8f37cae7b9d586ae5fdff9f8c3ac4a9747a8ee1e97464dc35ecd9843501b892314daacd2600de35ff2e577
-  languageName: node
-  linkType: hard
-
 "@terra-money/key-utils@npm:^1.0.2":
   version: 1.0.2
   resolution: "@terra-money/key-utils@npm:1.0.2"
@@ -4841,25 +4820,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@terra-money/terra.js@npm:2.1.19":
-  version: 2.1.19
-  resolution: "@terra-money/terra.js@npm:2.1.19"
+"@terra-money/terra.js@npm:3.0.0":
+  version: 3.0.0
+  resolution: "@terra-money/terra.js@npm:3.0.0"
   dependencies:
     "@terra-money/terra.proto": ^0.1.7
-    axios: ^0.21.1
+    axios: ^0.24.0
     bech32: ^2.0.0
     bip32: ^2.0.6
     bip39: ^3.0.3
     bufferutil: ^4.0.3
     decimal.js: ^10.2.1
     jscrypto: ^1.0.1
-    long: ^4.0.0
     readable-stream: ^3.6.0
     secp256k1: ^4.0.2
     tmp: ^0.2.1
     utf-8-validate: ^5.0.5
-    ws: ^7.4.2
-  checksum: 81123b719cdc11b424ff9ca32f123de85f513d7377de338e86f3a662f181dcd7e0f75c132e6071102e1dcaac7f00de9ff40554801d4fb783100127ea4b016c7a
+    ws: ^7.5.5
+  checksum: a42849835f767da1053a1492c1c2c1b516e61e1c030ad968074d293ed7472194681423a332616b0380233dbd0a098537e9c5f71e9760eadbd8e8cfe7bbbf8adb
   languageName: node
   linkType: hard
 
@@ -4871,6 +4849,16 @@ __metadata:
     long: ^4.0.0
     protobufjs: ~6.11.2
   checksum: c6ad15f559008e5159137aea6fa0b3edd8699b2638cfbe7361c3b53a523bcf7b1f92e2977f4f022532f61a5f57a74bdd3e3db7d3eb5b97df743106aa40764bd0
+  languageName: node
+  linkType: hard
+
+"@terra-money/use-wallet@npm:^3.0.0-alpha.1":
+  version: 3.0.0-alpha.1
+  resolution: "@terra-money/use-wallet@npm:3.0.0-alpha.1"
+  peerDependencies:
+    "@terra-money/terra.js": ^3.0.0
+    react: ^17.0.0
+  checksum: 90083f54a28423cac4365bbc412345364734ae73031f5531d3dd63a698f830cc54ae8495fc4cc836f713f56ff3b6cef1692ea8b9186a74072395bc5af3140b6f
   languageName: node
   linkType: hard
 
@@ -6685,12 +6673,12 @@ __metadata:
     "@storybook/addons": ^6.3.12
     "@storybook/preset-create-react-app": ^3.2.0
     "@storybook/react": ^6.3.12
-    "@terra-dev/use-wallet": ^2.4.0-alpha.3
     "@terra-money/key-utils": ^1.0.2
     "@terra-money/ledger-terra-js": ^1.1.0
     "@terra-money/msg-reader": ^2.1.2
     "@terra-money/react-base-components": ^1.0.0
-    "@terra-money/terra.js": ^2.1.19
+    "@terra-money/terra.js": ^3.0.0
+    "@terra-money/use-wallet": ^3.0.0-alpha.1
     "@testing-library/jest-dom": ^5.15.0
     "@testing-library/react-hooks": ^7.0.2
     "@types/big.js": ^6.1.2
@@ -7130,12 +7118,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^0.21.1":
-  version: 0.21.1
-  resolution: "axios@npm:0.21.1"
+"axios@npm:^0.24.0":
+  version: 0.24.0
+  resolution: "axios@npm:0.24.0"
   dependencies:
-    follow-redirects: ^1.10.0
-  checksum: c87915fa0b18c15c63350112b6b3563a3e2ae524d7707de0a73d2e065e0d30c5d3da8563037bc29d4cc1b7424b5a350cb7274fa52525c6c04a615fe561c6ab11
+    follow-redirects: ^1.14.4
+  checksum: 468cf496c08a6aadfb7e699bebdac02851e3043d4e7d282350804ea8900e30d368daa6e3cd4ab83b8ddb5a3b1e17a5a21ada13fc9cebd27b74828f47a4236316
   languageName: node
   linkType: hard
 
@@ -11913,13 +11901,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"follow-redirects@npm:^1.0.0, follow-redirects@npm:^1.10.0":
-  version: 1.14.4
-  resolution: "follow-redirects@npm:1.14.4"
+"follow-redirects@npm:^1.0.0, follow-redirects@npm:^1.14.4":
+  version: 1.14.5
+  resolution: "follow-redirects@npm:1.14.5"
   peerDependenciesMeta:
     debug:
       optional: true
-  checksum: d4ce74cf5c6f363168b97e706b914eb9ffb6bf4d4c6d8f8330b93088d9b90e566611ddbcf0e42c8ed5fd17598dfeda1d19230d3e9d6d6c6b4d1c10ec3a0b99be
+  checksum: f004a76b2ee3a849772c2816e30928253bf47537b0f00184d89f4966413add96a228a4d96ca8c702bc045a683c52c2ba41545c915cc1a5e33bf8fd9d07b59aee
   languageName: node
   linkType: hard
 
@@ -19612,25 +19600,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"react-query@npm:^3.27.0":
-  version: 3.27.0
-  resolution: "react-query@npm:3.27.0"
-  dependencies:
-    "@babel/runtime": ^7.5.5
-    broadcast-channel: ^3.4.1
-    match-sorter: ^6.0.2
-  peerDependencies:
-    react: ^16.8.0 || ^17.0.0
-  peerDependenciesMeta:
-    react-dom:
-      optional: true
-    react-native:
-      optional: true
-  checksum: a6be975ff938fb464067e56557a6f1b4e39389033aae7feb48906736d14615b3a8faa05d7681a3e8504202c21f940c5998c50750ac8abee4508178a2c87b915a
-  languageName: node
-  linkType: hard
-
-"react-query@npm:^3.32.1":
+"react-query@npm:^3.27.0, react-query@npm:^3.32.1":
   version: 3.32.3
   resolution: "react-query@npm:3.32.3"
   dependencies:
@@ -24619,7 +24589,7 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"ws@npm:^7.3.1, ws@npm:^7.4.2, ws@npm:^7.4.4":
+"ws@npm:^7.3.1, ws@npm:^7.4.4, ws@npm:^7.5.5":
   version: 7.5.5
   resolution: "ws@npm:7.5.5"
   peerDependencies:

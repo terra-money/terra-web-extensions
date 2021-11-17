@@ -11,7 +11,7 @@ import { browser } from 'webextension-polyfill-ts';
 import { ApproveHostname } from 'webextension/components/views/ApproveHostname';
 import { ViewCenterLayout } from 'webextension/components/views/components/ViewCenterLayout';
 import { useAllowedCommandId } from 'webextension/contexts/commands';
-import { txPortPrefix } from 'webextension/env';
+import { TX_PORT_PREFIX } from 'webextension/env';
 
 export function ConnectPopup() {
   // ---------------------------------------------
@@ -49,7 +49,7 @@ export function ConnectPopup() {
     await approveHostnames(connectInfo.hostname);
 
     const port = browser.runtime.connect(undefined, {
-      name: txPortPrefix + connectInfo.id,
+      name: TX_PORT_PREFIX + connectInfo.id,
     });
 
     port.postMessage(true);
@@ -59,7 +59,7 @@ export function ConnectPopup() {
 
   const deny = useCallback(() => {
     const port = browser.runtime.connect(undefined, {
-      name: txPortPrefix + connectInfo.id,
+      name: TX_PORT_PREFIX + connectInfo.id,
     });
 
     port.postMessage(false);

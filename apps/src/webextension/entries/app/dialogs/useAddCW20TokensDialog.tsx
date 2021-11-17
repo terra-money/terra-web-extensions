@@ -1,10 +1,10 @@
 import { DialogProps, OpenDialog, useDialog } from '@libs/use-dialog';
 import { Modal } from '@station/ui';
-import { useWallet } from '@terra-dev/use-wallet';
 import {
   addCW20Tokens,
   removeCW20Tokens,
 } from '@terra-dev/web-extension-backend';
+import { useWallet } from '@terra-money/use-wallet';
 import React, { ReactNode, useCallback } from 'react';
 import styled from 'styled-components';
 import { DialogLayout } from 'webextension/components/layouts/DialogLayout';

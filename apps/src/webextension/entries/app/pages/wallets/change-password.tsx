@@ -1,5 +1,5 @@
-import { useWallet } from '@terra-dev/use-wallet';
 import { updateWallet } from '@terra-dev/web-extension-backend';
+import { useWallet } from '@terra-money/use-wallet';
 import React, { useCallback } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { SubLayout } from 'webextension/components/layouts/SubLayout';
