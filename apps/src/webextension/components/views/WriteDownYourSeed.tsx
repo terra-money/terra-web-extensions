@@ -1,14 +1,10 @@
-import {
-  Checkbox,
-  CheckboxStylesNames,
-  Tooltip,
-  TooltipStylesNames,
-} from '@mantine/core';
+import { Checkbox, CheckboxStylesNames, Tooltip } from '@mantine/core';
 import {
   Button,
   createMantineStyles,
   Message,
   SingleLineFormContainer,
+  useTooltipStyles,
 } from '@station/ui';
 import { MnemonicKey } from '@terra-money/terra.js';
 import React, { useState } from 'react';
@@ -114,22 +110,5 @@ const useCheckboxStyles = createMantineStyles<CheckboxStylesNames>({
   label: {
     paddingLeft: 8,
     color: 'var(--color-content-text)',
-  },
-});
-
-const useTooltipStyles = createMantineStyles<TooltipStylesNames>({
-  root: {
-    fontSize: 0,
-    lineHeight: 1,
-  },
-  body: {
-    backgroundColor: 'var(--color-content-text)',
-    color: 'var(--color-content-background)',
-    fontSize: 12,
-    lineHeight: 1.5,
-    fontWeight: 500,
-  },
-  arrow: {
-    backgroundColor: 'var(--color-content-text)',
   },
 });

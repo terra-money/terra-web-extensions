@@ -1,5 +1,6 @@
 import { formatUToken } from '@libs/formatter';
 import { Token, u } from '@libs/types';
+import { TimeDistance } from '@station/ui';
 import { WebConnectorNetworkInfo } from '@terra-dev/web-connector-interface';
 import { CreateTxOptions } from '@terra-money/terra.js';
 import { fixHMR } from 'fix-hmr';
@@ -37,7 +38,9 @@ function Component({
       )}
       <li>
         <b>Timestamp</b>
-        <span>{date.toLocaleString()}</span>
+        <span>
+          <TimeDistance date={date} />
+        </span>
       </li>
       <li>
         <b>Fee</b>
