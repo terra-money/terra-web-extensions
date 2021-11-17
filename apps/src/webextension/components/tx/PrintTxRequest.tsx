@@ -2,13 +2,14 @@ import { formatUToken } from '@libs/formatter';
 import { Token, u } from '@libs/types';
 import { TimeDistance } from '@station/ui';
 import { WebConnectorNetworkInfo } from '@terra-dev/web-connector-interface';
-import { CreateTxOptions } from '@terra-money/terra.js';
+import { Coins, CreateTxOptions } from '@terra-money/terra.js';
 import { fixHMR } from 'fix-hmr';
 import React from 'react';
 import styled from 'styled-components';
 
 export interface PrintTxRequestProps {
   className?: string;
+  isEstimatedFee: boolean;
   network: WebConnectorNetworkInfo;
   tx: CreateTxOptions;
   hostname?: string;
@@ -17,6 +18,7 @@ export interface PrintTxRequestProps {
 
 function Component({
   className,
+  isEstimatedFee,
   network,
   tx,
   hostname,
@@ -42,22 +44,33 @@ function Component({
           <TimeDistance date={date} />
         </span>
       </li>
-      <li>
-        <b>Fee</b>
-        <span>
-          {tx.fee &&
-            tx.fee.amount
-              .toArray()
-              .map((coin) => {
-                return (
-                  formatUToken(coin.amount.toString() as u<Token>) +
-                  coin.denom.substr(1).toUpperCase()
-                );
-              })
-              .join(' + ')}
-        </span>
-      </li>
+      {tx.fee && (
+        <li>
+          <b>{isEstimatedFee ? 'Estimated Fee' : 'Fee'}</b>
+          <span>
+            <PrintCoins coins={tx.fee.amount} />
+          </span>
+        </li>
+      )}
     </ul>
+  );
+}
+
+function PrintCoins({ coins }: { coins: Coins }) {
+  return (
+    <>
+      {coins.toArray().map((coin, i) => {
+        return (
+          <span key={'coin' + i}>
+            {i !== 0 ? ' + ' : ''}
+            {formatUToken(coin.amount.toString() as u<Token>)}{' '}
+            <span style={{ fontSize: '0.8em' }}>
+              {coin.denom.substr(1).toUpperCase()}
+            </span>
+          </span>
+        );
+      })}
+    </>
   );
 }
 

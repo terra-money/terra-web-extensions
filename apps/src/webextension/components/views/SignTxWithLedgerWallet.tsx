@@ -17,7 +17,10 @@ import { FormMain } from 'webextension/components/layouts/FormMain';
 import { LedgerGuide } from 'webextension/components/tx/LedgerGuide';
 import { MsgsPrint } from 'webextension/components/tx/MsgsPrint';
 import { PrintTxRequest } from 'webextension/components/tx/PrintTxRequest';
-import { TxFee } from 'webextension/components/views/SignTxWithEncryptedWallet';
+import {
+  TxFee,
+  useFeeEstimate,
+} from 'webextension/components/views/SignTxWithEncryptedWallet';
 
 export interface SignTxWithLedgerWalletProps {
   className?: string;
@@ -61,6 +64,8 @@ export function SignTxWithLedgerWallet({
       </ul>
     </LedgerGuide>
   ));
+
+  useFeeEstimate(_originTx, wallet.terraAddress, network, setTx);
 
   const proceed = useCallback(async () => {
     try {
@@ -107,6 +112,7 @@ export function SignTxWithLedgerWallet({
       <FormMain>
         <PrintTxRequest
           className="wallets-actions"
+          isEstimatedFee={!_originTx.fee}
           network={network}
           tx={_originTx}
           hostname={hostname}

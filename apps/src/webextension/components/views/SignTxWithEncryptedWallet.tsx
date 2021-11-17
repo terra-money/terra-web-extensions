@@ -9,7 +9,7 @@ import {
   EncryptedWallet,
   Wallet,
 } from '@terra-dev/web-extension-backend';
-import { CreateTxOptions } from '@terra-money/terra.js';
+import { CreateTxOptions, LCDClient } from '@terra-money/terra.js';
 import React, {
   ChangeEvent,
   useCallback,
@@ -63,12 +63,7 @@ export function TxFee({
   }, [originTx.fee]);
 
   if (viewType === 'read') {
-    return (
-      <ul>
-        <li>TODO now only implemented single fee</li>
-        <li>type: readonly</li>
-      </ul>
-    );
+    return null;
   }
 
   return (
@@ -81,6 +76,31 @@ export function TxFee({
       onChange={onChange}
     />
   );
+}
+
+export function useFeeEstimate(
+  tx: CreateTxOptions,
+  terraAddress: string,
+  network: WebConnectorNetworkInfo,
+  update: (fn: (prev: CreateTxOptions) => CreateTxOptions) => void,
+) {
+  useEffect(() => {
+    if (!tx.fee) {
+      const lcd = new LCDClient({
+        chainID: network.chainID,
+        URL: network.lcd,
+      });
+
+      lcd.tx.create([{ address: terraAddress }], tx).then(({ auth_info }) => {
+        update((prev) => {
+          return {
+            ...prev,
+            fee: auth_info.fee,
+          };
+        });
+      });
+    }
+  }, [network.chainID, network.lcd, terraAddress, tx, update]);
 }
 
 export function SignTxWithEncryptedWallet({
@@ -114,6 +134,8 @@ export function SignTxWithEncryptedWallet({
     }
   }, [savedPassword]);
 
+  useFeeEstimate(_originTx, wallet.terraAddress, network, setTx);
+
   // ---------------------------------------------
   // callbacks
   // ---------------------------------------------
@@ -146,8 +168,9 @@ export function SignTxWithEncryptedWallet({
       <FormMain>
         <PrintTxRequest
           className="wallets-actions"
+          isEstimatedFee={!_originTx.fee}
           network={network}
-          tx={_originTx}
+          tx={tx}
           hostname={hostname}
           date={date}
         />
