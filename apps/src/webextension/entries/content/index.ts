@@ -1,14 +1,16 @@
 import { startAddCW20Tokens } from './modals/startAddCW20Tokens';
 import { startAddNetwork } from './modals/startAddNetwork';
 import { startConnect } from './modals/startConnect';
-import { startTx } from './modals/startTx';
+import { startPost } from './modals/startPost';
+import { startSign } from './modals/startSign';
 import {
   ContentScriptOptions,
   startWebExtensionContentScript,
 } from './startWebExtensionContentScript';
 
 const contentScriptOptions: ContentScriptOptions = {
-  startTx,
+  startPost,
+  startSign,
   startConnect,
   startAddCW20Tokens,
   startAddNetwork,

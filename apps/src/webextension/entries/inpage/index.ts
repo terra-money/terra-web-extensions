@@ -4,6 +4,8 @@ import {
   TerraWebConnector,
   TerraWebConnectorInfo,
   WebConnectorNetworkInfo,
+  WebConnectorPostPayload,
+  WebConnectorSignPayload,
   WebConnectorStates,
   WebConnectorStatus,
   WebConnectorStatusType,
@@ -25,7 +27,8 @@ import {
 import {
   AddCW20Tokens,
   AddNetwork,
-  ExecuteExtensionTx,
+  ExecuteExtensionPost,
+  ExecuteExtensionSign,
   FromContentScriptToWebMessage,
   FromWebToContentScriptMessage,
   HasCW20Tokens,
@@ -143,8 +146,75 @@ class WebExtensionController implements TerraWebConnector {
   post = (
     terraAddress: string,
     tx: CreateTxOptions,
-  ): Observable<WebConnectorTxResult> => {
-    return new Observable<WebConnectorTxProgress | WebConnectorTxSucceed>(
+  ): Observable<WebConnectorTxResult<WebConnectorPostPayload>> => {
+    return new Observable<
+      WebConnectorTxProgress | WebConnectorTxSucceed<WebConnectorPostPayload>
+    >((subscriber) => {
+      subscriber.next({
+        status: WebConnectorTxStatus.PROGRESS,
+      });
+
+      const id = Date.now();
+
+      const msg: ExecuteExtensionPost = {
+        type: FromWebToContentScriptMessage.EXECUTE_POST,
+        id,
+        terraAddress,
+        payload: serializeTx(tx),
+      };
+
+      this.hostWindow?.postMessage(msg, '*');
+
+      const callback = (event: MessageEvent) => {
+        if (
+          !isWebExtensionMessage(event.data) ||
+          event.data.type !== FromContentScriptToWebMessage.POST_RESPONSE ||
+          event.data.id !== id
+        ) {
+          return;
+        }
+
+        if (event.data.payload.status === WebConnectorTxStatus.PROGRESS) {
+          subscriber.next(event.data.payload);
+        } else if (
+          event.data.payload.status === WebConnectorTxStatus.DENIED ||
+          event.data.payload.status === WebConnectorTxStatus.FAIL ||
+          event.data.payload.status === WebConnectorTxStatus.SUCCEED
+        ) {
+          switch (event.data.payload.status) {
+            case WebConnectorTxStatus.DENIED:
+              subscriber.error(new WebConnectorUserDenied());
+              break;
+            case WebConnectorTxStatus.FAIL:
+              subscriber.error(
+                event.data.payload.error instanceof Error
+                  ? event.data.payload.error
+                  : createTxErrorFromJson(event.data.payload.error),
+              );
+              break;
+            case WebConnectorTxStatus.SUCCEED:
+              subscriber.next(event.data.payload);
+              subscriber.complete();
+              break;
+          }
+
+          this.hostWindow?.removeEventListener('message', callback);
+        }
+      };
+
+      this.hostWindow?.addEventListener('message', callback);
+
+      return () => {
+        this.hostWindow?.removeEventListener('message', callback);
+      };
+    });
+  };
+
+  sign = (
+    terraAddress: string,
+    tx: CreateTxOptions,
+  ): Observable<WebConnectorTxResult<WebConnectorSignPayload>> => {
+    return new Observable<WebConnectorTxResult<WebConnectorSignPayload>>(
       (subscriber) => {
         subscriber.next({
           status: WebConnectorTxStatus.PROGRESS,
@@ -152,8 +222,8 @@ class WebExtensionController implements TerraWebConnector {
 
         const id = Date.now();
 
-        const msg: ExecuteExtensionTx = {
-          type: FromWebToContentScriptMessage.EXECUTE_TX,
+        const msg: ExecuteExtensionSign = {
+          type: FromWebToContentScriptMessage.EXECUTE_SIGN,
           id,
           terraAddress,
           payload: serializeTx(tx),
@@ -164,7 +234,7 @@ class WebExtensionController implements TerraWebConnector {
         const callback = (event: MessageEvent) => {
           if (
             !isWebExtensionMessage(event.data) ||
-            event.data.type !== FromContentScriptToWebMessage.TX_RESPONSE ||
+            event.data.type !== FromContentScriptToWebMessage.SIGN_RESPONSE ||
             event.data.id !== id
           ) {
             return;

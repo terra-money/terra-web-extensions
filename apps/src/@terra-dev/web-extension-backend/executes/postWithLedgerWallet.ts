@@ -3,6 +3,7 @@ import {
   WebConnectorCreateTxFailed,
   WebConnectorLedgerError,
   WebConnectorNetworkInfo,
+  WebConnectorPostPayload,
   WebConnectorTxDenied,
   WebConnectorTxFail,
   WebConnectorTxFailed,
@@ -11,8 +12,7 @@ import {
   WebConnectorTxSucceed,
   WebConnectorTxUnspecifiedError,
 } from '@terra-dev/web-connector-interface';
-import { LedgerKey } from '@terra-dev/web-extension-backend/interfaces';
-import { LedgerWallet } from '@terra-dev/web-extension-backend/models';
+import { LedgerKey, LedgerWallet } from '@terra-dev/web-extension-backend';
 import {
   CreateTxOptions,
   isTxError,
@@ -21,30 +21,25 @@ import {
 } from '@terra-money/terra.js';
 import { Observable } from 'rxjs';
 
-export function executeTxWithLedgerWallet(
+export function postWithLedgerWallet(
   wallet: LedgerWallet,
   network: WebConnectorNetworkInfo,
   tx: CreateTxOptions,
   key: LedgerKey,
-): Observable<
-  | WebConnectorTxProgress
-  | WebConnectorTxDenied
-  | WebConnectorTxSucceed
-  | WebConnectorTxFail
-> {
-  const lcd = new LCDClient({
-    chainID: network.chainID,
-    URL: network.lcd,
-    gasPrices: tx.gasPrices,
-    gasAdjustment: tx.gasAdjustment,
-  });
-
+) {
   return new Observable<
     | WebConnectorTxProgress
     | WebConnectorTxDenied
-    | WebConnectorTxSucceed
+    | WebConnectorTxSucceed<WebConnectorPostPayload>
     | WebConnectorTxFail
   >((subscriber) => {
+    const lcd = new LCDClient({
+      chainID: network.chainID,
+      URL: network.lcd,
+      gasPrices: tx.gasPrices,
+      gasAdjustment: tx.gasAdjustment,
+    });
+
     lcd
       .wallet(key)
       .createAndSignTx({

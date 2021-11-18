@@ -1,6 +1,8 @@
 import {
   SerializedCreateTxOptions,
   WebConnectorNetworkInfo,
+  WebConnectorPostPayload,
+  WebConnectorSignPayload,
   WebConnectorStates,
   WebConnectorTxResult,
   WebConnectorTxStatus,
@@ -27,17 +29,23 @@ import {
   WebExtensionAddNetworkResponse,
   WebExtensionHasCW20TokensResponse,
   WebExtensionHasNetworkResponse,
+  WebExtensionPostResponse,
+  WebExtensionSignResponse,
   WebExtensionStatesUpdated,
-  WebExtensionTxResponse,
 } from '../../models/WebExtensionMessage';
 import { getDefaultNetworks } from '../../queries/useDefaultNetworks';
 
 export interface ContentScriptOptions {
-  startTx: (
+  startPost: (
     id: string,
     terraAddress: string,
     tx: SerializedCreateTxOptions,
-  ) => Observable<WebConnectorTxResult>;
+  ) => Observable<WebConnectorTxResult<WebConnectorPostPayload>>;
+  startSign: (
+    id: string,
+    terraAddress: string,
+    tx: SerializedCreateTxOptions,
+  ) => Observable<WebConnectorTxResult<WebConnectorSignPayload>>;
   startConnect: (id: string, hostname: string) => Promise<boolean>;
   startAddCW20Tokens: (
     id: string,
@@ -53,7 +61,8 @@ export interface ContentScriptOptions {
 const CONNECT_NAME = 'Terra Station';
 
 export function startWebExtensionContentScript({
-  startTx,
+  startPost,
+  startSign,
   startConnect,
   startAddCW20Tokens,
   startAddNetwork,
@@ -225,7 +234,12 @@ export function startWebExtensionContentScript({
       type: 'post';
     } & SerializedCreateTxOptions;
 
-    pageStream.on('data', async (data: Info | Connect | Post) => {
+    type Sign = {
+      id: number;
+      type: 'sign';
+    } & SerializedCreateTxOptions;
+
+    pageStream.on('data', async (data: Info | Connect | Post | Sign) => {
       switch (data.type) {
         // ---------------------------------------------
         // info
@@ -292,7 +306,7 @@ export function startWebExtensionContentScript({
           resolveStates((states) => {
             if (states.wallets.length > 0) {
               const focusedWallet = getFocusedWallet(states);
-              startTx(
+              startPost(
                 data.id.toString(),
                 focusedWallet.terraAddress,
                 data,
@@ -355,7 +369,75 @@ export function startWebExtensionContentScript({
           });
           break;
         // ---------------------------------------------
-        // TODO implement sign command
+        // sign
+        // ---------------------------------------------
+        case 'sign':
+          resolveStates((states) => {
+            if (states.wallets.length > 0) {
+              const focusedWallet = getFocusedWallet(states);
+              startSign(
+                data.id.toString(),
+                focusedWallet.terraAddress,
+                data,
+              ).subscribe((txResult) => {
+                switch (txResult.status) {
+                  case WebConnectorTxStatus.DENIED:
+                    pageStream.write({
+                      name: 'onSign',
+                      id: data.id,
+                      payload: {
+                        ...data,
+                        success: false,
+                        error: {
+                          code: 1, // user denied
+                        },
+                      },
+                    });
+                    break;
+                  case WebConnectorTxStatus.FAIL:
+                    pageStream.write({
+                      name: 'onSign',
+                      id: data.id,
+                      payload: {
+                        ...data,
+                        success: false,
+                        error: {
+                          code: 3, // error before make txhash
+                          message: String(txResult.error),
+                        },
+                      },
+                    });
+                    break;
+                  case WebConnectorTxStatus.SUCCEED:
+                    pageStream.write({
+                      name: 'onSign',
+                      id: data.id,
+                      payload: {
+                        ...data,
+                        success: true,
+                        result: txResult.payload,
+                      },
+                    });
+                    break;
+                }
+              });
+            } else {
+              pageStream.write({
+                name: 'onSign',
+                id: data.id,
+                payload: {
+                  ...data,
+                  success: false,
+                  error: {
+                    code: 3, // error before make txhash
+                    message: 'no wallets',
+                  },
+                },
+              });
+            }
+          });
+          break;
+        // ---------------------------------------------
         // TODO implement signBytes command
         // ---------------------------------------------
         default:
@@ -396,14 +478,29 @@ export function startWebExtensionContentScript({
               },
             );
             break;
-          case FromWebToContentScriptMessage.EXECUTE_TX:
-            startTx(
+          case FromWebToContentScriptMessage.EXECUTE_POST:
+            startPost(
               event.data.id.toString(),
               event.data.terraAddress,
               event.data.payload,
             ).subscribe((txResult) => {
-              const msg: WebExtensionTxResponse = {
-                type: FromContentScriptToWebMessage.TX_RESPONSE,
+              const msg: WebExtensionPostResponse = {
+                type: FromContentScriptToWebMessage.POST_RESPONSE,
+                id: +event.data.id,
+                payload: txResult,
+              };
+
+              window.postMessage(msg, '*');
+            });
+            break;
+          case FromWebToContentScriptMessage.EXECUTE_SIGN:
+            startSign(
+              event.data.id.toString(),
+              event.data.terraAddress,
+              event.data.payload,
+            ).subscribe((txResult) => {
+              const msg: WebExtensionSignResponse = {
+                type: FromContentScriptToWebMessage.SIGN_RESPONSE,
                 id: +event.data.id,
                 payload: txResult,
               };

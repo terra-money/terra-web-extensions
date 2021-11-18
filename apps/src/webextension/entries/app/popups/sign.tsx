@@ -1,6 +1,5 @@
 import {
   deserializeTx,
-  serializeTx,
   WebConnectorTxFail,
   WebConnectorTxStatus,
   WebConnectorTxUnspecifiedError,
@@ -10,8 +9,6 @@ import {
   approveHostnames,
   createLedgerKey,
   EncryptedWallet,
-  executeTxWithInternalWallet,
-  executeTxWithLedgerWallet,
   findWallet,
   fromURLSearchParams,
   getSavedPassword,
@@ -20,6 +17,8 @@ import {
   readHostnamesStorage,
   removeSavedPassword,
   savePassword,
+  signWithEncryptedWallet,
+  signWithLedgerWallet,
   TxRequest,
   Wallet,
 } from '@terra-dev/web-extension-backend';
@@ -36,13 +35,9 @@ import { SignTxWithEncryptedWallet } from 'webextension/components/views/SignTxW
 import { SignTxWithLedgerWallet } from 'webextension/components/views/SignTxWithLedgerWallet';
 import { UnknownCase } from 'webextension/components/views/UnknownCase';
 import { useAllowedCommandId } from 'webextension/contexts/commands';
-import {
-  TX_INFO_PORT_PREFIX,
-  TX_PORT_PREFIX,
-  WHITELIST_HOSTNAMES,
-} from 'webextension/env';
+import { TX_PORT_PREFIX, WHITELIST_HOSTNAMES } from 'webextension/env';
 
-export function TxPopup() {
+export function TxSignPopup() {
   // ---------------------------------------------
   // read hash urls
   // ---------------------------------------------
@@ -241,7 +236,7 @@ function LedgerWalletTxForm({
         name: TX_PORT_PREFIX + txRequest.id,
       });
 
-      executeTxWithLedgerWallet(
+      signWithLedgerWallet(
         wallet,
         txRequest.network,
         resolvedTx,
@@ -251,17 +246,6 @@ function LedgerWalletTxForm({
           if (result.status === WebConnectorTxStatus.SUCCEED) {
             port.postMessage(result);
             close();
-
-            const txInfoPort = browser.runtime.connect(undefined, {
-              name: TX_INFO_PORT_PREFIX + txRequest.id,
-            });
-
-            txInfoPort.postMessage({
-              ...txRequest.network,
-              txhash: result.payload.txhash,
-            });
-
-            txInfoPort.disconnect();
           } else if (result.status === WebConnectorTxStatus.DENIED) {
             port.postMessage({
               ...result,
@@ -342,18 +326,13 @@ function EncryptedWalletTxForm({
       resolvedTx: CreateTxOptions,
       password: string | null,
     ) => {
-      console.log(
-        'tx.tsx..()',
-        JSON.stringify(serializeTx(resolvedTx), null, 2),
-      );
-
       const port = browser.runtime.connect(undefined, {
         name: TX_PORT_PREFIX + txRequest.id,
       });
 
       let waitPasswordSaving: Promise<void>;
 
-      executeTxWithInternalWallet(
+      signWithEncryptedWallet(
         decryptedWallet,
         txRequest.network,
         resolvedTx,
@@ -371,17 +350,6 @@ function EncryptedWalletTxForm({
             } else {
               waitPasswordSaving = removeSavedPassword(txRequest.terraAddress);
             }
-
-            const txInfoPort = browser.runtime.connect(undefined, {
-              name: TX_INFO_PORT_PREFIX + txRequest.id,
-            });
-
-            txInfoPort.postMessage({
-              ...txRequest.network,
-              txhash: result.payload.txhash,
-            });
-
-            txInfoPort.disconnect();
           } else if (result.status === WebConnectorTxStatus.DENIED) {
             port.postMessage({
               ...result,

@@ -36,7 +36,8 @@ import { AddCw20TokenPopup } from './popups/add-cw20-token';
 import { AddNetworkPopup } from './popups/add-network';
 import { ConnectPopup } from './popups/connect';
 import { ConnectLedgerPopup } from './popups/connect-ledger';
-import { TxPopup } from './popups/tx';
+import { TxPostPopup } from './popups/post';
+import { TxSignPopup } from './popups/sign';
 
 const queryClient = new QueryClient();
 
@@ -108,7 +109,8 @@ function Component({ className }: { className?: string }) {
                   component={ConnectLedgerPopup}
                 />
                 <Route exact path="/connect" component={ConnectPopup} />
-                <Route exact path="/tx" component={TxPopup} />
+                <Route exact path="/tx/post" component={TxPostPopup} />
+                <Route exact path="/tx/sign" component={TxSignPopup} />
                 <Route exact path="/add-network" component={AddNetworkPopup} />
                 <Route
                   exact

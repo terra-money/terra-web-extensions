@@ -1,5 +1,7 @@
 import { WebConnectorController } from '@terra-dev/web-connector-controller';
 import {
+  WebConnectorPostPayload,
+  WebConnectorSignPayload,
   WebConnectorStates,
   WebConnectorStatus,
   WebConnectorStatusInitializing,
@@ -35,7 +37,11 @@ export interface WebConnectorState {
   post: (
     terraAddress: string,
     tx: CreateTxOptions,
-  ) => Observable<WebConnectorTxResult>;
+  ) => Observable<WebConnectorTxResult<WebConnectorPostPayload>>;
+  sign: (
+    terraAddress: string,
+    tx: CreateTxOptions,
+  ) => Observable<WebConnectorTxResult<WebConnectorSignPayload>>;
   hasCW20Tokens: (
     chainID: string,
     ...tokenAddrs: string[]
@@ -101,6 +107,7 @@ export function WebConnectorProvider({
       refetchStates: controller.refetchStates,
       requestApproval,
       post: controller.post,
+      sign: controller.sign,
       hasCW20Tokens: controller.hasCW20Tokens,
       addCW20Tokens: controller.addCW20Tokens,
       hasNetwork: controller.hasNetwork,

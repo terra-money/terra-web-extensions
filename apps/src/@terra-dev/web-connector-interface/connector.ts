@@ -3,7 +3,11 @@ import type { Observable, Observer } from 'rxjs';
 import { WebConnectorNetworkInfo } from './models/network';
 import { WebConnectorStates } from './models/states';
 import { WebConnectorStatus } from './models/status';
-import { WebConnectorTxResult } from './models/tx';
+import {
+  WebConnectorPostPayload,
+  WebConnectorSignPayload,
+  WebConnectorTxResult,
+} from './models/tx';
 
 export interface TerraWebConnectorInfo {
   icon: string;
@@ -37,7 +41,12 @@ export interface TerraWebConnector {
   post: (
     terraAddress: string,
     tx: CreateTxOptions,
-  ) => Observable<WebConnectorTxResult>;
+  ) => Observable<WebConnectorTxResult<WebConnectorPostPayload>>;
+
+  sign: (
+    terraAddress: string,
+    tx: CreateTxOptions,
+  ) => Observable<WebConnectorTxResult<WebConnectorSignPayload>>;
 
   hasCW20Tokens: (
     chainID: string,

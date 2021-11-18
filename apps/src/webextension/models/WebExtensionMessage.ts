@@ -1,5 +1,7 @@
 import {
   SerializedCreateTxOptions,
+  WebConnectorPostPayload,
+  WebConnectorSignPayload,
   WebConnectorStates,
   WebConnectorTxResult,
 } from '@terra-dev/web-connector-interface';
@@ -10,7 +12,8 @@ import { AccAddress } from '@terra-money/terra.js';
 // ---------------------------------------------
 export enum FromWebToContentScriptMessage {
   REFETCH_STATES = 'REFETCH_STATES',
-  EXECUTE_TX = 'EXECUTE_TX',
+  EXECUTE_POST = 'EXECUTE_POST',
+  EXECUTE_SIGN = 'EXECUTE_SIGN',
   REQUEST_APPROVAL = 'REQUEST_APPROVAL',
   HAS_CW20_TOKENS = 'HAS_CW20_TOKENS',
   ADD_CW20_TOKENS = 'ADD_CW20_TOKENS',
@@ -22,8 +25,21 @@ export interface RefetchExtensionStates {
   type: FromWebToContentScriptMessage.REFETCH_STATES;
 }
 
-export interface ExecuteExtensionTx {
-  type: FromWebToContentScriptMessage.EXECUTE_TX;
+export interface ExecuteExtensionPost {
+  type: FromWebToContentScriptMessage.EXECUTE_POST;
+
+  /** primary id of this tx */
+  id: number;
+
+  /** target terra wallet address */
+  terraAddress: string;
+
+  /** transaction payload */
+  payload: SerializedCreateTxOptions;
+}
+
+export interface ExecuteExtensionSign {
+  type: FromWebToContentScriptMessage.EXECUTE_SIGN;
 
   /** primary id of this tx */
   id: number;
@@ -92,7 +108,8 @@ export interface AddNetwork {
 // ---------------------------------------------
 export enum FromContentScriptToWebMessage {
   STATES_UPDATED = 'STATES_UPDATED',
-  TX_RESPONSE = 'TX_RESPONSE',
+  POST_RESPONSE = 'POST_RESPONSE',
+  SIGN_RESPONSE = 'SIGN_RESPONSE',
   HAS_CW20_TOKENS_RESPONSE = 'HAS_CW20_TOKENS_RESPONSE',
   ADD_CW20_TOKENS_RESPONSE = 'ADD_CW20_TOKENS_RESPONSE',
   HAS_NETWORK_RESPONSE = 'HAS_NETWORK_RESPONSE',
@@ -104,14 +121,24 @@ export interface WebExtensionStatesUpdated {
   payload: WebConnectorStates & { isApproved: boolean };
 }
 
-export interface WebExtensionTxResponse {
-  type: FromContentScriptToWebMessage.TX_RESPONSE;
+export interface WebExtensionPostResponse {
+  type: FromContentScriptToWebMessage.POST_RESPONSE;
 
   /** primary id of this tx */
   id: number;
 
   /** tx response */
-  payload: WebConnectorTxResult;
+  payload: WebConnectorTxResult<WebConnectorPostPayload>;
+}
+
+export interface WebExtensionSignResponse {
+  type: FromContentScriptToWebMessage.SIGN_RESPONSE;
+
+  /** primary id of this tx */
+  id: number;
+
+  /** tx response */
+  payload: WebConnectorTxResult<WebConnectorSignPayload>;
 }
 
 export interface WebExtensionAddCW20TokenResponse {
@@ -161,7 +188,8 @@ export interface WebExtensionAddNetworkResponse {
 export type WebExtensionMessage =
   // web -> content script
   | RefetchExtensionStates
-  | ExecuteExtensionTx
+  | ExecuteExtensionPost
+  | ExecuteExtensionSign
   | RequestApproval
   | HasCW20Tokens
   | AddCW20Tokens
@@ -169,7 +197,8 @@ export type WebExtensionMessage =
   | AddNetwork
   // content script -> web
   | WebExtensionStatesUpdated
-  | WebExtensionTxResponse
+  | WebExtensionPostResponse
+  | WebExtensionSignResponse
   | WebExtensionAddCW20TokenResponse
   | WebExtensionHasCW20TokensResponse
   | WebExtensionHasNetworkResponse
@@ -188,7 +217,8 @@ export function isWebExtensionMessage(
     // web -> content script
     case FromWebToContentScriptMessage.REFETCH_STATES:
       return true;
-    case FromWebToContentScriptMessage.EXECUTE_TX:
+    case FromWebToContentScriptMessage.EXECUTE_POST:
+    case FromWebToContentScriptMessage.EXECUTE_SIGN:
       return typeof msg.id === 'number' && !!msg.payload;
     case FromWebToContentScriptMessage.REQUEST_APPROVAL:
       return true;
@@ -209,7 +239,8 @@ export function isWebExtensionMessage(
     // content script -> web
     case FromContentScriptToWebMessage.STATES_UPDATED:
       return !!msg.payload;
-    case FromContentScriptToWebMessage.TX_RESPONSE:
+    case FromContentScriptToWebMessage.POST_RESPONSE:
+    case FromContentScriptToWebMessage.SIGN_RESPONSE:
       return typeof msg.id === 'number' && !!msg.payload;
     case FromContentScriptToWebMessage.ADD_CW20_TOKENS_RESPONSE:
       return typeof msg.id === 'number' && !!msg.payload;

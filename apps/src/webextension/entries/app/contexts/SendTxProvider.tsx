@@ -10,8 +10,8 @@ import {
 import {
   createLedgerKey,
   EncryptedWallet,
-  executeTxWithInternalWallet,
-  executeTxWithLedgerWallet,
+  postWithEncryptedWallet,
+  postWithLedgerWallet,
   LedgerWallet,
 } from '@terra-dev/web-extension-backend';
 import { CreateTxOptions } from '@terra-money/terra.js';
@@ -148,12 +148,7 @@ function PostResolver({
           createLedgerKey={createLedgerKey}
           onDeny={() => onReject(new UserDenied())}
           onProceed={({ key, close }, resolvedTx) => {
-            executeTxWithLedgerWallet(
-              wallet,
-              network,
-              resolvedTx,
-              key,
-            ).subscribe({
+            postWithLedgerWallet(wallet, network, resolvedTx, key).subscribe({
               next: (result) => {
                 if (result.status === WebConnectorTxStatus.SUCCEED) {
                   onResolve({
@@ -192,7 +187,7 @@ function PostResolver({
           date={new Date()}
           onDeny={() => onReject(new UserDenied())}
           onProceed={(decryptedWallet, resolvedTx) => {
-            executeTxWithInternalWallet(
+            postWithEncryptedWallet(
               decryptedWallet,
               network,
               resolvedTx,

@@ -1,5 +1,7 @@
 import {
   TerraWebConnector,
+  WebConnectorPostPayload,
+  WebConnectorSignPayload,
   WebConnectorStates,
   WebConnectorStatus,
   WebConnectorStatusType,
@@ -176,8 +178,15 @@ export class WebConnectorController {
   post = (
     terraAddress: string,
     tx: CreateTxOptions,
-  ): Observable<WebConnectorTxResult> => {
+  ): Observable<WebConnectorTxResult<WebConnectorPostPayload>> => {
     return this._connector!.post(terraAddress, tx);
+  };
+
+  sign = (
+    terraAddress: string,
+    tx: CreateTxOptions,
+  ): Observable<WebConnectorTxResult<WebConnectorSignPayload>> => {
+    return this._connector!.sign(terraAddress, tx);
   };
 
   hasCW20Tokens = (chainID: string, ...tokenAddrs: string[]) => {

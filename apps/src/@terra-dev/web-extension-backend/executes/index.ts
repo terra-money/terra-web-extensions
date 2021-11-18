@@ -1,2 +1,4 @@
-export * from './executeTxWithInternalWallet';
-export * from './executeTxWithLedgerWallet';
+export * from './postWithEncryptedWallet';
+export * from './signWithEncryptedWallet';
+export * from './postWithLedgerWallet';
+export * from './signWithLedgerWallet';

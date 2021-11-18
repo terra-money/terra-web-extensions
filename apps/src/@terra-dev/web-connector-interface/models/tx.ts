@@ -1,4 +1,4 @@
-import { CreateTxOptions, Fee, Msg } from '@terra-money/terra.js';
+import { CreateTxOptions, Fee, Msg, Tx } from '@terra-money/terra.js';
 import {
   WebConnectorCreateTxFailed,
   WebConnectorTxFailed,
@@ -17,13 +17,17 @@ export interface WebConnectorTxProgress {
   payload?: unknown;
 }
 
-export interface WebConnectorTxSucceed {
+export interface WebConnectorPostPayload {
+  height: number;
+  raw_log: string;
+  txhash: string;
+}
+
+export type WebConnectorSignPayload = Tx.Data;
+
+export interface WebConnectorTxSucceed<Payload> {
   status: WebConnectorTxStatus.SUCCEED;
-  payload: {
-    height: number;
-    raw_log: string;
-    txhash: string;
-  };
+  payload: Payload;
 }
 
 export interface WebConnectorTxFail {
@@ -38,9 +42,9 @@ export interface WebConnectorTxDenied {
   status: WebConnectorTxStatus.DENIED;
 }
 
-export type WebConnectorTxResult =
+export type WebConnectorTxResult<Payload> =
   | WebConnectorTxProgress
-  | WebConnectorTxSucceed
+  | WebConnectorTxSucceed<Payload>
   | WebConnectorTxFail
   | WebConnectorTxDenied;
 

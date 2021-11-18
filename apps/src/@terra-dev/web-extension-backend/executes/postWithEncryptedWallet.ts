@@ -1,6 +1,7 @@
 import {
   WebConnectorCreateTxFailed,
   WebConnectorNetworkInfo,
+  WebConnectorPostPayload,
   WebConnectorTxDenied,
   WebConnectorTxFail,
   WebConnectorTxFailed,
@@ -16,22 +17,17 @@ import {
   RawKey,
 } from '@terra-money/terra.js';
 import { Observable } from 'rxjs';
-import { Wallet } from '../models/InternalWallet';
+import { Wallet } from '../models';
 
-export function executeTxWithInternalWallet(
+export function postWithEncryptedWallet(
   wallet: Wallet,
   network: WebConnectorNetworkInfo,
   tx: CreateTxOptions,
-): Observable<
-  | WebConnectorTxProgress
-  | WebConnectorTxDenied
-  | WebConnectorTxSucceed
-  | WebConnectorTxFail
-> {
+) {
   return new Observable<
     | WebConnectorTxProgress
     | WebConnectorTxDenied
-    | WebConnectorTxSucceed
+    | WebConnectorTxSucceed<WebConnectorPostPayload>
     | WebConnectorTxFail
   >((subscriber) => {
     const lcd = new LCDClient({
@@ -78,7 +74,7 @@ export function executeTxWithInternalWallet(
         subscriber.next({
           status: WebConnectorTxStatus.FAIL,
           error: new WebConnectorTxUnspecifiedError(
-            'message' in error ? error.message : String(error),
+            error instanceof Error ? error.message : String(error),
           ),
         });
         subscriber.complete();

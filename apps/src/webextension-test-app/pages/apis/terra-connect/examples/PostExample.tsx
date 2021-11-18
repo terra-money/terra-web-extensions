@@ -1,6 +1,7 @@
 import { useLocalStorageValue } from '@mantine/hooks';
 import { useWalletSelect, useWebConnector } from '@station/web-connector-react';
 import {
+  WebConnectorPostPayload,
   WebConnectorTxResult,
   WebConnectorTxStatus,
 } from '@terra-dev/web-connector-interface';
@@ -9,7 +10,7 @@ import React, { useCallback, useState } from 'react';
 
 const TO_ADDRESS = 'terra12hnhh5vtyg5juqnzm43970nh4fw42pt27nw9g9';
 
-export function TxExample() {
+export function PostExample() {
   const { states, post } = useWebConnector();
 
   const { selectedWallet } = useWalletSelect();
@@ -21,7 +22,8 @@ export function TxExample() {
     defaultValue: 'single',
   });
 
-  const [txResult, setTxResult] = useState<WebConnectorTxResult | null>(null);
+  const [txResult, setTxResult] =
+    useState<WebConnectorTxResult<WebConnectorPostPayload> | null>(null);
 
   const [txError, setTxError] = useState<string | null>(null);
 
