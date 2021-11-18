@@ -1,3 +1,6 @@
+import { pollTxInfo } from '@libs/app-fns';
+import { truncate } from '@libs/formatter';
+import { defaultLcdFetcher } from '@libs/query-client';
 import {
   clearPasswords,
   clearStalePasswords,
@@ -7,7 +10,7 @@ import {
   migrateNetworkStorageV0,
   migrateWalletsStorageV0,
 } from '@terra-dev/web-extension-backend/migrate';
-import { browser, Runtime } from 'webextension-polyfill-ts';
+import { browser, Notifications, Runtime } from 'webextension-polyfill-ts';
 import { getDefaultNetworks } from 'webextension/queries/useDefaultNetworks';
 import {
   getIdFromContentScriptPort,
@@ -16,6 +19,7 @@ import {
   isTxInfoPort,
   isTxPort,
 } from '../../env';
+import CreateNotificationOptions = Notifications.CreateNotificationOptions;
 
 // ---------------------------------------------
 // port
@@ -51,10 +55,41 @@ browser.runtime.onConnect.addListener((port) => {
     port.onMessage.addListener(onMessage);
     port.onDisconnect.addListener(onDisconnect);
   } else if (isTxInfoPort(port.name)) {
-    console.log('index.ts..() ???', port.name);
+    const onMessage = (msg: any) => {
+      if (
+        msg &&
+        typeof msg === 'object' &&
+        'chainID' in msg &&
+        'lcd' in msg &&
+        'txhash' in msg
+      ) {
+        const url = `https://finder.terra.money/${msg.chainID}/tx/${msg.txhash}`;
+        const notificationOption: Omit<CreateNotificationOptions, 'message'> = {
+          type: 'basic',
+          iconUrl: browser.runtime.getURL('icons/icon-128.png'),
+          title: 'Terra Station',
+        };
 
-    const onMessage = (msg: unknown) => {
-      console.log('index.ts..onMessage()', msg);
+        pollTxInfo({
+          queryClient: {
+            lcdEndpoint: msg.lcd,
+            lcdFetcher: defaultLcdFetcher,
+          },
+          txhash: msg.txhash,
+        })
+          .then(() => {
+            browser.notifications.create(url, {
+              ...notificationOption,
+              message: truncate(msg.txhash, [5, 5]) + ' is succeed',
+            });
+          })
+          .catch(() => {
+            browser.notifications.create(url, {
+              ...notificationOption,
+              message: truncate(msg.txhash, [5, 5]) + ' is failed',
+            });
+          });
+      }
     };
 
     const onDisconnect = () => {
@@ -64,6 +99,14 @@ browser.runtime.onConnect.addListener((port) => {
 
     port.onMessage.addListener(onMessage);
     port.onDisconnect.addListener(onDisconnect);
+  }
+});
+
+browser.notifications.onClicked.addListener((notificationId) => {
+  if (/^https/.test(notificationId)) {
+    browser.tabs.create({
+      url: notificationId,
+    });
   }
 });
 

@@ -351,7 +351,7 @@ function EncryptedWalletTxForm({
         name: TX_PORT_PREFIX + txRequest.id,
       });
 
-      let wait: Promise<void>;
+      let waitPasswordSaving: Promise<void>;
 
       executeTxWithInternalWallet(
         decryptedWallet,
@@ -363,13 +363,13 @@ function EncryptedWalletTxForm({
             port.postMessage(result);
 
             if (password) {
-              wait = savePassword(
+              waitPasswordSaving = savePassword(
                 txRequest.terraAddress,
                 password,
                 Date.now() + DAY,
               );
             } else {
-              wait = removeSavedPassword(txRequest.terraAddress);
+              waitPasswordSaving = removeSavedPassword(txRequest.terraAddress);
             }
 
             const txInfoPort = browser.runtime.connect(undefined, {
@@ -403,7 +403,7 @@ function EncryptedWalletTxForm({
         complete: () => {
           port.disconnect();
           if (txRequest.closeWindowAfterTx) {
-            Promise.resolve(wait).then(() => {
+            Promise.resolve(waitPasswordSaving).then(() => {
               window.close();
             });
           }
