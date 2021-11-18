@@ -14,7 +14,7 @@ import {
 import React, { ChangeEvent, useCallback, useMemo, useState } from 'react';
 import { PasswordStrength } from 'webextension/components/form/PasswordStrength';
 import { FormFooter } from 'webextension/components/layouts/FormFooter';
-import { cardDesigns } from 'webextension/env';
+import { CARD_DESIGNS } from 'webextension/env';
 import { FormMain } from '../layouts/FormMain';
 
 export interface NewWalletResult {
@@ -36,7 +36,7 @@ export function NewWallet({ className, wallets, onConfirm }: NewWalletProps) {
   const [name, setName] = useState<string>('');
 
   const [designIndex, setDesignIndex] = useState(() =>
-    Math.floor(Math.random() * cardDesigns.length),
+    Math.floor(Math.random() * CARD_DESIGNS.length),
   );
 
   const [password, setPassword] = useState<string>('');
@@ -64,7 +64,7 @@ export function NewWallet({ className, wallets, onConfirm }: NewWalletProps) {
   const proceed = useCallback(() => {
     onConfirm({
       name,
-      design: cardDesigns[designIndex],
+      design: CARD_DESIGNS[designIndex],
       password,
     });
   }, [onConfirm, name, designIndex, password]);
@@ -85,7 +85,7 @@ export function NewWallet({ className, wallets, onConfirm }: NewWalletProps) {
           backgroundColor: 'var(--color-header-background)',
         }}
       >
-        {cardDesigns.map((design) => (
+        {CARD_DESIGNS.map((design) => (
           <WalletCard
             key={'card-' + design}
             name={name.length > 0 ? name : 'Type your wallet name'}

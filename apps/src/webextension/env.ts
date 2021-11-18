@@ -83,7 +83,7 @@ export const isTxInfoPort = (name: string) => /^txinfo-[0-9]+$/.test(name);
 export const getIdFromTxPort = (name: string) => name.substr(3);
 export const getIdFromContentScriptPort = (name: string) => name.substr(8);
 
-export const cardDesigns = [
+export const CARD_DESIGNS = [
   'terra',
   'anchor',
   'mirror',

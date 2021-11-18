@@ -14,10 +14,6 @@ import styled from 'styled-components';
 import { ErrorBoundary } from 'webextension/components/common/ErrorBoundary';
 import { LocalesProvider, useIntlProps } from 'webextension/contexts/locales';
 import { StoreProvider } from 'webextension/contexts/store';
-import { WalletToken } from 'webextension/entries/app/pages/wallets/token';
-import { AddNetworkPopup } from 'webextension/entries/app/popups/add-network';
-import { ConnectPopup } from 'webextension/entries/app/popups/connect';
-import { TxPopup } from 'webextension/entries/app/popups/tx';
 import {
   STATION_CONSTANTS,
   STATION_CONTRACT_ADDRESS,
@@ -33,9 +29,14 @@ import { WalletsCreate } from './pages/wallets/create';
 import { WalletExport } from './pages/wallets/export';
 import { WalletsRecover } from './pages/wallets/recover';
 import { WalletSend } from './pages/wallets/send';
+import { WalletToken } from './pages/wallets/token';
 import { WalletUpdate } from './pages/wallets/update';
+import { Welcome } from './pages/welcome';
 import { AddCw20TokenPopup } from './popups/add-cw20-token';
+import { AddNetworkPopup } from './popups/add-network';
+import { ConnectPopup } from './popups/connect';
 import { ConnectLedgerPopup } from './popups/connect-ledger';
+import { TxPopup } from './popups/tx';
 
 const queryClient = new QueryClient();
 
@@ -66,6 +67,7 @@ function Component({ className }: { className?: string }) {
             <main className={className} ref={containerRef}>
               <Switch>
                 <Route exact path="/" component={Dashboard} />
+                <Route exact path="/welcome" component={Welcome} />
                 <Route exact path="/wallets/create" component={WalletsCreate} />
                 <Route
                   exact

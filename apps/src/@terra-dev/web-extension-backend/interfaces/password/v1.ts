@@ -34,6 +34,15 @@ async function writePasswordStorage(data: PasswordStorageData): Promise<void> {
   });
 }
 
+export async function clearPasswords(): Promise<void> {
+  const { savedPasswords, ...data } = await readPasswordStorage();
+
+  await writePasswordStorage({
+    ...data,
+    savedPasswords: [],
+  });
+}
+
 export async function clearStalePasswords(): Promise<void> {
   const { savedPasswords, ...data } = await readPasswordStorage();
 

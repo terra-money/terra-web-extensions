@@ -1,5 +1,14 @@
-import { clearStalePasswords } from '@terra-dev/web-extension-backend';
+import {
+  clearPasswords,
+  clearStalePasswords,
+} from '@terra-dev/web-extension-backend';
+import {
+  migrateCW20StorageV0,
+  migrateNetworkStorageV0,
+  migrateWalletsStorageV0,
+} from '@terra-dev/web-extension-backend/migrate';
 import { browser, Runtime } from 'webextension-polyfill-ts';
+import { getDefaultNetworks } from 'webextension/queries/useDefaultNetworks';
 import {
   getIdFromContentScriptPort,
   getIdFromTxPort,
@@ -8,6 +17,9 @@ import {
   isTxPort,
 } from '../../env';
 
+// ---------------------------------------------
+// port
+// ---------------------------------------------
 const contentScriptPorts: Map<string, Runtime.Port> = new Map();
 
 browser.runtime.onConnect.addListener((port) => {
@@ -55,6 +67,47 @@ browser.runtime.onConnect.addListener((port) => {
   }
 });
 
+// ---------------------------------------------
+// hooks
+// ---------------------------------------------
+async function migration() {
+  const defaultNetworks = await getDefaultNetworks();
+
+  const teardowns = await Promise.all([
+    migrateCW20StorageV0(),
+    migrateNetworkStorageV0(defaultNetworks),
+    migrateWalletsStorageV0(),
+  ]);
+
+  for (const teardown of teardowns) {
+    teardown();
+  }
+}
+
+browser.runtime.onInstalled.addListener(({ reason }) => {
+  // migration test
+  //setDummyDataV0();
+  //migration();
+
+  if (reason !== 'install') {
+    console.log('EXTENSION UPDATED: start data migration');
+    migration();
+  } else if (reason === 'install' && process.env.NODE_ENV === 'production') {
+    console.log('EXTENSION INSTALLED: open welcome page');
+    browser.tabs.create({
+      url: browser.runtime.getURL('app.html#/welcome'),
+    });
+  }
+});
+
+browser.runtime.onStartup.addListener(() => {
+  console.log('EXTENSION STARTUP: clear all passwords');
+  clearPasswords();
+});
+
+// ---------------------------------------------
+// jobs
+// ---------------------------------------------
 const JOB_INTERVAL = 1000 * 30;
 
 async function job() {

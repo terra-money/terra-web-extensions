@@ -13,7 +13,7 @@ import React, { ChangeEvent, useCallback, useMemo, useState } from 'react';
 import { FormFooter } from 'webextension/components/layouts/FormFooter';
 import { FormMain } from 'webextension/components/layouts/FormMain';
 import { useStore } from 'webextension/contexts/store';
-import { cardDesigns } from 'webextension/env';
+import { CARD_DESIGNS } from 'webextension/env';
 
 export interface UpdateWalletResult {
   name: string;
@@ -44,7 +44,7 @@ export function UpdateWallet({
   const [name, setName] = useState<string>(wallet.name);
 
   const [designIndex, setDesignIndex] = useState<number>(() => {
-    const i = cardDesigns.findIndex((design) => wallet.design === design);
+    const i = CARD_DESIGNS.findIndex((design) => wallet.design === design);
     return i > -1 ? i : 0;
   });
 
@@ -66,7 +66,7 @@ export function UpdateWallet({
   const update = useCallback(() => {
     onUpdate({
       name,
-      design: cardDesigns[designIndex],
+      design: CARD_DESIGNS[designIndex],
     });
   }, [name, onUpdate, designIndex]);
 
@@ -86,7 +86,7 @@ export function UpdateWallet({
           backgroundColor: 'var(--color-header-background)',
         }}
       >
-        {cardDesigns.map((design) => (
+        {CARD_DESIGNS.map((design) => (
           <WalletCard
             key={'card-' + design}
             name={name}
@@ -116,7 +116,8 @@ export function UpdateWallet({
           disabled={
             name.length === 0 ||
             !!invalidName ||
-            (name === wallet.name && cardDesigns[designIndex] === wallet.design)
+            (name === wallet.name &&
+              CARD_DESIGNS[designIndex] === wallet.design)
           }
           onClick={update}
         >

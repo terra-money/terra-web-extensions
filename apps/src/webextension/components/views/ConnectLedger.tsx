@@ -22,7 +22,7 @@ import React, {
 import { FormFooter } from 'webextension/components/layouts/FormFooter';
 import { FormMain } from 'webextension/components/layouts/FormMain';
 import { LedgerGuide } from 'webextension/components/tx/LedgerGuide';
-import { cardDesigns } from 'webextension/env';
+import { CARD_DESIGNS } from 'webextension/env';
 
 export interface ConnectLedgerProps {
   className?: string;
@@ -45,7 +45,7 @@ export function ConnectLedger({
   const [name, setName] = useState<string>('');
 
   const [designIndex, setDesignIndex] = useState(() =>
-    Math.floor(Math.random() * cardDesigns.length),
+    Math.floor(Math.random() * CARD_DESIGNS.length),
   );
 
   const [guide, setGuide] = useState<ReactNode>(() => (
@@ -75,7 +75,7 @@ export function ConnectLedger({
     }
 
     try {
-      await onConnect(name, cardDesigns[designIndex]);
+      await onConnect(name, CARD_DESIGNS[designIndex]);
     } catch (e) {
       containerRef.current?.animate(vibrate, { duration: 100 });
 
@@ -103,7 +103,7 @@ export function ConnectLedger({
           backgroundColor: 'var(--color-header-background)',
         }}
       >
-        {cardDesigns.map((design) => (
+        {CARD_DESIGNS.map((design) => (
           <WalletCard
             key={'card-' + design}
             name={name.length > 0 ? name : 'Type your wallet name'}

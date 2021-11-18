@@ -17,8 +17,16 @@ import puppeteer from 'puppeteer';
     extensionReloaderExists ? ',' + extensionReloaderPath : ''
   }`;
 
+  const userDataDir = !!process.env.EMPTY_USER_DATA
+    ? path.join(
+        __dirname,
+        '../puppeteer-dummy-user-datas',
+        'user' + Math.floor(Math.random() * 100),
+      )
+    : path.join(__dirname, '../puppeteer-user-data');
+
   const browser = await puppeteer.launch({
-    userDataDir: path.join(__dirname, '../puppeteer-user-data'),
+    userDataDir,
     headless: false,
     //@ts-ignore
     defaultViewport: null,

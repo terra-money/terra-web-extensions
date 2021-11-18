@@ -32,3 +32,4 @@ test/storage/
 tsconfig.tsbuildinfo
 open-extension-ready-chrome/webextension
 puppeteer-user-data/
+puppeteer-dummy-user-datas/
