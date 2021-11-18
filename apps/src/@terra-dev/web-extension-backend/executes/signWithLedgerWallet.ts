@@ -1,28 +1,28 @@
 import {
-  WebConnectorNetworkInfo,
-  WebConnectorSignPayload,
-  WebConnectorTxDenied,
-  WebConnectorTxFail,
-  WebConnectorTxProgress,
-  WebConnectorTxStatus,
-  WebConnectorTxSucceed,
-  WebConnectorTxUnspecifiedError,
-} from '@terra-dev/web-connector-interface';
+  WalletNetworkInfo,
+  WalletSignPayload,
+  WalletTxDenied,
+  WalletTxFail,
+  WalletTxProgress,
+  WalletTxStatus,
+  WalletTxSucceed,
+  WalletTxUnspecifiedError,
+} from '@terra-dev/wallet-interface';
 import { LedgerKey, LedgerWallet } from '@terra-dev/web-extension-backend';
 import { CreateTxOptions, LCDClient, SignatureV2 } from '@terra-money/terra.js';
 import { Observable } from 'rxjs';
 
 export function signWithLedgerWallet(
   wallet: LedgerWallet,
-  network: WebConnectorNetworkInfo,
+  network: WalletNetworkInfo,
   tx: CreateTxOptions,
   key: LedgerKey,
 ) {
   return new Observable<
-    | WebConnectorTxProgress
-    | WebConnectorTxDenied
-    | WebConnectorTxSucceed<WebConnectorSignPayload>
-    | WebConnectorTxFail
+    | WalletTxProgress
+    | WalletTxDenied
+    | WalletTxSucceed<WalletSignPayload>
+    | WalletTxFail
   >((subscriber) => {
     const lcd = new LCDClient({
       chainID: network.chainID,
@@ -47,15 +47,15 @@ export function signWithLedgerWallet(
       })
       .then((signedTx) => {
         subscriber.next({
-          status: WebConnectorTxStatus.SUCCEED,
+          status: WalletTxStatus.SUCCEED,
           payload: signedTx.toData(),
         });
         subscriber.complete();
       })
       .catch((error) => {
         subscriber.next({
-          status: WebConnectorTxStatus.FAIL,
-          error: new WebConnectorTxUnspecifiedError(
+          status: WalletTxStatus.FAIL,
+          error: new WalletTxUnspecifiedError(
             error instanceof Error ? error.message : String(error),
           ),
         });

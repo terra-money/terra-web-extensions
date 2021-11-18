@@ -1,5 +1,5 @@
 import { IFramePoppingModal } from '@station/ui';
-import { WebConnectorNetworkInfo } from '@terra-dev/web-connector-interface';
+import { WalletNetworkInfo } from '@terra-dev/wallet-interface';
 import {
   deregisterAllowCommandId,
   registerAllowCommandId,
@@ -12,7 +12,7 @@ import { LOGO, MODAL_WIDTH } from '../env';
 
 export function startAddNetwork(
   id: string,
-  network: WebConnectorNetworkInfo,
+  network: WalletNetworkInfo,
 ): Promise<boolean> {
   registerAllowCommandId(id);
 

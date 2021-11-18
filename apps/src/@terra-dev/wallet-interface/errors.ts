@@ -1,7 +1,7 @@
-export class WebConnectorUserDenied extends Error {
+export class WalletUserDenied extends Error {
   constructor() {
     super('User Denied');
-    this.name = 'WebConnectorUserDenied';
+    this.name = 'WalletUserDenied';
   }
 
   toString = () => {
@@ -15,10 +15,10 @@ export class WebConnectorUserDenied extends Error {
   };
 }
 
-export class WebConnectorCreateTxFailed extends Error {
+export class WalletCreateTxFailed extends Error {
   constructor(message: string) {
     super(message);
-    this.name = 'WebConnectorCreateTxFailed';
+    this.name = 'WalletCreateTxFailed';
   }
 
   toString = () => {
@@ -33,14 +33,14 @@ export class WebConnectorCreateTxFailed extends Error {
   };
 }
 
-export class WebConnectorTxFailed extends Error {
+export class WalletTxFailed extends Error {
   constructor(
     public readonly txhash: string | undefined,
     message: string,
     public readonly raw_message: any,
   ) {
     super(message);
-    this.name = 'WebConnectorTxFailed';
+    this.name = 'WalletTxFailed';
   }
 
   toString = () => {
@@ -59,10 +59,10 @@ export class WebConnectorTxFailed extends Error {
   };
 }
 
-export class WebConnectorTxUnspecifiedError extends Error {
+export class WalletTxUnspecifiedError extends Error {
   constructor(message: string) {
     super(message);
-    this.name = 'WebConnectorTxUnspecifiedError';
+    this.name = 'WalletTxUnspecifiedError';
   }
 
   toString = () => {
@@ -77,10 +77,10 @@ export class WebConnectorTxUnspecifiedError extends Error {
   };
 }
 
-export class WebConnectorLedgerError extends Error {
+export class WalletLedgerError extends Error {
   constructor(public readonly code: number, message: string) {
     super(message);
-    this.name = 'WebConnectorLedgerError';
+    this.name = 'WalletLedgerError';
   }
 
   toString = () => {
@@ -99,39 +99,35 @@ export class WebConnectorLedgerError extends Error {
 // ---------------------------------------------
 // functions
 // ---------------------------------------------
-export function isWebConnectorError(error: unknown): boolean {
+export function isWalletError(error: unknown): boolean {
   return (
-    error instanceof WebConnectorUserDenied ||
-    error instanceof WebConnectorCreateTxFailed ||
-    error instanceof WebConnectorTxFailed ||
-    error instanceof WebConnectorLedgerError ||
-    error instanceof WebConnectorTxUnspecifiedError
+    error instanceof WalletUserDenied ||
+    error instanceof WalletCreateTxFailed ||
+    error instanceof WalletTxFailed ||
+    error instanceof WalletLedgerError ||
+    error instanceof WalletTxUnspecifiedError
   );
 }
 
 export function createTxErrorFromJson(
   json: any,
 ):
-  | WebConnectorUserDenied
-  | WebConnectorCreateTxFailed
-  | WebConnectorTxFailed
-  | WebConnectorLedgerError
-  | WebConnectorTxUnspecifiedError {
+  | WalletUserDenied
+  | WalletCreateTxFailed
+  | WalletTxFailed
+  | WalletLedgerError
+  | WalletTxUnspecifiedError {
   switch (json.name) {
-    case 'WebConnectorUserDenied':
-      return new WebConnectorUserDenied();
-    case 'WebConnectorCreateTxFailed':
-      return new WebConnectorCreateTxFailed(json.message);
-    case 'WebConnectorLedgerError':
-      return new WebConnectorLedgerError(json.code, json.message);
-    case 'WebConnectorTxFailed':
-      return new WebConnectorTxFailed(
-        json.txhash,
-        json.message,
-        json.raw_message,
-      );
+    case 'WalletUserDenied':
+      return new WalletUserDenied();
+    case 'WalletCreateTxFailed':
+      return new WalletCreateTxFailed(json.message);
+    case 'WalletLedgerError':
+      return new WalletLedgerError(json.code, json.message);
+    case 'WalletTxFailed':
+      return new WalletTxFailed(json.txhash, json.message, json.raw_message);
     default:
-      return new WebConnectorTxUnspecifiedError(
+      return new WalletTxUnspecifiedError(
         'message' in json ? json.message : String(json),
       );
   }

@@ -12,7 +12,7 @@
 
 ## Internal initialize steps
 
-1. Extension check if the dApp has `<meta name="terra-web-connect" />`
+1. Extension check if the dApp has `<meta name="terra-wallet" />`
    - If not extension do nothing
 2. Extension inject the `inpage.js (WebExtensionController)` to dApp
 3. `WebConnectorController` catch the `window.terraWebConnectors` and then initialize it

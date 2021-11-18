@@ -1,4 +1,4 @@
-import { useWebConnector } from '@station/web-connector-react';
+import { useWalletConnector } from '@station/web-connector-react';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 const ancAddr = {
@@ -22,7 +22,7 @@ const nebAddr = {
 };
 
 export function AddCW20TokensExample() {
-  const { states, hasCW20Tokens, addCW20Tokens } = useWebConnector();
+  const { states, hasCW20Tokens, addCW20Tokens } = useWalletConnector();
 
   const [addedStates, setAddedStates] = useState<{
     [tokenAddr: string]: boolean;

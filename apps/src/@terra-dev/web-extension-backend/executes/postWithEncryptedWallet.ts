@@ -1,15 +1,15 @@
 import {
-  WebConnectorCreateTxFailed,
-  WebConnectorNetworkInfo,
-  WebConnectorPostPayload,
-  WebConnectorTxDenied,
-  WebConnectorTxFail,
-  WebConnectorTxFailed,
-  WebConnectorTxProgress,
-  WebConnectorTxStatus,
-  WebConnectorTxSucceed,
-  WebConnectorTxUnspecifiedError,
-} from '@terra-dev/web-connector-interface';
+  WalletCreateTxFailed,
+  WalletNetworkInfo,
+  WalletPostPayload,
+  WalletTxDenied,
+  WalletTxFail,
+  WalletTxFailed,
+  WalletTxProgress,
+  WalletTxStatus,
+  WalletTxSucceed,
+  WalletTxUnspecifiedError,
+} from '@terra-dev/wallet-interface';
 import {
   CreateTxOptions,
   isTxError,
@@ -21,14 +21,14 @@ import { Wallet } from '../models';
 
 export function postWithEncryptedWallet(
   wallet: Wallet,
-  network: WebConnectorNetworkInfo,
+  network: WalletNetworkInfo,
   tx: CreateTxOptions,
 ) {
   return new Observable<
-    | WebConnectorTxProgress
-    | WebConnectorTxDenied
-    | WebConnectorTxSucceed<WebConnectorPostPayload>
-    | WebConnectorTxFail
+    | WalletTxProgress
+    | WalletTxDenied
+    | WalletTxSucceed<WalletPostPayload>
+    | WalletTxFail
   >((subscriber) => {
     const lcd = new LCDClient({
       chainID: network.chainID,
@@ -48,19 +48,15 @@ export function postWithEncryptedWallet(
       .then((data) => {
         if (isTxError(data)) {
           subscriber.next({
-            status: WebConnectorTxStatus.FAIL,
+            status: WalletTxStatus.FAIL,
             error: !!data.txhash
-              ? new WebConnectorTxFailed(
-                  data.txhash,
-                  data.raw_log,
-                  data.raw_log,
-                )
-              : new WebConnectorCreateTxFailed(data.raw_log),
+              ? new WalletTxFailed(data.txhash, data.raw_log, data.raw_log)
+              : new WalletCreateTxFailed(data.raw_log),
           });
           subscriber.complete();
         } else {
           subscriber.next({
-            status: WebConnectorTxStatus.SUCCEED,
+            status: WalletTxStatus.SUCCEED,
             payload: {
               txhash: data.txhash,
               height: data.height,
@@ -72,8 +68,8 @@ export function postWithEncryptedWallet(
       })
       .catch((error) => {
         subscriber.next({
-          status: WebConnectorTxStatus.FAIL,
-          error: new WebConnectorTxUnspecifiedError(
+          status: WalletTxStatus.FAIL,
+          error: new WalletTxUnspecifiedError(
             error instanceof Error ? error.message : String(error),
           ),
         });

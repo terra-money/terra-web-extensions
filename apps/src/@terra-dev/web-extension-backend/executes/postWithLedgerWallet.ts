@@ -1,17 +1,17 @@
 import {
-  isWebConnectorError,
-  WebConnectorCreateTxFailed,
-  WebConnectorLedgerError,
-  WebConnectorNetworkInfo,
-  WebConnectorPostPayload,
-  WebConnectorTxDenied,
-  WebConnectorTxFail,
-  WebConnectorTxFailed,
-  WebConnectorTxProgress,
-  WebConnectorTxStatus,
-  WebConnectorTxSucceed,
-  WebConnectorTxUnspecifiedError,
-} from '@terra-dev/web-connector-interface';
+  isWalletError,
+  WalletCreateTxFailed,
+  WalletLedgerError,
+  WalletNetworkInfo,
+  WalletPostPayload,
+  WalletTxDenied,
+  WalletTxFail,
+  WalletTxFailed,
+  WalletTxProgress,
+  WalletTxStatus,
+  WalletTxSucceed,
+  WalletTxUnspecifiedError,
+} from '@terra-dev/wallet-interface';
 import { LedgerKey, LedgerWallet } from '@terra-dev/web-extension-backend';
 import {
   CreateTxOptions,
@@ -23,15 +23,15 @@ import { Observable } from 'rxjs';
 
 export function postWithLedgerWallet(
   wallet: LedgerWallet,
-  network: WebConnectorNetworkInfo,
+  network: WalletNetworkInfo,
   tx: CreateTxOptions,
   key: LedgerKey,
 ) {
   return new Observable<
-    | WebConnectorTxProgress
-    | WebConnectorTxDenied
-    | WebConnectorTxSucceed<WebConnectorPostPayload>
-    | WebConnectorTxFail
+    | WalletTxProgress
+    | WalletTxDenied
+    | WalletTxSucceed<WalletPostPayload>
+    | WalletTxFail
   >((subscriber) => {
     const lcd = new LCDClient({
       chainID: network.chainID,
@@ -50,19 +50,15 @@ export function postWithLedgerWallet(
       .then((data) => {
         if (isTxError(data)) {
           subscriber.next({
-            status: WebConnectorTxStatus.FAIL,
+            status: WalletTxStatus.FAIL,
             error: !!data.txhash
-              ? new WebConnectorTxFailed(
-                  data.txhash,
-                  data.raw_log,
-                  data.raw_log,
-                )
-              : new WebConnectorCreateTxFailed(data.raw_log),
+              ? new WalletTxFailed(data.txhash, data.raw_log, data.raw_log)
+              : new WalletCreateTxFailed(data.raw_log),
           });
           subscriber.complete();
         } else {
           subscriber.next({
-            status: WebConnectorTxStatus.SUCCEED,
+            status: WalletTxStatus.SUCCEED,
             payload: {
               txhash: data.txhash,
               height: data.height,
@@ -75,28 +71,25 @@ export function postWithLedgerWallet(
       .catch((error) => {
         console.log(
           'executeTxWithLedgerWallet.ts..()',
-          error instanceof WebConnectorLedgerError,
-          isWebConnectorError(error),
+          error instanceof WalletLedgerError,
+          isWalletError(error),
           error.toString(),
         );
-        if (isWebConnectorError(error)) {
-          if (
-            error instanceof WebConnectorLedgerError &&
-            error.code === 27014
-          ) {
+        if (isWalletError(error)) {
+          if (error instanceof WalletLedgerError && error.code === 27014) {
             subscriber.next({
-              status: WebConnectorTxStatus.DENIED,
+              status: WalletTxStatus.DENIED,
             });
           } else {
             subscriber.next({
-              status: WebConnectorTxStatus.FAIL,
+              status: WalletTxStatus.FAIL,
               error,
             });
           }
         } else {
           subscriber.next({
-            status: WebConnectorTxStatus.FAIL,
-            error: new WebConnectorTxUnspecifiedError(
+            status: WalletTxStatus.FAIL,
+            error: new WalletTxUnspecifiedError(
               'message' in error ? error.message : String(error),
             ),
           });

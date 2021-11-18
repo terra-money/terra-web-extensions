@@ -5,7 +5,7 @@ import {
   TERRA_TX_KEYS,
 } from '@libs/app-provider';
 import type { Gas, HumanAddr, Rate } from '@libs/types';
-import type { WebConnectorNetworkInfo } from '@terra-dev/web-connector-interface';
+import type { WalletNetworkInfo } from '@terra-dev/wallet-interface';
 import type { NetworkInfo } from '@terra-money/use-wallet';
 
 export const WHITELIST_HOSTNAMES = [
@@ -58,7 +58,7 @@ export const STATION_TX_REFETCH_MAP = {
   ],
 };
 
-export const FALLBACK_NETWORKS: WebConnectorNetworkInfo[] = [
+export const FALLBACK_NETWORKS: WalletNetworkInfo[] = [
   {
     name: 'mainnet',
     chainID: 'columbus-5',

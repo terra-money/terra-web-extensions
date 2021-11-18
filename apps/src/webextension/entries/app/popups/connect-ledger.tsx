@@ -1,4 +1,4 @@
-import { WebConnectorLedgerError } from '@terra-dev/web-connector-interface';
+import { WalletLedgerError } from '@terra-dev/wallet-interface';
 import {
   addWallet,
   connectLedger,
@@ -31,7 +31,7 @@ export function ConnectLedgerPopup() {
 
         window.close();
       } else {
-        throw new WebConnectorLedgerError(
+        throw new WalletLedgerError(
           99999,
           `${ledgerWallet.terraAddress}는 이미 추가된 Wallet 입니다.`,
         );

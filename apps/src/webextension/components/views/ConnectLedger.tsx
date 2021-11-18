@@ -5,7 +5,7 @@ import {
   WalletCard,
   WalletCardSelector,
 } from '@station/ui';
-import { WebConnectorLedgerError } from '@terra-dev/web-connector-interface';
+import { WalletLedgerError } from '@terra-dev/wallet-interface';
 import {
   EncryptedWallet,
   LedgerWallet,
@@ -79,7 +79,7 @@ export function ConnectLedger({
     } catch (e) {
       containerRef.current?.animate(vibrate, { duration: 100 });
 
-      if (e instanceof WebConnectorLedgerError) {
+      if (e instanceof WalletLedgerError) {
         setGuide(<LedgerGuide code={e.code}>{e.message}</LedgerGuide>);
       } else {
         setGuide(

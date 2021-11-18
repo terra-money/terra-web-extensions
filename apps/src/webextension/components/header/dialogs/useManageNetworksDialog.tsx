@@ -1,6 +1,6 @@
 import { DialogProps, OpenDialog, useDialog } from '@libs/use-dialog';
 import { Modal, SvgButton } from '@station/ui';
-import { WebConnectorNetworkInfo } from '@terra-dev/web-connector-interface';
+import { WalletNetworkInfo } from '@terra-dev/wallet-interface';
 import { removeNetwork } from '@terra-dev/web-extension-backend';
 import React, { ReactNode, useCallback } from 'react';
 import { MdDeleteForever } from 'react-icons/md';
@@ -28,7 +28,7 @@ function ComponentBase({
   const { networks } = useNetworksStore([]);
 
   const remove = useCallback(
-    async (network: WebConnectorNetworkInfo) => {
+    async (network: WalletNetworkInfo) => {
       await removeNetwork(network);
 
       if (networks.length - 1 <= 0) {

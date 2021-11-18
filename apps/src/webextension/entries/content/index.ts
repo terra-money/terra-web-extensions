@@ -3,10 +3,7 @@ import { startAddNetwork } from './modals/startAddNetwork';
 import { startConnect } from './modals/startConnect';
 import { startPost } from './modals/startPost';
 import { startSign } from './modals/startSign';
-import {
-  ContentScriptOptions,
-  startWebExtensionContentScript,
-} from './startWebExtensionContentScript';
+import { ContentScriptOptions, startContentScript } from './startContentScript';
 
 const contentScriptOptions: ContentScriptOptions = {
   startPost,
@@ -19,11 +16,11 @@ const contentScriptOptions: ContentScriptOptions = {
 if (document.readyState === 'loading') {
   window.addEventListener(
     'DOMContentLoaded',
-    () => startWebExtensionContentScript(contentScriptOptions),
+    () => startContentScript(contentScriptOptions),
     {
       once: true,
     },
   );
 } else {
-  startWebExtensionContentScript(contentScriptOptions);
+  startContentScript(contentScriptOptions);
 }

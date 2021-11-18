@@ -1,4 +1,4 @@
-import { useWebConnector } from '@station/web-connector-react';
+import { useWalletConnector } from '@station/web-connector-react';
 import React, { useCallback, useEffect, useState } from 'react';
 
 const network = {
@@ -8,7 +8,7 @@ const network = {
 };
 
 export function AddNetworkExample() {
-  const { hasNetwork, addNetwork } = useWebConnector();
+  const { hasNetwork, addNetwork } = useWalletConnector();
 
   const [networkExists, setNetworkExists] = useState<
     'exists' | 'not exists' | null

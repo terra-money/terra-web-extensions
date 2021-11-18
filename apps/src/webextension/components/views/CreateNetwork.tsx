@@ -1,5 +1,5 @@
 import { Button, SingleLineFormContainer } from '@station/ui';
-import { WebConnectorNetworkInfo } from '@terra-dev/web-connector-interface';
+import { WalletNetworkInfo } from '@terra-dev/wallet-interface';
 import {
   validateNetworkLcdURL,
   validateNetworkName,
@@ -16,7 +16,7 @@ export interface CreateNetworkResult {
 
 export interface CreateNetworkProps {
   className?: string;
-  networks: WebConnectorNetworkInfo[];
+  networks: WalletNetworkInfo[];
   onCreate: (result: CreateNetworkResult) => void;
 }
 

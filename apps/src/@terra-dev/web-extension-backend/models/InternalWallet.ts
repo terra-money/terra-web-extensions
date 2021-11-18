@@ -1,4 +1,4 @@
-import { WebConnectorWalletInfo } from '@terra-dev/web-connector-interface';
+import { WalletInfo } from '@terra-dev/wallet-interface';
 import { decrypt, encrypt, validateMnemonic } from '@terra-money/key-utils';
 import { MnemonicKey } from '@terra-money/terra.js';
 
@@ -13,7 +13,7 @@ export interface Wallet {
  */
 export type EncryptedWalletString = string & { __nominal: 'encrypted-wallet' };
 
-export interface EncryptedWallet extends WebConnectorWalletInfo {
+export interface EncryptedWallet extends WalletInfo {
   encryptedWallet: EncryptedWalletString;
 }
 

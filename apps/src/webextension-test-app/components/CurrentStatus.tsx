@@ -1,13 +1,10 @@
-import { useWebConnector } from '@station/web-connector-react';
-import {
-  WebConnectorStatus,
-  WebConnectorStatusType,
-} from '@terra-dev/web-connector-interface';
+import { useWalletConnector } from '@station/web-connector-react';
+import { WalletStatus, WalletStatusType } from '@terra-dev/wallet-interface';
 import bowser from 'bowser';
 import React from 'react';
 
 export function CurrentStatus() {
-  const { status, requestApproval } = useWebConnector();
+  const { status, requestApproval } = useWalletConnector();
 
   return (
     <section>
@@ -20,11 +17,8 @@ export function CurrentStatus() {
   );
 }
 
-function InstallMessage({ status }: { status: WebConnectorStatus }) {
-  if (
-    status.type !== WebConnectorStatusType.NO_AVAILABLE ||
-    status.isInstalled
-  ) {
+function InstallMessage({ status }: { status: WalletStatus }) {
+  if (status.type !== WalletStatusType.NO_AVAILABLE || status.isInstalled) {
     return null;
   }
 

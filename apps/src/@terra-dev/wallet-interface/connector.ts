@@ -1,22 +1,22 @@
 import type { CreateTxOptions } from '@terra-money/terra.js';
-import type { Observable, Observer } from 'rxjs';
-import { WebConnectorNetworkInfo } from './models/network';
-import { WebConnectorStates } from './models/states';
-import { WebConnectorStatus } from './models/status';
+import type { Observer, Subscribable } from 'rxjs';
+import { WalletNetworkInfo } from './models/network';
+import { WalletStates } from './models/states';
+import { WalletStatus } from './models/status';
 import {
-  WebConnectorPostPayload,
-  WebConnectorSignPayload,
-  WebConnectorTxResult,
+  WalletPostPayload,
+  WalletSignPayload,
+  WalletTxResult,
 } from './models/tx';
 
-export interface TerraWebConnectorInfo {
+export interface TerraWalletConnectorInfo {
   icon: string;
   name: string;
   url: string;
 }
 
-export interface TerraWebConnector {
-  getInfo: () => TerraWebConnectorInfo;
+export interface TerraWalletConnector {
+  getInfo: () => TerraWalletConnectorInfo;
 
   // ---------------------------------------------
   // open / close
@@ -25,8 +25,8 @@ export interface TerraWebConnector {
 
   open: (
     hostWindow: Window,
-    statusObserver: Observer<WebConnectorStatus>,
-    statesObserver: Observer<WebConnectorStates>,
+    statusObserver: Observer<WalletStatus>,
+    statesObserver: Observer<WalletStates>,
   ) => void;
 
   close: () => void;
@@ -41,12 +41,12 @@ export interface TerraWebConnector {
   post: (
     terraAddress: string,
     tx: CreateTxOptions,
-  ) => Observable<WebConnectorTxResult<WebConnectorPostPayload>>;
+  ) => Subscribable<WalletTxResult<WalletPostPayload>>;
 
   sign: (
     terraAddress: string,
     tx: CreateTxOptions,
-  ) => Observable<WebConnectorTxResult<WebConnectorSignPayload>>;
+  ) => Subscribable<WalletTxResult<WalletSignPayload>>;
 
   hasCW20Tokens: (
     chainID: string,
@@ -58,9 +58,7 @@ export interface TerraWebConnector {
     ...tokenAddrs: string[]
   ) => Promise<{ [tokenAddr: string]: boolean }>;
 
-  hasNetwork: (
-    network: Omit<WebConnectorNetworkInfo, 'name'>,
-  ) => Promise<boolean>;
+  hasNetwork: (network: Omit<WalletNetworkInfo, 'name'>) => Promise<boolean>;
 
-  addNetwork: (network: WebConnectorNetworkInfo) => Promise<boolean>;
+  addNetwork: (network: WalletNetworkInfo) => Promise<boolean>;
 }

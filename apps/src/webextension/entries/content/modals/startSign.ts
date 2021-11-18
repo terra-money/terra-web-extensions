@@ -1,14 +1,14 @@
 import { IFramePoppingModal } from '@station/ui';
 import {
   SerializedCreateTxOptions,
-  WebConnectorSignPayload,
-  WebConnectorTxDenied,
-  WebConnectorTxFail,
-  WebConnectorTxProgress,
-  WebConnectorTxResult,
-  WebConnectorTxStatus,
-  WebConnectorTxSucceed,
-} from '@terra-dev/web-connector-interface';
+  WalletSignPayload,
+  WalletTxDenied,
+  WalletTxFail,
+  WalletTxProgress,
+  WalletTxResult,
+  WalletTxStatus,
+  WalletTxSucceed,
+} from '@terra-dev/wallet-interface';
 import {
   deregisterAllowCommandId,
   findWallet,
@@ -29,114 +29,110 @@ export function startSign(
   id: string,
   terraAddress: string,
   tx: SerializedCreateTxOptions,
-): Observable<WebConnectorTxResult<WebConnectorSignPayload>> {
+): Observable<WalletTxResult<WalletSignPayload>> {
   registerAllowCommandId(id);
 
-  return new Observable<WebConnectorTxResult<WebConnectorSignPayload>>(
-    (subscriber) => {
-      getDefaultNetworks()
-        .then((defaultNetworks) => {
-          return Promise.all([
-            readSelectedNetwork(defaultNetworks),
-            findWallet(terraAddress),
-          ]);
-        })
-        .then(([network, wallet]) => {
-          if (!wallet) {
-            subscriber.error(new Error(`Can't find wallet ${terraAddress}`));
+  return new Observable<WalletTxResult<WalletSignPayload>>((subscriber) => {
+    getDefaultNetworks()
+      .then((defaultNetworks) => {
+        return Promise.all([
+          readSelectedNetwork(defaultNetworks),
+          findWallet(terraAddress),
+        ]);
+      })
+      .then(([network, wallet]) => {
+        if (!wallet) {
+          subscriber.error(new Error(`Can't find wallet ${terraAddress}`));
+          return;
+        }
+
+        const isPopup = 'usbDevice' in wallet;
+
+        // ---------------------------------------------
+        // assets
+        // ---------------------------------------------
+        const modalContainer = !isPopup
+          ? window.document.createElement('div')
+          : null;
+
+        const port = browser.runtime.connect(undefined, {
+          name: CONTENT_SCRIPT_PORT_PREFIX + id,
+        });
+
+        // do not call before latest subscriber.next()
+        const endTx = () => {
+          if (modalContainer) {
+            window.document.querySelector('body')?.removeChild(modalContainer);
+          }
+          port.disconnect();
+          subscriber.unsubscribe();
+          deregisterAllowCommandId(id);
+        };
+
+        // ---------------------------------------------
+        // create and append modal
+        // ---------------------------------------------
+        const txHtml = browser.runtime.getURL('app.html');
+
+        const txRequest: TxRequest = {
+          id,
+          terraAddress,
+          network,
+          tx,
+          hostname: window.location.hostname,
+          date: new Date(),
+          closeWindowAfterTx: isPopup,
+        };
+
+        const src = `${txHtml}#/tx/sign?${toURLSearchParams(txRequest)}`;
+
+        if (modalContainer) {
+          const modal = createElement(IFramePoppingModal, {
+            logo: LOGO,
+            src,
+            onClose: () => {
+              subscriber.next({
+                status: WalletTxStatus.DENIED,
+              });
+              endTx();
+            },
+            width: `${MODAL_WIDTH}px`,
+            height: '70vh',
+            maxHeight: '800px',
+          });
+
+          render(modal, modalContainer);
+          window.document.querySelector('body')?.appendChild(modalContainer);
+        } else {
+          window.open(src, 'terra-station-tx-sign');
+        }
+
+        // ---------------------------------------------
+        // connect port (background -> content_script)
+        // ---------------------------------------------
+        const onMessage = (
+          msg:
+            | WalletTxProgress
+            | WalletTxSucceed<WalletSignPayload>
+            | WalletTxFail
+            | WalletTxDenied,
+        ) => {
+          if (!msg.status) {
             return;
           }
 
-          const isPopup = 'usbDevice' in wallet;
+          subscriber.next(msg);
 
-          // ---------------------------------------------
-          // assets
-          // ---------------------------------------------
-          const modalContainer = !isPopup
-            ? window.document.createElement('div')
-            : null;
-
-          const port = browser.runtime.connect(undefined, {
-            name: CONTENT_SCRIPT_PORT_PREFIX + id,
-          });
-
-          // do not call before latest subscriber.next()
-          const endTx = () => {
-            if (modalContainer) {
-              window.document
-                .querySelector('body')
-                ?.removeChild(modalContainer);
-            }
-            port.disconnect();
-            subscriber.unsubscribe();
-            deregisterAllowCommandId(id);
-          };
-
-          // ---------------------------------------------
-          // create and append modal
-          // ---------------------------------------------
-          const txHtml = browser.runtime.getURL('app.html');
-
-          const txRequest: TxRequest = {
-            id,
-            terraAddress,
-            network,
-            tx,
-            hostname: window.location.hostname,
-            date: new Date(),
-            closeWindowAfterTx: isPopup,
-          };
-
-          const src = `${txHtml}#/tx/sign?${toURLSearchParams(txRequest)}`;
-
-          if (modalContainer) {
-            const modal = createElement(IFramePoppingModal, {
-              logo: LOGO,
-              src,
-              onClose: () => {
-                subscriber.next({
-                  status: WebConnectorTxStatus.DENIED,
-                });
-                endTx();
-              },
-              width: `${MODAL_WIDTH}px`,
-              height: '70vh',
-              maxHeight: '800px',
-            });
-
-            render(modal, modalContainer);
-            window.document.querySelector('body')?.appendChild(modalContainer);
-          } else {
-            window.open(src, 'terra-station-tx-sign');
+          switch (msg.status) {
+            case WalletTxStatus.SUCCEED:
+            case WalletTxStatus.FAIL:
+            case WalletTxStatus.DENIED:
+              endTx();
+              break;
           }
+        };
 
-          // ---------------------------------------------
-          // connect port (background -> content_script)
-          // ---------------------------------------------
-          const onMessage = (
-            msg:
-              | WebConnectorTxProgress
-              | WebConnectorTxSucceed<WebConnectorSignPayload>
-              | WebConnectorTxFail
-              | WebConnectorTxDenied,
-          ) => {
-            if (!msg.status) {
-              return;
-            }
-
-            subscriber.next(msg);
-
-            switch (msg.status) {
-              case WebConnectorTxStatus.SUCCEED:
-              case WebConnectorTxStatus.FAIL:
-              case WebConnectorTxStatus.DENIED:
-                endTx();
-                break;
-            }
-          };
-
-          port.onMessage.addListener(onMessage);
-        });
-    },
-  );
+        port.onMessage.addListener(onMessage);
+      });
+  });
 }

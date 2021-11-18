@@ -1,12 +1,12 @@
 import {
   SerializedCreateTxOptions,
-  WebConnectorNetworkInfo,
-} from '@terra-dev/web-connector-interface';
+  WalletNetworkInfo,
+} from '@terra-dev/wallet-interface';
 
 export interface TxRequest {
   id: string;
   terraAddress: string;
-  network: WebConnectorNetworkInfo;
+  network: WalletNetworkInfo;
   tx: SerializedCreateTxOptions;
   hostname: string;
   date: Date;
@@ -60,7 +60,7 @@ export function fromURLSearchParams(search: string): TxRequest | undefined {
   }
 
   const tx: SerializedCreateTxOptions = JSON.parse(atob(txBase64));
-  const network: WebConnectorNetworkInfo = JSON.parse(atob(networkBase64));
+  const network: WalletNetworkInfo = JSON.parse(atob(networkBase64));
   const closeWindowAfterTx: boolean =
     params.get('close-window-after-tx') === 'yes';
 

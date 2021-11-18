@@ -1,18 +1,16 @@
-import { WebConnectorController } from '@terra-dev/web-connector-controller';
 import {
-  WebConnectorPostPayload,
-  WebConnectorSignPayload,
-  WebConnectorStates,
-  WebConnectorStatus,
-  WebConnectorStatusInitializing,
-  WebConnectorStatusNoAvailable,
-  WebConnectorStatusReady,
-  WebConnectorStatusType,
-  WebConnectorTxResult,
-} from '@terra-dev/web-connector-interface';
+  WalletPostPayload,
+  WalletSignPayload,
+  WalletStates,
+  WalletStatus,
+  WalletStatusInitializing,
+  WalletStatusNoAvailable,
+  WalletStatusReady,
+  WalletStatusType,
+  WalletTxResult,
+} from '@terra-dev/wallet-interface';
 import { CreateTxOptions } from '@terra-money/terra.js';
 import React, {
-  Consumer,
   Context,
   createContext,
   ReactNode,
@@ -21,27 +19,28 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { Observable } from 'rxjs';
+import { Subscribable } from 'rxjs';
+import { WalletConnectorController } from '../controllers/connector-controller';
 
-export interface WebConnectorProviderProps {
+export interface WalletConnectorProviderProps {
   children: ReactNode;
-  controller: WebConnectorController;
+  controller: WalletConnectorController;
 }
 
-export interface WebConnectorState {
-  controller: WebConnectorController;
-  status: WebConnectorStatus;
-  states: WebConnectorStates | null;
+export interface WalletConnectorState {
+  controller: WalletConnectorController;
+  status: WalletStatus;
+  states: WalletStates | null;
   refetchStates: () => void;
   requestApproval: (() => void) | null;
   post: (
     terraAddress: string,
     tx: CreateTxOptions,
-  ) => Observable<WebConnectorTxResult<WebConnectorPostPayload>>;
+  ) => Subscribable<WalletTxResult<WalletPostPayload>>;
   sign: (
     terraAddress: string,
     tx: CreateTxOptions,
-  ) => Observable<WebConnectorTxResult<WebConnectorSignPayload>>;
+  ) => Subscribable<WalletTxResult<WalletSignPayload>>;
   hasCW20Tokens: (
     chainID: string,
     ...tokenAddrs: string[]
@@ -58,25 +57,23 @@ export interface WebConnectorState {
   ) => Promise<boolean>;
 }
 
-const WebConnectorContext: Context<WebConnectorState> =
+const WalletConnectorContext: Context<WalletConnectorState> =
   // @ts-ignore
-  createContext<WebConnectorState>();
+  createContext<WalletConnectorState>();
 
-export function WebConnectorProvider({
+export function WalletConnectorProvider({
   children,
   controller,
-}: WebConnectorProviderProps) {
+}: WalletConnectorProviderProps) {
   const [status, setStatus] = useState<
-    | WebConnectorStatusInitializing
-    | WebConnectorStatusNoAvailable
-    | WebConnectorStatusReady
+    WalletStatusInitializing | WalletStatusNoAvailable | WalletStatusReady
   >(() => ({
-    type: WebConnectorStatusType.INITIALIZING,
+    type: WalletStatusType.INITIALIZING,
   }));
-  const [states, setStates] = useState<WebConnectorStates | null>(null);
+  const [states, setStates] = useState<WalletStates | null>(null);
 
   const requestApproval = useMemo(() => {
-    return status.type === WebConnectorStatusType.NO_AVAILABLE &&
+    return status.type === WalletStatusType.NO_AVAILABLE &&
       status.isApproved === false
       ? controller.requestApproval
       : null;
@@ -99,7 +96,7 @@ export function WebConnectorProvider({
     };
   }, [controller]);
 
-  const state = useMemo<WebConnectorState>(
+  const state = useMemo<WalletConnectorState>(
     () => ({
       controller,
       status,
@@ -117,15 +114,12 @@ export function WebConnectorProvider({
   );
 
   return (
-    <WebConnectorContext.Provider value={state}>
+    <WalletConnectorContext.Provider value={state}>
       {children}
-    </WebConnectorContext.Provider>
+    </WalletConnectorContext.Provider>
   );
 }
 
-export function useWebConnector(): WebConnectorState {
-  return useContext(WebConnectorContext);
+export function useWalletConnector(): WalletConnectorState {
+  return useContext(WalletConnectorContext);
 }
-
-export const WebConnectorConsumer: Consumer<WebConnectorState> =
-  WebConnectorContext.Consumer;

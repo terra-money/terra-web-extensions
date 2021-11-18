@@ -1,6 +1,6 @@
-import { WebConnectorWalletInfo } from '@terra-dev/web-connector-interface';
+import { WalletInfo } from '@terra-dev/wallet-interface';
 import { USBDeviceInfo } from '../models/USBDeviceInfo';
 
-export interface LedgerWallet extends WebConnectorWalletInfo {
+export interface LedgerWallet extends WalletInfo {
   usbDevice: USBDeviceInfo;
 }

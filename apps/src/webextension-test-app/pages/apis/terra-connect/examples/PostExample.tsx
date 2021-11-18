@@ -1,17 +1,20 @@
 import { useLocalStorageValue } from '@mantine/hooks';
-import { useWalletSelect, useWebConnector } from '@station/web-connector-react';
 import {
-  WebConnectorPostPayload,
-  WebConnectorTxResult,
-  WebConnectorTxStatus,
-} from '@terra-dev/web-connector-interface';
+  useWalletSelect,
+  useWalletConnector,
+} from '@station/web-connector-react';
+import {
+  WalletPostPayload,
+  WalletTxResult,
+  WalletTxStatus,
+} from '@terra-dev/wallet-interface';
 import { Coin, Fee, MsgSend } from '@terra-money/terra.js';
 import React, { useCallback, useState } from 'react';
 
 const TO_ADDRESS = 'terra12hnhh5vtyg5juqnzm43970nh4fw42pt27nw9g9';
 
 export function PostExample() {
-  const { states, post } = useWebConnector();
+  const { states, post } = useWalletConnector();
 
   const { selectedWallet } = useWalletSelect();
 
@@ -23,7 +26,7 @@ export function PostExample() {
   });
 
   const [txResult, setTxResult] =
-    useState<WebConnectorTxResult<WebConnectorPostPayload> | null>(null);
+    useState<WalletTxResult<WalletPostPayload> | null>(null);
 
   const [txError, setTxError] = useState<string | null>(null);
 
@@ -80,7 +83,7 @@ export function PostExample() {
 
       {txError && <pre>{txError}</pre>}
 
-      {txResult && states && txResult.status === WebConnectorTxStatus.SUCCEED && (
+      {txResult && states && txResult.status === WalletTxStatus.SUCCEED && (
         <a
           href={`https://finder.terra.money/${states.network.chainID}/tx/${txResult.payload.txhash}`}
           target="_blank"

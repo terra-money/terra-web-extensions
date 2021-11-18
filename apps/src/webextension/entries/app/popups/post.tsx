@@ -1,10 +1,10 @@
 import {
   deserializeTx,
-  WebConnectorTxFail,
-  WebConnectorTxStatus,
-  WebConnectorTxUnspecifiedError,
-  WebConnectorUserDenied,
-} from '@terra-dev/web-connector-interface';
+  WalletTxFail,
+  WalletTxStatus,
+  WalletTxUnspecifiedError,
+  WalletUserDenied,
+} from '@terra-dev/wallet-interface';
 import {
   approveHostnames,
   createLedgerKey,
@@ -78,7 +78,7 @@ export function TxPostPopup() {
     });
 
     port.postMessage({
-      status: WebConnectorTxStatus.DENIED,
+      status: WalletTxStatus.DENIED,
     });
 
     port.disconnect();
@@ -94,8 +94,8 @@ export function TxPostPopup() {
     });
 
     port.postMessage({
-      status: WebConnectorTxStatus.FAIL,
-      error: new WebConnectorTxUnspecifiedError(
+      status: WalletTxStatus.FAIL,
+      error: new WalletTxUnspecifiedError(
         `Can't find the wallet "${txRequest.terraAddress}"`,
       ),
     });
@@ -247,7 +247,7 @@ function LedgerWalletTxForm({
         key,
       ).subscribe({
         next: (result) => {
-          if (result.status === WebConnectorTxStatus.SUCCEED) {
+          if (result.status === WalletTxStatus.SUCCEED) {
             port.postMessage(result);
             close();
 
@@ -261,13 +261,13 @@ function LedgerWalletTxForm({
             });
 
             txInfoPort.disconnect();
-          } else if (result.status === WebConnectorTxStatus.DENIED) {
+          } else if (result.status === WalletTxStatus.DENIED) {
             port.postMessage({
               ...result,
-              error: new WebConnectorUserDenied().toJSON(),
+              error: new WalletUserDenied().toJSON(),
             });
             close();
-          } else if (result.status === WebConnectorTxStatus.FAIL) {
+          } else if (result.status === WalletTxStatus.FAIL) {
             port.postMessage({
               ...result,
               error: result.error.toJSON(),
@@ -277,9 +277,9 @@ function LedgerWalletTxForm({
         },
         error: (error) => {
           port.postMessage({
-            status: WebConnectorTxStatus.FAIL,
+            status: WalletTxStatus.FAIL,
             error,
-          } as WebConnectorTxFail);
+          } as WalletTxFail);
           close();
         },
         complete: () => {
@@ -353,7 +353,7 @@ function EncryptedWalletTxForm({
         resolvedTx,
       ).subscribe({
         next: (result) => {
-          if (result.status === WebConnectorTxStatus.SUCCEED) {
+          if (result.status === WalletTxStatus.SUCCEED) {
             port.postMessage(result);
 
             if (password) {
@@ -376,12 +376,12 @@ function EncryptedWalletTxForm({
             });
 
             txInfoPort.disconnect();
-          } else if (result.status === WebConnectorTxStatus.DENIED) {
+          } else if (result.status === WalletTxStatus.DENIED) {
             port.postMessage({
               ...result,
-              error: new WebConnectorUserDenied().toJSON(),
+              error: new WalletUserDenied().toJSON(),
             });
-          } else if (result.status === WebConnectorTxStatus.FAIL) {
+          } else if (result.status === WalletTxStatus.FAIL) {
             port.postMessage({
               ...result,
               error: result.error.toJSON(),
@@ -390,9 +390,9 @@ function EncryptedWalletTxForm({
         },
         error: (error) => {
           port.postMessage({
-            status: WebConnectorTxStatus.FAIL,
+            status: WalletTxStatus.FAIL,
             error,
-          } as WebConnectorTxFail);
+          } as WalletTxFail);
         },
         complete: () => {
           port.disconnect();

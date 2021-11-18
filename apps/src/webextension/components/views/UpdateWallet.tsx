@@ -4,7 +4,7 @@ import {
   WalletCard,
   WalletCardSelector,
 } from '@station/ui';
-import { WebConnectorWalletInfo } from '@terra-dev/web-connector-interface';
+import { WalletInfo } from '@terra-dev/wallet-interface';
 import {
   validateWalletName,
   WalletNameInvalid,
@@ -22,7 +22,7 @@ export interface UpdateWalletResult {
 
 export interface UpdateWalletProps {
   className?: string;
-  wallet: WebConnectorWalletInfo;
+  wallet: WalletInfo;
   onCancel: () => void;
   onUpdate: (result: UpdateWalletResult) => void;
 }

@@ -1,6 +1,6 @@
 import Transport from '@ledgerhq/hw-transport';
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
-import { WebConnectorLedgerError } from '@terra-dev/web-connector-interface';
+import { WalletLedgerError } from '@terra-dev/wallet-interface';
 import TerraLedgerApp, {
   PublicKeyResponse,
   SignResponse,
@@ -65,7 +65,7 @@ export async function createTransport(): Promise<Transport> {
   if (transport) {
     return transport;
   } else {
-    throw new WebConnectorLedgerError(
+    throw new WalletLedgerError(
       99999,
       `Failed to create instance of TransportWebUSB`,
     );
@@ -79,7 +79,7 @@ export async function connectLedger(): Promise<LedgerWallet | undefined> {
   await app.initialize();
 
   if (!(transport instanceof TransportWebUSB)) {
-    throw new WebConnectorLedgerError(
+    throw new WalletLedgerError(
       99999,
       `transport is not a TransportWebUSB instance`,
     );
@@ -105,10 +105,7 @@ export async function connectLedger(): Promise<LedgerWallet | undefined> {
     return wallet;
   }
 
-  throw new WebConnectorLedgerError(
-    publicKey.return_code,
-    publicKey.error_message,
-  );
+  throw new WalletLedgerError(publicKey.return_code, publicKey.error_message);
 }
 
 export type LedgerKeyResponse = { key: LedgerKey; close: () => void };
@@ -139,10 +136,7 @@ export async function createLedgerKey(): Promise<LedgerKeyResponse> {
     };
   }
 
-  throw new WebConnectorLedgerError(
-    publicKey.return_code,
-    publicKey.error_message,
-  );
+  throw new WalletLedgerError(publicKey.return_code, publicKey.error_message);
 }
 
 export class LedgerKey extends Key {
@@ -176,7 +170,7 @@ export class LedgerKey extends Key {
 
   public async createSignatureAmino(tx: SignDoc): Promise<SignatureV2> {
     if (!this.publicKey) {
-      throw new WebConnectorLedgerError(
+      throw new WalletLedgerError(
         99999,
         `[web-extension-backend] This LedgerKey does not have publicKey`,
       );
@@ -190,7 +184,7 @@ export class LedgerKey extends Key {
     );
 
     if (!('signature' in signature)) {
-      throw new WebConnectorLedgerError(
+      throw new WalletLedgerError(
         signature.return_code,
         signature.error_message,
       );
@@ -201,7 +195,7 @@ export class LedgerKey extends Key {
     );
 
     if (!signatureBuffer) {
-      throw new WebConnectorLedgerError(
+      throw new WalletLedgerError(
         99999,
         `[web-extension-backend] Failed to make Buffer from the result of TerraApp.sign()`,
       );

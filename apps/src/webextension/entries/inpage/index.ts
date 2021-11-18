@@ -1,20 +1,20 @@
 import {
   createTxErrorFromJson,
   serializeTx,
-  TerraWebConnector,
-  TerraWebConnectorInfo,
-  WebConnectorNetworkInfo,
-  WebConnectorPostPayload,
-  WebConnectorSignPayload,
-  WebConnectorStates,
-  WebConnectorStatus,
-  WebConnectorStatusType,
-  WebConnectorTxProgress,
-  WebConnectorTxResult,
-  WebConnectorTxStatus,
-  WebConnectorTxSucceed,
-  WebConnectorUserDenied,
-} from '@terra-dev/web-connector-interface';
+  TerraWalletConnector,
+  TerraWalletConnectorInfo,
+  WalletNetworkInfo,
+  WalletPostPayload,
+  WalletSignPayload,
+  WalletStates,
+  WalletStatus,
+  WalletStatusType,
+  WalletTxProgress,
+  WalletTxResult,
+  WalletTxStatus,
+  WalletTxSucceed,
+  WalletUserDenied,
+} from '@terra-dev/wallet-interface';
 import { AccAddress, CreateTxOptions } from '@terra-money/terra.js';
 import bowser from 'bowser';
 import {
@@ -38,10 +38,9 @@ import {
   RequestApproval,
 } from '../../models/WebExtensionMessage';
 
-function canRequestApproval(status: WebConnectorStatus): boolean {
+function canRequestApproval(status: WalletStatus): boolean {
   return (
-    status.type === WebConnectorStatusType.NO_AVAILABLE &&
-    status.isApproved === false
+    status.type === WalletStatusType.NO_AVAILABLE && status.isApproved === false
   );
 }
 
@@ -51,22 +50,22 @@ const INFO = {
   icon: 'https://assets.terra.money/station.png',
 };
 
-class WebExtensionController implements TerraWebConnector {
-  private _status: BehaviorSubject<WebConnectorStatus>;
-  private _states: BehaviorSubject<WebConnectorStates | null>;
+class WebExtensionController implements TerraWalletConnector {
+  private _status: BehaviorSubject<WalletStatus>;
+  private _states: BehaviorSubject<WalletStates | null>;
   private hostWindow: Window | null = null;
   private statusSubscription: Subscription | null = null;
   private statesSubscription: Subscription | null = null;
 
   constructor() {
-    this._status = new BehaviorSubject<WebConnectorStatus>({
-      type: WebConnectorStatusType.INITIALIZING,
+    this._status = new BehaviorSubject<WalletStatus>({
+      type: WalletStatusType.INITIALIZING,
     });
 
-    this._states = new BehaviorSubject<WebConnectorStates | null>(null);
+    this._states = new BehaviorSubject<WalletStates | null>(null);
   }
 
-  getInfo = (): TerraWebConnectorInfo => {
+  getInfo = (): TerraWalletConnectorInfo => {
     return INFO;
   };
 
@@ -88,17 +87,14 @@ class WebExtensionController implements TerraWebConnector {
 
   open = (
     hostWindow: Window,
-    statusObserver: Observer<WebConnectorStatus>,
-    statesObserver: Observer<WebConnectorStates>,
+    statusObserver: Observer<WalletStatus>,
+    statesObserver: Observer<WalletStates>,
   ) => {
     this.hostWindow = hostWindow;
     this.statusSubscription = this._status.subscribe(statusObserver);
     this.statesSubscription = this._states
       .pipe(
-        filter(
-          (state: WebConnectorStates | null): state is WebConnectorStates =>
-            !!state,
-        ),
+        filter((state: WalletStates | null): state is WalletStates => !!state),
       )
       .subscribe(statesObserver);
 
@@ -111,10 +107,6 @@ class WebExtensionController implements TerraWebConnector {
     this.hostWindow?.removeEventListener('message', this.onMessage);
     this.statusSubscription?.unsubscribe();
     this.statesSubscription?.unsubscribe();
-
-    this.hostWindow = null;
-    this.statusSubscription = null;
-    this.statesSubscription = null;
   };
 
   refetchStates = () => {
@@ -146,12 +138,12 @@ class WebExtensionController implements TerraWebConnector {
   post = (
     terraAddress: string,
     tx: CreateTxOptions,
-  ): Observable<WebConnectorTxResult<WebConnectorPostPayload>> => {
+  ): Observable<WalletTxResult<WalletPostPayload>> => {
     return new Observable<
-      WebConnectorTxProgress | WebConnectorTxSucceed<WebConnectorPostPayload>
+      WalletTxProgress | WalletTxSucceed<WalletPostPayload>
     >((subscriber) => {
       subscriber.next({
-        status: WebConnectorTxStatus.PROGRESS,
+        status: WalletTxStatus.PROGRESS,
       });
 
       const id = Date.now();
@@ -174,25 +166,25 @@ class WebExtensionController implements TerraWebConnector {
           return;
         }
 
-        if (event.data.payload.status === WebConnectorTxStatus.PROGRESS) {
+        if (event.data.payload.status === WalletTxStatus.PROGRESS) {
           subscriber.next(event.data.payload);
         } else if (
-          event.data.payload.status === WebConnectorTxStatus.DENIED ||
-          event.data.payload.status === WebConnectorTxStatus.FAIL ||
-          event.data.payload.status === WebConnectorTxStatus.SUCCEED
+          event.data.payload.status === WalletTxStatus.DENIED ||
+          event.data.payload.status === WalletTxStatus.FAIL ||
+          event.data.payload.status === WalletTxStatus.SUCCEED
         ) {
           switch (event.data.payload.status) {
-            case WebConnectorTxStatus.DENIED:
-              subscriber.error(new WebConnectorUserDenied());
+            case WalletTxStatus.DENIED:
+              subscriber.error(new WalletUserDenied());
               break;
-            case WebConnectorTxStatus.FAIL:
+            case WalletTxStatus.FAIL:
               subscriber.error(
                 event.data.payload.error instanceof Error
                   ? event.data.payload.error
                   : createTxErrorFromJson(event.data.payload.error),
               );
               break;
-            case WebConnectorTxStatus.SUCCEED:
+            case WalletTxStatus.SUCCEED:
               subscriber.next(event.data.payload);
               subscriber.complete();
               break;
@@ -213,68 +205,66 @@ class WebExtensionController implements TerraWebConnector {
   sign = (
     terraAddress: string,
     tx: CreateTxOptions,
-  ): Observable<WebConnectorTxResult<WebConnectorSignPayload>> => {
-    return new Observable<WebConnectorTxResult<WebConnectorSignPayload>>(
-      (subscriber) => {
-        subscriber.next({
-          status: WebConnectorTxStatus.PROGRESS,
-        });
+  ): Observable<WalletTxResult<WalletSignPayload>> => {
+    return new Observable<WalletTxResult<WalletSignPayload>>((subscriber) => {
+      subscriber.next({
+        status: WalletTxStatus.PROGRESS,
+      });
 
-        const id = Date.now();
+      const id = Date.now();
 
-        const msg: ExecuteExtensionSign = {
-          type: FromWebToContentScriptMessage.EXECUTE_SIGN,
-          id,
-          terraAddress,
-          payload: serializeTx(tx),
-        };
+      const msg: ExecuteExtensionSign = {
+        type: FromWebToContentScriptMessage.EXECUTE_SIGN,
+        id,
+        terraAddress,
+        payload: serializeTx(tx),
+      };
 
-        this.hostWindow?.postMessage(msg, '*');
+      this.hostWindow?.postMessage(msg, '*');
 
-        const callback = (event: MessageEvent) => {
-          if (
-            !isWebExtensionMessage(event.data) ||
-            event.data.type !== FromContentScriptToWebMessage.SIGN_RESPONSE ||
-            event.data.id !== id
-          ) {
-            return;
+      const callback = (event: MessageEvent) => {
+        if (
+          !isWebExtensionMessage(event.data) ||
+          event.data.type !== FromContentScriptToWebMessage.SIGN_RESPONSE ||
+          event.data.id !== id
+        ) {
+          return;
+        }
+
+        if (event.data.payload.status === WalletTxStatus.PROGRESS) {
+          subscriber.next(event.data.payload);
+        } else if (
+          event.data.payload.status === WalletTxStatus.DENIED ||
+          event.data.payload.status === WalletTxStatus.FAIL ||
+          event.data.payload.status === WalletTxStatus.SUCCEED
+        ) {
+          switch (event.data.payload.status) {
+            case WalletTxStatus.DENIED:
+              subscriber.error(new WalletUserDenied());
+              break;
+            case WalletTxStatus.FAIL:
+              subscriber.error(
+                event.data.payload.error instanceof Error
+                  ? event.data.payload.error
+                  : createTxErrorFromJson(event.data.payload.error),
+              );
+              break;
+            case WalletTxStatus.SUCCEED:
+              subscriber.next(event.data.payload);
+              subscriber.complete();
+              break;
           }
 
-          if (event.data.payload.status === WebConnectorTxStatus.PROGRESS) {
-            subscriber.next(event.data.payload);
-          } else if (
-            event.data.payload.status === WebConnectorTxStatus.DENIED ||
-            event.data.payload.status === WebConnectorTxStatus.FAIL ||
-            event.data.payload.status === WebConnectorTxStatus.SUCCEED
-          ) {
-            switch (event.data.payload.status) {
-              case WebConnectorTxStatus.DENIED:
-                subscriber.error(new WebConnectorUserDenied());
-                break;
-              case WebConnectorTxStatus.FAIL:
-                subscriber.error(
-                  event.data.payload.error instanceof Error
-                    ? event.data.payload.error
-                    : createTxErrorFromJson(event.data.payload.error),
-                );
-                break;
-              case WebConnectorTxStatus.SUCCEED:
-                subscriber.next(event.data.payload);
-                subscriber.complete();
-                break;
-            }
-
-            this.hostWindow?.removeEventListener('message', callback);
-          }
-        };
-
-        this.hostWindow?.addEventListener('message', callback);
-
-        return () => {
           this.hostWindow?.removeEventListener('message', callback);
-        };
-      },
-    );
+        }
+      };
+
+      this.hostWindow?.addEventListener('message', callback);
+
+      return () => {
+        this.hostWindow?.removeEventListener('message', callback);
+      };
+    });
   };
 
   hasCW20Tokens = (
@@ -359,9 +349,7 @@ class WebExtensionController implements TerraWebConnector {
     });
   };
 
-  hasNetwork = (
-    network: Omit<WebConnectorNetworkInfo, 'name'>,
-  ): Promise<boolean> => {
+  hasNetwork = (network: Omit<WalletNetworkInfo, 'name'>): Promise<boolean> => {
     const id = Date.now();
 
     const msg: HasNetwork = {
@@ -392,7 +380,7 @@ class WebExtensionController implements TerraWebConnector {
     });
   };
 
-  addNetwork = (network: WebConnectorNetworkInfo): Promise<boolean> => {
+  addNetwork = (network: WalletNetworkInfo): Promise<boolean> => {
     const id = Date.now();
 
     const msg: AddNetwork = {
@@ -434,15 +422,15 @@ class WebExtensionController implements TerraWebConnector {
         const { isApproved, ...nextStates } = event.data.payload;
 
         if (isApproved) {
-          if (currentStatus.type !== WebConnectorStatusType.READY) {
+          if (currentStatus.type !== WalletStatusType.READY) {
             this._status.next({
-              type: WebConnectorStatusType.READY,
+              type: WalletStatusType.READY,
             });
           }
         } else {
-          if (currentStatus.type !== WebConnectorStatusType.NO_AVAILABLE) {
+          if (currentStatus.type !== WalletStatusType.NO_AVAILABLE) {
             this._status.next({
-              type: WebConnectorStatusType.NO_AVAILABLE,
+              type: WalletStatusType.NO_AVAILABLE,
               isConnectorExists: true,
               isSupportBrowser: true,
               isInstalled: true,
@@ -457,13 +445,28 @@ class WebExtensionController implements TerraWebConnector {
   };
 }
 
-const instance = new WebExtensionController();
+declare global {
+  interface Window {
+    terraWallets:
+      | Array<{
+          name: string;
+          identifier: string;
+          connector: () => TerraWalletConnector;
+          icon: string;
+        }>
+      | undefined;
+  }
+}
 
-//@ts-ignore
-if (typeof window.terraWebConnectors === 'undefined') {
-  //@ts-ignore
-  window.terraWebConnectors = [instance];
+const WALLET_INFO = {
+  name: 'Terra Station',
+  identifier: 'terra-station',
+  connector: () => new WebExtensionController(),
+  icon: '',
+};
+
+if (typeof window.terraWallets === 'undefined') {
+  window.terraWallets = [WALLET_INFO];
 } else {
-  //@ts-ignore
-  window.terraWebConnectors.push(instance);
+  window.terraWallets.push(WALLET_INFO);
 }

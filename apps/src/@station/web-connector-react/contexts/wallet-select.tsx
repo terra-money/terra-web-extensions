@@ -1,4 +1,4 @@
-import { WebConnectorWalletInfo } from '@terra-dev/web-connector-interface';
+import { WalletInfo } from '@terra-dev/wallet-interface';
 import React, {
   Consumer,
   Context,
@@ -11,16 +11,16 @@ import React, {
   useState,
 } from 'react';
 import { useStateRef } from 'use-state-ref';
-import { useWebConnector } from './web-extension';
+import { useWalletConnector } from './web-extension';
 
 export interface WalletSelectProviderProps {
   children: ReactNode;
 }
 
 export interface WalletSelect {
-  wallets: WebConnectorWalletInfo[];
-  selectedWallet: WebConnectorWalletInfo | null;
-  selectWallet: (nextWallet: WebConnectorWalletInfo) => void;
+  wallets: WalletInfo[];
+  selectedWallet: WalletInfo | null;
+  selectWallet: (nextWallet: WalletInfo) => void;
 }
 
 const WalletSelectContext: Context<WalletSelect> =
@@ -30,14 +30,13 @@ const WalletSelectContext: Context<WalletSelect> =
 const CURRENT_WALLET_ADDRESS = '__current_wallet_address__';
 
 export function WalletSelectProvider({ children }: WalletSelectProviderProps) {
-  const { states } = useWebConnector();
+  const { states } = useWalletConnector();
 
-  const [selectedWallet, setSelectedWallet] =
-    useState<WebConnectorWalletInfo | null>(null);
+  const [selectedWallet, setSelectedWallet] = useState<WalletInfo | null>(null);
 
   const selectedWalletRef = useStateRef(selectedWallet);
 
-  const selectWallet = useCallback((wallet: WebConnectorWalletInfo) => {
+  const selectWallet = useCallback((wallet: WalletInfo) => {
     setSelectedWallet(wallet);
     localStorage.setItem(CURRENT_WALLET_ADDRESS, wallet.terraAddress);
   }, []);

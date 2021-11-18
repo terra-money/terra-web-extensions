@@ -2,7 +2,7 @@
  * Data type for storage and UI
  * This information is not protected (someone access)
  */
-export interface WebConnectorWalletInfo {
+export interface WalletInfo {
   /**
    * Wallet display name
    * This should be primary key
