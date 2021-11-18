@@ -1,6 +1,6 @@
 {
   "name": "open-extension-ready-chrome",
-  "version": "0.8.2",
+  "version": "0.9.0",
   "description": "",
   "main": "index.js",
   "author": "Ian Lee <i@ssen.name>",
