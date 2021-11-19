@@ -1,0 +1,19 @@
+{
+  "name": "terra-web-extension",
+  "version": "0.11.4",
+  "author": "Ian Lee <ian@terra.money>",
+  "description": "Run terra web extension installed chromium",
+  "main": "index.js",
+  "typings": "index.d.ts",
+  "bin": "bin.js",
+  "license": "MIT",
+  "files": [
+    "unpacked",
+    "index.js",
+    "bin.js",
+    "index.d.ts"
+  ],
+  "dependencies": {
+    "puppeteer": ">=10.4.0"
+  }
+}

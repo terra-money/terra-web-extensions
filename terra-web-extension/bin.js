@@ -4,11 +4,9 @@ const puppeteer = require('puppeteer');
 const path = require('path');
 
 (async () => {
-  const extensionPath = path.resolve(__dirname, './webextension/');
+  const extensionPath = path.resolve(__dirname, './unpacked/');
 
-  const url =
-    process.argv[2] ||
-    'https://anchor-web-app-git-feature-wallet-connect-anchor-protocol.vercel.app/';
+  const url = process.argv[2] || 'https://app.anchorprotocol.com';
 
   const browser = await puppeteer.launch({
     userDataDir: process.env.EXTENSION_READY_CHROME_USER_DATA,

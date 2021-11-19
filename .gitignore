@@ -30,6 +30,6 @@ dev/
 test/storage/
 .eslintcache
 tsconfig.tsbuildinfo
-open-extension-ready-chrome/webextension
+terra-web-extension/unpacked
 puppeteer-user-data/
 puppeteer-dummy-user-datas/

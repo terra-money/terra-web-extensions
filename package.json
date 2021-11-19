@@ -6,7 +6,7 @@
   "repository": "github:githubid/repository",
   "workspaces": [
     "apps",
-    "open-extension-ready-chrome"
+    "terra-web-extension"
   ],
   "scripts": {
     "storybook:build": "yarn workspace apps run storybook:build",
