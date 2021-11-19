@@ -17,7 +17,7 @@ declare global {
       | Array<{
           name: string;
           identifier: string;
-          connector: () => TerraWebExtensionConnector;
+          connector: () => Promise<TerraWebExtensionConnector>;
           icon: string;
         }>
       | undefined;
@@ -26,7 +26,7 @@ declare global {
 
 async function getConnector(
   hostWindow: Window,
-): Promise<(() => TerraWebExtensionConnector) | undefined> {
+): Promise<(() => Promise<TerraWebExtensionConnector>) | undefined> {
   return new Promise((resolve) => {
     let count = 20;
 
@@ -98,23 +98,23 @@ export class WebExtensionConnectorController {
         return;
       }
 
-      const connector = factory();
+      factory().then((connector) => {
+        if (!connector.checkBrowserAvailability(navigator.userAgent)) {
+          this._status.next({
+            type: WebExtensionStatusType.NO_AVAILABLE,
+            isConnectorExists: true,
+            isSupportBrowser: false,
+          });
 
-      if (!connector.checkBrowserAvailability(navigator.userAgent)) {
-        this._status.next({
-          type: WebExtensionStatusType.NO_AVAILABLE,
-          isConnectorExists: true,
-          isSupportBrowser: false,
-        });
+          connector.close();
 
-        connector.close();
+          return;
+        }
 
-        return;
-      }
+        connector.open(hostWindow, this._status, this._states);
 
-      connector.open(hostWindow, this._status, this._states);
-
-      this._connector = connector;
+        this._connector = connector;
+      });
     });
   }
 

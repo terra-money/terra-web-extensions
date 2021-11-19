@@ -459,7 +459,7 @@ declare global {
       | Array<{
           name: string;
           identifier: string;
-          connector: () => TerraWebExtensionConnector;
+          connector: () => Promise<TerraWebExtensionConnector>;
           icon: string;
         }>
       | undefined;
@@ -469,7 +469,7 @@ declare global {
 const WALLET_INFO = {
   name: 'Terra Station',
   identifier: 'terra-station',
-  connector: () => new WebExtensionController(),
+  connector: () => Promise.resolve(new WebExtensionController()),
   icon: '',
 };
 
