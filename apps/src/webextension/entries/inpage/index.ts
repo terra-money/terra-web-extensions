@@ -58,8 +58,8 @@ class WebExtensionController implements TerraWebExtensionConnector {
     this.statesSubscription = this._states
       .pipe(
         filter(
-          (state: WebExtensionStates | null): state is WebExtensionStates =>
-            !!state,
+          (states: WebExtensionStates | null): states is WebExtensionStates =>
+            !!states,
         ),
       )
       .subscribe(statesObserver);
@@ -428,6 +428,8 @@ const WALLET_INFO = {
   icon: 'https://assets.terra.money/icon/station-extension/icon.png',
   connector: () => new WebExtensionController(),
 };
+
+window.isTerraExtensionAvailable = true;
 
 if (typeof window.terraWallets === 'undefined') {
   window.terraWallets = [WALLET_INFO];
