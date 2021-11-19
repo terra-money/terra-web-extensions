@@ -466,7 +466,7 @@ export function startContentScript({
             break;
           case FromWebToContentScriptMessage.REQUEST_APPROVAL:
             if (lastStates?.isApproved === true) {
-              console.warn(`${window.location.hostname} is already approved!`);
+              extensionStateLastUpdated.next(Date.now());
               break;
             }
 

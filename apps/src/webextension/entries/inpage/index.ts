@@ -42,7 +42,7 @@ function canRequestApproval(states: WebExtensionStates): boolean {
   );
 }
 
-class WebExtensionController implements TerraWebExtensionConnector {
+class TerraStationConnector implements TerraWebExtensionConnector {
   private _states: BehaviorSubject<WebExtensionStates>;
   private hostWindow: Window | null = null;
   private statesSubscription: Subscription | null = null;
@@ -55,16 +55,23 @@ class WebExtensionController implements TerraWebExtensionConnector {
 
   open = (hostWindow: Window, statesObserver: Observer<WebExtensionStates>) => {
     this.hostWindow = hostWindow;
-    this.statesSubscription = this._states
-      .pipe(
-        filter(
-          (states: WebExtensionStates | null): states is WebExtensionStates =>
-            !!states,
-        ),
-      )
-      .subscribe(statesObserver);
+    this.statesSubscription = this._states.subscribe(statesObserver);
 
     hostWindow.addEventListener('message', this.onMessage);
+
+    const init = this._states
+      .pipe(filter(({ type }) => type !== WebExtensionStatus.INITIALIZING))
+      .subscribe({
+        next: (states) => {
+          if (
+            states.type === WebExtensionStatus.NO_AVAILABLE &&
+            states.isApproved === false
+          ) {
+            this.requestApproval();
+          }
+          init.unsubscribe();
+        },
+      });
 
     this.refetchStates();
   };
@@ -426,7 +433,7 @@ const WALLET_INFO = {
   name: 'Terra Station',
   identifier: 'terra-station',
   icon: 'https://assets.terra.money/icon/station-extension/icon.png',
-  connector: () => new WebExtensionController(),
+  connector: () => new TerraStationConnector(),
 };
 
 window.isTerraExtensionAvailable = true;
