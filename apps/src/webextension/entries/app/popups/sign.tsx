@@ -1,10 +1,10 @@
 import {
   deserializeTx,
-  WalletTxFail,
-  WalletTxStatus,
-  WalletTxUnspecifiedError,
-  WalletUserDenied,
-} from '@terra-dev/wallet-interface';
+  WebExtensionTxFail,
+  WebExtensionTxStatus,
+  WebExtensionTxUnspecifiedError,
+  WebExtensionUserDenied,
+} from '@terra-dev/web-extension-interface';
 import {
   approveHostnames,
   createLedgerKey,
@@ -74,7 +74,7 @@ export function TxSignPopup() {
     });
 
     port.postMessage({
-      status: WalletTxStatus.DENIED,
+      status: WebExtensionTxStatus.DENIED,
     });
 
     port.disconnect();
@@ -90,8 +90,8 @@ export function TxSignPopup() {
     });
 
     port.postMessage({
-      status: WalletTxStatus.FAIL,
-      error: new WalletTxUnspecifiedError(
+      status: WebExtensionTxStatus.FAIL,
+      error: new WebExtensionTxUnspecifiedError(
         `Can't find the wallet "${txRequest.terraAddress}"`,
       ),
     });
@@ -243,16 +243,16 @@ function LedgerWalletTxForm({
         key,
       ).subscribe({
         next: (result) => {
-          if (result.status === WalletTxStatus.SUCCEED) {
+          if (result.status === WebExtensionTxStatus.SUCCEED) {
             port.postMessage(result);
             close();
-          } else if (result.status === WalletTxStatus.DENIED) {
+          } else if (result.status === WebExtensionTxStatus.DENIED) {
             port.postMessage({
               ...result,
-              error: new WalletUserDenied().toJSON(),
+              error: new WebExtensionUserDenied().toJSON(),
             });
             close();
-          } else if (result.status === WalletTxStatus.FAIL) {
+          } else if (result.status === WebExtensionTxStatus.FAIL) {
             port.postMessage({
               ...result,
               error: result.error.toJSON(),
@@ -262,9 +262,9 @@ function LedgerWalletTxForm({
         },
         error: (error) => {
           port.postMessage({
-            status: WalletTxStatus.FAIL,
+            status: WebExtensionTxStatus.FAIL,
             error,
-          } as WalletTxFail);
+          } as WebExtensionTxFail);
           close();
         },
         complete: () => {
@@ -338,7 +338,7 @@ function EncryptedWalletTxForm({
         resolvedTx,
       ).subscribe({
         next: (result) => {
-          if (result.status === WalletTxStatus.SUCCEED) {
+          if (result.status === WebExtensionTxStatus.SUCCEED) {
             port.postMessage(result);
 
             if (password) {
@@ -350,12 +350,12 @@ function EncryptedWalletTxForm({
             } else {
               waitPasswordSaving = removeSavedPassword(txRequest.terraAddress);
             }
-          } else if (result.status === WalletTxStatus.DENIED) {
+          } else if (result.status === WebExtensionTxStatus.DENIED) {
             port.postMessage({
               ...result,
-              error: new WalletUserDenied().toJSON(),
+              error: new WebExtensionUserDenied().toJSON(),
             });
-          } else if (result.status === WalletTxStatus.FAIL) {
+          } else if (result.status === WebExtensionTxStatus.FAIL) {
             port.postMessage({
               ...result,
               error: result.error.toJSON(),
@@ -364,9 +364,9 @@ function EncryptedWalletTxForm({
         },
         error: (error) => {
           port.postMessage({
-            status: WalletTxStatus.FAIL,
+            status: WebExtensionTxStatus.FAIL,
             error,
-          } as WalletTxFail);
+          } as WebExtensionTxFail);
         },
         complete: () => {
           port.disconnect();

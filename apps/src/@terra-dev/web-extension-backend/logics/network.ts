@@ -1,4 +1,4 @@
-import { WalletNetworkInfo } from '@terra-dev/wallet-interface';
+import { WebExtensionNetworkInfo } from '@terra-dev/web-extension-interface';
 
 export enum NetworkNameInvalid {
   SAME_NAME_EXISTS = 'SAME_NAME_EXISTS',
@@ -6,7 +6,7 @@ export enum NetworkNameInvalid {
 
 export function validateNetworkName(
   name: string,
-  networks: WalletNetworkInfo[],
+  networks: WebExtensionNetworkInfo[],
 ): NetworkNameInvalid | null {
   if (name.length === 0) {
     return null;

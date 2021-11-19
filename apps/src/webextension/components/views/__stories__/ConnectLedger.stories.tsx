@@ -1,5 +1,5 @@
 import { Meta } from '@storybook/react';
-import { WalletLedgerError } from '@terra-dev/wallet-interface';
+import { WebExtensionLedgerError } from '@terra-dev/web-extension-interface';
 import React from 'react';
 import { ConnectLedger } from '../ConnectLedger';
 
@@ -20,7 +20,7 @@ export const ConnectLedger_ = () => {
           },
         ]}
         onConnect={async (name, design) => {
-          throw new WalletLedgerError(27404, `Ledger error!`);
+          throw new WebExtensionLedgerError(27404, `Ledger error!`);
         }}
         onCancel={console.log}
       />

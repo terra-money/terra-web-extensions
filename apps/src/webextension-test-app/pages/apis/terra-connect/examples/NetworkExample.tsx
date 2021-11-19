@@ -1,8 +1,8 @@
-import { useWalletConnector } from '@station/web-connector-react';
+import { useWebExtensionConnector } from '@station/web-extension-react';
 import React from 'react';
 
 export function NetworkExample() {
-  const { states } = useWalletConnector();
+  const { states } = useWebExtensionConnector();
 
   if (!states) return null;
 

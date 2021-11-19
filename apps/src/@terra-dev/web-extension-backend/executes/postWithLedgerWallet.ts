@@ -1,17 +1,17 @@
 import {
-  isWalletError,
-  WalletCreateTxFailed,
-  WalletLedgerError,
-  WalletNetworkInfo,
-  WalletPostPayload,
-  WalletTxDenied,
-  WalletTxFail,
-  WalletTxFailed,
-  WalletTxProgress,
-  WalletTxStatus,
-  WalletTxSucceed,
-  WalletTxUnspecifiedError,
-} from '@terra-dev/wallet-interface';
+  isWebExtensionError,
+  WebExtensionCreateTxFailed,
+  WebExtensionLedgerError,
+  WebExtensionNetworkInfo,
+  WebExtensionPostPayload,
+  WebExtensionTxDenied,
+  WebExtensionTxFail,
+  WebExtensionTxFailed,
+  WebExtensionTxProgress,
+  WebExtensionTxStatus,
+  WebExtensionTxSucceed,
+  WebExtensionTxUnspecifiedError,
+} from '@terra-dev/web-extension-interface';
 import { LedgerKey, LedgerWallet } from '@terra-dev/web-extension-backend';
 import {
   CreateTxOptions,
@@ -23,15 +23,15 @@ import { Observable } from 'rxjs';
 
 export function postWithLedgerWallet(
   wallet: LedgerWallet,
-  network: WalletNetworkInfo,
+  network: WebExtensionNetworkInfo,
   tx: CreateTxOptions,
   key: LedgerKey,
 ) {
   return new Observable<
-    | WalletTxProgress
-    | WalletTxDenied
-    | WalletTxSucceed<WalletPostPayload>
-    | WalletTxFail
+    | WebExtensionTxProgress
+    | WebExtensionTxDenied
+    | WebExtensionTxSucceed<WebExtensionPostPayload>
+    | WebExtensionTxFail
   >((subscriber) => {
     const lcd = new LCDClient({
       chainID: network.chainID,
@@ -50,15 +50,19 @@ export function postWithLedgerWallet(
       .then((data) => {
         if (isTxError(data)) {
           subscriber.next({
-            status: WalletTxStatus.FAIL,
+            status: WebExtensionTxStatus.FAIL,
             error: !!data.txhash
-              ? new WalletTxFailed(data.txhash, data.raw_log, data.raw_log)
-              : new WalletCreateTxFailed(data.raw_log),
+              ? new WebExtensionTxFailed(
+                  data.txhash,
+                  data.raw_log,
+                  data.raw_log,
+                )
+              : new WebExtensionCreateTxFailed(data.raw_log),
           });
           subscriber.complete();
         } else {
           subscriber.next({
-            status: WalletTxStatus.SUCCEED,
+            status: WebExtensionTxStatus.SUCCEED,
             payload: {
               txhash: data.txhash,
               height: data.height,
@@ -71,25 +75,28 @@ export function postWithLedgerWallet(
       .catch((error) => {
         console.log(
           'executeTxWithLedgerWallet.ts..()',
-          error instanceof WalletLedgerError,
-          isWalletError(error),
+          error instanceof WebExtensionLedgerError,
+          isWebExtensionError(error),
           error.toString(),
         );
-        if (isWalletError(error)) {
-          if (error instanceof WalletLedgerError && error.code === 27014) {
+        if (isWebExtensionError(error)) {
+          if (
+            error instanceof WebExtensionLedgerError &&
+            error.code === 27014
+          ) {
             subscriber.next({
-              status: WalletTxStatus.DENIED,
+              status: WebExtensionTxStatus.DENIED,
             });
           } else {
             subscriber.next({
-              status: WalletTxStatus.FAIL,
+              status: WebExtensionTxStatus.FAIL,
               error,
             });
           }
         } else {
           subscriber.next({
-            status: WalletTxStatus.FAIL,
-            error: new WalletTxUnspecifiedError(
+            status: WebExtensionTxStatus.FAIL,
+            error: new WebExtensionTxUnspecifiedError(
               'message' in error ? error.message : String(error),
             ),
           });

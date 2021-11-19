@@ -1,13 +1,13 @@
 import {
   SerializedCreateTxOptions,
-  WalletNetworkInfo,
-  WalletPostPayload,
-  WalletSignPayload,
-  WalletStates,
-  WalletTxResult,
-  WalletTxStatus,
-  WalletInfo,
-} from '@terra-dev/wallet-interface';
+  WebExtensionNetworkInfo,
+  WebExtensionPostPayload,
+  WebExtensionSignPayload,
+  WebExtensionStates,
+  WebExtensionTxResult,
+  WebExtensionTxStatus,
+  WebExtensionWalletInfo,
+} from '@terra-dev/web-extension-interface';
 import {
   findSimilarNetwork,
   hasCW20Tokens,
@@ -40,19 +40,22 @@ export interface ContentScriptOptions {
     id: string,
     terraAddress: string,
     tx: SerializedCreateTxOptions,
-  ) => Observable<WalletTxResult<WalletPostPayload>>;
+  ) => Observable<WebExtensionTxResult<WebExtensionPostPayload>>;
   startSign: (
     id: string,
     terraAddress: string,
     tx: SerializedCreateTxOptions,
-  ) => Observable<WalletTxResult<WalletSignPayload>>;
+  ) => Observable<WebExtensionTxResult<WebExtensionSignPayload>>;
   startConnect: (id: string, hostname: string) => Promise<boolean>;
   startAddCW20Tokens: (
     id: string,
     chainID: string,
     ...tokenAddrs: string[]
   ) => Promise<{ [tokenAddr: string]: boolean }>;
-  startAddNetwork: (id: string, network: WalletNetworkInfo) => Promise<boolean>;
+  startAddNetwork: (
+    id: string,
+    network: WebExtensionNetworkInfo,
+  ) => Promise<boolean>;
 }
 
 const CONNECT_NAME = 'Terra Station';
@@ -109,7 +112,7 @@ export function startContentScript({
   // listen extension storage states
   // ---------------------------------------------
   type WalletsStates = {
-    wallets: WalletInfo[];
+    wallets: WebExtensionWalletInfo[];
     focusedWalletAddress: string | undefined;
     isApproved: boolean;
   };
@@ -147,7 +150,7 @@ export function startContentScript({
     ),
   );
 
-  type ExtensionStates = WalletStates & { isApproved: boolean };
+  type ExtensionStates = WebExtensionStates & { isApproved: boolean };
 
   const extensionStates = combineLatest([
     extensionStateLastUpdated,
@@ -178,10 +181,10 @@ export function startContentScript({
       target: 'station:inpage',
     });
 
-    let _states: WalletStates | null = null;
-    let _statesResolvers: Set<(_: WalletStates) => void> = new Set();
+    let _states: WebExtensionStates | null = null;
+    let _statesResolvers: Set<(_: WebExtensionStates) => void> = new Set();
 
-    function resolveStates(callback: (_: WalletStates) => void) {
+    function resolveStates(callback: (_: WebExtensionStates) => void) {
       if (_states) {
         callback(_states);
       } else {
@@ -192,7 +195,7 @@ export function startContentScript({
     function getFocusedWallet({
       wallets,
       focusedWalletAddress,
-    }: WalletStates): WalletInfo {
+    }: WebExtensionStates): WebExtensionWalletInfo {
       if (wallets.length === 0) {
         throw new Error('the wallets should have at least one more wallet!!!');
       }
@@ -258,7 +261,7 @@ export function startContentScript({
         // connect
         // ---------------------------------------------
         case 'connect':
-          function approveConnect(states: WalletStates) {
+          function approveConnect(states: WebExtensionStates) {
             const focusedWallet = getFocusedWallet(states);
 
             pageStream.write({
@@ -309,7 +312,7 @@ export function startContentScript({
                 data,
               ).subscribe((txResult) => {
                 switch (txResult.status) {
-                  case WalletTxStatus.DENIED:
+                  case WebExtensionTxStatus.DENIED:
                     pageStream.write({
                       name: 'onPost',
                       id: data.id,
@@ -322,7 +325,7 @@ export function startContentScript({
                       },
                     });
                     break;
-                  case WalletTxStatus.FAIL:
+                  case WebExtensionTxStatus.FAIL:
                     pageStream.write({
                       name: 'onPost',
                       id: data.id,
@@ -336,7 +339,7 @@ export function startContentScript({
                       },
                     });
                     break;
-                  case WalletTxStatus.SUCCEED:
+                  case WebExtensionTxStatus.SUCCEED:
                     pageStream.write({
                       name: 'onPost',
                       id: data.id,
@@ -378,7 +381,7 @@ export function startContentScript({
                 data,
               ).subscribe((txResult) => {
                 switch (txResult.status) {
-                  case WalletTxStatus.DENIED:
+                  case WebExtensionTxStatus.DENIED:
                     pageStream.write({
                       name: 'onSign',
                       id: data.id,
@@ -391,7 +394,7 @@ export function startContentScript({
                       },
                     });
                     break;
-                  case WalletTxStatus.FAIL:
+                  case WebExtensionTxStatus.FAIL:
                     pageStream.write({
                       name: 'onSign',
                       id: data.id,
@@ -405,7 +408,7 @@ export function startContentScript({
                       },
                     });
                     break;
-                  case WalletTxStatus.SUCCEED:
+                  case WebExtensionTxStatus.SUCCEED:
                     pageStream.write({
                       name: 'onSign',
                       id: data.id,

@@ -1,12 +1,12 @@
 import {
-  TerraWalletConnector,
-  WalletPostPayload,
-  WalletSignPayload,
-  WalletStates,
-  WalletStatus,
-  WalletStatusType,
-  WalletTxResult,
-} from '@terra-dev/wallet-interface';
+  TerraWebExtensionConnector,
+  WebExtensionPostPayload,
+  WebExtensionSignPayload,
+  WebExtensionStates,
+  WebExtensionStatus,
+  WebExtensionStatusType,
+  WebExtensionTxResult,
+} from '@terra-dev/web-extension-interface';
 import { CreateTxOptions } from '@terra-money/terra.js';
 import bowser from 'bowser';
 import { BehaviorSubject, Subscribable } from 'rxjs';
@@ -17,7 +17,7 @@ declare global {
       | Array<{
           name: string;
           identifier: string;
-          connector: () => TerraWalletConnector;
+          connector: () => TerraWebExtensionConnector;
           icon: string;
         }>
       | undefined;
@@ -26,7 +26,7 @@ declare global {
 
 async function getConnector(
   hostWindow: Window,
-): Promise<(() => TerraWalletConnector) | undefined> {
+): Promise<(() => TerraWebExtensionConnector) | undefined> {
   return new Promise((resolve) => {
     let count = 20;
 
@@ -52,17 +52,17 @@ async function getConnector(
   });
 }
 
-export class WalletConnectorController {
-  private readonly _status: BehaviorSubject<WalletStatus>;
-  private readonly _states: BehaviorSubject<WalletStates | null>;
-  private _connector: TerraWalletConnector | null = null;
+export class WebExtensionConnectorController {
+  private readonly _status: BehaviorSubject<WebExtensionStatus>;
+  private readonly _states: BehaviorSubject<WebExtensionStates | null>;
+  private _connector: TerraWebExtensionConnector | null = null;
 
   constructor(private hostWindow: Window) {
-    this._status = new BehaviorSubject<WalletStatus>({
-      type: WalletStatusType.INITIALIZING,
+    this._status = new BehaviorSubject<WebExtensionStatus>({
+      type: WebExtensionStatusType.INITIALIZING,
     });
 
-    this._states = new BehaviorSubject<WalletStates | null>(null);
+    this._states = new BehaviorSubject<WebExtensionStates | null>(null);
 
     const browser = bowser.getParser(navigator.userAgent);
 
@@ -90,7 +90,7 @@ export class WalletConnectorController {
         }
 
         this._status.next({
-          type: WalletStatusType.NO_AVAILABLE,
+          type: WebExtensionStatusType.NO_AVAILABLE,
           isConnectorExists: false,
           installLink,
         });
@@ -102,7 +102,7 @@ export class WalletConnectorController {
 
       if (!connector.checkBrowserAvailability(navigator.userAgent)) {
         this._status.next({
-          type: WalletStatusType.NO_AVAILABLE,
+          type: WebExtensionStatusType.NO_AVAILABLE,
           isConnectorExists: true,
           isSupportBrowser: false,
         });
@@ -137,14 +137,14 @@ export class WalletConnectorController {
   post = (
     terraAddress: string,
     tx: CreateTxOptions,
-  ): Subscribable<WalletTxResult<WalletPostPayload>> => {
+  ): Subscribable<WebExtensionTxResult<WebExtensionPostPayload>> => {
     return this._connector!.post(terraAddress, tx);
   };
 
   sign = (
     terraAddress: string,
     tx: CreateTxOptions,
-  ): Subscribable<WalletTxResult<WalletSignPayload>> => {
+  ): Subscribable<WebExtensionTxResult<WebExtensionSignPayload>> => {
     return this._connector!.sign(terraAddress, tx);
   };
 

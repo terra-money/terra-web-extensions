@@ -1,49 +1,52 @@
 import { CreateTxOptions, Fee, Msg, Tx } from '@terra-money/terra.js';
 import {
-  WalletCreateTxFailed,
-  WalletTxFailed,
-  WalletTxUnspecifiedError,
+  WebExtensionCreateTxFailed,
+  WebExtensionTxFailed,
+  WebExtensionTxUnspecifiedError,
 } from '../errors';
 
-export enum WalletTxStatus {
+export enum WebExtensionTxStatus {
   PROGRESS = 'PROGRESS',
   SUCCEED = 'SUCCEED',
   FAIL = 'FAIL',
   DENIED = 'DENIED',
 }
 
-export interface WalletTxProgress {
-  status: WalletTxStatus.PROGRESS;
+export interface WebExtensionTxProgress {
+  status: WebExtensionTxStatus.PROGRESS;
   payload?: unknown;
 }
 
-export interface WalletPostPayload {
+export interface WebExtensionPostPayload {
   height: number;
   raw_log: string;
   txhash: string;
 }
 
-export type WalletSignPayload = Tx.Data;
+export type WebExtensionSignPayload = Tx.Data;
 
-export interface WalletTxSucceed<Payload> {
-  status: WalletTxStatus.SUCCEED;
+export interface WebExtensionTxSucceed<Payload> {
+  status: WebExtensionTxStatus.SUCCEED;
   payload: Payload;
 }
 
-export interface WalletTxFail {
-  status: WalletTxStatus.FAIL;
-  error: WalletCreateTxFailed | WalletTxFailed | WalletTxUnspecifiedError;
+export interface WebExtensionTxFail {
+  status: WebExtensionTxStatus.FAIL;
+  error:
+    | WebExtensionCreateTxFailed
+    | WebExtensionTxFailed
+    | WebExtensionTxUnspecifiedError;
 }
 
-export interface WalletTxDenied {
-  status: WalletTxStatus.DENIED;
+export interface WebExtensionTxDenied {
+  status: WebExtensionTxStatus.DENIED;
 }
 
-export type WalletTxResult<Payload> =
-  | WalletTxProgress
-  | WalletTxSucceed<Payload>
-  | WalletTxFail
-  | WalletTxDenied;
+export type WebExtensionTxResult<Payload> =
+  | WebExtensionTxProgress
+  | WebExtensionTxSucceed<Payload>
+  | WebExtensionTxFail
+  | WebExtensionTxDenied;
 
 // ---------------------------------------------
 // functions

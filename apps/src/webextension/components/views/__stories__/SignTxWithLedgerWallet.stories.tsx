@@ -1,5 +1,5 @@
 import { Meta } from '@storybook/react';
-import { WalletLedgerError } from '@terra-dev/wallet-interface';
+import { WebExtensionLedgerError } from '@terra-dev/web-extension-interface';
 import { Fee, MsgExecuteContract } from '@terra-money/terra.js';
 import React from 'react';
 import { SignTxWithLedgerWallet } from '../SignTxWithLedgerWallet';
@@ -42,7 +42,10 @@ export const SignTxWithLedgerWallet_ = () => {
         onDeny={console.log}
         onProceed={console.log}
         createLedgerKey={() => {
-          throw new WalletLedgerError(27404, 'Ledger 를 찾을 수 없습니다.');
+          throw new WebExtensionLedgerError(
+            27404,
+            'Ledger 를 찾을 수 없습니다.',
+          );
         }}
       />
     </div>

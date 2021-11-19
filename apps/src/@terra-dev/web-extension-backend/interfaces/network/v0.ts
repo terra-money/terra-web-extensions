@@ -1,8 +1,8 @@
-import { WalletNetworkInfo } from '@terra-dev/wallet-interface';
+import { WebExtensionNetworkInfo } from '@terra-dev/web-extension-interface';
 import { NetworkStorageData, writeNetworkStorage } from './v1';
 
 export async function migrateNetworkStorageV0(
-  defaultNetworks: WalletNetworkInfo[],
+  defaultNetworks: WebExtensionNetworkInfo[],
 ): Promise<() => void> {
   const settingsData = localStorage.getItem('settings');
 

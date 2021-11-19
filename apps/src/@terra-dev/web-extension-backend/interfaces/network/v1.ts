@@ -1,4 +1,4 @@
-import { WalletNetworkInfo } from '@terra-dev/wallet-interface';
+import { WebExtensionNetworkInfo } from '@terra-dev/web-extension-interface';
 import { Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { browser, Storage } from 'webextension-polyfill-ts';
@@ -7,8 +7,8 @@ import { safariWebExtensionStorageChangeListener } from '../../utils/safariWebEx
 const storageKey = 'terra_network_storage_v1';
 
 export interface NetworkStorageData {
-  networks: WalletNetworkInfo[];
-  selectedNetwork: WalletNetworkInfo | undefined;
+  networks: WebExtensionNetworkInfo[];
+  selectedNetwork: WebExtensionNetworkInfo | undefined;
 }
 
 export async function readNetworkStorage(): Promise<NetworkStorageData> {
@@ -31,23 +31,25 @@ export async function writeNetworkStorage(
 
 export async function findNetwork(
   name: string,
-): Promise<WalletNetworkInfo | undefined> {
+): Promise<WebExtensionNetworkInfo | undefined> {
   const { networks } = await readNetworkStorage();
   return networks.find((network) => network.name === name);
 }
 
 export async function findSimilarNetwork(
-  defaultNetworks: WalletNetworkInfo[],
+  defaultNetworks: WebExtensionNetworkInfo[],
   chainID: string,
   lcd: string,
-): Promise<WalletNetworkInfo | undefined> {
+): Promise<WebExtensionNetworkInfo | undefined> {
   const { networks } = await readNetworkStorage();
   return [...defaultNetworks, ...networks].find((targetNetwork) => {
     return targetNetwork.chainID === chainID && targetNetwork.lcd === lcd;
   });
 }
 
-export async function addNetwork(network: WalletNetworkInfo): Promise<void> {
+export async function addNetwork(
+  network: WebExtensionNetworkInfo,
+): Promise<void> {
   const { networks } = await readNetworkStorage();
   const nextNetworks = [...networks, network];
   await writeNetworkStorage({
@@ -56,7 +58,9 @@ export async function addNetwork(network: WalletNetworkInfo): Promise<void> {
   });
 }
 
-export async function removeNetwork(network: WalletNetworkInfo): Promise<void> {
+export async function removeNetwork(
+  network: WebExtensionNetworkInfo,
+): Promise<void> {
   const { networks, selectedNetwork } = await readNetworkStorage();
   const nextNetworks = networks.filter(({ name }) => network.name !== name);
   const nextSelectedNetwork =
@@ -70,7 +74,7 @@ export async function removeNetwork(network: WalletNetworkInfo): Promise<void> {
 
 export async function updateNetwork(
   name: string,
-  network: WalletNetworkInfo,
+  network: WebExtensionNetworkInfo,
 ): Promise<void> {
   const { networks, selectedNetwork } = await readNetworkStorage();
   const index = networks.findIndex(
@@ -135,7 +139,9 @@ export function observeNetworkStorage(): Observable<NetworkStorageData> {
   });
 }
 
-export async function selectNetwork(network: WalletNetworkInfo): Promise<void> {
+export async function selectNetwork(
+  network: WebExtensionNetworkInfo,
+): Promise<void> {
   const { selectedNetwork, ...storage } = await readNetworkStorage();
   await writeNetworkStorage({
     selectedNetwork: network,
@@ -144,12 +150,12 @@ export async function selectNetwork(network: WalletNetworkInfo): Promise<void> {
 }
 
 export type NetworksData = {
-  networks: WalletNetworkInfo[];
-  selectedNetwork: WalletNetworkInfo | undefined;
+  networks: WebExtensionNetworkInfo[];
+  selectedNetwork: WebExtensionNetworkInfo | undefined;
 };
 
 export function observeNetworks(
-  defaultNetworks: WalletNetworkInfo[],
+  defaultNetworks: WebExtensionNetworkInfo[],
 ): Observable<NetworksData> {
   return observeNetworkStorage().pipe(
     map(({ networks, selectedNetwork }) => {
@@ -162,8 +168,8 @@ export function observeNetworks(
 }
 
 export async function readSelectedNetwork(
-  defaultNetworks: WalletNetworkInfo[],
-): Promise<WalletNetworkInfo> {
+  defaultNetworks: WebExtensionNetworkInfo[],
+): Promise<WebExtensionNetworkInfo> {
   return readNetworkStorage().then(({ selectedNetwork }) => {
     return selectedNetwork ?? defaultNetworks[0];
   });

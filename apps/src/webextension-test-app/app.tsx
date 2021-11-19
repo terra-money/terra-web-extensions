@@ -1,8 +1,8 @@
 import {
-  WalletConnectorController,
-  WalletConnectorProvider,
+  WebExtensionConnectorController,
+  WebExtensionConnectorProvider,
   WalletSelectProvider,
-} from '@station/web-connector-react';
+} from '@station/web-extension-react';
 import React from 'react';
 import { render } from 'react-dom';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
@@ -13,11 +13,11 @@ import './markdown.css';
 import TerraConnectAPI from './pages/apis/terra-connect/api.mdx';
 import TerraConnectExample from './pages/apis/terra-connect/example.mdx';
 
-const controller = new WalletConnectorController(window);
+const controller = new WebExtensionConnectorController(window);
 
 function App() {
   return (
-    <WalletConnectorProvider controller={controller}>
+    <WebExtensionConnectorProvider controller={controller}>
       <WalletSelectProvider>
         <AppLayout>
           <Switch>
@@ -34,7 +34,7 @@ function App() {
           </Switch>
         </AppLayout>
       </WalletSelectProvider>
-    </WalletConnectorProvider>
+    </WebExtensionConnectorProvider>
   );
 }
 

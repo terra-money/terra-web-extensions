@@ -1,10 +1,10 @@
-import { WalletNetworkInfo } from '@terra-dev/wallet-interface';
+import { WebExtensionNetworkInfo } from '@terra-dev/web-extension-interface';
 import { useEffect, useState } from 'react';
 import { FALLBACK_NETWORKS } from 'webextension/env';
 
 function parseData(
-  data: Record<string, WalletNetworkInfo>,
-): WalletNetworkInfo[] {
+  data: Record<string, WebExtensionNetworkInfo>,
+): WebExtensionNetworkInfo[] {
   return Object.keys(data)
     .filter((name) => name !== 'localterra')
     .map((name) => data[name]);
@@ -13,15 +13,15 @@ function parseData(
 const STORAGE_KEY = 'networks';
 
 let cachedDataString: string = localStorage.getItem(STORAGE_KEY) ?? '';
-let cache: WalletNetworkInfo[] =
+let cache: WebExtensionNetworkInfo[] =
   cachedDataString !== ''
     ? parseData(JSON.parse(cachedDataString))
     : FALLBACK_NETWORKS;
 
-export function getDefaultNetworks(): Promise<WalletNetworkInfo[]> {
+export function getDefaultNetworks(): Promise<WebExtensionNetworkInfo[]> {
   return fetch('https://assets.terra.money/chains.json')
     .then((res) => res.json())
-    .then((data: Record<string, WalletNetworkInfo>) => {
+    .then((data: Record<string, WebExtensionNetworkInfo>) => {
       const dataString = JSON.stringify(data);
 
       if (cachedDataString === dataString) {
@@ -42,8 +42,8 @@ export function getDefaultNetworks(): Promise<WalletNetworkInfo[]> {
     });
 }
 
-export function useDefaultNetworks(): WalletNetworkInfo[] {
-  const [data, setData] = useState<WalletNetworkInfo[]>(() => cache);
+export function useDefaultNetworks(): WebExtensionNetworkInfo[] {
+  const [data, setData] = useState<WebExtensionNetworkInfo[]>(() => cache);
 
   useEffect(() => {
     getDefaultNetworks().then(setData);

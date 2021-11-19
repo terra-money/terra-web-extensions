@@ -1,4 +1,4 @@
-import { useWalletConnector } from '@station/web-connector-react';
+import { useWebExtensionConnector } from '@station/web-extension-react';
 import React, { ReactNode } from 'react';
 import { MdDashboard, MdFunctions, MdWifiTethering } from 'react-icons/md';
 import { NavLink } from 'react-router-dom';
@@ -11,7 +11,7 @@ export interface AppLayoutProps {
 }
 
 function AppLayoutBase({ className, children }: AppLayoutProps) {
-  const { states } = useWalletConnector();
+  const { states } = useWebExtensionConnector();
 
   return (
     <div className={className}>

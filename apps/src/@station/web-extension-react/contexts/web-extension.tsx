@@ -1,14 +1,14 @@
 import {
-  WalletPostPayload,
-  WalletSignPayload,
-  WalletStates,
-  WalletStatus,
-  WalletStatusInitializing,
-  WalletStatusNoAvailable,
-  WalletStatusReady,
-  WalletStatusType,
-  WalletTxResult,
-} from '@terra-dev/wallet-interface';
+  WebExtensionPostPayload,
+  WebExtensionSignPayload,
+  WebExtensionStates,
+  WebExtensionStatus,
+  WebExtensionStatusInitializing,
+  WebExtensionStatusNoAvailable,
+  WebExtensionStatusReady,
+  WebExtensionStatusType,
+  WebExtensionTxResult,
+} from '@terra-dev/web-extension-interface';
 import { CreateTxOptions } from '@terra-money/terra.js';
 import React, {
   Context,
@@ -20,27 +20,27 @@ import React, {
   useState,
 } from 'react';
 import { Subscribable } from 'rxjs';
-import { WalletConnectorController } from '../controllers/connector-controller';
+import { WebExtensionConnectorController } from '../controllers/connector-controller';
 
-export interface WalletConnectorProviderProps {
+export interface WebExtensionConnectorProviderProps {
   children: ReactNode;
-  controller: WalletConnectorController;
+  controller: WebExtensionConnectorController;
 }
 
-export interface WalletConnectorState {
-  controller: WalletConnectorController;
-  status: WalletStatus;
-  states: WalletStates | null;
+export interface WebExtensionConnectorState {
+  controller: WebExtensionConnectorController;
+  status: WebExtensionStatus;
+  states: WebExtensionStates | null;
   refetchStates: () => void;
   requestApproval: (() => void) | null;
   post: (
     terraAddress: string,
     tx: CreateTxOptions,
-  ) => Subscribable<WalletTxResult<WalletPostPayload>>;
+  ) => Subscribable<WebExtensionTxResult<WebExtensionPostPayload>>;
   sign: (
     terraAddress: string,
     tx: CreateTxOptions,
-  ) => Subscribable<WalletTxResult<WalletSignPayload>>;
+  ) => Subscribable<WebExtensionTxResult<WebExtensionSignPayload>>;
   hasCW20Tokens: (
     chainID: string,
     ...tokenAddrs: string[]
@@ -57,23 +57,25 @@ export interface WalletConnectorState {
   ) => Promise<boolean>;
 }
 
-const WalletConnectorContext: Context<WalletConnectorState> =
+const WebExtensionConnectorContext: Context<WebExtensionConnectorState> =
   // @ts-ignore
-  createContext<WalletConnectorState>();
+  createContext<WebExtensionConnectorState>();
 
-export function WalletConnectorProvider({
+export function WebExtensionConnectorProvider({
   children,
   controller,
-}: WalletConnectorProviderProps) {
+}: WebExtensionConnectorProviderProps) {
   const [status, setStatus] = useState<
-    WalletStatusInitializing | WalletStatusNoAvailable | WalletStatusReady
+    | WebExtensionStatusInitializing
+    | WebExtensionStatusNoAvailable
+    | WebExtensionStatusReady
   >(() => ({
-    type: WalletStatusType.INITIALIZING,
+    type: WebExtensionStatusType.INITIALIZING,
   }));
-  const [states, setStates] = useState<WalletStates | null>(null);
+  const [states, setStates] = useState<WebExtensionStates | null>(null);
 
   const requestApproval = useMemo(() => {
-    return status.type === WalletStatusType.NO_AVAILABLE &&
+    return status.type === WebExtensionStatusType.NO_AVAILABLE &&
       status.isApproved === false
       ? controller.requestApproval
       : null;
@@ -96,7 +98,7 @@ export function WalletConnectorProvider({
     };
   }, [controller]);
 
-  const state = useMemo<WalletConnectorState>(
+  const state = useMemo<WebExtensionConnectorState>(
     () => ({
       controller,
       status,
@@ -114,12 +116,12 @@ export function WalletConnectorProvider({
   );
 
   return (
-    <WalletConnectorContext.Provider value={state}>
+    <WebExtensionConnectorContext.Provider value={state}>
       {children}
-    </WalletConnectorContext.Provider>
+    </WebExtensionConnectorContext.Provider>
   );
 }
 
-export function useWalletConnector(): WalletConnectorState {
-  return useContext(WalletConnectorContext);
+export function useWebExtensionConnector(): WebExtensionConnectorState {
+  return useContext(WebExtensionConnectorContext);
 }

@@ -1,4 +1,4 @@
-import { WalletNetworkInfo } from '@terra-dev/wallet-interface';
+import { WebExtensionNetworkInfo } from '@terra-dev/web-extension-interface';
 import { addNetwork } from '@terra-dev/web-extension-backend';
 import React, { useCallback } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
@@ -18,7 +18,7 @@ export function NetworksCreate({ history }: RouteComponentProps<{}>) {
 
   const create = useCallback(
     async (result: CreateNetworkResult) => {
-      const network: WalletNetworkInfo = {
+      const network: WebExtensionNetworkInfo = {
         name: result.name,
         chainID: result.chainID,
         lcd: result.lcd,

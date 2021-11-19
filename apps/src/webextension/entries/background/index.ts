@@ -19,7 +19,6 @@ import {
   isTxInfoPort,
   isTxPort,
 } from '../../env';
-import CreateNotificationOptions = Notifications.CreateNotificationOptions;
 
 // ---------------------------------------------
 // port
@@ -64,7 +63,10 @@ browser.runtime.onConnect.addListener((port) => {
         'txhash' in msg
       ) {
         const url = `https://finder.terra.money/${msg.chainID}/tx/${msg.txhash}`;
-        const notificationOption: Omit<CreateNotificationOptions, 'message'> = {
+        const notificationOption: Omit<
+          Notifications.CreateNotificationOptions,
+          'message'
+        > = {
           type: 'basic',
           iconUrl: browser.runtime.getURL('icons/icon-128.png'),
           title: 'Terra Station',

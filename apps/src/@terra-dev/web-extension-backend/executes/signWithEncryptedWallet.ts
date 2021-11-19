@@ -1,13 +1,13 @@
 import {
-  WalletNetworkInfo,
-  WalletSignPayload,
-  WalletTxDenied,
-  WalletTxFail,
-  WalletTxProgress,
-  WalletTxStatus,
-  WalletTxSucceed,
-  WalletTxUnspecifiedError,
-} from '@terra-dev/wallet-interface';
+  WebExtensionNetworkInfo,
+  WebExtensionSignPayload,
+  WebExtensionTxDenied,
+  WebExtensionTxFail,
+  WebExtensionTxProgress,
+  WebExtensionTxStatus,
+  WebExtensionTxSucceed,
+  WebExtensionTxUnspecifiedError,
+} from '@terra-dev/web-extension-interface';
 import {
   CreateTxOptions,
   LCDClient,
@@ -19,14 +19,14 @@ import { Wallet } from '../models';
 
 export function signWithEncryptedWallet(
   wallet: Wallet,
-  network: WalletNetworkInfo,
+  network: WebExtensionNetworkInfo,
   tx: CreateTxOptions,
 ) {
   return new Observable<
-    | WalletTxProgress
-    | WalletTxDenied
-    | WalletTxSucceed<WalletSignPayload>
-    | WalletTxFail
+    | WebExtensionTxProgress
+    | WebExtensionTxDenied
+    | WebExtensionTxSucceed<WebExtensionSignPayload>
+    | WebExtensionTxFail
   >((subscriber) => {
     const lcd = new LCDClient({
       chainID: network.chainID,
@@ -52,15 +52,15 @@ export function signWithEncryptedWallet(
       })
       .then((signedTx) => {
         subscriber.next({
-          status: WalletTxStatus.SUCCEED,
+          status: WebExtensionTxStatus.SUCCEED,
           payload: signedTx.toData(),
         });
         subscriber.complete();
       })
       .catch((error) => {
         subscriber.next({
-          status: WalletTxStatus.FAIL,
-          error: new WalletTxUnspecifiedError(
+          status: WebExtensionTxStatus.FAIL,
+          error: new WebExtensionTxUnspecifiedError(
             error instanceof Error ? error.message : String(error),
           ),
         });

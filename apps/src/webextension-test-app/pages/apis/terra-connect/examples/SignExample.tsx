@@ -1,13 +1,13 @@
 import { useLocalStorageValue } from '@mantine/hooks';
 import {
   useWalletSelect,
-  useWalletConnector,
-} from '@station/web-connector-react';
+  useWebExtensionConnector,
+} from '@station/web-extension-react';
 import {
-  WalletSignPayload,
-  WalletTxResult,
-  WalletTxStatus,
-} from '@terra-dev/wallet-interface';
+  WebExtensionSignPayload,
+  WebExtensionTxResult,
+  WebExtensionTxStatus,
+} from '@terra-dev/web-extension-interface';
 import {
   Coin,
   Fee,
@@ -21,7 +21,7 @@ import React, { useCallback, useState } from 'react';
 const TO_ADDRESS = 'terra12hnhh5vtyg5juqnzm43970nh4fw42pt27nw9g9';
 
 export function SignExample() {
-  const { states, sign } = useWalletConnector();
+  const { states, sign } = useWebExtensionConnector();
 
   const { selectedWallet } = useWalletSelect();
 
@@ -33,7 +33,7 @@ export function SignExample() {
   });
 
   const [txResult, setTxResult] =
-    useState<WalletTxResult<WalletSignPayload> | null>(null);
+    useState<WebExtensionTxResult<WebExtensionSignPayload> | null>(null);
 
   const [txError, setTxError] = useState<string | null>(null);
 
@@ -80,7 +80,7 @@ export function SignExample() {
         setBroadcastResult(null);
         setBroadcastError(null);
 
-        if (result.status === WalletTxStatus.SUCCEED) {
+        if (result.status === WebExtensionTxStatus.SUCCEED) {
           const lcd = new LCDClient({
             chainID: states.network.chainID,
             URL: states.network.lcd,

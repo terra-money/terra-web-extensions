@@ -2,9 +2,9 @@ import { HumanAddr } from '@libs/types';
 import { vibrate } from '@libs/ui';
 import { Button, WalletCard } from '@station/ui';
 import {
-  WalletLedgerError,
-  WalletNetworkInfo,
-} from '@terra-dev/wallet-interface';
+  WebExtensionLedgerError,
+  WebExtensionNetworkInfo,
+} from '@terra-dev/web-extension-interface';
 import {
   LedgerKeyResponse,
   LedgerWallet,
@@ -25,7 +25,7 @@ import {
 export interface SignTxWithLedgerWalletProps {
   className?: string;
   wallet: LedgerWallet;
-  network: WalletNetworkInfo;
+  network: WebExtensionNetworkInfo;
   tx: CreateTxOptions;
   hostname?: string;
   date: Date;
@@ -85,7 +85,7 @@ export function SignTxWithLedgerWallet({
     } catch (e) {
       containerRef.current?.animate(vibrate, { duration: 100 });
 
-      if (e instanceof WalletLedgerError) {
+      if (e instanceof WebExtensionLedgerError) {
         setGuide(<LedgerGuide code={e.code}>{e.message}</LedgerGuide>);
       } else {
         setGuide(

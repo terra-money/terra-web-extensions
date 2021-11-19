@@ -1,10 +1,10 @@
 import {
   SerializedCreateTxOptions,
-  WalletPostPayload,
-  WalletSignPayload,
-  WalletStates,
-  WalletTxResult,
-} from '@terra-dev/wallet-interface';
+  WebExtensionPostPayload,
+  WebExtensionSignPayload,
+  WebExtensionStates,
+  WebExtensionTxResult,
+} from '@terra-dev/web-extension-interface';
 import { AccAddress } from '@terra-money/terra.js';
 
 // ---------------------------------------------
@@ -118,7 +118,7 @@ export enum FromContentScriptToWebMessage {
 
 export interface WebExtensionStatesUpdated {
   type: FromContentScriptToWebMessage.STATES_UPDATED;
-  payload: WalletStates & { isApproved: boolean };
+  payload: WebExtensionStates & { isApproved: boolean };
 }
 
 export interface WebExtensionPostResponse {
@@ -128,7 +128,7 @@ export interface WebExtensionPostResponse {
   id: number;
 
   /** tx response */
-  payload: WalletTxResult<WalletPostPayload>;
+  payload: WebExtensionTxResult<WebExtensionPostPayload>;
 }
 
 export interface WebExtensionSignResponse {
@@ -138,7 +138,7 @@ export interface WebExtensionSignResponse {
   id: number;
 
   /** tx response */
-  payload: WalletTxResult<WalletSignPayload>;
+  payload: WebExtensionTxResult<WebExtensionSignPayload>;
 }
 
 export interface WebExtensionAddCW20TokenResponse {

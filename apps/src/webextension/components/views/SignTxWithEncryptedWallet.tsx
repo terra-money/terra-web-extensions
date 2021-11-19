@@ -3,7 +3,7 @@ import { HumanAddr } from '@libs/types';
 import { vibrate } from '@libs/ui';
 import { Switch } from '@mantine/core';
 import { Button, SingleLineFormContainer, WalletCard } from '@station/ui';
-import { WalletNetworkInfo } from '@terra-dev/wallet-interface';
+import { WebExtensionNetworkInfo } from '@terra-dev/web-extension-interface';
 import {
   decryptWallet,
   EncryptedWallet,
@@ -28,7 +28,7 @@ import { FormFooter } from '../layouts/FormFooter';
 export interface SignTxWithEncryptedWalletProps {
   className?: string;
   wallet: EncryptedWallet;
-  network: WalletNetworkInfo;
+  network: WebExtensionNetworkInfo;
   tx: CreateTxOptions;
   hostname?: string;
   savedPassword?: string | undefined;
@@ -81,7 +81,7 @@ export function TxFee({
 export function useFeeEstimate(
   tx: CreateTxOptions,
   terraAddress: string,
-  network: WalletNetworkInfo,
+  network: WebExtensionNetworkInfo,
   update: (fn: (prev: CreateTxOptions) => CreateTxOptions) => void,
 ) {
   useEffect(() => {

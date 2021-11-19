@@ -1,7 +1,7 @@
 import { formatUToken } from '@libs/formatter';
 import { Token, u } from '@libs/types';
 import { TimeDistance } from '@station/ui';
-import { WalletNetworkInfo } from '@terra-dev/wallet-interface';
+import { WebExtensionNetworkInfo } from '@terra-dev/web-extension-interface';
 import { Coins, CreateTxOptions } from '@terra-money/terra.js';
 import { fixHMR } from 'fix-hmr';
 import React from 'react';
@@ -10,7 +10,7 @@ import styled from 'styled-components';
 export interface PrintTxRequestProps {
   className?: string;
   isEstimatedFee: boolean;
-  network: WalletNetworkInfo;
+  network: WebExtensionNetworkInfo;
   tx: CreateTxOptions;
   hostname?: string;
   date: Date;

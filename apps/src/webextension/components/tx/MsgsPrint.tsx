@@ -1,4 +1,4 @@
-import { WalletNetworkInfo } from '@terra-dev/wallet-interface';
+import { WebExtensionNetworkInfo } from '@terra-dev/web-extension-interface';
 import { readMsg } from '@terra-money/msg-reader';
 import { TxDescription } from '@terra-money/react-base-components';
 import { Coins, Msg } from '@terra-money/terra.js';
@@ -11,7 +11,7 @@ export interface MsgsPrintProps {
   className?: string;
   msgs: Msg[];
   walletAddress?: string;
-  network: WalletNetworkInfo;
+  network: WebExtensionNetworkInfo;
   defaultOpen?: boolean;
 }
 

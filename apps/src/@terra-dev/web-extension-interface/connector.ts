@@ -1,22 +1,22 @@
 import type { CreateTxOptions } from '@terra-money/terra.js';
 import type { Observer, Subscribable } from 'rxjs';
-import { WalletNetworkInfo } from './models/network';
-import { WalletStates } from './models/states';
-import { WalletStatus } from './models/status';
-import {
-  WalletPostPayload,
-  WalletSignPayload,
-  WalletTxResult,
+import type { WebExtensionNetworkInfo } from './models/network';
+import type { WebExtensionStates } from './models/states';
+import type { WebExtensionStatus } from './models/status';
+import type {
+  WebExtensionPostPayload,
+  WebExtensionSignPayload,
+  WebExtensionTxResult,
 } from './models/tx';
 
-export interface TerraWalletConnectorInfo {
+export interface TerraWebExtensionConnectorInfo {
   icon: string;
   name: string;
   url: string;
 }
 
-export interface TerraWalletConnector {
-  getInfo: () => TerraWalletConnectorInfo;
+export interface TerraWebExtensionConnector {
+  getInfo: () => TerraWebExtensionConnectorInfo;
 
   // ---------------------------------------------
   // open / close
@@ -25,8 +25,8 @@ export interface TerraWalletConnector {
 
   open: (
     hostWindow: Window,
-    statusObserver: Observer<WalletStatus>,
-    statesObserver: Observer<WalletStates>,
+    statusObserver: Observer<WebExtensionStatus>,
+    statesObserver: Observer<WebExtensionStates>,
   ) => void;
 
   close: () => void;
@@ -41,12 +41,12 @@ export interface TerraWalletConnector {
   post: (
     terraAddress: string,
     tx: CreateTxOptions,
-  ) => Subscribable<WalletTxResult<WalletPostPayload>>;
+  ) => Subscribable<WebExtensionTxResult<WebExtensionPostPayload>>;
 
   sign: (
     terraAddress: string,
     tx: CreateTxOptions,
-  ) => Subscribable<WalletTxResult<WalletSignPayload>>;
+  ) => Subscribable<WebExtensionTxResult<WebExtensionSignPayload>>;
 
   hasCW20Tokens: (
     chainID: string,
@@ -58,7 +58,9 @@ export interface TerraWalletConnector {
     ...tokenAddrs: string[]
   ) => Promise<{ [tokenAddr: string]: boolean }>;
 
-  hasNetwork: (network: Omit<WalletNetworkInfo, 'name'>) => Promise<boolean>;
+  hasNetwork: (
+    network: Omit<WebExtensionNetworkInfo, 'name'>,
+  ) => Promise<boolean>;
 
-  addNetwork: (network: WalletNetworkInfo) => Promise<boolean>;
+  addNetwork: (network: WebExtensionNetworkInfo) => Promise<boolean>;
 }

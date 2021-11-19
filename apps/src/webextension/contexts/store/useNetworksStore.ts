@@ -1,4 +1,4 @@
-import { WalletNetworkInfo } from '@terra-dev/wallet-interface';
+import { WebExtensionNetworkInfo } from '@terra-dev/web-extension-interface';
 import {
   NetworksData,
   observeNetworks,
@@ -6,7 +6,7 @@ import {
 import { useEffect, useState } from 'react';
 
 export function useNetworksStore(
-  defaultNetworks: WalletNetworkInfo[],
+  defaultNetworks: WebExtensionNetworkInfo[],
 ): NetworksData {
   const [networks, setNetworks] = useState<NetworksData>(() => ({
     networks: defaultNetworks,

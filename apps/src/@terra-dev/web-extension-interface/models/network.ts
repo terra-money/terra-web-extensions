@@ -4,7 +4,7 @@
  * chainID: 'columbus-5',
  * lcd: 'https://lcd.terra.dev'
  */
-export interface WalletNetworkInfo {
+export interface WebExtensionNetworkInfo {
   name: string;
   chainID: string;
   lcd: string;
