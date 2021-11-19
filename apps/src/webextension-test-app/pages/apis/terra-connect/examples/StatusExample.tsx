@@ -2,11 +2,11 @@ import { useWebExtensionConnector } from '@station/web-extension-react';
 import React from 'react';
 
 export function StatusExample() {
-  const { status, requestApproval } = useWebExtensionConnector();
+  const { states, requestApproval } = useWebExtensionConnector();
 
   return (
     <div>
-      <p>{JSON.stringify(status)}</p>
+      <pre>{JSON.stringify(states, null, 2)}</pre>
       {requestApproval && <button onClick={requestApproval}>Connect</button>}
     </div>
   );

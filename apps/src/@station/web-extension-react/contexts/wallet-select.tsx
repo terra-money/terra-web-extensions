@@ -1,4 +1,7 @@
-import { WebExtensionWalletInfo } from '@terra-dev/web-extension-interface';
+import {
+  WebExtensionStatus,
+  WebExtensionWalletInfo,
+} from '@terra-dev/web-extension-interface';
 import React, {
   Context,
   createContext,
@@ -43,15 +46,15 @@ export function WalletSelectProvider({ children }: WalletSelectProviderProps) {
 
   const state = useMemo<WalletSelect>(
     () => ({
-      wallets: states?.wallets ?? [],
+      wallets: states.type === WebExtensionStatus.READY ? states.wallets : [],
       selectedWallet: selectedWallet,
       selectWallet,
     }),
-    [states?.wallets, selectedWallet, selectWallet],
+    [states, selectedWallet, selectWallet],
   );
 
   useEffect(() => {
-    if (!states) {
+    if (states.type !== WebExtensionStatus.READY) {
       return;
     }
 

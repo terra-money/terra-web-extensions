@@ -1,18 +1,18 @@
 import { useWebExtensionConnector } from '@station/web-extension-react';
 import {
+  WebExtensionStates,
   WebExtensionStatus,
-  WebExtensionStatusType,
 } from '@terra-dev/web-extension-interface';
 import bowser from 'bowser';
 import React from 'react';
 
 export function CurrentStatus() {
-  const { status, requestApproval } = useWebExtensionConnector();
+  const { states, requestApproval } = useWebExtensionConnector();
 
   return (
     <section>
-      <p>{JSON.stringify(status)}</p>
-      <InstallMessage status={status} />
+      <p>{JSON.stringify(states)}</p>
+      <InstallMessage states={states} />
       {requestApproval && (
         <button onClick={() => requestApproval()}>Connect</button>
       )}
@@ -20,10 +20,10 @@ export function CurrentStatus() {
   );
 }
 
-function InstallMessage({ status }: { status: WebExtensionStatus }) {
+function InstallMessage({ states }: { states: WebExtensionStates }) {
   if (
-    status.type !== WebExtensionStatusType.NO_AVAILABLE ||
-    status.isInstalled
+    states.type !== WebExtensionStatus.NO_AVAILABLE ||
+    states.isConnectorExists
   ) {
     return null;
   }

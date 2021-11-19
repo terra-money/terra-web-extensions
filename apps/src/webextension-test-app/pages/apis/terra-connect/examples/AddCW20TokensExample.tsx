@@ -1,4 +1,5 @@
 import { useWebExtensionConnector } from '@station/web-extension-react';
+import { WebExtensionStatus } from '@terra-dev/web-extension-interface';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 const ancAddr = {
@@ -29,11 +30,14 @@ export function AddCW20TokensExample() {
   } | null>(null);
 
   const network = useMemo(() => {
-    return states?.network.name === 'mainnet' ? 'mainnet' : 'testnet';
-  }, [states?.network.name]);
+    return states.type === WebExtensionStatus.READY &&
+      states.network.name === 'mainnet'
+      ? 'mainnet'
+      : 'testnet';
+  }, [states]);
 
   const reloadAddedStates = useCallback(async () => {
-    if (states?.network) {
+    if (states.type === WebExtensionStatus.READY && states.network) {
       const result = await hasCW20Tokens(
         states.network.chainID,
         ancAddr[network],
@@ -43,13 +47,13 @@ export function AddCW20TokensExample() {
       );
       setAddedStates(result);
     }
-  }, [hasCW20Tokens, network, states?.network]);
+  }, [hasCW20Tokens, network, states]);
 
   const add = useCallback(
     async (tokenAddrs: string[]) => {
-      if (states?.network) {
+      if (states.type === WebExtensionStatus.READY) {
         const result = await addCW20Tokens(
-          states?.network.chainID,
+          states.network.chainID,
           ...tokenAddrs,
         );
         console.log(
@@ -61,7 +65,7 @@ export function AddCW20TokensExample() {
         }
       }
     },
-    [addCW20Tokens, reloadAddedStates, states?.network],
+    [addCW20Tokens, reloadAddedStates, states],
   );
 
   useEffect(() => {

@@ -2,13 +2,11 @@ import {
   createTxErrorFromJson,
   serializeTx,
   TerraWebExtensionConnector,
-  TerraWebExtensionConnectorInfo,
   WebExtensionNetworkInfo,
   WebExtensionPostPayload,
   WebExtensionSignPayload,
   WebExtensionStates,
   WebExtensionStatus,
-  WebExtensionStatusType,
   WebExtensionTxProgress,
   WebExtensionTxResult,
   WebExtensionTxStatus,
@@ -16,7 +14,6 @@ import {
   WebExtensionUserDenied,
 } from '@terra-dev/web-extension-interface';
 import { AccAddress, CreateTxOptions } from '@terra-money/terra.js';
-import bowser from 'bowser';
 import {
   BehaviorSubject,
   filter,
@@ -38,61 +35,26 @@ import {
   RequestApproval,
 } from '../../models/WebExtensionMessage';
 
-function canRequestApproval(status: WebExtensionStatus): boolean {
+function canRequestApproval(states: WebExtensionStates): boolean {
   return (
-    status.type === WebExtensionStatusType.NO_AVAILABLE &&
-    status.isApproved === false
+    states.type === WebExtensionStatus.NO_AVAILABLE &&
+    states.isApproved === false
   );
 }
 
-const INFO = {
-  name: 'Terra Station',
-  url: 'https://google.com',
-  icon: 'https://assets.terra.money/station.png',
-};
-
 class WebExtensionController implements TerraWebExtensionConnector {
-  private _status: BehaviorSubject<WebExtensionStatus>;
-  private _states: BehaviorSubject<WebExtensionStates | null>;
+  private _states: BehaviorSubject<WebExtensionStates>;
   private hostWindow: Window | null = null;
-  private statusSubscription: Subscription | null = null;
   private statesSubscription: Subscription | null = null;
 
   constructor() {
-    this._status = new BehaviorSubject<WebExtensionStatus>({
-      type: WebExtensionStatusType.INITIALIZING,
+    this._states = new BehaviorSubject<WebExtensionStates>({
+      type: WebExtensionStatus.INITIALIZING,
     });
-
-    this._states = new BehaviorSubject<WebExtensionStates | null>(null);
   }
 
-  getInfo = (): TerraWebExtensionConnectorInfo => {
-    return INFO;
-  };
-
-  checkBrowserAvailability = (userAgent: string): boolean => {
-    const browser = bowser.getParser(userAgent);
-
-    const isSupportBrowser = browser.satisfies({
-      desktop: {
-        chrome: '>70',
-        edge: '>80',
-        // TODO temporary disable before publish extensions
-        firefox: '>80',
-        safari: '>=14',
-      },
-    });
-
-    return isSupportBrowser === true;
-  };
-
-  open = (
-    hostWindow: Window,
-    statusObserver: Observer<WebExtensionStatus>,
-    statesObserver: Observer<WebExtensionStates>,
-  ) => {
+  open = (hostWindow: Window, statesObserver: Observer<WebExtensionStates>) => {
     this.hostWindow = hostWindow;
-    this.statusSubscription = this._status.subscribe(statusObserver);
     this.statesSubscription = this._states
       .pipe(
         filter(
@@ -109,7 +71,6 @@ class WebExtensionController implements TerraWebExtensionConnector {
 
   close = () => {
     this.hostWindow?.removeEventListener('message', this.onMessage);
-    this.statusSubscription?.unsubscribe();
     this.statesSubscription?.unsubscribe();
   };
 
@@ -122,9 +83,9 @@ class WebExtensionController implements TerraWebExtensionConnector {
   };
 
   requestApproval = () => {
-    const currentStatus = this._status.getValue();
+    const currentStates = this._states.getValue();
 
-    if (canRequestApproval(currentStatus)) {
+    if (canRequestApproval(currentStates)) {
       const msg: RequestApproval = {
         type: FromWebToContentScriptMessage.REQUEST_APPROVAL,
       };
@@ -133,7 +94,7 @@ class WebExtensionController implements TerraWebExtensionConnector {
     } else {
       console.warn(
         `requestApproval() is ignored. do not call at this status is "${JSON.stringify(
-          currentStatus,
+          currentStates,
         )}"`,
       );
     }
@@ -426,28 +387,21 @@ class WebExtensionController implements TerraWebExtensionConnector {
 
     switch (event.data.type) {
       case FromContentScriptToWebMessage.STATES_UPDATED:
-        const currentStatus = this._status.getValue();
+        const currentStates = this._states.getValue();
         const { isApproved, ...nextStates } = event.data.payload;
 
         if (isApproved) {
-          if (currentStatus.type !== WebExtensionStatusType.READY) {
-            this._status.next({
-              type: WebExtensionStatusType.READY,
-            });
-          }
-        } else {
-          if (currentStatus.type !== WebExtensionStatusType.NO_AVAILABLE) {
-            this._status.next({
-              type: WebExtensionStatusType.NO_AVAILABLE,
-              isConnectorExists: true,
-              isSupportBrowser: true,
-              isInstalled: true,
-              isApproved: false,
-            });
-          }
+          this._states.next({
+            type: WebExtensionStatus.READY,
+            ...nextStates,
+          });
+        } else if (currentStates.type !== WebExtensionStatus.NO_AVAILABLE) {
+          this._states.next({
+            type: WebExtensionStatus.NO_AVAILABLE,
+            isConnectorExists: true,
+            isApproved: false,
+          });
         }
-
-        this._states.next(nextStates);
         break;
     }
   };
@@ -459,7 +413,9 @@ declare global {
       | Array<{
           name: string;
           identifier: string;
-          connector: () => Promise<TerraWebExtensionConnector>;
+          connector: () =>
+            | TerraWebExtensionConnector
+            | Promise<TerraWebExtensionConnector>;
           icon: string;
         }>
       | undefined;
@@ -469,8 +425,8 @@ declare global {
 const WALLET_INFO = {
   name: 'Terra Station',
   identifier: 'terra-station',
-  connector: () => Promise.resolve(new WebExtensionController()),
-  icon: '',
+  icon: 'https://assets.terra.money/icon/station-extension/icon.png',
+  connector: () => new WebExtensionController(),
 };
 
 if (typeof window.terraWallets === 'undefined') {

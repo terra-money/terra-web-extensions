@@ -4,11 +4,9 @@ import {
   WebExtensionSignPayload,
   WebExtensionStates,
   WebExtensionStatus,
-  WebExtensionStatusType,
   WebExtensionTxResult,
 } from '@terra-dev/web-extension-interface';
 import { CreateTxOptions } from '@terra-money/terra.js';
-import bowser from 'bowser';
 import { BehaviorSubject, Subscribable } from 'rxjs';
 
 declare global {
@@ -17,7 +15,9 @@ declare global {
       | Array<{
           name: string;
           identifier: string;
-          connector: () => Promise<TerraWebExtensionConnector>;
+          connector: () =>
+            | TerraWebExtensionConnector
+            | Promise<TerraWebExtensionConnector>;
           icon: string;
         }>
       | undefined;
@@ -26,7 +26,10 @@ declare global {
 
 async function getConnector(
   hostWindow: Window,
-): Promise<(() => Promise<TerraWebExtensionConnector>) | undefined> {
+): Promise<
+  | (() => TerraWebExtensionConnector | Promise<TerraWebExtensionConnector>)
+  | undefined
+> {
   return new Promise((resolve) => {
     let count = 20;
 
@@ -53,66 +56,27 @@ async function getConnector(
 }
 
 export class WebExtensionConnectorController {
-  private readonly _status: BehaviorSubject<WebExtensionStatus>;
-  private readonly _states: BehaviorSubject<WebExtensionStates | null>;
+  private readonly _states: BehaviorSubject<WebExtensionStates>;
   private _connector: TerraWebExtensionConnector | null = null;
 
   constructor(private hostWindow: Window) {
-    this._status = new BehaviorSubject<WebExtensionStatus>({
-      type: WebExtensionStatusType.INITIALIZING,
+    this._states = new BehaviorSubject<WebExtensionStates>({
+      type: WebExtensionStatus.INITIALIZING,
     });
-
-    this._states = new BehaviorSubject<WebExtensionStates | null>(null);
-
-    const browser = bowser.getParser(navigator.userAgent);
 
     //@ts-ignore
     getConnector(hostWindow).then((factory) => {
       if (!factory) {
-        const name = browser.getBrowserName(true);
-
-        let installLink: string;
-
-        switch (name) {
-          case 'chrome':
-          case 'microsoft edge':
-            installLink = 'https://google.com/chrome';
-            break;
-          case 'firefox':
-            installLink = 'https://google.com/firefox';
-            break;
-          case 'safari':
-            installLink = 'https://google.com/safari';
-            break;
-          default:
-            installLink = 'https://google.com/chrome';
-            break;
-        }
-
-        this._status.next({
-          type: WebExtensionStatusType.NO_AVAILABLE,
+        this._states.next({
+          type: WebExtensionStatus.NO_AVAILABLE,
           isConnectorExists: false,
-          installLink,
         });
 
         return;
       }
 
-      factory().then((connector) => {
-        if (!connector.checkBrowserAvailability(navigator.userAgent)) {
-          this._status.next({
-            type: WebExtensionStatusType.NO_AVAILABLE,
-            isConnectorExists: true,
-            isSupportBrowser: false,
-          });
-
-          connector.close();
-
-          return;
-        }
-
-        connector.open(hostWindow, this._status, this._states);
-
+      Promise.resolve(factory()).then((connector) => {
+        connector.open(hostWindow, this._states);
         this._connector = connector;
       });
     });
@@ -124,14 +88,6 @@ export class WebExtensionConnectorController {
 
   requestApproval = () => {
     this._connector?.requestApproval();
-  };
-
-  status = () => {
-    return this._status.asObservable();
-  };
-
-  getLastStatus = () => {
-    return this._status.getValue();
   };
 
   post = (

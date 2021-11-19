@@ -1,9 +1,10 @@
 import {
   SerializedCreateTxOptions,
+  WebExtensionNetworkInfo,
   WebExtensionPostPayload,
   WebExtensionSignPayload,
-  WebExtensionStates,
   WebExtensionTxResult,
+  WebExtensionWalletInfo,
 } from '@terra-dev/web-extension-interface';
 import { AccAddress } from '@terra-money/terra.js';
 
@@ -106,6 +107,13 @@ export interface AddNetwork {
 // ---------------------------------------------
 // content script -> web
 // ---------------------------------------------
+export interface ExtensionStates {
+  focusedWalletAddress: string;
+  wallets: WebExtensionWalletInfo[];
+  network: WebExtensionNetworkInfo;
+  isApproved: boolean;
+}
+
 export enum FromContentScriptToWebMessage {
   STATES_UPDATED = 'STATES_UPDATED',
   POST_RESPONSE = 'POST_RESPONSE',
@@ -118,7 +126,7 @@ export enum FromContentScriptToWebMessage {
 
 export interface WebExtensionStatesUpdated {
   type: FromContentScriptToWebMessage.STATES_UPDATED;
-  payload: WebExtensionStates & { isApproved: boolean };
+  payload: ExtensionStates;
 }
 
 export interface WebExtensionPostResponse {

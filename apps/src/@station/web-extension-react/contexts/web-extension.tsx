@@ -3,10 +3,6 @@ import {
   WebExtensionSignPayload,
   WebExtensionStates,
   WebExtensionStatus,
-  WebExtensionStatusInitializing,
-  WebExtensionStatusNoAvailable,
-  WebExtensionStatusReady,
-  WebExtensionStatusType,
   WebExtensionTxResult,
 } from '@terra-dev/web-extension-interface';
 import { CreateTxOptions } from '@terra-money/terra.js';
@@ -29,8 +25,7 @@ export interface WebExtensionConnectorProviderProps {
 
 export interface WebExtensionConnectorState {
   controller: WebExtensionConnectorController;
-  status: WebExtensionStatus;
-  states: WebExtensionStates | null;
+  states: WebExtensionStates;
   refetchStates: () => void;
   requestApproval: (() => void) | null;
   post: (
@@ -65,35 +60,27 @@ export function WebExtensionConnectorProvider({
   children,
   controller,
 }: WebExtensionConnectorProviderProps) {
-  const [status, setStatus] = useState<
-    | WebExtensionStatusInitializing
-    | WebExtensionStatusNoAvailable
-    | WebExtensionStatusReady
-  >(() => ({
-    type: WebExtensionStatusType.INITIALIZING,
-  }));
-  const [states, setStates] = useState<WebExtensionStates | null>(null);
+  const [states, setStates] = useState<WebExtensionStates>(() => {
+    return {
+      type: WebExtensionStatus.INITIALIZING,
+    };
+  });
 
   const requestApproval = useMemo(() => {
-    return status.type === WebExtensionStatusType.NO_AVAILABLE &&
-      status.isApproved === false
+    return states.type === WebExtensionStatus.NO_AVAILABLE &&
+      states.isApproved === false
       ? controller.requestApproval
       : null;
-  }, [controller.requestApproval, status]);
+  }, [controller.requestApproval, states]);
 
   useEffect(() => {
     controller.refetchStates();
-
-    const statusSubscription = controller.status().subscribe((nextStatus) => {
-      setStatus(nextStatus);
-    });
 
     const statesSubscription = controller.states().subscribe((nextStates) => {
       setStates(nextStates);
     });
 
     return () => {
-      statusSubscription.unsubscribe();
       statesSubscription.unsubscribe();
     };
   }, [controller]);
@@ -101,7 +88,6 @@ export function WebExtensionConnectorProvider({
   const state = useMemo<WebExtensionConnectorState>(
     () => ({
       controller,
-      status,
       states,
       refetchStates: controller.refetchStates,
       requestApproval,
@@ -112,7 +98,7 @@ export function WebExtensionConnectorProvider({
       hasNetwork: controller.hasNetwork,
       addNetwork: controller.addNetwork,
     }),
-    [controller, status, states, requestApproval],
+    [controller, states, requestApproval],
   );
 
   return (

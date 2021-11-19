@@ -1,8 +1,13 @@
 import { useWebExtensionConnector } from '@station/web-extension-react';
+import { WebExtensionStatus } from '@terra-dev/web-extension-interface';
 import React from 'react';
 
 export function CurrentNetwork() {
   const { states } = useWebExtensionConnector();
 
-  return <pre>{JSON.stringify(states?.network, null, 2)}</pre>;
+  if (states.type !== WebExtensionStatus.READY) {
+    return null;
+  }
+
+  return <pre>{JSON.stringify(states.network, null, 2)}</pre>;
 }

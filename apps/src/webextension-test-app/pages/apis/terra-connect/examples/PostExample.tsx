@@ -5,6 +5,7 @@ import {
 } from '@station/web-extension-react';
 import {
   WebExtensionPostPayload,
+  WebExtensionStatus,
   WebExtensionTxResult,
   WebExtensionTxStatus,
 } from '@terra-dev/web-extension-interface';
@@ -33,7 +34,7 @@ export function PostExample() {
   const [inProgress, setInProgress] = useState<boolean>(false);
 
   const send = useCallback(() => {
-    if (!states || !selectedWallet) {
+    if (states.type !== WebExtensionStatus.READY || !selectedWallet) {
       return;
     }
 
@@ -83,15 +84,17 @@ export function PostExample() {
 
       {txError && <pre>{txError}</pre>}
 
-      {txResult && states && txResult.status === WebExtensionTxStatus.SUCCEED && (
-        <a
-          href={`https://finder.terra.money/${states.network.chainID}/tx/${txResult.payload.txhash}`}
-          target="_blank"
-          rel="noreferrer"
-        >
-          Open Tx Result in Terra Finder
-        </a>
-      )}
+      {txResult &&
+        states.type === WebExtensionStatus.READY &&
+        txResult.status === WebExtensionTxStatus.SUCCEED && (
+          <a
+            href={`https://finder.terra.money/${states.network.chainID}/tx/${txResult.payload.txhash}`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Open Tx Result in Terra Finder
+          </a>
+        )}
 
       {(!!txResult || !!txError) && (
         <div>

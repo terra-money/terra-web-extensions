@@ -1,10 +1,13 @@
 import { useWebExtensionConnector } from '@station/web-extension-react';
+import { WebExtensionStatus } from '@terra-dev/web-extension-interface';
 import React from 'react';
 
 export function WalletsExample() {
   const { states } = useWebExtensionConnector();
 
-  if (!states) return null;
+  if (states.type !== WebExtensionStatus.READY) {
+    return null;
+  }
 
   return (
     <ol>

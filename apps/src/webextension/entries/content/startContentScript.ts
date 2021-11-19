@@ -1,20 +1,19 @@
 import {
-  SerializedCreateTxOptions,
-  WebExtensionNetworkInfo,
-  WebExtensionPostPayload,
-  WebExtensionSignPayload,
-  WebExtensionStates,
-  WebExtensionTxResult,
-  WebExtensionTxStatus,
-  WebExtensionWalletInfo,
-} from '@terra-dev/web-extension-interface';
-import {
   findSimilarNetwork,
   hasCW20Tokens,
   observeHostnamesStorage,
   observeNetworkStorage,
   observeWalletsStorage,
 } from '@terra-dev/web-extension-backend';
+import {
+  SerializedCreateTxOptions,
+  WebExtensionNetworkInfo,
+  WebExtensionPostPayload,
+  WebExtensionSignPayload,
+  WebExtensionTxResult,
+  WebExtensionTxStatus,
+  WebExtensionWalletInfo,
+} from '@terra-dev/web-extension-interface';
 //@ts-ignore
 import LocalMessageDuplexStream from 'post-message-stream';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
@@ -22,6 +21,7 @@ import { map } from 'rxjs/operators';
 import { browser } from 'webextension-polyfill-ts';
 import { WHITELIST_HOSTNAMES } from 'webextension/env';
 import {
+  ExtensionStates,
   FromContentScriptToWebMessage,
   FromWebToContentScriptMessage,
   isWebExtensionMessage,
@@ -150,8 +150,6 @@ export function startContentScript({
     ),
   );
 
-  type ExtensionStates = WebExtensionStates & { isApproved: boolean };
-
   const extensionStates = combineLatest([
     extensionStateLastUpdated,
     walletsObservable,
@@ -181,10 +179,10 @@ export function startContentScript({
       target: 'station:inpage',
     });
 
-    let _states: WebExtensionStates | null = null;
-    let _statesResolvers: Set<(_: WebExtensionStates) => void> = new Set();
+    let _states: ExtensionStates | null = null;
+    let _statesResolvers: Set<(_: ExtensionStates) => void> = new Set();
 
-    function resolveStates(callback: (_: WebExtensionStates) => void) {
+    function resolveStates(callback: (_: ExtensionStates) => void) {
       if (_states) {
         callback(_states);
       } else {
@@ -195,7 +193,7 @@ export function startContentScript({
     function getFocusedWallet({
       wallets,
       focusedWalletAddress,
-    }: WebExtensionStates): WebExtensionWalletInfo {
+    }: ExtensionStates): WebExtensionWalletInfo {
       if (wallets.length === 0) {
         throw new Error('the wallets should have at least one more wallet!!!');
       }
@@ -261,7 +259,7 @@ export function startContentScript({
         // connect
         // ---------------------------------------------
         case 'connect':
-          function approveConnect(states: WebExtensionStates) {
+          function approveConnect(states: ExtensionStates) {
             const focusedWallet = getFocusedWallet(states);
 
             pageStream.write({

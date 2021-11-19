@@ -5,6 +5,7 @@ import {
 } from '@station/web-extension-react';
 import {
   WebExtensionSignPayload,
+  WebExtensionStatus,
   WebExtensionTxResult,
   WebExtensionTxStatus,
 } from '@terra-dev/web-extension-interface';
@@ -45,7 +46,7 @@ export function SignExample() {
   const [inProgress, setInProgress] = useState<boolean>(false);
 
   const send = useCallback(() => {
-    if (!states || !selectedWallet) {
+    if (states.type !== WebExtensionStatus.READY || !selectedWallet) {
       return;
     }
 
@@ -123,7 +124,7 @@ export function SignExample() {
 
       {broadcastError && <pre>{broadcastError}</pre>}
 
-      {broadcastResult && states && (
+      {broadcastResult && states.type === WebExtensionStatus.READY && (
         <a
           href={`https://finder.terra.money/${states.network.chainID}/tx/${broadcastResult.txhash}`}
           target="_blank"

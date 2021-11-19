@@ -1,4 +1,5 @@
 import { useWebExtensionConnector } from '@station/web-extension-react';
+import { WebExtensionStatus } from '@terra-dev/web-extension-interface';
 import React, { ReactNode } from 'react';
 import { MdDashboard, MdFunctions, MdWifiTethering } from 'react-icons/md';
 import { NavLink } from 'react-router-dom';
@@ -47,7 +48,7 @@ function AppLayoutBase({ className, children }: AppLayoutProps) {
 
         <div />
 
-        {states && (
+        {states.type === WebExtensionStatus.READY && (
           <ul style={{ marginBottom: 30 }}>
             <li>
               <div>
