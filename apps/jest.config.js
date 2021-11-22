@@ -8,4 +8,6 @@ module.exports = {
     ...jestPreset.setupFilesAfterEnv,
     './jest.setup.js',
   ],
+  
+  //testEnvironment: 'node',
 };
