@@ -8,7 +8,15 @@ import type {
   WebExtensionTxResult,
 } from './models/tx';
 
+export type TerraWebExtensionFeatures =
+  | 'post'
+  | 'sign'
+  | 'cw20-token'
+  | 'network';
+
 export interface TerraWebExtensionConnector {
+  supportFeatures: () => TerraWebExtensionFeatures[];
+
   // ---------------------------------------------
   // open / close
   // ---------------------------------------------

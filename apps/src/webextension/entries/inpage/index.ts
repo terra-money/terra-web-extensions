@@ -2,6 +2,7 @@ import {
   createTxErrorFromJson,
   serializeTx,
   TerraWebExtensionConnector,
+  TerraWebExtensionFeatures,
   WebExtensionNetworkInfo,
   WebExtensionPostPayload,
   WebExtensionSignPayload,
@@ -42,10 +43,21 @@ function canRequestApproval(states: WebExtensionStates): boolean {
   );
 }
 
+const supportFeatures: TerraWebExtensionFeatures[] = [
+  'post',
+  'sign',
+  'cw20-token',
+  'network',
+];
+
 class TerraStationConnector implements TerraWebExtensionConnector {
   private _states: BehaviorSubject<WebExtensionStates>;
   private hostWindow: Window | null = null;
   private statesSubscription: Subscription | null = null;
+
+  supportFeatures() {
+    return supportFeatures;
+  }
 
   constructor() {
     this._states = new BehaviorSubject<WebExtensionStates>({
