@@ -1,28 +1,11 @@
 #!/usr/bin/env node
 
-const puppeteer = require('puppeteer');
-const path = require('path');
+const runBrowser = require('./index');
 
-(async () => {
-  const extensionPath = path.resolve(__dirname, './unpacked/');
+const url = process.argv[2] || 'https://app.anchorprotocol.com';
 
-  const url = process.argv[2] || 'https://app.anchorprotocol.com';
-
-  const browser = await puppeteer.launch({
+runBrowser(url, {
+  puppeteerLaunchOptions: {
     userDataDir: process.env.EXTENSION_READY_CHROME_USER_DATA,
-    headless: false,
-    defaultViewport: null,
-    args: [
-      `--load-extension=${extensionPath}`,
-      `--disable-extensions-except=${extensionPath}`,
-    ],
-    ignoreDefaultArgs: ['--disable-extensions'],
-  });
-
-  const page = await browser.newPage();
-  await page.goto(url);
-
-  console.log(
-    `🌏 Test Chromium is ready. A shortcut "Ctrl + C" is close the browser.`,
-  );
-})();
+  }
+})

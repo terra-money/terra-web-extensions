@@ -1,7 +1,10 @@
 const puppeteer = require('puppeteer');
 const path = require('path');
 
-module.exports = async (url, { extensionPaths, puppeteerLaunchOptions } = {}) => {
+module.exports = async (
+  url,
+  { extensionPaths = [], puppeteerLaunchOptions = {} } = {},
+) => {
   const extensionPath = path.resolve(__dirname, './unpacked/');
 
   const extension = [extensionPath, ...extensionPaths].join(',');
