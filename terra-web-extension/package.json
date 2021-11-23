@@ -1,6 +1,6 @@
 {
   "name": "terra-web-extension",
-  "version": "0.11.4",
+  "version": "0.12.0",
   "author": "Ian Lee <ian@terra.money>",
   "description": "Run terra web extension installed chromium",
   "main": "index.js",
