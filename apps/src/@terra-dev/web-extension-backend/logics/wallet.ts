@@ -1,5 +1,5 @@
 import { validateMnemonic } from '@terra-money/key-utils';
-import { EncryptedWallet } from '../models/InternalWallet';
+import { EncryptedWallet } from '../models/EncryptedWallet';
 import { LedgerWallet } from '../models/LedgerWallet';
 
 export enum WalletNameInvalid {

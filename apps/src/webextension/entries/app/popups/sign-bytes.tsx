@@ -1,28 +1,23 @@
 import {
-  deserializeTx,
+  approveHostnames,
+  EncryptedWallet,
+  findWallet,
+  getSavedPassword,
+  LedgerWallet,
+  readHostnamesStorage,
+  removeSavedPassword,
+  savePassword,
+  SignBytesRequest,
+  signBytesRequestFromURLSearchParams,
+  signBytesWithEncryptedWallet,
+  Wallet,
+} from '@terra-dev/web-extension-backend';
+import {
   WebExtensionTxFail,
   WebExtensionTxStatus,
   WebExtensionTxUnspecifiedError,
   WebExtensionUserDenied,
 } from '@terra-dev/web-extension-interface';
-import {
-  approveHostnames,
-  createLedgerKey,
-  EncryptedWallet,
-  findWallet,
-  txRequestFromURLSearchParams,
-  getSavedPassword,
-  LedgerKeyResponse,
-  LedgerWallet,
-  postWithEncryptedWallet,
-  postWithLedgerWallet,
-  readHostnamesStorage,
-  removeSavedPassword,
-  savePassword,
-  TxRequest,
-  Wallet,
-} from '@terra-dev/web-extension-backend';
-import { CreateTxOptions } from '@terra-money/terra.js';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
@@ -31,24 +26,18 @@ import { ApproveHostname } from 'webextension/components/views/ApproveHostname';
 import { CanNotFindTx } from 'webextension/components/views/CanNotFindTx';
 import { CanNotFindWallet } from 'webextension/components/views/CanNotFindWallet';
 import { InProgress } from 'webextension/components/views/InProgress';
-import { SignTxWithEncryptedWallet } from 'webextension/components/views/SignTxWithEncryptedWallet';
-import { SignTxWithLedgerWallet } from 'webextension/components/views/SignTxWithLedgerWallet';
-import { UnknownCase } from 'webextension/components/views/UnknownCase';
+import { SignBytesWithEncryptedWallet } from 'webextension/components/views/SignBytesTxWithEncryptedWallet';
 import { useAllowedCommandId } from 'webextension/contexts/commands';
-import {
-  TX_INFO_PORT_PREFIX,
-  TX_PORT_PREFIX,
-  WHITELIST_HOSTNAMES,
-} from 'webextension/env';
+import { TX_PORT_PREFIX, WHITELIST_HOSTNAMES } from 'webextension/env';
 
-export function TxPostPopup() {
+export function TxSignBytesPopup() {
   // ---------------------------------------------
   // read hash urls
   // ---------------------------------------------
   const { search } = useLocation();
 
   const txRequest = useMemo(() => {
-    return txRequestFromURLSearchParams(search);
+    return signBytesRequestFromURLSearchParams(search);
   }, [search]);
 
   useAllowedCommandId(txRequest?.id, '/error/abnormal-approach');
@@ -159,7 +148,7 @@ export function TxPostPopup() {
       <Center>
         <CanNotFindWallet
           className="content"
-          chainID={txRequest.network.chainID}
+          chainID={''}
           terraAddress={txRequest.terraAddress}
           onConfirm={cantFindWallet}
         />
@@ -186,12 +175,6 @@ export function TxPostPopup() {
     );
   }
 
-  if ('usbDevice' in wallet) {
-    return (
-      <LedgerWalletTxForm txRequest={txRequest} wallet={wallet} onDeny={deny} />
-    );
-  }
-
   if ('encryptedWallet' in wallet) {
     return (
       <EncryptedWalletTxForm
@@ -202,7 +185,7 @@ export function TxPostPopup() {
     );
   }
 
-  return <UnknownCase detail={JSON.stringify(txRequest)} onConfirm={deny} />;
+  return <div>Hello</div>;
 }
 
 const Center = styled.div`
@@ -211,102 +194,6 @@ const Center = styled.div`
     max-height: 600px;
   }
 `;
-
-function LedgerWalletTxForm({
-  className,
-  txRequest,
-  wallet,
-  onDeny,
-}: {
-  className?: string;
-  txRequest: TxRequest;
-  wallet: LedgerWallet;
-  onDeny: (params: { id: string }) => void;
-}) {
-  const tx = useMemo(() => {
-    return deserializeTx(txRequest.tx);
-  }, [txRequest.tx]);
-
-  const deny = useCallback(() => {
-    onDeny(txRequest);
-    if (txRequest.closeWindowAfterTx) {
-      window.close();
-    }
-  }, [onDeny, txRequest]);
-
-  const proceed = useCallback(
-    async ({ key, close }: LedgerKeyResponse, resolvedTx: CreateTxOptions) => {
-      const port = browser.runtime.connect(undefined, {
-        name: TX_PORT_PREFIX + txRequest.id,
-      });
-
-      postWithLedgerWallet(
-        wallet,
-        txRequest.network,
-        resolvedTx,
-        key,
-      ).subscribe({
-        next: (result) => {
-          if (result.status === WebExtensionTxStatus.SUCCEED) {
-            port.postMessage(result);
-            close();
-
-            const txInfoPort = browser.runtime.connect(undefined, {
-              name: TX_INFO_PORT_PREFIX + txRequest.id,
-            });
-
-            txInfoPort.postMessage({
-              ...txRequest.network,
-              txhash: result.payload.txhash,
-            });
-
-            txInfoPort.disconnect();
-          } else if (result.status === WebExtensionTxStatus.DENIED) {
-            port.postMessage({
-              ...result,
-              error: new WebExtensionUserDenied().toJSON(),
-            });
-            close();
-          } else if (result.status === WebExtensionTxStatus.FAIL) {
-            port.postMessage({
-              ...result,
-              error: result.error.toJSON(),
-            });
-            close();
-          }
-        },
-        error: (error) => {
-          port.postMessage({
-            status: WebExtensionTxStatus.FAIL,
-            error,
-          } as WebExtensionTxFail);
-          close();
-        },
-        complete: () => {
-          port.disconnect();
-          if (txRequest.closeWindowAfterTx) {
-            window.close();
-          }
-        },
-      });
-    },
-    [txRequest.closeWindowAfterTx, txRequest.id, txRequest.network, wallet],
-  );
-
-  return (
-    <SignTxWithLedgerWallet
-      className={className}
-      wallet={wallet}
-      network={txRequest.network}
-      tx={tx}
-      hostname={txRequest.hostname}
-      date={txRequest.date}
-      onDeny={deny}
-      onProceed={proceed}
-      createLedgerKey={createLedgerKey}
-    />
-  );
-}
 
 const DAY = 1000 * 60 * 60 * 24;
 
@@ -317,14 +204,10 @@ function EncryptedWalletTxForm({
   onDeny,
 }: {
   className?: string;
-  txRequest: TxRequest;
+  txRequest: SignBytesRequest;
   wallet: EncryptedWallet;
   onDeny: (params: { id: string }) => void;
 }) {
-  const tx = useMemo(() => {
-    return deserializeTx(txRequest.tx);
-  }, [txRequest.tx]);
-
   const deny = useCallback(() => {
     onDeny(txRequest);
   }, [onDeny, txRequest]);
@@ -336,22 +219,14 @@ function EncryptedWalletTxForm({
   }, [txRequest.terraAddress]);
 
   const proceed = useCallback(
-    async (
-      decryptedWallet: Wallet,
-      resolvedTx: CreateTxOptions,
-      password: string | null,
-    ) => {
+    async (decryptedWallet: Wallet, bytes: Buffer, password: string | null) => {
       const port = browser.runtime.connect(undefined, {
         name: TX_PORT_PREFIX + txRequest.id,
       });
 
       let waitPasswordSaving: Promise<void>;
 
-      postWithEncryptedWallet(
-        decryptedWallet,
-        txRequest.network,
-        resolvedTx,
-      ).subscribe({
+      signBytesWithEncryptedWallet(decryptedWallet, bytes).subscribe({
         next: (result) => {
           if (result.status === WebExtensionTxStatus.SUCCEED) {
             port.postMessage(result);
@@ -365,17 +240,6 @@ function EncryptedWalletTxForm({
             } else {
               waitPasswordSaving = removeSavedPassword(txRequest.terraAddress);
             }
-
-            const txInfoPort = browser.runtime.connect(undefined, {
-              name: TX_INFO_PORT_PREFIX + txRequest.id,
-            });
-
-            txInfoPort.postMessage({
-              ...txRequest.network,
-              txhash: result.payload.txhash,
-            });
-
-            txInfoPort.disconnect();
           } else if (result.status === WebExtensionTxStatus.DENIED) {
             port.postMessage({
               ...result,
@@ -404,12 +268,7 @@ function EncryptedWalletTxForm({
         },
       });
     },
-    [
-      txRequest.closeWindowAfterTx,
-      txRequest.id,
-      txRequest.network,
-      txRequest.terraAddress,
-    ],
+    [txRequest.closeWindowAfterTx, txRequest.id, txRequest.terraAddress],
   );
 
   if (savedPassword === 0) {
@@ -417,16 +276,15 @@ function EncryptedWalletTxForm({
   }
 
   return (
-    <SignTxWithEncryptedWallet
+    <SignBytesWithEncryptedWallet
       className={className}
       wallet={wallet}
-      network={txRequest.network}
-      tx={tx}
-      hostname={txRequest.hostname}
+      bytes={txRequest.bytes}
       date={txRequest.date}
-      savedPassword={savedPassword}
       onDeny={deny}
       onProceed={proceed}
+      savedPassword={savedPassword}
+      hostname={txRequest.hostname}
     />
   );
 }

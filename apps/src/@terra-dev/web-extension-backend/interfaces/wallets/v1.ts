@@ -1,7 +1,7 @@
 import { Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { browser, Storage } from 'webextension-polyfill-ts';
-import { EncryptedWallet } from '../../models/InternalWallet';
+import { EncryptedWallet } from '../../models/EncryptedWallet';
 import { LedgerWallet } from '../../models/LedgerWallet';
 import { safariWebExtensionStorageChangeListener } from '../../utils/safariWebExtensionStorageChangeListener';
 

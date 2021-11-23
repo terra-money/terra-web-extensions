@@ -2,6 +2,7 @@ import {
   SerializedCreateTxOptions,
   WebExtensionNetworkInfo,
   WebExtensionPostPayload,
+  WebExtensionSignBytesPayload,
   WebExtensionSignPayload,
   WebExtensionTxResult,
   WebExtensionWalletInfo,
@@ -15,6 +16,7 @@ export enum FromWebToContentScriptMessage {
   REFETCH_STATES = 'REFETCH_STATES',
   EXECUTE_POST = 'EXECUTE_POST',
   EXECUTE_SIGN = 'EXECUTE_SIGN',
+  EXECUTE_SIGN_BYTES = 'EXECUTE_SIGN_BYTES',
   REQUEST_APPROVAL = 'REQUEST_APPROVAL',
   HAS_CW20_TOKENS = 'HAS_CW20_TOKENS',
   ADD_CW20_TOKENS = 'ADD_CW20_TOKENS',
@@ -50,6 +52,19 @@ export interface ExecuteExtensionSign {
 
   /** transaction payload */
   payload: SerializedCreateTxOptions;
+}
+
+export interface ExecuteExtensionSignBytes {
+  type: FromWebToContentScriptMessage.EXECUTE_SIGN_BYTES;
+
+  /** primary id of this tx */
+  id: number;
+
+  /** target terra wallet address */
+  terraAddress: string;
+
+  /** base64 encoded Buffer */
+  payload: string;
 }
 
 export interface RequestApproval {
@@ -118,6 +133,7 @@ export enum FromContentScriptToWebMessage {
   STATES_UPDATED = 'STATES_UPDATED',
   POST_RESPONSE = 'POST_RESPONSE',
   SIGN_RESPONSE = 'SIGN_RESPONSE',
+  SIGN_BYTES_RESPONSE = 'SIGN_BYTES_RESPONSE',
   HAS_CW20_TOKENS_RESPONSE = 'HAS_CW20_TOKENS_RESPONSE',
   ADD_CW20_TOKENS_RESPONSE = 'ADD_CW20_TOKENS_RESPONSE',
   HAS_NETWORK_RESPONSE = 'HAS_NETWORK_RESPONSE',
@@ -147,6 +163,16 @@ export interface WebExtensionSignResponse {
 
   /** tx response */
   payload: WebExtensionTxResult<WebExtensionSignPayload>;
+}
+
+export interface WebExtensionSignBytesResponse {
+  type: FromContentScriptToWebMessage.SIGN_BYTES_RESPONSE;
+
+  /** primary id of this tx */
+  id: number;
+
+  /** response */
+  payload: WebExtensionTxResult<WebExtensionSignBytesPayload>;
 }
 
 export interface WebExtensionAddCW20TokenResponse {
@@ -198,6 +224,7 @@ export type WebExtensionMessage =
   | RefetchExtensionStates
   | ExecuteExtensionPost
   | ExecuteExtensionSign
+  | ExecuteExtensionSignBytes
   | RequestApproval
   | HasCW20Tokens
   | AddCW20Tokens
@@ -207,6 +234,7 @@ export type WebExtensionMessage =
   | WebExtensionStatesUpdated
   | WebExtensionPostResponse
   | WebExtensionSignResponse
+  | WebExtensionSignBytesResponse
   | WebExtensionAddCW20TokenResponse
   | WebExtensionHasCW20TokensResponse
   | WebExtensionHasNetworkResponse
@@ -227,6 +255,7 @@ export function isWebExtensionMessage(
       return true;
     case FromWebToContentScriptMessage.EXECUTE_POST:
     case FromWebToContentScriptMessage.EXECUTE_SIGN:
+    case FromWebToContentScriptMessage.EXECUTE_SIGN_BYTES:
       return typeof msg.id === 'number' && !!msg.payload;
     case FromWebToContentScriptMessage.REQUEST_APPROVAL:
       return true;
@@ -249,6 +278,7 @@ export function isWebExtensionMessage(
       return !!msg.payload;
     case FromContentScriptToWebMessage.POST_RESPONSE:
     case FromContentScriptToWebMessage.SIGN_RESPONSE:
+    case FromContentScriptToWebMessage.SIGN_BYTES_RESPONSE:
       return typeof msg.id === 'number' && !!msg.payload;
     case FromContentScriptToWebMessage.ADD_CW20_TOKENS_RESPONSE:
       return typeof msg.id === 'number' && !!msg.payload;

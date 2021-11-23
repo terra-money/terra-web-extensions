@@ -5,6 +5,7 @@ import {
   TerraWebExtensionFeatures,
   WebExtensionNetworkInfo,
   WebExtensionPostPayload,
+  WebExtensionSignBytesPayload,
   WebExtensionSignPayload,
   WebExtensionStates,
   WebExtensionStatus,
@@ -20,6 +21,7 @@ import {
   filter,
   Observable,
   Observer,
+  Subscribable,
   Subscription,
 } from 'rxjs';
 import {
@@ -27,6 +29,7 @@ import {
   AddNetwork,
   ExecuteExtensionPost,
   ExecuteExtensionSign,
+  ExecuteExtensionSignBytes,
   FromContentScriptToWebMessage,
   FromWebToContentScriptMessage,
   HasCW20Tokens,
@@ -122,7 +125,7 @@ class TerraStationConnector implements TerraWebExtensionConnector {
   post = (
     terraAddress: string,
     tx: CreateTxOptions,
-  ): Observable<WebExtensionTxResult<WebExtensionPostPayload>> => {
+  ): Subscribable<WebExtensionTxResult<WebExtensionPostPayload>> => {
     return new Observable<
       WebExtensionTxProgress | WebExtensionTxSucceed<WebExtensionPostPayload>
     >((subscriber) => {
@@ -189,7 +192,7 @@ class TerraStationConnector implements TerraWebExtensionConnector {
   sign = (
     terraAddress: string,
     tx: CreateTxOptions,
-  ): Observable<WebExtensionTxResult<WebExtensionSignPayload>> => {
+  ): Subscribable<WebExtensionTxResult<WebExtensionSignPayload>> => {
     return new Observable<WebExtensionTxResult<WebExtensionSignPayload>>(
       (subscriber) => {
         subscriber.next({
@@ -211,6 +214,74 @@ class TerraStationConnector implements TerraWebExtensionConnector {
           if (
             !isWebExtensionMessage(event.data) ||
             event.data.type !== FromContentScriptToWebMessage.SIGN_RESPONSE ||
+            event.data.id !== id
+          ) {
+            return;
+          }
+
+          if (event.data.payload.status === WebExtensionTxStatus.PROGRESS) {
+            subscriber.next(event.data.payload);
+          } else if (
+            event.data.payload.status === WebExtensionTxStatus.DENIED ||
+            event.data.payload.status === WebExtensionTxStatus.FAIL ||
+            event.data.payload.status === WebExtensionTxStatus.SUCCEED
+          ) {
+            switch (event.data.payload.status) {
+              case WebExtensionTxStatus.DENIED:
+                subscriber.error(new WebExtensionUserDenied());
+                break;
+              case WebExtensionTxStatus.FAIL:
+                subscriber.error(
+                  event.data.payload.error instanceof Error
+                    ? event.data.payload.error
+                    : createTxErrorFromJson(event.data.payload.error),
+                );
+                break;
+              case WebExtensionTxStatus.SUCCEED:
+                subscriber.next(event.data.payload);
+                subscriber.complete();
+                break;
+            }
+
+            this.hostWindow?.removeEventListener('message', callback);
+          }
+        };
+
+        this.hostWindow?.addEventListener('message', callback);
+
+        return () => {
+          this.hostWindow?.removeEventListener('message', callback);
+        };
+      },
+    );
+  };
+
+  signBytes = (
+    terraAddress: string,
+    bytes: Buffer,
+  ): Subscribable<WebExtensionTxResult<WebExtensionSignBytesPayload>> => {
+    return new Observable<WebExtensionTxResult<WebExtensionSignBytesPayload>>(
+      (subscriber) => {
+        subscriber.next({
+          status: WebExtensionTxStatus.PROGRESS,
+        });
+
+        const id = Date.now();
+
+        const msg: ExecuteExtensionSignBytes = {
+          type: FromWebToContentScriptMessage.EXECUTE_SIGN_BYTES,
+          id,
+          terraAddress,
+          payload: bytes.toString('base64'),
+        };
+
+        this.hostWindow?.postMessage(msg, '*');
+
+        const callback = (event: MessageEvent) => {
+          if (
+            !isWebExtensionMessage(event.data) ||
+            event.data.type !==
+              FromContentScriptToWebMessage.SIGN_BYTES_RESPONSE ||
             event.data.id !== id
           ) {
             return;

@@ -38,6 +38,7 @@ import { ConnectPopup } from './popups/connect';
 import { ConnectLedgerPopup } from './popups/connect-ledger';
 import { TxPostPopup } from './popups/post';
 import { TxSignPopup } from './popups/sign';
+import { TxSignBytesPopup } from './popups/sign-bytes';
 
 const queryClient = new QueryClient();
 
@@ -111,6 +112,11 @@ function Component({ className }: { className?: string }) {
                 <Route exact path="/connect" component={ConnectPopup} />
                 <Route exact path="/tx/post" component={TxPostPopup} />
                 <Route exact path="/tx/sign" component={TxSignPopup} />
+                <Route
+                  exact
+                  path="/tx/sign-bytes"
+                  component={TxSignBytesPopup}
+                />
                 <Route exact path="/add-network" component={AddNetworkPopup} />
                 <Route
                   exact

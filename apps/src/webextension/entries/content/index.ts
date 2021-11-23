@@ -3,11 +3,13 @@ import { startAddNetwork } from './modals/startAddNetwork';
 import { startConnect } from './modals/startConnect';
 import { startPost } from './modals/startPost';
 import { startSign } from './modals/startSign';
+import { startSignBytes } from './modals/startSignBytes';
 import { ContentScriptOptions, startContentScript } from './startContentScript';
 
 const contentScriptOptions: ContentScriptOptions = {
   startPost,
   startSign,
+  startSignBytes,
   startConnect,
   startAddCW20Tokens,
   startAddNetwork,

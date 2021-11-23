@@ -14,7 +14,7 @@ import {
   findWallet,
   readSelectedNetwork,
   registerAllowCommandId,
-  toURLSearchParams,
+  txRequestToURLSearchParams,
   TxRequest,
 } from '@terra-dev/web-extension-backend';
 import { createElement } from 'react';
@@ -87,7 +87,9 @@ export function startSign(
             closeWindowAfterTx: isPopup,
           };
 
-          const src = `${txHtml}#/tx/sign?${toURLSearchParams(txRequest)}`;
+          const src = `${txHtml}#/tx/sign?${txRequestToURLSearchParams(
+            txRequest,
+          )}`;
 
           if (modalContainer) {
             const modal = createElement(IFramePoppingModal, {

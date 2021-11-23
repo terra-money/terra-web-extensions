@@ -1,33 +1,25 @@
-import {
-  SerializedCreateTxOptions,
-  WebExtensionNetworkInfo,
-} from '@terra-dev/web-extension-interface';
-
-export interface TxRequest {
+export interface SignBytesRequest {
   id: string;
   terraAddress: string;
-  network: WebExtensionNetworkInfo;
-  tx: SerializedCreateTxOptions;
+  bytes: Buffer;
   hostname: string;
   date: Date;
   closeWindowAfterTx: boolean;
 }
 
-export function txRequestToURLSearchParams({
+export function signBytesRequestToURLSearchParams({
   id,
   terraAddress,
-  network,
-  tx,
+  bytes,
   hostname,
   date,
   closeWindowAfterTx,
-}: TxRequest): string {
+}: SignBytesRequest): string {
   const params = new URLSearchParams();
 
   params.set('id', id);
   params.set('terra-address', terraAddress);
-  params.set('network', btoa(JSON.stringify(network)));
-  params.set('tx', btoa(JSON.stringify(tx)));
+  params.set('bytes', bytes.toString('base64'));
   params.set('hostname', hostname);
   params.set('date', date.getTime().toString());
   if (closeWindowAfterTx) {
@@ -37,40 +29,30 @@ export function txRequestToURLSearchParams({
   return params.toString();
 }
 
-export function txRequestFromURLSearchParams(
+export function signBytesRequestFromURLSearchParams(
   search: string,
-): TxRequest | undefined {
+): SignBytesRequest | undefined {
   const params = new URLSearchParams(search);
 
   const id = params.get('id');
   const terraAddress = params.get('terra-address');
-  const txBase64 = params.get('tx');
-  const networkBase64 = params.get('network');
+  const bytesBase64 = params.get('bytes');
   const hostname = params.get('hostname');
   const date = params.get('date');
 
-  if (
-    !id ||
-    !terraAddress ||
-    !txBase64 ||
-    !networkBase64 ||
-    !hostname ||
-    !date
-  ) {
-    console.error(`Can't find TxRequest on the search`, params);
+  if (!id || !terraAddress || !bytesBase64 || !hostname || !date) {
+    console.error(`Can't find SignBytesRequest on the search`, params);
     return undefined;
   }
 
-  const tx: SerializedCreateTxOptions = JSON.parse(atob(txBase64));
-  const network: WebExtensionNetworkInfo = JSON.parse(atob(networkBase64));
+  const bytes = Buffer.from(bytesBase64, 'base64');
   const closeWindowAfterTx: boolean =
     params.get('close-window-after-tx') === 'yes';
 
   return {
     id,
     terraAddress,
-    network,
-    tx,
+    bytes,
     hostname,
     date: new Date(parseInt(date)),
     closeWindowAfterTx,

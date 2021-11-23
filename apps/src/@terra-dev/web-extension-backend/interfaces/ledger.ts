@@ -113,6 +113,23 @@ export async function connectLedger(): Promise<LedgerWallet | undefined> {
 
 export type LedgerKeyResponse = { key: LedgerKey; close: () => void };
 
+export async function signBytesWithLedger(
+  bytes: Buffer,
+): Promise<SignResponse> {
+  const transport = await createTransport();
+  const app = new TerraLedgerApp(transport);
+
+  await app.initialize();
+
+  const res = await app.sign(TERRA_APP_PATH, bytes);
+
+  if (res.signature) {
+    return res;
+  }
+
+  throw new WebExtensionLedgerError(res.return_code, res.error_message);
+}
+
 export async function createLedgerKey(): Promise<LedgerKeyResponse> {
   const transport = await createTransport();
   const app = new TerraLedgerApp(transport);

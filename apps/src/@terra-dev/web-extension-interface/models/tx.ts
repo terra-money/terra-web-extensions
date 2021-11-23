@@ -1,4 +1,10 @@
-import { CreateTxOptions, Fee, Msg, Tx } from '@terra-money/terra.js';
+import {
+  CreateTxOptions,
+  Fee,
+  Msg,
+  PublicKey,
+  Tx,
+} from '@terra-money/terra.js';
 import {
   WebExtensionCreateTxFailed,
   WebExtensionTxFailed,
@@ -24,6 +30,32 @@ export interface WebExtensionPostPayload {
 }
 
 export type WebExtensionSignPayload = Tx.Data;
+
+export interface WebExtensionSignBytesPayload {
+  recid: number;
+
+  /**
+   * base64 Uint8Array
+   *
+   * @example
+   * ```
+   * // stringified by
+   * Buffer.from(Uint8Array).toString('base64')
+   *
+   * // to Uint8Array
+   * Uint8Array.from(Buffer.from(base64String, 'base64'))
+   * ```
+   */
+  signature: string;
+
+  /**
+   * @example
+   * ```
+   * PublicKey.fromData(public_key)
+   * ```
+   */
+  public_key?: PublicKey.Data;
+}
 
 export interface WebExtensionTxSucceed<Payload> {
   status: WebExtensionTxStatus.SUCCEED;

@@ -1,4 +1,4 @@
-import { MnemonicKey, RawKey } from '@terra-money/terra.js';
+import { MnemonicKey, PublicKey, RawKey } from '@terra-money/terra.js';
 import { randomBytes } from 'crypto';
 import jscrypto from 'jscrypto';
 import secp256k1 from 'secp256k1';
@@ -41,8 +41,6 @@ describe.skip('sign-bytes', () => {
     const mk = new MnemonicKey({ coinType: 330 });
     const privateKey = mk.privateKey.toString('hex');
     const key = new RawKey(Buffer.from(privateKey, 'hex'));
-    //@ts-ignore
-    const publicKey = key.publicKey!.toProto().key;
 
     // create message
     const bytes = Buffer.from('hello world');
@@ -61,8 +59,13 @@ describe.skip('sign-bytes', () => {
     const userReturn = {
       recid,
       signature,
-      publicKey: Buffer.from(publicKey).toString('base64'),
+      public_key: key.publicKey?.toData(),
     };
+
+    //@ts-ignore
+    const publicKey = PublicKey.fromData(userReturn.public_key!).toProto().key;
+
+    //publicKey: Buffer.from(publicKey.key).toString('base64'),
 
     // verify by userReturn data
     expect(
@@ -72,7 +75,7 @@ describe.skip('sign-bytes', () => {
           jscrypto.SHA256.hash(new jscrypto.Word32Array(bytes)).toString(),
           'hex',
         ),
-        Buffer.from(userReturn.publicKey, 'base64'),
+        Buffer.from(publicKey, 'base64'),
       ),
     ).toBeTruthy();
   });

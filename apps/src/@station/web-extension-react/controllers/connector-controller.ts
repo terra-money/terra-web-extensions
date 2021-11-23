@@ -1,6 +1,7 @@
 import {
   TerraWebExtensionConnector,
   WebExtensionPostPayload,
+  WebExtensionSignBytesPayload,
   WebExtensionSignPayload,
   WebExtensionStates,
   WebExtensionStatus,
@@ -102,6 +103,13 @@ export class WebExtensionConnectorController {
     tx: CreateTxOptions,
   ): Subscribable<WebExtensionTxResult<WebExtensionSignPayload>> => {
     return this._connector!.sign(terraAddress, tx);
+  };
+
+  signBytes = (
+    terraAddress: string,
+    bytes: Buffer,
+  ): Subscribable<WebExtensionTxResult<WebExtensionSignBytesPayload>> => {
+    return this._connector!.signBytes(terraAddress, bytes);
   };
 
   hasCW20Tokens = (chainID: string, ...tokenAddrs: string[]) => {

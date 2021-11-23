@@ -4,6 +4,7 @@ import type { WebExtensionNetworkInfo } from './models/network';
 import type { WebExtensionStates } from './models/states';
 import type {
   WebExtensionPostPayload,
+  WebExtensionSignBytesPayload,
   WebExtensionSignPayload,
   WebExtensionTxResult,
 } from './models/tx';
@@ -11,6 +12,7 @@ import type {
 export type TerraWebExtensionFeatures =
   | 'post'
   | 'sign'
+  | 'sign-bytes'
   | 'cw20-token'
   | 'network';
 
@@ -43,6 +45,11 @@ export interface TerraWebExtensionConnector {
     terraAddress: string,
     tx: CreateTxOptions,
   ) => Subscribable<WebExtensionTxResult<WebExtensionSignPayload>>;
+
+  signBytes: (
+    terraAddress: string,
+    bytes: Buffer,
+  ) => Subscribable<WebExtensionTxResult<WebExtensionSignBytesPayload>>;
 
   hasCW20Tokens: (
     chainID: string,

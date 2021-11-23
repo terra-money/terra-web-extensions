@@ -10,7 +10,7 @@ import {
   createLedgerKey,
   EncryptedWallet,
   findWallet,
-  fromURLSearchParams,
+  txRequestFromURLSearchParams,
   getSavedPassword,
   LedgerKeyResponse,
   LedgerWallet,
@@ -44,7 +44,7 @@ export function TxSignPopup() {
   const { search } = useLocation();
 
   const txRequest = useMemo(() => {
-    return fromURLSearchParams(search);
+    return txRequestFromURLSearchParams(search);
   }, [search]);
 
   useAllowedCommandId(txRequest?.id, '/error/abnormal-approach');

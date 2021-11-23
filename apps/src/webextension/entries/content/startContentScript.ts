@@ -9,6 +9,7 @@ import {
   SerializedCreateTxOptions,
   WebExtensionNetworkInfo,
   WebExtensionPostPayload,
+  WebExtensionSignBytesPayload,
   WebExtensionSignPayload,
   WebExtensionTxResult,
   WebExtensionTxStatus,
@@ -30,6 +31,7 @@ import {
   WebExtensionHasCW20TokensResponse,
   WebExtensionHasNetworkResponse,
   WebExtensionPostResponse,
+  WebExtensionSignBytesResponse,
   WebExtensionSignResponse,
   WebExtensionStatesUpdated,
 } from '../../models/WebExtensionMessage';
@@ -46,6 +48,11 @@ export interface ContentScriptOptions {
     terraAddress: string,
     tx: SerializedCreateTxOptions,
   ) => Observable<WebExtensionTxResult<WebExtensionSignPayload>>;
+  startSignBytes: (
+    id: string,
+    terraAddress: string,
+    bytes: Buffer,
+  ) => Observable<WebExtensionTxResult<WebExtensionSignBytesPayload>>;
   startConnect: (id: string, hostname: string) => Promise<boolean>;
   startAddCW20Tokens: (
     id: string,
@@ -58,11 +65,12 @@ export interface ContentScriptOptions {
   ) => Promise<boolean>;
 }
 
-const CONNECT_NAME = 'Terra Station';
+//const CONNECT_NAME = 'Terra Station';
 
 export function startContentScript({
   startPost,
   startSign,
+  startSignBytes,
   startConnect,
   startAddCW20Tokens,
   startAddNetwork,
@@ -83,7 +91,8 @@ export function startContentScript({
   // ---------------------------------------------
   // set the attribute <meta name="terra-wallet" connected="Terra Station">
   // ---------------------------------------------
-  meta.setAttribute('connected', CONNECT_NAME);
+  // TODO move control this part to wallet-provider
+  //meta.setAttribute('connected', CONNECT_NAME);
 
   // ---------------------------------------------
   // inject inpage scripts
@@ -499,6 +508,21 @@ export function startContentScript({
             ).subscribe((txResult) => {
               const msg: WebExtensionSignResponse = {
                 type: FromContentScriptToWebMessage.SIGN_RESPONSE,
+                id: +event.data.id,
+                payload: txResult,
+              };
+
+              window.postMessage(msg, '*');
+            });
+            break;
+          case FromWebToContentScriptMessage.EXECUTE_SIGN_BYTES:
+            startSignBytes(
+              event.data.id.toString(),
+              event.data.terraAddress,
+              Buffer.from(event.data.payload, 'base64'),
+            ).subscribe((txResult) => {
+              const msg: WebExtensionSignBytesResponse = {
+                type: FromContentScriptToWebMessage.SIGN_BYTES_RESPONSE,
                 id: +event.data.id,
                 payload: txResult,
               };

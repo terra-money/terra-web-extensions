@@ -1,5 +1,6 @@
 import {
   WebExtensionPostPayload,
+  WebExtensionSignBytesPayload,
   WebExtensionSignPayload,
   WebExtensionStates,
   WebExtensionStatus,
@@ -36,6 +37,10 @@ export interface WebExtensionConnectorState {
     terraAddress: string,
     tx: CreateTxOptions,
   ) => Subscribable<WebExtensionTxResult<WebExtensionSignPayload>>;
+  signBytes: (
+    terraAddress: string,
+    bytes: Buffer,
+  ) => Subscribable<WebExtensionTxResult<WebExtensionSignBytesPayload>>;
   hasCW20Tokens: (
     chainID: string,
     ...tokenAddrs: string[]
@@ -93,6 +98,7 @@ export function WebExtensionConnectorProvider({
       requestApproval,
       post: controller.post,
       sign: controller.sign,
+      signBytes: controller.signBytes,
       hasCW20Tokens: controller.hasCW20Tokens,
       addCW20Tokens: controller.addCW20Tokens,
       hasNetwork: controller.hasNetwork,
