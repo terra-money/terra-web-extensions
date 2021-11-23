@@ -49,6 +49,7 @@ function canRequestApproval(states: WebExtensionStates): boolean {
 const supportFeatures: TerraWebExtensionFeatures[] = [
   'post',
   'sign',
+  'sign-bytes',
   'cw20-token',
   'network',
 ];
