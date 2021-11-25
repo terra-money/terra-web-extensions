@@ -516,7 +516,7 @@ declare global {
 const WALLET_INFO = {
   name: 'Terra Station',
   identifier: 'terra-station',
-  icon: 'https://assets.terra.money/icon/station-extension/icon.png',
+  icon: 'https://assets.terra.money/icon/wallet-provider/station.svg',
   connector: () => new TerraStationConnector(),
 };
 
