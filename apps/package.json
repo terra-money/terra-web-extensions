@@ -9,6 +9,7 @@
     "webextension-test-app:start": "vite --config webextension-test-app.vite.ts",
     "webextension-test-app:build": "tsc --noEmit && vite build --config webextension-test-app.vite.ts",
     "webextension:browser": "cross-env TS_NODE_PROJECT=tsconfig.script.json INSPECT_CHROME=9222 node -r ts-node/register -r tsconfig-paths/register scripts/webextension.browser.ts",
+    "webextension:browser:empty": "cross-env EMPTY_USER_DATA=true TS_NODE_PROJECT=tsconfig.script.json INSPECT_CHROME=9222 node -r ts-node/register -r tsconfig-paths/register scripts/webextension.browser.ts",
     "storybook:start": "start-storybook --static-dir ./public/common --port 60055",
     "storybook:build": "build-storybook --static-dir ./public/common --output-dir out/storybook",
     "build": "yarn run webextension:build",

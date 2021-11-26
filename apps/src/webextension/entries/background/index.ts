@@ -5,6 +5,7 @@ import {
   clearPasswords,
   clearStalePasswords,
 } from '@terra-dev/web-extension-backend';
+import { devconfig } from '@terra-dev/web-extension-backend/devconfig';
 import {
   migrateCW20StorageV0,
   migrateNetworkStorageV0,
@@ -143,6 +144,8 @@ browser.runtime.onInstalled.addListener(({ reason }) => {
       url: browser.runtime.getURL('app.html#/welcome'),
     });
   }
+
+  devconfig();
 });
 
 browser.runtime.onStartup.addListener(() => {

@@ -1,39 +1,34 @@
 {
-  "$schema": "https://json.schemastore.org/chrome-manifest",
   "manifest_version": 2,
-  
+
   "name": "Terra Connect",
   "description": "Terra Connect",
   "version": "0.2.0",
-  
-  "permissions": [
-    "storage",
-    "tabs",
-    "notifications"
-  ],
-  
+
+  "permissions": ["storage", "tabs", "notifications"],
+
   "icons": {
     "16": "icons/icon-32.png",
     "48": "icons/icon-128.png",
     "128": "icons/icon-128.png",
     "180": "icons/icon-180.png"
   },
-  
+
   "background": {
-    "scripts": [
-      "background.js"
-    ]
+    "scripts": ["background.js"]
   },
-  
+
   "options_page": "app.html",
-  
-  "content_scripts": [{
-    "js": ["content.js"],
-    "matches": ["<all_urls>"],
-    "run_at": "document_start",
-    "all_frames": true
-  }],
-  
+
+  "content_scripts": [
+    {
+      "js": ["content.js"],
+      "matches": ["<all_urls>"],
+      "run_at": "document_start",
+      "all_frames": true
+    }
+  ],
+
   "browser_action": {
     "default_icon": {
       "16": "icons/icon-32.png",
@@ -42,11 +37,8 @@
     "default_title": "Terra Connect",
     "default_popup": "app.html"
   },
-  
-  "web_accessible_resources": [
-    "inpage.js",
-    "app.html"
-  ],
-  
+
+  "web_accessible_resources": ["inpage.js", "app.html"],
+
   "content_security_policy": "script-src 'self' 'unsafe-eval' 'sha256-/13BBW2yQVtpCsBV7JiO23y7pwEFFUobOzefJ27Nltg='; object-src 'self'"
 }

@@ -18,8 +18,36 @@ terra-web-extension https://localhost:3000
 If you want to keep your chrome browser user data
 
 ```sh
-EXTENSION_READY_CHROME_USER_DATA="/your/chromium/user-data-path" terra-web-extension https://localhost:3000
+terra-web-extension https://localhost:3000 --userData="/your/chromium/user-data-path"
 ```
+
+### Pre-config test
+
+```json
+{
+  "$schema": "https://assets.terra.money/schemas/web-extension-test-config.json",
+  "wallets": [
+    {
+      "name": "validator",
+      "mnemonic": "satisfy adjust timber high purchase tuition stool faith fine install that you unaware feed domain license impose boss human eager hat rent enjoy dawn"
+    },
+    {
+      "name": "test1",
+      "mnemonic": "notice oak worry limit wrap speak medal online prefer cluster roof addict wrist behave treat actual wasp year salad speed social layer crew genius"
+    }
+  ],
+  "selectedWallet": "test1",
+  "selectedNetwork": "testnet"
+}
+```
+
+Create a config file like above
+
+```sh
+terra-web-extension https://localhost:3000 --config="./config.json"
+```
+
+Then, you can use the set extension immediately.
 
 ### Without `npm install -g`
 
@@ -65,5 +93,15 @@ runBrowser('https://localhost:3000', {
   puppeteerLaunchOptions: {
     userDataDir: '/your/chromium/user-data-path',
   }
+})
+```
+
+If you want to use pre-config json file
+
+```js
+const runBrowser = require('terra-web-extension')
+
+runBrowser('https://localhost:3000', {
+  configPath: './config.json',
 })
 ```
