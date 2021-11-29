@@ -7,6 +7,7 @@ import {
   writeWalletsStorage,
 } from './interfaces';
 import {
+  BIPCoinType,
   createWallet,
   EncryptedWallet,
   encryptWallet,
@@ -17,6 +18,8 @@ export interface DevConfigWallet {
   name: string;
   mnemonic: string;
   password?: string;
+  coinType?: BIPCoinType;
+  addressIndex?: number;
 }
 
 export interface DevConfig {
@@ -64,8 +67,14 @@ export async function devconfig() {
     }
 
     const wallets: EncryptedWallet[] = config.wallets.map(
-      ({ name, mnemonic, password }) => {
-        const mk = restoreMnemonicKey(mnemonic);
+      ({
+        name,
+        mnemonic,
+        password,
+        coinType = BIPCoinType.LUNA,
+        addressIndex = 0,
+      }) => {
+        const mk = restoreMnemonicKey(mnemonic, coinType, addressIndex);
         const wallet = createWallet(mk);
         const encryptedWallet = encryptWallet(wallet, password ?? '1234567890');
         return {

@@ -9,6 +9,14 @@ export interface Wallet {
 }
 
 /**
+ * @see https://github.com/satoshilabs/slips/blob/master/slip-0044.md#registered-coin-types
+ */
+export enum BIPCoinType {
+  LUNA = 330,
+  ATOM = 118,
+}
+
+/**
  * EncryptedWalletString = encrypt(JSON.stringify(Wallet))
  */
 export type EncryptedWalletString = string & { __nominal: 'encrypted-wallet' };
@@ -17,15 +25,39 @@ export interface EncryptedWallet extends WebExtensionWalletInfo {
   encryptedWallet: EncryptedWalletString;
 }
 
-export function createMnemonicKey(): MnemonicKey {
-  return new MnemonicKey({ coinType: 330 });
+/**
+ * @see https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki#path-levels
+ *
+ * @param coinType
+ * @param addressIndex 0 ~ 1_000_000
+ */
+export function createMnemonicKey(
+  coinType: BIPCoinType = BIPCoinType.LUNA,
+  addressIndex?: number,
+): MnemonicKey {
+  return new MnemonicKey({ coinType, index: addressIndex });
 }
 
-export function restoreMnemonicKey(mnemonic: string): MnemonicKey {
+/**
+ * @see https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki#path-levels
+ *
+ * @param mnemonic
+ * @param coinType
+ * @param addressIndex 0 ~ 1_000_000
+ */
+export function restoreMnemonicKey(
+  mnemonic: string,
+  coinType: BIPCoinType,
+  addressIndex: number = 0,
+): MnemonicKey {
   if (!validateMnemonic(mnemonic)) {
     throw new Error(`mnemonic key is invalid!`);
   }
-  return new MnemonicKey({ mnemonic, coinType: 330 });
+  return new MnemonicKey({
+    mnemonic,
+    coinType: coinType,
+    index: addressIndex,
+  });
 }
 
 export function createWallet(mk: MnemonicKey): Wallet {

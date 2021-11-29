@@ -14,12 +14,18 @@ import {
   NewWalletResult,
 } from 'webextension/components/views/NewWallet';
 import { RecoverWallet } from 'webextension/components/views/RecoverWallet';
+import { SelectAvailableBIPWallet } from 'webextension/components/views/SelectAvailableBIPWallet';
 import { useStore } from 'webextension/contexts/store';
+import { BIPWalletInfo } from 'webextension/models/BIPWalletInfo';
 
 export function WalletsRecover({ history }: RouteComponentProps) {
   const { wallets } = useStore();
 
   const [newWallet, setNewWallet] = useState<NewWalletResult | null>(null);
+
+  const [availableBipWallets, setAvailableBipWallets] = useState<
+    BIPWalletInfo[] | null
+  >(null);
 
   //// dummy data
   //const [newWallet, setNewWallet] = useState<NewWalletResult | null>(() => ({
@@ -56,6 +62,17 @@ export function WalletsRecover({ history }: RouteComponentProps) {
     [history, newWallet],
   );
 
+  const createBipWallets = useCallback(
+    async (bipWallets: BIPWalletInfo[]) => {
+      if (bipWallets.length === 1) {
+        await confirm(bipWallets[0].mk);
+      } else if (bipWallets.length > 1) {
+        setAvailableBipWallets(bipWallets);
+      }
+    },
+    [confirm],
+  );
+
   if (!newWallet) {
     return (
       <SubLayout
@@ -68,13 +85,29 @@ export function WalletsRecover({ history }: RouteComponentProps) {
     );
   }
 
+  if (Array.isArray(availableBipWallets)) {
+    return (
+      <SubLayout
+        title="Select address to recover"
+        onBack={cancel}
+        rightSection={<DonutIcon ratio={1} />}
+      >
+        <SelectAvailableBIPWallet
+          wallets={wallets}
+          availableBipWallets={availableBipWallets}
+          onSelect={confirm}
+        />
+      </SubLayout>
+    );
+  }
+
   return (
     <SubLayout
       title="Enter your seed phrase"
       onBack={cancel}
-      rightSection={<DonutIcon ratio={1} />}
+      rightSection={<DonutIcon ratio={0.5} />}
     >
-      <RecoverWallet wallets={wallets} onConfirm={confirm} />
+      <RecoverWallet wallets={wallets} onConfirm={createBipWallets} />
     </SubLayout>
   );
 }

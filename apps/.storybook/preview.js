@@ -1,5 +1,5 @@
 import { MantineProvider } from '@mantine/core';
-import { WalletContext, WalletStatus } from '@terra-dev/use-wallet';
+import { WalletContext, WalletStatus } from '@terra-money/use-wallet';
 import React, { useMemo } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { AppProvider } from '../src/@libs/app-provider';

@@ -1,20 +1,20 @@
-import { vibrate } from '@libs/ui';
+import { EmptyNumberInput, vibrate } from '@libs/ui';
 import { Button, SingleLineFormContainer } from '@station/ui';
 import {
   EncryptedWallet,
   LedgerWallet,
-  restoreMnemonicKey,
   validateMnemonicKey,
 } from '@terra-dev/web-extension-backend';
-import { MnemonicKey } from '@terra-money/terra.js';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { FormMain } from 'webextension/components/layouts/FormMain';
+import { getAvailableBIPWallets } from 'webextension/queries/getAvailableBIPWallets';
+import { BIPWalletInfo } from '../../models/BIPWalletInfo';
 import { FormFooter } from '../layouts/FormFooter';
+import { FormMain } from '../layouts/FormMain';
 
 export interface RecoverWalletProps {
   className?: string;
   wallets: (EncryptedWallet | LedgerWallet)[];
-  onConfirm: (mk: MnemonicKey) => void;
+  onConfirm: (availableBipWallets: BIPWalletInfo[]) => void;
 }
 
 export function RecoverWallet({
@@ -25,6 +25,7 @@ export function RecoverWallet({
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [mnemonic, setMnemonic] = useState<string>('');
+  const [addressIndex, setAddressIndex] = useState<string>('');
 
   const invalidMnemonic = useMemo(() => {
     return validateMnemonicKey(mnemonic);
@@ -42,13 +43,23 @@ export function RecoverWallet({
 
   const create = useCallback(async () => {
     try {
-      const mk = restoreMnemonicKey(mnemonic);
+      const availableBipWallets = await getAvailableBIPWallets(
+        mnemonic,
+        addressIndex.length > 0 ? parseInt(addressIndex) : undefined,
+      );
 
-      if (wallets.some(({ terraAddress }) => terraAddress === mk.accAddress)) {
+      const accAddresses = new Set<string>(
+        availableBipWallets.map(({ mk }) => mk.accAddress),
+      );
+
+      if (
+        availableBipWallets.length === 1 &&
+        wallets.some(({ terraAddress }) => accAddresses.has(terraAddress))
+      ) {
         containerRef.current?.animate(vibrate, { duration: 100 });
         setError('Same address exists');
       } else {
-        onConfirm(mk);
+        onConfirm(availableBipWallets);
       }
     } catch (err) {
       containerRef.current?.animate(vibrate, { duration: 100 });
@@ -59,7 +70,7 @@ export function RecoverWallet({
         setError(String(err));
       }
     }
-  }, [mnemonic, onConfirm, wallets]);
+  }, [addressIndex, mnemonic, onConfirm, wallets]);
 
   // ---------------------------------------------
   // presentation
@@ -79,6 +90,15 @@ export function RecoverWallet({
               resize: 'none',
               height: 80,
             }}
+          />
+        </SingleLineFormContainer>
+
+        <SingleLineFormContainer label="Address Index">
+          <EmptyNumberInput
+            type="integer"
+            maxIntegerPoints={7}
+            value={addressIndex}
+            onChange={setAddressIndex}
           />
         </SingleLineFormContainer>
       </FormMain>
