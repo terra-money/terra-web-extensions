@@ -204,10 +204,25 @@ function DashboardBase({ className }: { className?: string }) {
                   <Menu.Item
                     icon={<MdVpnKey />}
                     onClick={() =>
-                      history.push(`/wallet/${wallet.terraAddress}/password`)
+                      history.push(
+                        `/wallet/${wallet.terraAddress}/change-password`,
+                      )
                     }
                   >
                     <FormattedMessage id="wallet.change-password" />
+                  </Menu.Item>
+                )}
+
+                {'encryptedWallet' in wallet && (
+                  <Menu.Item
+                    icon={<MdVpnKey />}
+                    onClick={() =>
+                      history.push(
+                        `/wallet/${wallet.terraAddress}/reset-password`,
+                      )
+                    }
+                  >
+                    Reset password
                   </Menu.Item>
                 )}
 

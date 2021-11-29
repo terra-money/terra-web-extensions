@@ -31,13 +31,13 @@ export function RecoverWallet({
     return validateMnemonicKey(mnemonic);
   }, [mnemonic]);
 
-  const [error, setError] = useState<string | null>(null);
+  const [mnemonicError, setMnemonicError] = useState<string | null>(null);
 
   // ---------------------------------------------
   // callbacks
   // ---------------------------------------------
   const updateMnemonic = useCallback(({ currentTarget }) => {
-    setError(null);
+    setMnemonicError(null);
     setMnemonic(currentTarget.value);
   }, []);
 
@@ -57,17 +57,17 @@ export function RecoverWallet({
         wallets.some(({ terraAddress }) => accAddresses.has(terraAddress))
       ) {
         containerRef.current?.animate(vibrate, { duration: 100 });
-        setError('Same address exists');
+        setMnemonicError('Same address exists');
       } else {
         onConfirm(availableBipWallets);
       }
-    } catch (err) {
+    } catch (error) {
       containerRef.current?.animate(vibrate, { duration: 100 });
 
-      if (err instanceof Error) {
-        setError(err.message);
+      if (error instanceof Error) {
+        setMnemonicError(error.message);
       } else {
-        setError(String(err));
+        setMnemonicError(String(error));
       }
     }
   }, [addressIndex, mnemonic, onConfirm, wallets]);
@@ -80,7 +80,7 @@ export function RecoverWallet({
       <FormMain>
         <SingleLineFormContainer
           label="Seed phrase"
-          invalid={invalidMnemonic ?? error}
+          invalid={invalidMnemonic ?? mnemonicError}
         >
           <textarea
             placeholder="word1 word2 word3 word4..."

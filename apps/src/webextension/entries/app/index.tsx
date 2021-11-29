@@ -28,6 +28,7 @@ import { WalletChangePassword } from './pages/wallets/change-password';
 import { WalletsCreate } from './pages/wallets/create';
 import { WalletExport } from './pages/wallets/export';
 import { WalletsRecover } from './pages/wallets/recover';
+import { WalletResetPassword } from './pages/wallets/reset-password';
 import { WalletSend } from './pages/wallets/send';
 import { WalletToken } from './pages/wallets/token';
 import { WalletUpdate } from './pages/wallets/update';
@@ -81,8 +82,12 @@ function Component({ className }: { className?: string }) {
                   component={WalletUpdate}
                 />
                 <Route
-                  path="/wallet/:terraAddress/password"
+                  path="/wallet/:terraAddress/change-password"
                   component={WalletChangePassword}
+                />
+                <Route
+                  path="/wallet/:terraAddress/reset-password"
+                  component={WalletResetPassword}
                 />
                 <Route
                   path="/wallet/:terraAddress/export"
