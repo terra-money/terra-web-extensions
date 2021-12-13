@@ -10,7 +10,12 @@ const STORAGE_CONFIG = path.join(STORAGE, '.config.json');
 
 module.exports = async (
   url,
-  { extensionPaths = [], puppeteerLaunchOptions = {}, configPath } = {},
+  {
+    enableInfoBar = false,
+    extensionPaths = [],
+    puppeteerLaunchOptions = {},
+    configPath,
+  } = {},
 ) => {
   const unpackedExtensionPath = path.resolve(__dirname, './unpacked/');
 
@@ -66,16 +71,26 @@ module.exports = async (
   }
 
   const extension = [extensionPath, ...extensionPaths].join(',');
+  
+  const args = [
+    `--load-extension=${extension}`,
+    `--disable-extensions-except=${extension}`,
+  ];
+  
+  const ignoreDefaultArgs = ['--disable-extensions'];
+  
+  if (!enableInfoBar) {
+    args.push(`--no-default-browser-check`);
+    ignoreDefaultArgs.push(`--enable-automation`);
+  }
 
+  // --no-default-browser-check
   const browser = await puppeteer.launch({
     headless: false,
     defaultViewport: null,
-    args: [
-      `--load-extension=${extension}`,
-      `--disable-extensions-except=${extension}`,
-    ],
-    ignoreDefaultArgs: ['--disable-extensions'],
     ...puppeteerLaunchOptions,
+    args,
+    ignoreDefaultArgs,
   });
 
   const page = await browser.newPage();

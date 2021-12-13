@@ -3,6 +3,7 @@ declare module 'terra-web-extension' {
     url: string,
     param?: {
       extensionPaths?: string[];
+      enableInfoBar?: boolean;
       puppeteerLaunchOptions?: object;
       configPath?: string;
     },
