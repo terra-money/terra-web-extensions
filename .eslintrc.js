@@ -1,9 +1,8 @@
 module.exports = {
   extends: [
-    '@ssen',
-    //'react-app',
-    //'react-app/jest',
-    //'prettier',
+    'react-app',
+    'react-app/jest',
+    'prettier',
   ],
   rules: {
     //  'react-hooks/exhaustive-deps': [
@@ -13,4 +12,12 @@ module.exports = {
     //    },
     //  ],
   },
+  overrides: [
+    {
+      files: ['**/*.stories.{js,jsx,ts,tsx}'],
+      rules: {
+        'import/no-anonymous-default-export': 0,
+      },
+    },
+  ],
 };

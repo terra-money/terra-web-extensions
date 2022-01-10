@@ -1,18 +1,36 @@
 {
   "private": true,
   "version": "2020.08.30",
-  "author": "Name <id@mail.com>",
+  "author": "Ian <ian@terra.money>",
   "license": "MIT",
-  "repository": "github:githubid/repository",
+  "repository": "github:terra-money/terra-web-extensions",
   "workspaces": [
-    "apps",
-    "terra-web-extension"
+    "terra-web-extension",
+    "webextension",
+    "webextension-reloader",
+    "webextension-test-app"
   ],
   "scripts": {
-    "storybook:build": "yarn workspace apps run storybook:build",
+    "storybook:build": "yarn workspace @workspace/webextension run storybook:build",
     "format": "prettier --write \"**/*.{ts,tsx}\"",
     "lint": "eslint \"**/*.{js,jsx,ts,tsx}\"",
+    "start": "multiplerun dev",
     "prepare": "husky install"
+  },
+  "multiplerun": {
+    "dev": [
+      [
+        "yarn workspace @workspace/webextension run tsc:watch",
+        "yarn workspace @workspace/webextension-test-app run start"
+      ],
+      [
+        "yarn workspace @workspace/webextension run webextension:watch",
+        {
+          "command": "yarn run zx scripts/start.browser.mjs",
+          "wait": 10000
+        }
+      ]
+    ]
   },
   "lint-staged": {
     "**/src/{**/*,*}.{ts,tsx}": [
@@ -22,16 +40,20 @@
   },
   "devDependencies": {
     "@handbook/markdown-source-import": "^1.1.0",
-    "@ssen/eslint-config": "^2.0.1",
     "@ssen/prettier-config": "^2.0.1",
     "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-config-react-app": "^7.0.0",
     "husky": "^7.0.2",
     "lint-staged": "^11.2.3",
-    "prettier": "^2.4.1"
+    "multiplerun": "^2.0.1",
+    "prettier": "^2.4.1",
+    "puppeteer": "^13.0.1",
+    "zx": "^4.2.0"
   },
   "resolutions": {
-    "@terra-money/terra.js": "3.0.0",
+    "@terra-money/terra.js": "3.0.3",
     "node-fetch": "2.6.6"
   },
-  "packageManager": "yarn@3.1.0"
+  "packageManager": "yarn@3.1.1"
 }

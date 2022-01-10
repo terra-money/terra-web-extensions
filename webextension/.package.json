@@ -1,0 +1,13 @@
+{
+  "author": "Ian Lee <ian@terra.money>",
+  "license": "MIT",
+  "repository": "github:terra-money/terra-web-extensions",
+  "bugs": "https://github.com/terra-money/terra-web-extensions/issues",
+  "homepage": "https://github.com/terra-money/terra-web-extensions/tree/main/apps/src/{name}",
+  "engines": {
+    "node": ">=12"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

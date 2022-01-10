@@ -32,7 +32,7 @@ const {
 
 runBrowser(url, {
   puppeteerLaunchOptions: {
-    userDataDir: userData ?? process.env.EXTENSION_READY_CHROME_USER_DATA,
+    userDataDir: userData ?? process.env.TERRA_WEB_EXTENSION_USER_DATA,
   },
   configPath: config,
 });
